@@ -1,0 +1,21 @@
+# Viewflow Workflow Design Checklist
+
+- Goal of workflow:
+- Business object:
+- Actors:
+- Start condition:
+- Flow data:
+- Business data:
+- Tasks:
+- Valid transitions:
+- Invalid transitions:
+- Approvals:
+- Rejection or rework path:
+- Cancellation path:
+- Final state:
+- Permissions:
+- Assignment rules:
+- Frontend forms/views/viewsets:
+- Dashboard behavior:
+- Migration or active-process risk:
+- Tests:

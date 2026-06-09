@@ -1,0 +1,30 @@
+id: viewflow-frontend-form-review
+name: Viewflow frontend form review
+description: Ensure frontend review includes forms, views/viewsets, user actions, validation, permissions, and tests.
+suite: skills
+risk_level: high
+tags:
+  - viewflow
+  - frontend
+  - forms
+input:
+  task: "Review a Viewflow form and viewset change that changes available user actions on a dashboard task."
+  project: "karakana"
+  skill: "viewflow-framework"
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "forms"
+    - "views"
+    - "viewsets"
+    - "user"
+    - "validation"
+    - "permissions"
+    - "tests"
+  must_not_include:
+    - "frontend-only"
+  required_sections:
+    - "Selected Skill"
+    - "Safety Rules"

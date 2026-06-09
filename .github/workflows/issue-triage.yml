@@ -1,0 +1,31 @@
+name: Karakana Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  issue-triage:
+    runs-on: ubuntu-latest
+    env:
+      KARAKANA_POST_COMMENTS: "false"
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Karakana
+        run: python -m pip install -e .[dev]
+      - name: Generate issue triage artifact
+        if: env.KARAKANA_POST_COMMENTS != 'true'
+        run: karakana github issue-triage --project karakana --skill karakana-self-improvement
+      - name: Generate and post issue triage comment
+        if: env.KARAKANA_POST_COMMENTS == 'true'
+        run: karakana github issue-triage --project karakana --skill karakana-self-improvement --post-comment
+      - uses: actions/upload-artifact@v4
+        with:
+          name: karakana-issue-triage
+          path: .karakana/issue-triage.md

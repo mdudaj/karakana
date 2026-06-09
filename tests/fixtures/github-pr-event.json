@@ -1,0 +1,11 @@
+{
+  "pull_request": {
+    "number": 7,
+    "title": "Add skill validator tests",
+    "body": "Adds coverage for skill metadata validation.",
+    "user": {"login": "octocat"},
+    "base": {"ref": "main"},
+    "head": {"ref": "feature/skills"},
+    "html_url": "https://github.com/mdudaj/karakana/pull/7"
+  }
+}

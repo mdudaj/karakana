@@ -1,0 +1,33 @@
+id: viewflow-workflow-design-review
+name: Viewflow workflow design review
+description: Ensure workflow design review separates flow data, business data, permissions, tests, approval/rejection path, and edge cases.
+suite: skills
+risk_level: high
+tags:
+  - viewflow
+  - workflow
+  - design
+input:
+  task: "Review a new Viewflow approval workflow for a laboratory request. Cover flow data, business data, permissions, approval and rejection paths, tests, and edge cases."
+  project: "karakana"
+  skill: "viewflow-framework"
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "flow data"
+    - "business data"
+    - "permissions"
+    - "tests"
+    - "approval"
+    - "rejection"
+    - "edge"
+  must_not_include:
+    - "deploy directly to production"
+  required_sections:
+    - "Task"
+    - "Selected Skill"
+    - "Safety Rules"
+  safety_flags:
+    - "human_review_required"
