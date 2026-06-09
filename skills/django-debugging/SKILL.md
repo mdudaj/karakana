@@ -27,6 +27,9 @@ activation:
     - python
 category: development
 scope: bundled
+status: stable
+visibility: public
+bucket: development
 ---
 # Django Debugging
 

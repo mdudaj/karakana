@@ -1,0 +1,25 @@
+id: handoff-includes-suggested-skills
+name: Handoff includes suggested skills
+description: Ensure handoffs include current state, artifacts, suggested skills, next actions, risks, and definition of done.
+suite: skills
+risk_level: low
+tags:
+  - handoff
+  - productivity
+input:
+  task: "Create a handoff for a partially completed Karakana milestone."
+  project: karakana
+  skill: karakana-handoff
+  task_type: planning
+expectations:
+  must_include:
+    - "Current Goal"
+    - "Current State"
+    - "Relevant Files and Artifacts"
+    - "Suggested Skills"
+    - "Suggested Next Actions"
+    - "Risks and Constraints"
+    - "Definition of Done"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

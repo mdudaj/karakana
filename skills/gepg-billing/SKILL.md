@@ -28,6 +28,9 @@ activation:
     - python
 category: domain
 scope: bundled
+status: stable
+visibility: public
+bucket: domain
 ---
 # GePG Billing
 

@@ -27,9 +27,10 @@ from karakana.models.review.reviewer import review_response
 from karakana.models.router import route_model
 from karakana.safety.model_calls import failed_model_checks, validate_model_call
 from karakana.router import select_model
+from karakana.skills.index import generate_skill_index
 from karakana.skills.loader import SkillLoader
 from karakana.skills.validator import SkillValidator
-from karakana.safety.github_writes import failed_checks, validate_comment_write, validate_issue_create, validate_pr_create
+from karakana.safety.github_writes import MAX_BODY_SIZE, failed_checks, validate_comment_write, validate_issue_create, validate_pr_create
 from karakana.tools.codex_executor import CodexExecutor
 from karakana.tools.github import GitHubPromptGenerator, load_github_event
 from karakana.tools.github_api import GitHubApiClient
@@ -401,7 +402,9 @@ def github_issue_triage(
             raise typer.Exit(code=1) from exc
     if post_comment:
         issue_number = _event_issue_number()
-        body = output_path.read_text(encoding="utf-8")
+        body = _bounded_github_comment_body(output_path.read_text(encoding="utf-8"), output_path)
+        if body != output_path.read_text(encoding="utf-8"):
+            trace.warnings.append("GitHub comment body was truncated to satisfy body_size_reasonable.")
         client = GitHubApiClient()
         checks = validate_comment_write(client, post_comment, issue_number, body)
         _record_github_checks(trace, checks)
@@ -462,7 +465,9 @@ def github_pr_review(
             raise typer.Exit(code=1) from exc
     if post_comment:
         pr_number = _event_pr_number()
-        body = output_path.read_text(encoding="utf-8")
+        body = _bounded_github_comment_body(output_path.read_text(encoding="utf-8"), output_path)
+        if body != output_path.read_text(encoding="utf-8"):
+            trace.warnings.append("GitHub comment body was truncated to satisfy body_size_reasonable.")
         client = GitHubApiClient()
         checks = validate_comment_write(client, post_comment, pr_number, body)
         _record_github_checks(trace, checks)
@@ -974,6 +979,21 @@ def skill_validate_all() -> None:
     _success_trace(trace_store, trace)
 
 
+@skill_app.command("index")
+def skill_index(write: bool = typer.Option(False, "--write", help="Write skills/README.md instead of dry-running.")) -> None:
+    """Generate the public skill index."""
+    repo_root = Path.cwd()
+    index_text = generate_skill_index(repo_root / "skills")
+    output_path = repo_root / "skills" / "README.md"
+    if write:
+        output_path.write_text(index_text, encoding="utf-8")
+        typer.echo(f"Skill index written to: {output_path}")
+        return
+    typer.echo("Dry run: no files written. Use --write to update skills/README.md.")
+    typer.echo("")
+    typer.echo(index_text)
+
+
 @trace_app.command("list")
 def trace_list(limit: int = typer.Option(20, "--limit", help="Maximum runs to show.")) -> None:
     """List recent local run traces."""
@@ -1041,6 +1061,20 @@ def _print_validation_result(result) -> None:
 def _event_issue_number() -> int | None:
     issue = load_github_event().get("issue", {})
     return issue.get("number")
+
+
+def _bounded_github_comment_body(body: str, artifact_path: Path) -> str:
+    """Keep explicit GitHub comments within the API safety limit."""
+    if len(body) <= MAX_BODY_SIZE:
+        return body
+    notice = (
+        "Karakana generated a full review artifact, but it exceeded the safe GitHub comment size.\n\n"
+        f"Full local artifact: `{artifact_path}`\n\n"
+        "Preview:\n\n"
+    )
+    suffix = "\n\n[Comment truncated by Karakana safety gate. Review the uploaded artifact for full context.]\n"
+    limit = max(MAX_BODY_SIZE - len(notice) - len(suffix), 0)
+    return notice + body[:limit].rstrip() + suffix
 
 
 def _event_pr_number() -> int | None:

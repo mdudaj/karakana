@@ -20,7 +20,10 @@ REQUIRED_METADATA = [
 
 ALLOWED_RISK_LEVELS = {"low", "medium", "high", "critical"}
 ALLOWED_SCOPES = {"bundled", "optional", "project"}
-ALLOWED_CATEGORIES = {"development", "research", "infrastructure", "documentation", "self-improvement", "domain"}
+ALLOWED_CATEGORIES = {"development", "research", "infrastructure", "documentation", "self-improvement", "domain", "productivity"}
+ALLOWED_STATUSES = {"stable", "experimental", "in-progress", "deprecated"}
+ALLOWED_VISIBILITIES = {"public", "internal", "hidden"}
+ALLOWED_BUCKETS = {"development", "domain", "productivity", "research", "infrastructure", "self-improvement", "misc"}
 
 REQUIRED_SECTIONS = [
     "# ",
@@ -93,6 +96,20 @@ class SkillValidator:
         category = metadata.get("category")
         if category is not None and category not in ALLOWED_CATEGORIES:
             result.warnings.append(f"Unknown category: {category}")
+
+        status = metadata.get("status")
+        if status is not None and status not in ALLOWED_STATUSES:
+            result.errors.append(f"Invalid status: {status}")
+        elif status == "deprecated":
+            result.warnings.append("Skill is deprecated")
+
+        visibility = metadata.get("visibility")
+        if visibility is not None and visibility not in ALLOWED_VISIBILITIES:
+            result.errors.append(f"Invalid visibility: {visibility}")
+
+        bucket = metadata.get("bucket")
+        if bucket is not None and bucket not in ALLOWED_BUCKETS:
+            result.errors.append(f"Invalid bucket: {bucket}")
 
         activation = metadata.get("activation")
         if activation is not None:

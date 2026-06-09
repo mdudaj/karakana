@@ -27,6 +27,9 @@ class Skill:
     activation: SkillActivation | None = None
     category: str | None = None
     scope: str | None = None
+    status: str | None = None
+    visibility: str | None = None
+    bucket: str | None = None
 
 
 @dataclass

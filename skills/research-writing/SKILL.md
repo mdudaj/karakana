@@ -21,6 +21,9 @@ activation:
     - grep
 category: research
 scope: bundled
+status: stable
+visibility: public
+bucket: research
 ---
 # Research Writing
 

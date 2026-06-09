@@ -5,6 +5,9 @@ version: 0.1.0
 risk_level: high
 category: development
 scope: bundled
+status: stable
+visibility: public
+bucket: development
 activation:
   keywords:
     - viewflow

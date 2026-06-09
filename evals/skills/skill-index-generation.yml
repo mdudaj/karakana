@@ -1,0 +1,29 @@
+id: skill-index-generation
+name: Skill index generation
+description: Ensure skill index guidance covers grouping, visibility, lifecycle status, and index entry fields.
+suite: skills
+risk_level: low
+tags:
+  - skills
+  - governance
+  - index
+input:
+  task: "Generate and review the public Karakana skill index."
+  project: karakana
+  skill: write-karakana-skill
+  task_type: planning
+  context_files:
+    - docs/skills.md
+expectations:
+  must_include:
+    - "bucket"
+    - "hidden"
+    - "deprecated"
+    - "status"
+    - "description"
+    - "path"
+  required_sections:
+    - "Safety Rules"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

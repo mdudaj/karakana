@@ -27,6 +27,9 @@ activation:
     - pytest
 category: development
 scope: bundled
+status: stable
+visibility: public
+bucket: development
 ---
 # GitHub PR Review
 
@@ -47,6 +50,19 @@ Do not use for style-only commentary or broad planning without a concrete change
 - Findings should be grounded in changed files and observable behavior.
 - Prioritize blocking correctness, security, data loss, migration, and deployment risks.
 - Missing tests matter when behavior changes.
+- Review both whether the change is engineered well and whether it satisfies the original task or issue.
+
+## Standards-vs-Spec Review Mode
+
+Use this mode when a pull request should be evaluated against both repository standards and the original specification.
+
+### Standards Review
+
+Check whether the change follows coding standards, architecture rules, safety rules, security requirements, test expectations, maintainability expectations, project conventions, and relevant skill guidance.
+
+### Spec Review
+
+Check whether the change satisfies the original user request, linked issue requirements, acceptance criteria, expected behavior, missing scope, excessive scope, and regressions against the intended workflow.
 
 ## Standard workflow
 
@@ -71,6 +87,36 @@ Do not use for style-only commentary or broad planning without a concrete change
 ## Output format
 
 Return blocking issues, non-blocking suggestions, test gaps, security risks, and deployment risks.
+
+When Standards-vs-Spec mode is requested, use:
+
+```markdown
+# PR Review
+
+## Summary
+
+## Standards Review
+
+### Blocking Issues
+
+### Non-blocking Suggestions
+
+## Spec Review
+
+### Missing Requirements
+
+### Over-Implementation
+
+### Acceptance Criteria Check
+
+## Test Gaps
+
+## Security and Safety Risks
+
+## Deployment Risks
+
+## Recommended Next Actions
+```
 
 ## Quick Reference
 

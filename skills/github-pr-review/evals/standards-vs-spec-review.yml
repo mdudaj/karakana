@@ -1,0 +1,23 @@
+id: standards-vs-spec-review
+name: Standards versus spec PR review
+description: Ensure PR review output checks both engineering standards and the original specification.
+suite: skills
+risk_level: medium
+tags:
+  - github
+  - pr-review
+input:
+  task: "Review a pull request against repository standards and the original task specification."
+  project: karakana
+  skill: github-pr-review
+  task_type: planning
+expectations:
+  must_include:
+    - "Standards Review"
+    - "Spec Review"
+    - "Test Gaps"
+    - "Security and Safety Risks"
+    - "Acceptance Criteria Check"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

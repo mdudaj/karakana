@@ -47,6 +47,9 @@ class SkillLoader:
             activation=activation,
             category=metadata.get("category"),
             scope=metadata.get("scope"),
+            status=metadata.get("status"),
+            visibility=metadata.get("visibility"),
+            bucket=metadata.get("bucket"),
         )
 
 

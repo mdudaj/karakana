@@ -30,6 +30,9 @@ activation:
     - git
 category: self-improvement
 scope: bundled
+status: stable
+visibility: public
+bucket: self-improvement
 ---
 # Karakana Self Improvement
 

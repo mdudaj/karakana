@@ -30,6 +30,9 @@ activation:
     - git
 category: domain
 scope: bundled
+status: stable
+visibility: public
+bucket: domain
 ---
 # Invenio Framework
 

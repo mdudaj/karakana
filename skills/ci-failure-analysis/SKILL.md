@@ -24,6 +24,9 @@ activation:
     - git
 category: development
 scope: bundled
+status: stable
+visibility: public
+bucket: development
 ---
 # CI Failure Analysis
 
