@@ -55,7 +55,8 @@ def test_blocked_response_creates_blocked_bundle(tmp_path):
     bundle = ActionExtractor().extract_from_response(response)
 
     assert bundle.status == "blocked"
-    assert bundle.actions == []
+    assert [action.action_type for action in bundle.actions] == ["manual_review"]
+    assert bundle.actions[0].risk_level == "high"
 
 
 def test_require_passed_review_enforced(tmp_path):
@@ -63,3 +64,11 @@ def test_require_passed_review_enforced(tmp_path):
 
     with pytest.raises(ValueError, match="passed or warning"):
         ActionExtractor().extract_from_response(response, require_passed_review=True)
+
+
+def test_extracts_handoff_action(tmp_path):
+    response = write_response(tmp_path, "Handoff: Prepare current state for the next agent.\n", {"status": "passed", "blocked": False})
+
+    bundle = ActionExtractor().extract_from_response(response)
+
+    assert bundle.actions[0].action_type == "handoff"

@@ -627,11 +627,19 @@ issue_triage: claude-haiku-4.5
 documentation: claude-haiku-4.5
 changelog: claude-haiku-4.5
 simple_summary: claude-haiku-4.5
-code_implementation: codex-gpt-5.5
-refactoring: codex-gpt-5.5
-ci_repair: codex-gpt-5.5
-deep_pr_review: codex-gpt-5.5
-migration_review: codex-gpt-5.5
+routine_code_implementation: gpt-5.4-mini
+test_generation: gpt-5.4-mini
+codex_task_drafting: gpt-5.4-mini
+code_implementation: gpt-5.4-mini
+refactoring: gpt-5.4
+ci_repair: gpt-5.4
+deep_pr_review: gpt-5.4
+framework_code_implementation: gpt-5.4
+high_risk_code_review: gpt-5.5
+security_or_auth_change: gpt-5.5
+payment_or_billing_logic: gpt-5.5
+database_or_index_migration: gpt-5.5
+viewflow_process_state_change: gpt-5.5
 ```
 
 ### 8.2 Escalation rules
@@ -645,7 +653,7 @@ Escalate from Claude Haiku 4.5 to GPT-5 mini when:
 * issue requires multi-step reasoning,
 * previous answer confidence is low.
 
-Escalate from GPT-5 mini to Codex GPT-5.5 when:
+Escalate from GPT-5 mini to Codex GPT-5.4-mini when:
 
 * repository edits are required,
 * tests must be run,
@@ -659,7 +667,7 @@ Escalate from GPT-5 mini to Codex GPT-5.5 when:
 
 ## 9. Codex Integration Requirements
 
-Codex GPT-5.5 should be treated as a coding executor and reviewer, not only a text model.
+Codex models should be treated as coding executors and reviewers, not only text models. Start routine work with GPT-5.4-mini, use GPT-5.4 for serious coding, and reserve GPT-5.5 for high-risk or stuck work.
 
 ### 9.1 Local Codex mode
 

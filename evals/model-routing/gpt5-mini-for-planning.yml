@@ -1,0 +1,17 @@
+id: model-routing-gpt5-mini-for-planning
+name: GPT-5 mini for planning
+description: Planning should use GPT-5 mini.
+suite: model-routing
+risk_level: low
+tags:
+  - routing
+input:
+  task: "Route a planning task."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

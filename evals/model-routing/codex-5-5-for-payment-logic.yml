@@ -1,0 +1,18 @@
+id: model-routing-codex-5-5-for-payment-logic
+name: Codex GPT-5.5 for payment logic
+description: Payment and billing logic should route to GPT-5.5.
+suite: model-routing
+risk_level: high
+tags:
+  - routing
+  - billing
+input:
+  task: "Route a GePG callback idempotency change."
+  task_type: "payment_or_billing_logic"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.5"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

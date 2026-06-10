@@ -1,0 +1,18 @@
+id: model-routing-codex-mini-for-routine-code
+name: Codex mini for routine code
+description: Routine coding should start with GPT-5.4-mini.
+suite: model-routing
+risk_level: medium
+tags:
+  - routing
+  - codex
+input:
+  task: "Route a routine code implementation task."
+  task_type: "routine_code_implementation"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

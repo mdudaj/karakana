@@ -29,8 +29,21 @@ Use focused commands when possible:
 ```bash
 karakana memory validate --project karakana
 karakana model check
+karakana model route --task-type planning
 karakana trace latest
 ```
+
+## Model Routing
+
+Use cost-effective routing by default:
+
+- Claude Haiku 4.5 for lightweight documentation, issue triage, changelog, and summary work.
+- GPT-5 mini for planning, architecture reasoning, reflection, skill design, and action extraction review.
+- Codex GPT-5.4-mini for routine code edits, simple tests, and Codex task drafting.
+- Codex GPT-5.4 for refactoring, CI repair, deep PR review, and framework-level implementation.
+- Codex GPT-5.5 only for high-risk or stuck work: authentication, authorization, payment, billing, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, or repeated failures.
+
+Manual overrides are allowed, but record the rationale in traces or task notes.
 
 ## How to Add a Skill
 
@@ -99,6 +112,8 @@ Live model calls and GitHub writes must remain explicit opt-in.
 - `karakana/tools/github_api.py`
 - `karakana/safety/**`
 - `karakana/models/providers/**`
+- `karakana/models/router.py`
+- `karakana/models/escalation.py`
 - `karakana/improvement/**`
 - `KARAKANA.md`
 - `AGENTS.md`

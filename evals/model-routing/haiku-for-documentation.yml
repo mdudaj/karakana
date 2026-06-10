@@ -1,0 +1,19 @@
+id: model-routing-haiku-for-documentation
+name: Haiku for documentation
+description: Documentation should use fast low-cost language routing.
+suite: model-routing
+risk_level: low
+tags:
+  - routing
+input:
+  task: "Route a documentation cleanup task."
+  task_type: "documentation"
+expectations:
+  expected_provider: "github"
+  expected_model: "claude-haiku-4.5"
+  must_include:
+    - "Safety Rules"
+  must_not_include:
+    - "gpt-5.5"
+  required_sections:
+    - "Safety Rules"

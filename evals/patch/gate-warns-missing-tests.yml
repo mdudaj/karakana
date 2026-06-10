@@ -1,0 +1,15 @@
+id: patch-gate-warns-missing-tests
+name: Patch gate warns on missing tests
+description: Ensure source changes without test evidence are treated as review risks.
+suite: patch
+risk_level: medium
+tags: [patch, tests]
+input:
+  task: "Check that patch lifecycle status recommends attaching test evidence before commit."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "Run relevant tests"
+    - "human approval"

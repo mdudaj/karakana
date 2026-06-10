@@ -5,7 +5,7 @@ from karakana.models.registry import default_registry
 def test_default_registry_lists_providers():
     registry = default_registry()
 
-    assert registry.list_providers() == ["anthropic", "github", "mock", "openai"]
+    assert registry.list_providers() == ["anthropic", "github", "mock", "openai", "openai_codex"]
     assert "mock" in registry.configured_providers()
 
 

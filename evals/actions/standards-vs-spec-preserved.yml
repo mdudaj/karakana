@@ -1,0 +1,23 @@
+id: actions-standards-vs-spec-preserved
+name: Standards versus spec context preserved
+description: Ensure action extraction preserves PR review standards and spec context.
+suite: actions
+risk_level: medium
+tags:
+  - actions
+  - pr-review
+input:
+  task: "Check Standards Review, Spec Review, and Acceptance Criteria context preservation in action artifacts."
+  task_type: "simple_summary"
+expectations:
+  expected_provider: "github"
+  expected_model: "claude-haiku-4.5"
+  must_include:
+    - "reviewable"
+    - "approval"
+    - "tests"
+  required_sections:
+    - "Safety Rules"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

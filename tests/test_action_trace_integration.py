@@ -17,4 +17,5 @@ def test_action_extract_creates_trace_and_redacts(tmp_path, monkeypatch):
     assert result.exit_code == 0
     assert trace.command == "action extract"
     assert trace.outputs["actions_count"] == 1
+    assert "handoff_markdown" in trace.outputs
     assert "abc" not in json.dumps(trace.to_dict())

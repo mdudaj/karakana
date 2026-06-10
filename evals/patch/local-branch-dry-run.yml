@@ -1,0 +1,14 @@
+id: patch-local-branch-dry-run
+name: Local branch dry-run
+description: Ensure branch creation is dry-run unless create is explicit.
+suite: patch
+risk_level: medium
+tags: [patch, branch]
+input:
+  task: "Verify local branch preparation proposes a branch and does not create it by default."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "reviewable"

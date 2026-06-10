@@ -1,0 +1,18 @@
+id: model-routing-no-gpt5-5-for-simple-docs
+name: No GPT-5.5 for simple docs
+description: Simple docs must not default to GPT-5.5.
+suite: model-routing
+risk_level: low
+tags:
+  - routing
+  - cost
+input:
+  task: "Route a simple README cleanup."
+  task_type: "documentation"
+expectations:
+  expected_provider: "github"
+  expected_model: "claude-haiku-4.5"
+  must_not_include:
+    - "gpt-5.5"
+  required_sections:
+    - "Safety Rules"

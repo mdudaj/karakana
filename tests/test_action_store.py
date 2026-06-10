@@ -24,6 +24,7 @@ def test_action_store_writes_summary_and_artifacts(tmp_path):
     assert path.exists()
     root = path.parent
     assert (root / "actions.md").exists()
+    assert (root / "handoff.md").exists()
     assert list((root / "codex-tasks").glob("*.md"))
     assert list((root / "issue-drafts").glob("*.md"))
     assert list((root / "proposals").glob("*.md"))

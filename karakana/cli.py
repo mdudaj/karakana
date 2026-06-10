@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import subprocess
 
@@ -12,6 +13,11 @@ from karakana.actions.extractor import ActionExtractor
 from karakana.actions.publisher import ActionPublisher
 from karakana.actions.store import ActionStore
 from karakana.agents.planner import compose_planning_prompt, write_planning_prompt
+from karakana.codex.executor import CodexExecution
+from karakana.codex.handoff import CodexHandoffBuilder
+from karakana.codex.patch import PatchCapture
+from karakana.codex.reviewer import PatchReviewer
+from karakana.codex.summary import summarize_patch
 from karakana.evals.loader import EvalLoader
 from karakana.evals.report import EvalReportStore
 from karakana.evals.runner import EvalRunner
@@ -20,12 +26,20 @@ from karakana.improvement.store import ProposalStore
 from karakana.memory.ubongo import UbongoMemory
 from karakana.models.config import redacted_model_config
 from karakana.models.errors import ModelProviderError
+from karakana.models.escalation import recommend_escalation
 from karakana.models.executor import ModelExecutor
 from karakana.models.registry import default_registry
 from karakana.models.review.report import render_review_markdown, write_review_artifacts
 from karakana.models.review.reviewer import review_response
-from karakana.models.router import route_model
+from karakana.models.router import available_task_types, route_model
+from karakana.patch.apply import apply_patch_run
+from karakana.patch.branch import create_patch_branch, plan_patch_branch
+from karakana.patch.commit import commit_patch_run
+from karakana.patch.gates import attach_test_evidence, render_gate_markdown, run_patch_gate
+from karakana.patch.status import write_patch_status
+from karakana.patch.summary import summarize_patch_lifecycle
 from karakana.safety.model_calls import failed_model_checks, validate_model_call
+from karakana.safety.model_routing import validate_model_route
 from karakana.router import select_model
 from karakana.skills.index import generate_skill_index
 from karakana.skills.loader import SkillLoader
@@ -45,6 +59,7 @@ github_app = typer.Typer(help="Generate safe GitHub workflow artifacts.")
 improve_app = typer.Typer(help="Generate self-improvement proposals from traces.")
 memory_app = typer.Typer(help="Inspect ubongo durable memory.")
 model_app = typer.Typer(help="Inspect and invoke model providers.")
+patch_app = typer.Typer(help="Gate, apply, and summarize captured patches.")
 skill_app = typer.Typer(help="Inspect and validate Karakana skills.")
 trace_app = typer.Typer(help="Inspect local Karakana run traces.")
 
@@ -55,6 +70,7 @@ app.add_typer(github_app, name="github")
 app.add_typer(improve_app, name="improve")
 app.add_typer(memory_app, name="memory")
 app.add_typer(model_app, name="model")
+app.add_typer(patch_app, name="patch")
 app.add_typer(skill_app, name="skill")
 app.add_typer(trace_app, name="trace")
 
@@ -92,7 +108,7 @@ def action_extract(
         inputs={"from_response": str(from_response), "project": project, "skill": skill, "require_passed_review": require_passed_review, "output": str(output) if output else None},
     )
     try:
-        bundle = ActionExtractor().extract_from_response(from_response, project=project, skill=skill, require_passed_review=require_passed_review)
+        bundle = ActionExtractor(repo_root).extract_from_response(from_response, project=project, skill=skill, require_passed_review=require_passed_review)
         path = ActionStore(repo_root).save(bundle, output_dir=output)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
@@ -106,14 +122,17 @@ def action_extract(
             "response_review_status": bundle.source.review_status,
             "actions_count": len(bundle.actions),
             "action_types": [action.action_type for action in bundle.actions],
+            "suggested_skills": bundle.suggested_skills,
             "risk_levels": [action.risk_level for action in bundle.actions],
             "actions_json": str(path),
             "actions_markdown": str(path.parent / "actions.md"),
+            "handoff_markdown": str(path.parent / "handoff.md"),
         }
     )
     trace.warnings.extend(bundle.warnings)
     trace.artifacts.append(TraceArtifact(path=str(path), kind="actions_json", description="Extracted action bundle JSON"))
     trace.artifacts.append(TraceArtifact(path=str(path.parent / "actions.md"), kind="actions_markdown", description="Extracted action bundle markdown"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "handoff.md"), kind="actions_handoff", description="Extracted action handoff markdown"))
     _success_trace(trace_store, trace)
     typer.echo(f"Action bundle written to: {path.parent}")
     typer.echo(f"Status: {bundle.status}")
@@ -181,7 +200,7 @@ def action_publish(
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
-    trace.outputs.update({"action_run_id": action_run_id, "publish_result": result})
+    trace.outputs.update({"action_run_id": action_run_id, "publish_mode": "write" if any([create_issues, create_proposals, create_codex_tasks]) else "dry_run", "publish_result": result})
     _success_trace(trace_store, trace)
     if result.get("dry_run"):
         typer.echo("Dry run: no actions published.")
@@ -217,6 +236,7 @@ def plan(
         selected_model=model_route["model"],
         inputs={"project": project, "skill": skill, "task": task, "output": str(output), "live": live, "provider": model_route["provider"], "model": model_route["model"]},
     )
+    _record_route_outputs(trace, model_route)
     try:
         prompt = compose_planning_prompt(project=project, skill=skill, task=task, repo_root=repo_root)
         output_path = write_planning_prompt(prompt, repo_root=repo_root, output_path=output)
@@ -262,7 +282,7 @@ def codex_run(
         skill=skill,
         task=task,
         task_type="codex_task_generation",
-        selected_model="codex-gpt-5.5",
+        selected_model=route_model("codex_task_drafting")["model"],
         inputs={"project": project, "skill": skill, "task": task, "focus": focus, "output": str(output), "print": print_prompt},
     )
     try:
@@ -281,6 +301,458 @@ def codex_run(
     if print_prompt:
         typer.echo("")
         typer.echo(prompt)
+
+
+@codex_app.command("handoff")
+def codex_handoff(
+    action_run_id: str,
+    action_id: str | None = typer.Option(None, "--action-id", help="Generate handoff for one action."),
+    project: str | None = typer.Option(None, "--project", help="Override project."),
+    skill: str | None = typer.Option(None, "--skill", help="Override skill."),
+    output: Path | None = typer.Option(None, "--output", help="Custom output directory under .karakana/."),
+    json_output: bool = typer.Option(False, "--json", help="Print generated task paths as JSON."),
+    execute: bool = typer.Option(False, "--execute", help="Explicitly execute generated Codex task if safe."),
+) -> None:
+    """Generate Codex handoff tasks from an action bundle."""
+    import json
+
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(
+        command="codex handoff",
+        task_type="codex_handoff",
+        inputs={"action_run_id": action_run_id, "action_id": action_id, "project": project, "skill": skill, "output": str(output) if output else None, "execute": execute},
+    )
+    try:
+        paths = CodexHandoffBuilder(repo_root).build_from_action_bundle(action_run_id, action_id=action_id, project=project, skill=skill, output_dir=output)
+        task_records = []
+        for path in paths:
+            task_json = path.with_name("codex-task.json")
+            if task_json.exists():
+                task_records.append(json.loads(task_json.read_text(encoding="utf-8")))
+        execution_paths = []
+        if execute:
+            for path in paths:
+                try:
+                    execution_paths.append(str(CodexExecution(repo_root).execute(path, explicit=True)))
+                except Exception as exc:
+                    trace.warnings.append(str(exc))
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update(
+        {
+            "action_run_id": action_run_id,
+            "action_id": action_id,
+            "codex_task_ids": [record.get("task_id") for record in task_records],
+            "codex_task_paths": [str(path) for path in paths],
+            "recommended_provider": task_records[0].get("recommended_provider") if task_records else None,
+            "recommended_model": task_records[0].get("recommended_model") if task_records else None,
+            "escalation_model": task_records[0].get("escalation_model") if task_records else None,
+            "risk_levels": [record.get("risk_level") for record in task_records],
+            "execution_requested": execute,
+            "execution_performed": bool(execution_paths),
+            "execution_paths": execution_paths,
+        }
+    )
+    for path in paths:
+        trace.artifacts.append(TraceArtifact(path=str(path), kind="codex_handoff_task", description="Codex handoff task"))
+    _success_trace(trace_store, trace)
+    for path in paths:
+        typer.echo(f"Codex handoff task written to: {path}")
+    if not execute:
+        typer.echo("Codex execution was not run.")
+    if json_output:
+        typer.echo(json.dumps({"codex_task_paths": [str(path) for path in paths], "execution_paths": execution_paths}, indent=2, sort_keys=True))
+
+
+@codex_app.command("execute")
+def codex_execute(codex_task_path: Path, execute: bool = typer.Option(False, "--execute", help="Required to execute Codex.")) -> None:
+    """Safely execute a Codex task only with explicit --execute."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="codex execute", task_type="codex_execution", inputs={"codex_task_path": str(codex_task_path), "execute": execute})
+    try:
+        result = CodexExecution(repo_root).execute(codex_task_path, explicit=execute)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs["execution_result"] = str(result)
+    trace.artifacts.append(TraceArtifact(path=str(result), kind="codex_execution_result", description="Codex execution result"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Codex execution result: {result}")
+
+
+@codex_app.command("capture-diff")
+def codex_capture_diff(
+    source_task: str | None = typer.Option(None, "--source-task", help="Source Codex task ID."),
+    include_staged: bool = typer.Option(False, "--include-staged", help="Capture staged diff too."),
+    output: Path | None = typer.Option(None, "--output", help="Custom output directory under .karakana/."),
+    json_output: bool = typer.Option(False, "--json", help="Print patch JSON."),
+) -> None:
+    """Capture current git diff without mutating files."""
+    import json
+
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="codex capture-diff", task_type="patch_capture", inputs={"source_task": source_task, "include_staged": include_staged, "output": str(output) if output else None})
+    try:
+        artifact = PatchCapture(repo_root).capture_diff(source_task=source_task, include_staged=include_staged, output_dir=output)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": artifact.patch_run_id, "files_changed": artifact.files_changed, "diff_path": artifact.diff_path, "summary_path": artifact.summary_path})
+    trace.warnings.extend(artifact.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(artifact.diff_path), kind="patch_diff", description="Captured working tree diff"))
+    trace.artifacts.append(TraceArtifact(path=str(artifact.summary_path), kind="patch_summary", description="Patch summary"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch captured: {Path(artifact.summary_path).parent}")
+    typer.echo(f"Patch run ID: {artifact.patch_run_id}")
+    if artifact.warnings:
+        for warning in artifact.warnings:
+            typer.echo(f"WARNING: {warning}")
+    if json_output:
+        typer.echo(json.dumps(artifact.to_dict(), indent=2, sort_keys=True))
+
+
+@codex_app.command("capture-tests")
+def codex_capture_tests(command: str = typer.Option(..., "--command", help="Explicit test command to run.")) -> None:
+    """Run and capture an explicit safe test command."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="codex capture-tests", task_type="test_capture", inputs={"command": command})
+    try:
+        result_path = PatchCapture(repo_root).capture_tests(command)
+        result_data = json.loads(result_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"test_run_id": result_data.get("test_run_id"), "test_result_path": str(result_path), "exit_code": result_data.get("exit_code"), "refused": result_data.get("refused")})
+    trace.warnings.extend(result_data.get("warnings") or [])
+    trace.artifacts.append(TraceArtifact(path=str(result_path), kind="test_result", description="Captured test result JSON"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Test result captured: {result_path}")
+
+
+@codex_app.command("review-patch")
+def codex_review_patch(diff: Path = typer.Option(..., "--diff", help="Diff file to review.")) -> None:
+    """Review a captured patch diff using deterministic checks."""
+    import json
+
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="codex review-patch", task_type="patch_review", inputs={"diff": str(diff)})
+    try:
+        review_path = PatchReviewer(repo_root).review_diff(diff)
+        data = json.loads(review_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_review_id": review_path.parent.name, "review_status": data.get("status"), "review_blocked": data.get("blocked"), "risk_level": data.get("risk_level"), "review_path": str(review_path)})
+    trace.artifacts.append(TraceArtifact(path=str(review_path), kind="patch_review", description="Patch review JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(review_path.parent / "review.md"), kind="patch_review_markdown", description="Patch review markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch review written to: {review_path.parent}")
+    typer.echo(f"Status: {data.get('status')}")
+    typer.echo(f"Risk level: {data.get('risk_level')}")
+
+
+@codex_app.command("summarize-patch")
+def codex_summarize_patch(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."), review: bool = typer.Option(False, "--review", help="Also run patch review.")) -> None:
+    """Summarize a captured patch."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="codex summarize-patch", task_type="patch_summary", inputs={"patch_run": patch_run, "review": review})
+    try:
+        summary_path = summarize_patch(repo_root, patch_run)
+        review_path = None
+        if review:
+            review_path = PatchReviewer(repo_root).review_diff(repo_root / ".karakana" / "patches" / patch_run / "changes.diff")
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "summary_path": str(summary_path), "review_path": str(review_path) if review_path else None})
+    trace.artifacts.append(TraceArtifact(path=str(summary_path), kind="patch_summary", description="Patch summary"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch summary written to: {summary_path}")
+
+
+@patch_app.command("gate")
+def patch_gate(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."), json_output: bool = typer.Option(False, "--json", help="Print gate JSON.")) -> None:
+    """Run patch lifecycle gates for a captured patch."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch gate", task_type="patch_gate", inputs={"patch_run_id": patch_run})
+    try:
+        result, gate_path = run_patch_gate(repo_root, patch_run)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "gate_run_id": gate_path.parent.name, "risk_level": result.risk_level, "blocked": result.blocked, "gate_path": str(gate_path)})
+    trace.warnings.extend(result.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(gate_path), kind="patch_gate", description="Patch gate JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(gate_path.parent / "gate.md"), kind="patch_gate_markdown", description="Patch gate markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch gate written to: {gate_path.parent}")
+    typer.echo(f"Status: {result.status}")
+    typer.echo(f"Risk level: {result.risk_level}")
+    typer.echo(f"Blocked: {result.blocked}")
+    if json_output:
+        typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+@patch_app.command("branch")
+def patch_branch(
+    patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."),
+    base: str = typer.Option("main", "--base", help="Base branch."),
+    name: str | None = typer.Option(None, "--name", help="Branch name."),
+    create: bool = typer.Option(False, "--create", help="Create local branch."),
+    allow_dirty: bool = typer.Option(False, "--allow-dirty", help="Allow branch creation from a dirty worktree."),
+    reuse: bool = typer.Option(False, "--reuse", help="Reuse existing branch."),
+    json_output: bool = typer.Option(False, "--json", help="Print branch JSON."),
+) -> None:
+    """Plan or create a local patch branch."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch branch", task_type="patch_branch", inputs={"patch_run_id": patch_run, "base": base, "name": name, "create": create, "allow_dirty": allow_dirty, "reuse": reuse})
+    try:
+        plan = create_patch_branch(repo_root, patch_run, base=base, name=name, allow_dirty=allow_dirty, reuse=reuse) if create else plan_patch_branch(repo_root, patch_run, base=base, name=name)
+        branch_dir = repo_root / ".karakana" / "patch-branches" / trace.run_id
+        branch_dir.mkdir(parents=True, exist_ok=True)
+        branch_json = branch_dir / "branch.json"
+        branch_md = branch_dir / "branch.md"
+        branch_json.write_text(json.dumps(plan.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        branch_md.write_text(_render_branch_plan(plan.to_dict(), create), encoding="utf-8")
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "current_branch": plan.current_branch, "target_branch": plan.proposed_branch, "branch_create_requested": create, "can_create": plan.can_create, "branch_path": str(branch_json)})
+    trace.warnings.extend(plan.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(branch_json), kind="patch_branch_plan", description="Patch branch JSON"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Branch plan written to: {branch_dir}")
+    typer.echo(f"Proposed branch: {plan.proposed_branch}")
+    typer.echo("Branch created." if create and plan.can_create else "Branch was not created.")
+    if plan.warnings:
+        for warning in plan.warnings:
+            typer.echo(f"WARNING: {warning}")
+    if json_output:
+        typer.echo(json.dumps(plan.to_dict(), indent=2, sort_keys=True))
+
+
+@patch_app.command("apply")
+def patch_apply(
+    patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."),
+    write: bool = typer.Option(False, "--write", help="Apply the patch."),
+    stage: bool = typer.Option(False, "--stage", help="Stage changed files after applying."),
+    allow_high_risk: bool = typer.Option(False, "--allow-high-risk", help="Allow high-risk patch apply."),
+    allow_main: bool = typer.Option(False, "--allow-main", help="Allow apply on main/master."),
+    json_output: bool = typer.Option(False, "--json", help="Print apply JSON."),
+) -> None:
+    """Dry-run or explicitly apply a captured patch."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch apply", task_type="patch_apply", inputs={"patch_run_id": patch_run, "write": write, "stage": stage, "allow_high_risk": allow_high_risk, "allow_main": allow_main})
+    try:
+        result = apply_patch_run(repo_root, patch_run, write=write, stage=stage, allow_high_risk=allow_high_risk, allow_main=allow_main)
+        result_dir = repo_root / ".karakana" / "patch-apply" / trace.run_id
+        result_dir.mkdir(parents=True, exist_ok=True)
+        result_json = result_dir / "result.json"
+        result_json.write_text(json.dumps(result.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        (result_dir / "result.md").write_text(_render_apply_result(result.to_dict()), encoding="utf-8")
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "operation": "apply", "dry_run": result.dry_run, "write_requested": write, "stage_requested": stage, "applied": result.applied, "status": result.status, "files_changed": result.files_changed})
+    trace.warnings.extend(result.warnings)
+    trace.errors.extend(result.errors)
+    trace.artifacts.append(TraceArtifact(path=str(result_json), kind="patch_apply_result", description="Patch apply result"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch apply result written to: {result_dir}")
+    typer.echo(f"Status: {result.status}")
+    typer.echo(f"Applied: {result.applied}")
+    if json_output:
+        typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+@patch_app.command("attach-test")
+def patch_attach_test(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."), test_run: str = typer.Option(..., "--test-run", help="Test run ID.")) -> None:
+    """Attach captured test evidence to a patch run."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch attach-test", task_type="patch_test_evidence", inputs={"patch_run_id": patch_run, "test_run_id": test_run})
+    try:
+        output = attach_test_evidence(repo_root, patch_run, test_run)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "test_run_id": test_run, "test_evidence_path": str(output)})
+    trace.artifacts.append(TraceArtifact(path=str(output), kind="patch_test_evidence", description="Patch test evidence"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Test evidence attached: {output}")
+
+
+@patch_app.command("status")
+def patch_status(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID.")) -> None:
+    """Write and print patch lifecycle status."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch status", task_type="patch_status", inputs={"patch_run_id": patch_run})
+    try:
+        status_path, data = write_patch_status(repo_root, patch_run)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "status_path": str(status_path), "blocked": (data.get("gate") or {}).get("blocked"), "risk_level": (data.get("gate") or {}).get("risk_level")})
+    trace.artifacts.append(TraceArtifact(path=str(status_path), kind="patch_status", description="Patch status markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(status_path.read_text(encoding="utf-8"))
+
+
+@patch_app.command("summary")
+def patch_summary(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID.")) -> None:
+    """Write patch lifecycle summary artifacts."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch summary", task_type="patch_summary", inputs={"patch_run_id": patch_run})
+    try:
+        path = summarize_patch_lifecycle(repo_root, patch_run)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "summary_path": str(path)})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="patch_lifecycle_summary", description="Patch lifecycle summary"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch summary written to: {path}")
+
+
+@patch_app.command("commit")
+def patch_commit(
+    patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."),
+    message: str = typer.Option(..., "--message", help="Commit message."),
+    write: bool = typer.Option(False, "--write", help="Create local commit."),
+    stage: bool = typer.Option(False, "--stage", help="Stage patch files before committing."),
+    allow_high_risk: bool = typer.Option(False, "--allow-high-risk", help="Allow high-risk patch commit."),
+    allow_main: bool = typer.Option(False, "--allow-main", help="Allow commit on main/master."),
+    json_output: bool = typer.Option(False, "--json", help="Print commit JSON."),
+) -> None:
+    """Dry-run or explicitly create a local commit for an applied patch."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="patch commit", task_type="patch_commit", inputs={"patch_run_id": patch_run, "message": message, "write": write, "stage": stage, "allow_high_risk": allow_high_risk, "allow_main": allow_main})
+    try:
+        result = commit_patch_run(repo_root, patch_run, message, write=write, stage=stage, allow_high_risk=allow_high_risk, allow_main=allow_main)
+        result_dir = repo_root / ".karakana" / "patch-commits" / trace.run_id
+        result_dir.mkdir(parents=True, exist_ok=True)
+        result_json = result_dir / "result.json"
+        result_json.write_text(json.dumps(result.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        (result_dir / "result.md").write_text(_render_commit_result(result.to_dict()), encoding="utf-8")
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"patch_run_id": patch_run, "operation": "commit", "commit_requested": write, "stage_requested": stage, "committed": result.committed, "commit_sha": result.commit_sha, "status": result.status})
+    trace.warnings.extend(result.warnings)
+    trace.errors.extend(result.errors)
+    trace.artifacts.append(TraceArtifact(path=str(result_json), kind="patch_commit_result", description="Patch commit result"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Patch commit result written to: {result_dir}")
+    typer.echo(f"Status: {result.status}")
+    typer.echo(f"Committed: {result.committed}")
+    if result.commit_sha:
+        typer.echo(f"Commit SHA: {result.commit_sha}")
+    if json_output:
+        typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _render_branch_plan(data: dict, create: bool) -> str:
+    return f"""# Karakana Patch Branch Plan
+
+## Summary
+
+- Patch run ID: {data.get("patch_run_id")}
+- Current branch: {data.get("current_branch") or ""}
+- Proposed branch: {data.get("proposed_branch")}
+- Base branch: {data.get("base_branch")}
+- Create requested: {create}
+- Can create: {data.get("can_create")}
+
+## Warnings
+
+{_markdown_bullets(data.get("warnings") or [])}
+
+## Safety
+
+- No remote push was performed.
+- No pull request was created.
+"""
+
+
+def _render_apply_result(data: dict) -> str:
+    return f"""# Karakana Patch Apply Result
+
+## Summary
+
+- Patch run ID: {data.get("patch_run_id")}
+- Status: {data.get("status")}
+- Dry run: {data.get("dry_run")}
+- Applied: {data.get("applied")}
+
+## Files Changed
+
+{_markdown_bullets(data.get("files_changed") or [])}
+
+## Conflicts
+
+{_markdown_bullets(data.get("conflicts") or [])}
+
+## Warnings
+
+{_markdown_bullets(data.get("warnings") or [])}
+
+## Errors
+
+{_markdown_bullets(data.get("errors") or [])}
+"""
+
+
+def _render_commit_result(data: dict) -> str:
+    return f"""# Karakana Patch Commit Result
+
+## Summary
+
+- Patch run ID: {data.get("patch_run_id")}
+- Status: {data.get("status")}
+- Committed: {data.get("committed")}
+- Commit SHA: {data.get("commit_sha") or ""}
+- Message: {data.get("message") or ""}
+
+## Warnings
+
+{_markdown_bullets(data.get("warnings") or [])}
+
+## Errors
+
+{_markdown_bullets(data.get("errors") or [])}
+"""
+
+
+def _markdown_bullets(values: list[str]) -> str:
+    if not values:
+        return "- None"
+    return "\n".join(f"- {value}" for value in values)
 
 
 @eval_app.command("list")
@@ -383,6 +855,7 @@ def github_issue_triage(
         selected_model=model_route["model"],
         inputs={"project": project, "skill": skill, "output": str(output), "post_comment": post_comment, "live": live, "provider": model_route["provider"], "model": model_route["model"]},
     )
+    _record_route_outputs(trace, model_route)
     try:
         prompt = generator.build_issue_triage_prompt(project=project, skill=skill)
         output_path = generator.write_prompt(prompt, output)
@@ -446,6 +919,7 @@ def github_pr_review(
         selected_model=model_route["model"],
         inputs={"project": project, "skill": skill, "output": str(output), "post_comment": post_comment, "live": live, "provider": model_route["provider"], "model": model_route["model"]},
     )
+    _record_route_outputs(trace, model_route)
     try:
         prompt = generator.build_pr_review_prompt(project=project, skill=skill)
         output_path = generator.write_prompt(prompt, output)
@@ -508,6 +982,7 @@ def github_ci_failure(
         selected_model=model_route["model"],
         inputs={"project": project, "skill": skill, "log_file": str(log_file) if log_file else None, "output": str(output), "live": live, "provider": model_route["provider"], "model": model_route["model"]},
     )
+    _record_route_outputs(trace, model_route)
     if log_file is None:
         trace.errors.append("--log-file is required")
         trace.next_actions.append("Provide --log-file with a local CI log path.")
@@ -645,6 +1120,81 @@ def model_check() -> None:
     for provider_name in registry.list_providers():
         status = "configured" if provider_name in configured else "not configured"
         typer.echo(f"{provider_name}: {status}")
+
+
+@model_app.command("route")
+def model_route(
+    task_type: str = typer.Option(..., "--task-type", help="Task type to route."),
+    signals: str = typer.Option("", "--signals", help="Comma-separated escalation signals."),
+    provider: str | None = typer.Option(None, "--provider", help="Manual provider override."),
+    model: str | None = typer.Option(None, "--model", help="Manual model override."),
+    risk_level: str | None = typer.Option(None, "--risk-level", help="Optional risk level for safety warnings."),
+    json_output: bool = typer.Option(False, "--json", help="Print route JSON."),
+) -> None:
+    """Show the cost-aware route for a task type."""
+    import json
+
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    signal_list = [signal.strip() for signal in signals.split(",") if signal.strip()]
+    route = route_model(task_type, provider=provider, model=model)
+    escalation = recommend_escalation(route["provider"], route["model"], signal_list)
+    warnings = validate_model_route(task_type, route["provider"], route["model"], risk_level=risk_level)
+    trace = trace_store.create_run(
+        command="model route",
+        task_type="model_routing",
+        selected_model=route["model"],
+        inputs={"task_type": task_type, "signals": signal_list, "provider": provider, "model": model, "risk_level": risk_level},
+    )
+    trace.outputs.update(
+        {
+            "task_type": task_type,
+            "selected_provider": route["provider"],
+            "selected_model": route["model"],
+            "routing_rationale": route.get("rationale"),
+            "escalation_signals": signal_list,
+            "escalation_recommendation": escalation,
+            "manual_override": route.get("manual_override", False),
+            "override_reason": "Manual --provider/--model override" if route.get("manual_override") else None,
+            "cost_tier": route.get("cost_tier"),
+            "risk_tier": risk_level,
+            "capability_tier": route.get("capability_tier"),
+            "warnings": warnings,
+        }
+    )
+    trace.warnings.extend(warnings)
+    _success_trace(trace_store, trace)
+    output = {
+        "task_type": task_type,
+        "provider": route["provider"],
+        "model": route["model"],
+        "mode": route.get("mode"),
+        "rationale": route.get("rationale"),
+        "cost_tier": route.get("cost_tier"),
+        "capability_tier": route.get("capability_tier"),
+        "manual_override": route.get("manual_override", False),
+        "escalation": escalation,
+        "warnings": warnings,
+    }
+    if json_output:
+        typer.echo(json.dumps(output, indent=2, sort_keys=True))
+        return
+    typer.echo(f"Task type: {task_type}")
+    typer.echo(f"Provider: {route['provider']}")
+    typer.echo(f"Model: {route['model']}")
+    typer.echo(f"Mode: {route.get('mode')}")
+    typer.echo(f"Cost tier: {route.get('cost_tier')}")
+    typer.echo(f"Capability tier: {route.get('capability_tier')}")
+    typer.echo(f"Rationale: {route.get('rationale')}")
+    if signal_list:
+        typer.echo(f"Escalation signals: {', '.join(signal_list)}")
+    typer.echo(f"Escalation notes: {escalation['rationale']}")
+    if escalation["should_escalate"]:
+        typer.echo(f"Recommended escalation: {escalation['to_provider']}/{escalation['to_model']}")
+    if warnings:
+        typer.echo("Warnings:")
+        for warning in warnings:
+            typer.echo(f"- {warning}")
 
 
 @model_app.command("complete")
@@ -1187,6 +1737,15 @@ def _print_live_artifacts(artifacts: dict[str, Path | str | bool]) -> None:
     typer.echo(f"Response: {artifacts['response']}")
     typer.echo(f"Review: {artifacts['review']}")
     typer.echo(f"Review status: {artifacts['review_status']}")
+
+
+def _record_route_outputs(trace, route: dict) -> None:
+    trace.outputs["selected_provider"] = route.get("provider")
+    trace.outputs["selected_model"] = route.get("model")
+    trace.outputs["routing_rationale"] = route.get("rationale")
+    trace.outputs["manual_override"] = route.get("manual_override", False)
+    trace.outputs["cost_tier"] = route.get("cost_tier")
+    trace.outputs["capability_tier"] = route.get("capability_tier")
 
 
 def _max_risk(proposal) -> str:

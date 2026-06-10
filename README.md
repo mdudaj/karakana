@@ -24,6 +24,7 @@ The current implementation covers the local Karakana harness through evaluation 
 - self-improvement proposal artifacts under `.karakana/proposals/`
 - deterministic eval reports under `.karakana/eval-runs/`
 - model provider abstraction with dry-run defaults
+- cost-effective model routing and escalation guidance
 - GitHub workflow scaffolding and explicit opt-in GitHub writes
 
 ## CLI
@@ -41,6 +42,24 @@ karakana skill validate-all
 karakana plan --project karakana --skill karakana-self-improvement --task "Design the next improvement loop"
 karakana codex run --project karakana --skill karakana-self-improvement --task "Implement reflection trace schema"
 karakana eval run
+karakana model route --task-type planning
+karakana model route --task-type routine_code_implementation
+```
+
+## Model Routing
+
+Karakana uses the cheapest capable model first:
+
+- Claude Haiku 4.5: fast low-cost issue triage, documentation, changelog, and summaries.
+- GPT-5 mini: planning, architecture reasoning, reflection, skill design, and action extraction review.
+- Codex GPT-5.4-mini: routine code implementation, simple tests, and Codex task drafting.
+- Codex GPT-5.4: serious day-to-day coding, refactoring, CI repair, framework implementation, and deep PR review.
+- Codex GPT-5.5: principal-level escalation for authentication, payments, migrations, process-state changes, production risk, high-risk review, or repeated failures.
+
+Inspect routing decisions with:
+
+```bash
+karakana model route --task-type payment_or_billing_logic
 ```
 
 ## Skills and Tools

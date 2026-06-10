@@ -1,0 +1,16 @@
+id: codex-handoff-generates-model-route
+name: Codex handoff generates model route
+description: Ensure Codex handoffs include recommended model routing.
+suite: codex
+risk_level: medium
+tags: [codex, handoff, routing]
+input:
+  task: "Generate a Codex handoff from a reviewed action."
+  task_type: "codex_task_drafting"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

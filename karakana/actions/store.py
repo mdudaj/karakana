@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from karakana.actions.schemas import ActionBundle, ExtractedAction
-from karakana.actions.summary import render_action_artifact, render_action_bundle
+from karakana.actions.summary import render_action_artifact, render_action_bundle, render_handoff
 
 
 class ActionStore:
@@ -29,6 +29,7 @@ class ActionStore:
         actions_json = bundle_dir / "actions.json"
         actions_json.write_text(json.dumps(bundle.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
         (bundle_dir / "actions.md").write_text(render_action_bundle(bundle, artifact_paths), encoding="utf-8")
+        (bundle_dir / "handoff.md").write_text(render_handoff(bundle, artifact_paths), encoding="utf-8")
         self._write_latest(bundle.action_run_id)
         return actions_json
 

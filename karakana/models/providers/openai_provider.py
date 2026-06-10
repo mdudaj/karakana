@@ -13,7 +13,9 @@ from karakana.models.schemas import ModelRequest, ModelResponse
 class OpenAIProvider(ModelProvider):
     name = "openai"
 
-    def __init__(self) -> None:
+    def __init__(self, name: str | None = None) -> None:
+        if name:
+            self.name = name
         self.api_key = os.environ.get("OPENAI_API_KEY")
         self.endpoint = os.environ.get("OPENAI_ENDPOINT", "https://api.openai.com/v1/chat/completions")
 

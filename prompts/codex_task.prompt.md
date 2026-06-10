@@ -32,6 +32,10 @@
 
 {files_likely_relevant}
 
+## Recommended Codex Model
+
+{recommended_codex_model}
+
 ## Safety Rules
 
 {safety_rules}

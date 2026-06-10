@@ -11,11 +11,18 @@ DEFAULT_MODEL_ROUTING = {
     "documentation": "claude-haiku-4.5",
     "changelog": "claude-haiku-4.5",
     "simple_summary": "claude-haiku-4.5",
-    "code_implementation": "codex-gpt-5.5",
-    "refactoring": "codex-gpt-5.5",
-    "ci_repair": "codex-gpt-5.5",
-    "deep_pr_review": "codex-gpt-5.5",
-    "migration_review": "codex-gpt-5.5",
+    "code_implementation": "gpt-5.4-mini",
+    "routine_code_implementation": "gpt-5.4-mini",
+    "test_generation": "gpt-5.4-mini",
+    "refactoring": "gpt-5.4",
+    "ci_repair": "gpt-5.4",
+    "deep_pr_review": "gpt-5.4",
+    "migration_review": "gpt-5.5",
+    "high_risk_code_review": "gpt-5.5",
+    "security_or_auth_change": "gpt-5.5",
+    "payment_or_billing_logic": "gpt-5.5",
+    "database_or_index_migration": "gpt-5.5",
+    "viewflow_process_state_change": "gpt-5.5",
 }
 
 

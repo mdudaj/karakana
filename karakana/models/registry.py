@@ -34,5 +34,6 @@ def default_registry() -> ModelProviderRegistry:
     registry.register(MockProvider())
     registry.register(GitHubModelsProvider())
     registry.register(OpenAIProvider())
+    registry.register(OpenAIProvider(name="openai_codex"))
     registry.register(AnthropicProvider())
     return registry

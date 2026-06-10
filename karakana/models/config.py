@@ -23,7 +23,12 @@ def model_config() -> dict:
             },
             "openai": {
                 "configured": bool(os.environ.get("OPENAI_API_KEY")),
-                "model": os.environ.get("OPENAI_MODEL", "gpt-5.5"),
+                "model": os.environ.get("OPENAI_MODEL", "gpt-5.4"),
+                "endpoint": os.environ.get("OPENAI_ENDPOINT", "https://api.openai.com/v1/chat/completions"),
+            },
+            "openai_codex": {
+                "configured": bool(os.environ.get("OPENAI_API_KEY")),
+                "model": os.environ.get("OPENAI_CODEX_MODEL", "gpt-5.4-mini"),
                 "endpoint": os.environ.get("OPENAI_ENDPOINT", "https://api.openai.com/v1/chat/completions"),
             },
             "anthropic": {
@@ -43,7 +48,8 @@ def redacted_model_config() -> dict:
 def _default_model(provider: str) -> str:
     return {
         "github": "gpt-5-mini",
-        "openai": "gpt-5.5",
+        "openai": "gpt-5.4",
+        "openai_codex": "gpt-5.4-mini",
         "anthropic": "claude-haiku-4.5",
         "mock": DEFAULT_MODEL,
     }.get(provider, DEFAULT_MODEL)

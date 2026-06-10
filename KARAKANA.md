@@ -40,11 +40,15 @@ Use:
 
 - Planning: GPT-5 mini
 - Lightweight documentation: Claude Haiku 4.5
-- Complex coding: Codex GPT-5.5
-- Code review: Codex GPT-5.5 plus GPT-5 mini summary
+- Routine coding: Codex GPT-5.4-mini
+- Serious coding, refactors, and CI repair: Codex GPT-5.4
+- High-risk or stuck coding: Codex GPT-5.5
+- Code review: Codex GPT-5.4 by default; Codex GPT-5.5 for high-risk review
 - Reflection: GPT-5 mini
-- Skill improvement implementation: Codex GPT-5.5
+- Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.5 when risk requires it
 - Skill improvement review: GPT-5 mini
+
+Use GPT-5.5 only when the work is high-risk, complex, or stuck.
 
 ## Safety rules
 

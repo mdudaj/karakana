@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from karakana.memory.ubongo import UbongoMemory
+from karakana.models.router import route_model
 from karakana.skills.loader import SkillLoader
 from karakana.tools.code_search import collect_repository_context
 
@@ -33,6 +34,7 @@ class CodexExecutor:
             "repository_instructions": _read_optional(self.repo_root / "AGENTS.md", "No AGENTS.md found."),
             "repository_context": collect_repository_context(self.repo_root),
             "files_likely_relevant": _files_likely_relevant(project, skill),
+            "recommended_codex_model": _recommended_codex_model(task, selected_skill.requires_approval_for),
             "safety_rules": _safety_rules(),
             "required_output": _required_output(),
             "tests_to_run": _tests_to_run(),
@@ -74,6 +76,36 @@ def _files_likely_relevant(project: str, skill: str) -> str:
 - `ubongo/projects/{project}/`
 - `skills/{skill}/SKILL.md`
 - Files named by the task after repository inspection."""
+
+
+def _recommended_codex_model(task: str, approval_requirements: list[str]) -> str:
+    high_risk_terms = {
+        "authentication",
+        "permission",
+        "payment",
+        "billing",
+        "migration",
+        "database",
+        "opensearch",
+        "workflow state",
+        "process state",
+        "production",
+        "oauth",
+        "sso",
+    }
+    text = " ".join([task, *approval_requirements]).lower()
+    if any(term in text for term in high_risk_terms):
+        route = route_model("high_risk_code_review")
+        return f"""- Default: `{route['model']}`
+- Provider: `{route['provider']}`
+- Reason: This task touches high-risk approval or domain areas.
+- Escalation triggers: authentication, payments, migrations, process state, production deployment, or repeated failures."""
+    default_route = route_model("routine_code_implementation")
+    escalation_route = route_model("refactoring")
+    return f"""- Default: `{default_route['model']}`
+- Provider: `{default_route['provider']}`
+- Escalate to: `{escalation_route['model']}`
+- Use `gpt-5.5` only if the task touches authentication, payments, migrations, process state, production deployment, or repeated failures."""
 
 
 def _safety_rules() -> str:
@@ -161,6 +193,10 @@ def _default_template() -> str:
 ## Files Likely Relevant
 
 {files_likely_relevant}
+
+## Recommended Codex Model
+
+{recommended_codex_model}
 
 ## Safety Rules
 
