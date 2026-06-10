@@ -1,0 +1,58 @@
+name: billing
+description: Django GePG billing and reconciliation project profile
+version: 0.1.0
+status: stable
+project:
+  id: billing
+  display_name: Billing
+  memory: ubongo/projects/billing
+  contract: KARAKANA.md
+skills:
+  required:
+    - gepg-billing
+    - django-debugging
+    - github-pr-review
+    - ci-failure-analysis
+    - karakana-handoff
+  optional:
+    - viewflow-framework
+    - write-karakana-skill
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+  payment_or_billing_logic:
+    provider: openai_codex
+    model: gpt-5.5
+  database_or_index_migration:
+    provider: openai_codex
+    model: gpt-5.5
+  ci_repair:
+    provider: openai_codex
+    model: gpt-5.4
+safety:
+  high_risk_paths:
+    - billing/**
+    - payments/**
+    - reconciliation/**
+    - cancellations/**
+    - celery/**
+    - .github/workflows/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - payment_or_billing_logic
+    - database_migration
+    - production_config_change
+    - destructive_command
+tests:
+  commands:
+    - pytest
+  recommended_before_commit:
+    - karakana eval run --skill gepg-billing
+conventions:
+  notes:
+    - Treat callbacks, reconciliation, cancellation, and idempotency as high risk.
+    - Check Celery retry behavior and duplicate notification handling.

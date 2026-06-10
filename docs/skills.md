@@ -4,6 +4,8 @@ Karakana skills are reusable workflow instructions stored as markdown under `ski
 
 Skills are for guidance: they describe when to use a workflow, what risks to check, what tools may help, and how to verify the result. Tools are for deterministic execution and safety-gated operations.
 
+Project skillpacks live under `skillpacks/` and declare which skills, memory, routes, safety paths, tests, and conventions apply to a specific project. See `docs/skillpacks.md`.
+
 ## Required Metadata
 
 Every skill must include YAML front matter with:

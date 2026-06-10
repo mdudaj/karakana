@@ -31,6 +31,15 @@ karakana memory validate --project karakana
 karakana model check
 karakana model route --task-type planning
 karakana trace latest
+karakana skillpack validate-all
+```
+
+Use project skillpacks when available:
+
+```bash
+karakana skillpack list
+karakana skillpack activate karakana
+karakana plan --use-current-skillpack --task "Review project risk"
 ```
 
 ## Model Routing

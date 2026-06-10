@@ -1,0 +1,12 @@
+id: skillpacks-codex-handoff-includes-skillpack-tests
+name: Codex handoff includes skillpack tests
+description: Ensure Codex handoff can include project tests and conventions.
+suite: skillpacks
+risk_level: medium
+tags: [skillpacks, codex]
+input:
+  task: "Verify Codex handoff includes skillpack test commands and project safety rules."
+  task_type: "codex_task_drafting"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"

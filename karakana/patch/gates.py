@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import secrets
+from fnmatch import fnmatch
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -13,7 +14,7 @@ from karakana.safety.patch import detect_patch_blocking_signals, detect_patch_hi
 from karakana.traces.schemas import redact_value
 
 
-def run_patch_gate(repo_root: Path, patch_run_id: str) -> tuple[PatchGateResult, Path]:
+def run_patch_gate(repo_root: Path, patch_run_id: str, skillpack_context=None) -> tuple[PatchGateResult, Path]:
     patch_root = repo_root / ".karakana" / "patches" / patch_run_id
     checks_passed: list[str] = []
     checks_failed: list[str] = []
@@ -47,6 +48,16 @@ def run_patch_gate(repo_root: Path, patch_run_id: str) -> tuple[PatchGateResult,
     files_changed = artifact.files_changed if artifact else []
     blocking = detect_patch_blocking_signals(diff, files_changed)
     high_risk = detect_patch_high_risk_signals(diff, files_changed)
+    skillpack_blocked = _matching_paths(files_changed, skillpack_context.blocked_paths if skillpack_context else [])
+    skillpack_high_risk = _matching_paths(files_changed, skillpack_context.high_risk_paths if skillpack_context else [])
+    if skillpack_blocked:
+        blocking.append("skillpack_blocked_path")
+    if skillpack_high_risk:
+        high_risk.append("skillpack_high_risk_path")
+    if skillpack_context:
+        metadata["skillpack"] = skillpack_context.skillpack.name
+        metadata["skillpack_blocked_paths"] = skillpack_blocked
+        metadata["skillpack_high_risk_paths"] = skillpack_high_risk
     metadata.update({"blocking_signals": blocking, "high_risk_signals": high_risk, "files_changed": files_changed})
     for signal in blocking:
         checks_failed.append(f"no_{signal}")
@@ -188,6 +199,16 @@ def _docs_only(files: list[str]) -> bool:
 def _max_risk(values: list[str]) -> str:
     order = {"low": 0, "medium": 1, "high": 2, "critical": 3}
     return max(values, key=lambda item: order.get(item, 0))
+
+
+def _matching_paths(files: list[str], patterns: list[str]) -> list[str]:
+    matches: list[str] = []
+    for path in files:
+        for pattern in patterns:
+            if fnmatch(path, pattern):
+                matches.append(path)
+                break
+    return sorted(set(matches))
 
 
 def generate_gate_run_id() -> str:

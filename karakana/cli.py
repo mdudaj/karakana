@@ -44,6 +44,11 @@ from karakana.router import select_model
 from karakana.skills.index import generate_skill_index
 from karakana.skills.loader import SkillLoader
 from karakana.skills.validator import SkillValidator
+from karakana.skillpacks.activation import SkillpackActivation
+from karakana.skillpacks.loader import SkillpackLoader
+from karakana.skillpacks.resolver import SkillpackResolver
+from karakana.skillpacks.summary import render_skillpack_summary
+from karakana.skillpacks.validator import SkillpackValidator
 from karakana.safety.github_writes import MAX_BODY_SIZE, failed_checks, validate_comment_write, validate_issue_create, validate_pr_create
 from karakana.tools.codex_executor import CodexExecutor
 from karakana.tools.github import GitHubPromptGenerator, load_github_event
@@ -61,6 +66,7 @@ memory_app = typer.Typer(help="Inspect ubongo durable memory.")
 model_app = typer.Typer(help="Inspect and invoke model providers.")
 patch_app = typer.Typer(help="Gate, apply, and summarize captured patches.")
 skill_app = typer.Typer(help="Inspect and validate Karakana skills.")
+skillpack_app = typer.Typer(help="Inspect and activate project skillpacks.")
 trace_app = typer.Typer(help="Inspect local Karakana run traces.")
 
 app.add_typer(action_app, name="action")
@@ -72,6 +78,7 @@ app.add_typer(memory_app, name="memory")
 app.add_typer(model_app, name="model")
 app.add_typer(patch_app, name="patch")
 app.add_typer(skill_app, name="skill")
+app.add_typer(skillpack_app, name="skillpack")
 app.add_typer(trace_app, name="trace")
 
 
@@ -214,18 +221,33 @@ def action_publish(
 
 @app.command()
 def plan(
-    project: str = typer.Option(..., "--project", "-p", help="Project memory key."),
-    skill: str = typer.Option(..., "--skill", "-s", help="Skill name to include."),
+    project: str | None = typer.Option(None, "--project", "-p", help="Project memory key."),
+    skill: str | None = typer.Option(None, "--skill", "-s", help="Skill name to include."),
     task: str = typer.Option(..., "--task", "-t", help="Planning task text."),
     output: Path = typer.Option(Path(".karakana/planning-task.md"), "--output", help="Prompt output path."),
     live: bool = typer.Option(False, "--live", help="Execute selected model provider."),
     provider: str | None = typer.Option(None, "--provider", help="Override model provider."),
     model: str | None = typer.Option(None, "--model", help="Override model name."),
     strict_review: bool = typer.Option(False, "--strict-review", help="Block live responses missing expected sections."),
+    use_skillpack: bool = typer.Option(False, "--use-skillpack", help="Load skillpack matching --project."),
+    use_current_skillpack: bool = typer.Option(False, "--use-current-skillpack", help="Use active local skillpack."),
 ) -> None:
     """Compose a model-ready planning prompt without calling a model."""
     repo_root = Path.cwd()
-    model_route = route_model("planning", provider=provider, model=model)
+    resolved_skillpack = None
+    if use_skillpack or use_current_skillpack:
+        try:
+            resolver = SkillpackResolver(repo_root)
+            resolved_skillpack = resolver.resolve_current() if use_current_skillpack else resolver.resolve_for_project(project)
+            project = project or resolved_skillpack.skillpack.project.id
+            skill = skill or (resolved_skillpack.required_skills[0] if resolved_skillpack.required_skills else None)
+        except Exception as exc:
+            typer.echo(str(exc))
+            raise typer.Exit(code=1) from exc
+    if not project or not skill:
+        typer.echo("--project and --skill are required unless a skillpack supplies them.")
+        raise typer.Exit(code=1)
+    model_route = route_model("planning", provider=provider, model=model, skillpack_routes=resolved_skillpack.model_routes if resolved_skillpack else None)
     trace_store = TraceStore(repo_root)
     trace = trace_store.create_run(
         command="plan",
@@ -234,11 +256,11 @@ def plan(
         task=task,
         task_type="planning",
         selected_model=model_route["model"],
-        inputs={"project": project, "skill": skill, "task": task, "output": str(output), "live": live, "provider": model_route["provider"], "model": model_route["model"]},
+        inputs={"project": project, "skill": skill, "task": task, "output": str(output), "live": live, "provider": model_route["provider"], "model": model_route["model"], "use_skillpack": use_skillpack, "use_current_skillpack": use_current_skillpack, "skillpack": resolved_skillpack.skillpack.name if resolved_skillpack else None},
     )
     _record_route_outputs(trace, model_route)
     try:
-        prompt = compose_planning_prompt(project=project, skill=skill, task=task, repo_root=repo_root)
+        prompt = compose_planning_prompt(project=project, skill=skill, task=task, repo_root=repo_root, skillpack_context=_render_resolved_skillpack_context(resolved_skillpack), allow_missing_memory=bool(resolved_skillpack))
         output_path = write_planning_prompt(prompt, repo_root=repo_root, output_path=output)
     except FileNotFoundError as exc:
         _fail_trace(trace_store, trace, exc)
@@ -309,6 +331,7 @@ def codex_handoff(
     action_id: str | None = typer.Option(None, "--action-id", help="Generate handoff for one action."),
     project: str | None = typer.Option(None, "--project", help="Override project."),
     skill: str | None = typer.Option(None, "--skill", help="Override skill."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context to include."),
     output: Path | None = typer.Option(None, "--output", help="Custom output directory under .karakana/."),
     json_output: bool = typer.Option(False, "--json", help="Print generated task paths as JSON."),
     execute: bool = typer.Option(False, "--execute", help="Explicitly execute generated Codex task if safe."),
@@ -321,10 +344,11 @@ def codex_handoff(
     trace = trace_store.create_run(
         command="codex handoff",
         task_type="codex_handoff",
-        inputs={"action_run_id": action_run_id, "action_id": action_id, "project": project, "skill": skill, "output": str(output) if output else None, "execute": execute},
+        inputs={"action_run_id": action_run_id, "action_id": action_id, "project": project, "skill": skill, "skillpack": skillpack, "output": str(output) if output else None, "execute": execute},
     )
     try:
-        paths = CodexHandoffBuilder(repo_root).build_from_action_bundle(action_run_id, action_id=action_id, project=project, skill=skill, output_dir=output)
+        skillpack_context = _resolve_optional_skillpack(repo_root, skillpack)
+        paths = CodexHandoffBuilder(repo_root).build_from_action_bundle(action_run_id, action_id=action_id, project=project, skill=skill, output_dir=output, skillpack_context=skillpack_context)
         task_records = []
         for path in paths:
             task_json = path.with_name("codex-task.json")
@@ -351,6 +375,7 @@ def codex_handoff(
             "recommended_model": task_records[0].get("recommended_model") if task_records else None,
             "escalation_model": task_records[0].get("escalation_model") if task_records else None,
             "risk_levels": [record.get("risk_level") for record in task_records],
+            "skillpack": skillpack_context.skillpack.name if skillpack_context else None,
             "execution_requested": execute,
             "execution_performed": bool(execution_paths),
             "execution_paths": execution_paths,
@@ -439,21 +464,22 @@ def codex_capture_tests(command: str = typer.Option(..., "--command", help="Expl
 
 
 @codex_app.command("review-patch")
-def codex_review_patch(diff: Path = typer.Option(..., "--diff", help="Diff file to review.")) -> None:
+def codex_review_patch(diff: Path = typer.Option(..., "--diff", help="Diff file to review."), skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context for high-risk paths.")) -> None:
     """Review a captured patch diff using deterministic checks."""
     import json
 
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
-    trace = trace_store.create_run(command="codex review-patch", task_type="patch_review", inputs={"diff": str(diff)})
+    trace = trace_store.create_run(command="codex review-patch", task_type="patch_review", inputs={"diff": str(diff), "skillpack": skillpack})
     try:
-        review_path = PatchReviewer(repo_root).review_diff(diff)
+        skillpack_context = _resolve_optional_skillpack(repo_root, skillpack)
+        review_path = PatchReviewer(repo_root).review_diff(diff, skillpack_context=skillpack_context)
         data = json.loads(review_path.read_text(encoding="utf-8"))
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
-    trace.outputs.update({"patch_review_id": review_path.parent.name, "review_status": data.get("status"), "review_blocked": data.get("blocked"), "risk_level": data.get("risk_level"), "review_path": str(review_path)})
+    trace.outputs.update({"patch_review_id": review_path.parent.name, "review_status": data.get("status"), "review_blocked": data.get("blocked"), "risk_level": data.get("risk_level"), "review_path": str(review_path), "skillpack": skillpack_context.skillpack.name if skillpack_context else None})
     trace.artifacts.append(TraceArtifact(path=str(review_path), kind="patch_review", description="Patch review JSON"))
     trace.artifacts.append(TraceArtifact(path=str(review_path.parent / "review.md"), kind="patch_review_markdown", description="Patch review markdown"))
     _success_trace(trace_store, trace)
@@ -484,18 +510,19 @@ def codex_summarize_patch(patch_run: str = typer.Option(..., "--patch-run", help
 
 
 @patch_app.command("gate")
-def patch_gate(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."), json_output: bool = typer.Option(False, "--json", help="Print gate JSON.")) -> None:
+def patch_gate(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."), skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context for path gates."), json_output: bool = typer.Option(False, "--json", help="Print gate JSON.")) -> None:
     """Run patch lifecycle gates for a captured patch."""
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
-    trace = trace_store.create_run(command="patch gate", task_type="patch_gate", inputs={"patch_run_id": patch_run})
+    trace = trace_store.create_run(command="patch gate", task_type="patch_gate", inputs={"patch_run_id": patch_run, "skillpack": skillpack})
     try:
-        result, gate_path = run_patch_gate(repo_root, patch_run)
+        skillpack_context = _resolve_optional_skillpack(repo_root, skillpack)
+        result, gate_path = run_patch_gate(repo_root, patch_run, skillpack_context=skillpack_context)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
-    trace.outputs.update({"patch_run_id": patch_run, "gate_run_id": gate_path.parent.name, "risk_level": result.risk_level, "blocked": result.blocked, "gate_path": str(gate_path)})
+    trace.outputs.update({"patch_run_id": patch_run, "gate_run_id": gate_path.parent.name, "risk_level": result.risk_level, "blocked": result.blocked, "gate_path": str(gate_path), "skillpack": skillpack_context.skillpack.name if skillpack_context else None})
     trace.warnings.extend(result.warnings)
     trace.artifacts.append(TraceArtifact(path=str(gate_path), kind="patch_gate", description="Patch gate JSON"))
     trace.artifacts.append(TraceArtifact(path=str(gate_path.parent / "gate.md"), kind="patch_gate_markdown", description="Patch gate markdown"))
@@ -1128,6 +1155,7 @@ def model_route(
     signals: str = typer.Option("", "--signals", help="Comma-separated escalation signals."),
     provider: str | None = typer.Option(None, "--provider", help="Manual provider override."),
     model: str | None = typer.Option(None, "--model", help="Manual model override."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Use skillpack route overrides."),
     risk_level: str | None = typer.Option(None, "--risk-level", help="Optional risk level for safety warnings."),
     json_output: bool = typer.Option(False, "--json", help="Print route JSON."),
 ) -> None:
@@ -1137,14 +1165,15 @@ def model_route(
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
     signal_list = [signal.strip() for signal in signals.split(",") if signal.strip()]
-    route = route_model(task_type, provider=provider, model=model)
+    skillpack_context = _resolve_optional_skillpack(repo_root, skillpack) if skillpack else None
+    route = route_model(task_type, provider=provider, model=model, skillpack_routes=skillpack_context.model_routes if skillpack_context else None)
     escalation = recommend_escalation(route["provider"], route["model"], signal_list)
     warnings = validate_model_route(task_type, route["provider"], route["model"], risk_level=risk_level)
     trace = trace_store.create_run(
         command="model route",
         task_type="model_routing",
         selected_model=route["model"],
-        inputs={"task_type": task_type, "signals": signal_list, "provider": provider, "model": model, "risk_level": risk_level},
+        inputs={"task_type": task_type, "signals": signal_list, "provider": provider, "model": model, "skillpack": skillpack, "risk_level": risk_level},
     )
     trace.outputs.update(
         {
@@ -1155,6 +1184,8 @@ def model_route(
             "escalation_signals": signal_list,
             "escalation_recommendation": escalation,
             "manual_override": route.get("manual_override", False),
+            "route_source": route.get("route_source"),
+            "skillpack": skillpack_context.skillpack.name if skillpack_context else None,
             "override_reason": "Manual --provider/--model override" if route.get("manual_override") else None,
             "cost_tier": route.get("cost_tier"),
             "risk_tier": risk_level,
@@ -1173,6 +1204,8 @@ def model_route(
         "cost_tier": route.get("cost_tier"),
         "capability_tier": route.get("capability_tier"),
         "manual_override": route.get("manual_override", False),
+        "route_source": route.get("route_source"),
+        "skillpack": skillpack_context.skillpack.name if skillpack_context else None,
         "escalation": escalation,
         "warnings": warnings,
     }
@@ -1186,6 +1219,9 @@ def model_route(
     typer.echo(f"Cost tier: {route.get('cost_tier')}")
     typer.echo(f"Capability tier: {route.get('capability_tier')}")
     typer.echo(f"Rationale: {route.get('rationale')}")
+    typer.echo(f"Route source: {route.get('route_source')}")
+    if skillpack_context:
+        typer.echo(f"Skillpack: {skillpack_context.skillpack.name}")
     if signal_list:
         typer.echo(f"Escalation signals: {', '.join(signal_list)}")
     typer.echo(f"Escalation notes: {escalation['rationale']}")
@@ -1544,6 +1580,87 @@ def skill_index(write: bool = typer.Option(False, "--write", help="Write skills/
     typer.echo(index_text)
 
 
+@skillpack_app.command("list")
+def skillpack_list() -> None:
+    """List available project skillpacks."""
+    for name in SkillpackLoader(Path.cwd()).list_skillpacks():
+        typer.echo(name)
+
+
+@skillpack_app.command("show")
+def skillpack_show(name: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Show one skillpack."""
+    try:
+        skillpack = SkillpackLoader(Path.cwd()).load(name)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(skillpack.to_dict(), indent=2, sort_keys=True) if json_output else render_skillpack_summary(skillpack))
+
+
+@skillpack_app.command("validate")
+def skillpack_validate(name: str, strict: bool = typer.Option(False, "--strict", help="Treat warnings as errors.")) -> None:
+    """Validate one skillpack."""
+    result = SkillpackValidator(Path.cwd()).validate(name, strict=strict)
+    _print_skillpack_validation(result)
+    if not result.ok:
+        raise typer.Exit(code=1)
+
+
+@skillpack_app.command("validate-all")
+def skillpack_validate_all(strict: bool = typer.Option(False, "--strict", help="Treat warnings as errors.")) -> None:
+    """Validate all skillpacks."""
+    failed = False
+    for result in SkillpackValidator(Path.cwd()).validate_all(strict=strict):
+        _print_skillpack_validation(result)
+        failed = failed or not result.ok
+    if failed:
+        raise typer.Exit(code=1)
+
+
+@skillpack_app.command("activate")
+def skillpack_activate(name: str) -> None:
+    """Activate a skillpack locally under .karakana/."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="skillpack activate", task_type="skillpack_activation", inputs={"skillpack": name})
+    try:
+        state = SkillpackActivation(repo_root).activate(name)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update(state)
+    _success_trace(trace_store, trace)
+    typer.echo(f"Activated skillpack: {state['skillpack']}")
+    typer.echo(f"Project: {state['project']}")
+
+
+@skillpack_app.command("current")
+def skillpack_current(json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Show current active skillpack."""
+    state = SkillpackActivation(Path.cwd()).current()
+    if not state:
+        typer.echo("No active skillpack.")
+        return
+    if json_output:
+        typer.echo(json.dumps(state, indent=2, sort_keys=True))
+    else:
+        typer.echo(f"Skillpack: {state['skillpack']}")
+        typer.echo(f"Project: {state['project']}")
+        typer.echo(f"Activated at: {state['activated_at']}")
+
+
+@skillpack_app.command("summary")
+def skillpack_summary(name: str) -> None:
+    """Print a readable skillpack summary."""
+    try:
+        typer.echo(render_skillpack_summary(SkillpackLoader(Path.cwd()).load(name)))
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
 @trace_app.command("list")
 def trace_list(limit: int = typer.Option(20, "--limit", help="Maximum runs to show.")) -> None:
     """List recent local run traces."""
@@ -1744,8 +1861,63 @@ def _record_route_outputs(trace, route: dict) -> None:
     trace.outputs["selected_model"] = route.get("model")
     trace.outputs["routing_rationale"] = route.get("rationale")
     trace.outputs["manual_override"] = route.get("manual_override", False)
+    trace.outputs["route_source"] = route.get("route_source")
     trace.outputs["cost_tier"] = route.get("cost_tier")
     trace.outputs["capability_tier"] = route.get("capability_tier")
+
+
+def _render_resolved_skillpack_context(context) -> str | None:
+    if context is None:
+        return None
+    skillpack = context.skillpack
+    return f"""# Skillpack: {skillpack.name}
+
+Description: {skillpack.description}
+Project memory: {context.memory_path or ""}
+
+## Required Skills
+
+{_markdown_bullets(context.required_skills)}
+
+## Optional Skills
+
+{_markdown_bullets(context.optional_skills)}
+
+## Safety
+
+High-risk paths:
+{_markdown_bullets(context.high_risk_paths)}
+
+Blocked paths:
+{_markdown_bullets(context.blocked_paths)}
+
+Approval requirements:
+{_markdown_bullets(skillpack.safety.requires_approval_for)}
+
+## Recommended Tests
+
+{_markdown_bullets(context.test_commands)}
+
+## Conventions
+
+{_markdown_bullets(context.conventions)}
+"""
+
+
+def _resolve_optional_skillpack(repo_root: Path, name: str | None):
+    if name:
+        return SkillpackResolver(repo_root).resolve_for_project(name)
+    return SkillpackResolver(repo_root).resolve_current()
+
+
+def _print_skillpack_validation(result) -> None:
+    typer.echo(f"Validating skillpack: {result.name}")
+    for error in result.errors:
+        typer.echo(f"ERROR: {error}")
+    for warning in result.warnings:
+        typer.echo(f"WARNING: {warning}")
+    if result.ok:
+        typer.echo("OK")
 
 
 def _max_risk(proposal) -> str:

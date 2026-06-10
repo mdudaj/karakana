@@ -8,13 +8,18 @@ from karakana.memory.ubongo import UbongoMemory
 from karakana.skills.loader import SkillLoader
 
 
-def compose_planning_prompt(project: str, skill: str, task: str, repo_root: Path) -> str:
+def compose_planning_prompt(project: str, skill: str, task: str, repo_root: Path, skillpack_context: str | None = None, allow_missing_memory: bool = False) -> str:
     """Compose a deterministic planning prompt from local repository context."""
     memory = UbongoMemory(repo_root)
     missing_memory = memory.validate_project(project)
     if missing_memory:
-        missing = ", ".join(missing_memory)
-        raise FileNotFoundError(f"Project '{project}' is missing required memory files: {missing}")
+        if allow_missing_memory:
+            project_memory = f"Project memory for '{project}' is incomplete or not initialized. Missing: {', '.join(missing_memory)}"
+        else:
+            missing = ", ".join(missing_memory)
+            raise FileNotFoundError(f"Project '{project}' is missing required memory files: {missing}")
+    else:
+        project_memory = memory.summarize_project_context(project)
 
     skill_loader = SkillLoader(repo_root / "skills")
     selected_skill = skill_loader.load_skill(skill)
@@ -25,12 +30,15 @@ def compose_planning_prompt(project: str, skill: str, task: str, repo_root: Path
         "task": task,
         "project": project,
         "selected_skill": _render_skill(selected_skill),
-        "project_memory": memory.summarize_project_context(project),
+        "project_memory": project_memory,
         "project_contract": project_contract,
         "required_output": _required_output(),
         "safety_rules": _safety_rules(),
     }
-    return template.format(**values).strip() + "\n"
+    prompt = template.format(**values).strip()
+    if skillpack_context:
+        prompt += "\n\n## Skillpack Context\n\n" + skillpack_context.strip()
+    return prompt + "\n"
 
 
 def write_planning_prompt(prompt: str, repo_root: Path, output_path: Path | None = None) -> Path:

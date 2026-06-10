@@ -1,0 +1,56 @@
+name: lims
+description: Django Viewflow laboratory workflow project profile
+version: 0.1.0
+status: stable
+project:
+  id: lims
+  display_name: Labs/LIMS
+  memory: ubongo/projects/lims
+  contract: KARAKANA.md
+skills:
+  required:
+    - viewflow-framework
+    - django-debugging
+    - github-pr-review
+    - ci-failure-analysis
+    - karakana-handoff
+  optional:
+    - gepg-billing
+    - write-karakana-skill
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+  viewflow_process_state_change:
+    provider: openai_codex
+    model: gpt-5.5
+  framework_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4
+safety:
+  high_risk_paths:
+    - workflows/**
+    - viewflow/**
+    - lims/**
+    - lab/**
+    - samples/**
+    - results/**
+    - .github/workflows/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - workflow_state_change
+    - permission_change
+    - database_migration
+    - production_config_change
+tests:
+  commands:
+    - pytest
+  recommended_before_commit:
+    - karakana eval run --skill viewflow-framework
+conventions:
+  notes:
+    - Review Viewflow process state, assignment, permissions, and frontend behavior together.
+    - Active workflow compatibility must be checked before changing flow state names.

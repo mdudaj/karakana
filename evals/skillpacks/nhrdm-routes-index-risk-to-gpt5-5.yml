@@ -1,0 +1,12 @@
+id: skillpacks-nhrdm-routes-index-risk-to-gpt5-5
+name: NHRDM index risk routes to GPT-5.5
+description: Ensure NHRDM migration/index risk is high scrutiny.
+suite: skillpacks
+risk_level: high
+tags: [skillpacks, nhrdm]
+input:
+  task: "Review NHRDM custom field migration and OpenSearch index risk."
+  task_type: "database_or_index_migration"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.5"

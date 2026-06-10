@@ -40,16 +40,29 @@ DEFAULT_MODEL_ROUTING = {
 }
 
 
-def route_model(task_type: str, provider: str | None = None, model: str | None = None) -> dict:
+def route_model(task_type: str, provider: str | None = None, model: str | None = None, skillpack_routes: dict | None = None) -> dict:
     route = DEFAULT_MODEL_ROUTING.get(
         task_type,
         {"provider": "mock", "model": "mock-model", "mode": "mock", "rationale": "Unknown task type; use mock dry-run routing."},
     ).copy()
+    route["route_source"] = "global"
+    if skillpack_routes and task_type in skillpack_routes:
+        skillpack_route = skillpack_routes[task_type]
+        route.update(
+            {
+                "provider": skillpack_route.get("provider", route["provider"]),
+                "model": skillpack_route.get("model", route["model"]),
+                "rationale": skillpack_route.get("rationale") or route.get("rationale"),
+                "route_source": "skillpack",
+            }
+        )
     manual_override = bool(provider or model)
     if provider:
         route["provider"] = provider
     if model:
         route["model"] = model
+    if manual_override:
+        route["route_source"] = "manual_override"
     route["task_type"] = task_type
     route["manual_override"] = manual_override
     route.update(MODEL_TIERS.get(route["model"], {"cost_tier": "unknown", "capability_tier": "unknown"}))

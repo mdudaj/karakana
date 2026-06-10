@@ -1,0 +1,15 @@
+id: skillpacks-plan-uses-skillpack-context
+name: Plan uses skillpack context
+description: Ensure planning with skillpacks includes project conventions and safety.
+suite: skillpacks
+risk_level: medium
+tags: [skillpacks, planning]
+input:
+  task: "Plan a project-specific change using skillpack context."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "Safety Rules"
+    - "Approval"

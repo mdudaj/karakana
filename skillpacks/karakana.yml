@@ -1,0 +1,57 @@
+name: karakana
+description: Karakana self-improvement and safety workflow project profile
+version: 0.1.0
+status: stable
+project:
+  id: karakana
+  display_name: Karakana
+  memory: ubongo/projects/karakana
+  contract: KARAKANA.md
+skills:
+  required:
+    - karakana-self-improvement
+    - github-pr-review
+    - ci-failure-analysis
+    - karakana-handoff
+    - write-karakana-skill
+  optional:
+    - django-debugging
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+    rationale: Karakana planning needs reasoning but should remain cost-aware.
+  documentation:
+    provider: github
+    model: claude-haiku-4.5
+  high_risk_code_review:
+    provider: openai_codex
+    model: gpt-5.5
+safety:
+  high_risk_paths:
+    - karakana/models/**
+    - karakana/safety/**
+    - karakana/patch/**
+    - karakana/codex/**
+    - karakana/actions/**
+    - .github/workflows/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - safety_policy_change
+    - model_execution_change
+    - patch_application_change
+    - workflow_change
+tests:
+  commands:
+    - pytest
+  recommended_before_commit:
+    - karakana skill validate-all
+    - karakana eval run
+conventions:
+  notes:
+    - Keep all automation dry-run by default unless explicit flags are used.
+    - Add evals for governance or safety changes.
+    - Preserve human review for model, Codex, patch, and GitHub write workflows.

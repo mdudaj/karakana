@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import secrets
+from fnmatch import fnmatch
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -35,19 +36,19 @@ class PatchReviewer:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
 
-    def review_diff(self, diff_path: Path, output_dir: Path | None = None) -> Path:
+    def review_diff(self, diff_path: Path, output_dir: Path | None = None, skillpack_context=None) -> Path:
         diff = diff_path.read_text(encoding="utf-8")
         patch_run_id = _patch_run_id_from_path(diff_path)
-        review = review_patch_text(diff, patch_run_id=patch_run_id)
+        review = review_patch_text(diff, patch_run_id=patch_run_id, skillpack_context=skillpack_context)
         root = _review_dir(self.repo_root, output_dir)
         root.mkdir(parents=True, exist_ok=True)
         (root / "evidence").mkdir(exist_ok=True)
         (root / "review.json").write_text(json.dumps(review.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        (root / "review.md").write_text(render_patch_review(review, diff), encoding="utf-8")
+        (root / "review.md").write_text(render_patch_review(review, diff, skillpack_name=skillpack_context.skillpack.name if skillpack_context else None), encoding="utf-8")
         return root / "review.json"
 
 
-def review_patch_text(diff: str, patch_run_id: str | None = None) -> PatchReview:
+def review_patch_text(diff: str, patch_run_id: str | None = None, skillpack_context=None) -> PatchReview:
     findings: list[PatchReviewFinding] = []
     files = changed_files_from_diff(diff)
     lowered = diff.lower()
@@ -67,6 +68,11 @@ def review_patch_text(diff: str, patch_run_id: str | None = None) -> PatchReview
             if pattern in lowered:
                 findings.append(PatchReviewFinding(finding_type, "high", f"High-risk patch area detected: {pattern}", evidence=pattern))
                 break
+    if skillpack_context:
+        for path in _matching_paths(files, skillpack_context.blocked_paths):
+            findings.append(PatchReviewFinding("skillpack_blocked_path", "critical", f"Skillpack blocked path changed: {path}", file_path=path))
+        for path in _matching_paths(files, skillpack_context.high_risk_paths):
+            findings.append(PatchReviewFinding("skillpack_high_risk_path", "high", f"Skillpack high-risk path changed: {path}", file_path=path))
     if len(files) > 5:
         findings.append(PatchReviewFinding("large_diff_size", "medium", "Patch changes more than five files."))
     source_files = [path for path in files if not _is_test_file(path) and not path.endswith(".md")]
@@ -88,7 +94,7 @@ def review_patch_text(diff: str, patch_run_id: str | None = None) -> PatchReview
     )
 
 
-def render_patch_review(review: PatchReview, diff: str) -> str:
+def render_patch_review(review: PatchReview, diff: str, skillpack_name: str | None = None) -> str:
     files = changed_files_from_diff(diff)
     route = route_model(_route_type_for_review(review))
     return f"""# Karakana Patch Review
@@ -100,6 +106,7 @@ def render_patch_review(review: PatchReview, diff: str) -> str:
 - Status: {review.status}
 - Risk level: {review.risk_level}
 - Blocked: {review.blocked}
+- Skillpack: {skillpack_name or ""}
 
 ## Files Changed
 
@@ -218,3 +225,13 @@ def _bullets(values: list[str]) -> str:
     if not values:
         return "- None"
     return "\n".join(f"- {redact_value(value)}" for value in values)
+
+
+def _matching_paths(files: list[str], patterns: list[str]) -> list[str]:
+    matches: list[str] = []
+    for path in files:
+        for pattern in patterns:
+            if fnmatch(path, pattern):
+                matches.append(path)
+                break
+    return sorted(set(matches))

@@ -44,6 +44,8 @@ karakana codex run --project karakana --skill karakana-self-improvement --task "
 karakana eval run
 karakana model route --task-type planning
 karakana model route --task-type routine_code_implementation
+karakana skillpack list
+karakana skillpack validate-all
 ```
 
 ## Model Routing
@@ -73,6 +75,7 @@ Combine it with `django-debugging` for general Django errors, `gepg-billing` whe
 See:
 
 - `docs/skills.md`
+- `docs/skillpacks.md`
 - `docs/skill-vs-tool-policy.md`
 
 ## Repository Layout
