@@ -1,0 +1,16 @@
+id: requirements-stories-have-acceptance-criteria
+name: Stories have acceptance criteria
+description: Ensure user stories include actor, capability, outcome, and acceptance criteria.
+suite: requirements
+risk_level: low
+tags: [requirements, stories]
+input:
+  task: "Generate user stories with actor, desired capability, outcome, and acceptance criteria."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["user stories", "actor", "outcome", "acceptance criteria"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

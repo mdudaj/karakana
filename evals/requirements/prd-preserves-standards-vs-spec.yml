@@ -1,0 +1,16 @@
+id: requirements-prd-preserves-standards-vs-spec
+name: PRD preserves Standards-vs-Spec
+description: Ensure requirements preserve Standards Review and Spec Review context.
+suite: requirements
+risk_level: medium
+tags: [requirements, standards, spec]
+input:
+  task: "Preserve Standards Review, Spec Review, and Acceptance Criteria when decomposing requirements."
+  project: karakana
+  skill: github-pr-review
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["Standards Review", "Spec Review", "Acceptance Criteria"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

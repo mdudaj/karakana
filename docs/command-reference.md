@@ -1,0 +1,350 @@
+# Karakana Command Reference
+
+## version
+
+Purpose: Show package and runtime version metadata.
+
+Common commands:
+```bash
+karakana version
+```
+
+Safe default behavior: Read-only.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana version
+```
+
+## doctor
+
+Purpose: Run local health checks.
+
+Common commands:
+```bash
+karakana doctor
+```
+
+Safe default behavior: Read-only plus local artifacts.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana doctor
+```
+
+## config
+
+Purpose: Inspect and validate configuration.
+
+Common commands:
+```bash
+karakana config show
+karakana config validate
+karakana config paths
+```
+
+Safe default behavior: Read-only.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana config validate
+```
+
+## memory
+
+Purpose: Inspect ubongo memory.
+
+Common commands:
+```bash
+karakana memory validate --project karakana
+```
+
+Safe default behavior: Read-only validation.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana memory validate --project karakana
+```
+
+## skill
+
+Purpose: Inspect, validate, and index skills.
+
+Common commands:
+```bash
+karakana skill validate-all
+karakana skill index
+```
+
+Safe default behavior: Dry-run index by default.
+
+Write/execute flags: --write for index writes
+
+Example:
+```bash
+karakana skill validate-all
+```
+
+## skillpack
+
+Purpose: Inspect and activate project skillpacks.
+
+Common commands:
+```bash
+karakana skillpack list
+karakana skillpack activate karakana
+```
+
+Safe default behavior: Activation writes local .karakana state only.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana skillpack validate-all
+```
+
+## workspace
+
+Purpose: Coordinate read-only multi-project state.
+
+Common commands:
+```bash
+karakana workspace status
+karakana workspace handoff --project nhrdm
+```
+
+Safe default behavior: Read-only or artifact generation.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana workspace status
+```
+
+## model
+
+Purpose: Inspect routing and controlled live model calls.
+
+Common commands:
+```bash
+karakana model route --task-type planning
+```
+
+Safe default behavior: Dry-run unless --live is used.
+
+Write/execute flags: --live
+
+Example:
+```bash
+karakana model route --task-type planning
+```
+
+## github
+
+Purpose: Generate GitHub artifacts and explicit writes.
+
+Common commands:
+```bash
+karakana github issue-draft
+```
+
+Safe default behavior: Dry-run/artifact generation by default.
+
+Write/execute flags: Explicit create/comment flags
+
+Example:
+```bash
+karakana github --help
+```
+
+## trace
+
+Purpose: Inspect local traces.
+
+Common commands:
+```bash
+karakana trace latest
+```
+
+Safe default behavior: Read-only.
+
+Write/execute flags: None
+
+Example:
+```bash
+karakana trace latest
+```
+
+## improve
+
+Purpose: Generate reviewable improvement proposals.
+
+Common commands:
+```bash
+karakana improve from-trace <run-id>
+```
+
+Safe default behavior: Proposal only by default.
+
+Write/execute flags: --write or publish flags where supported
+
+Example:
+```bash
+karakana improve --help
+```
+
+## action
+
+Purpose: Extract reviewable actions from model responses.
+
+Common commands:
+```bash
+karakana action extract --from-response <path>
+```
+
+Safe default behavior: Artifact generation only.
+
+Write/execute flags: Publish flags are explicit
+
+Example:
+```bash
+karakana action list
+```
+
+## codex
+
+Purpose: Generate Codex handoffs, capture diffs, review patches.
+
+Common commands:
+```bash
+karakana codex handoff <action-run-id>
+```
+
+Safe default behavior: No Codex execution by default.
+
+Write/execute flags: --execute
+
+Example:
+```bash
+karakana codex capture-diff
+```
+
+## patch
+
+Purpose: Gate, branch, apply, and commit reviewed patches locally.
+
+Common commands:
+```bash
+karakana patch gate --patch-run <id>
+```
+
+Safe default behavior: Dry-run by default.
+
+Write/execute flags: --write, --create, --stage
+
+Example:
+```bash
+karakana patch status --patch-run <id>
+```
+
+## ingest
+
+Purpose: Distill selected evidence into reviewable candidates.
+
+Common commands:
+```bash
+karakana ingest file README.md --classify
+```
+
+Safe default behavior: No writes by default.
+
+Write/execute flags: --write
+
+Example:
+```bash
+karakana ingest list
+```
+
+## requirements
+
+Purpose: Generate PRDs, stories, issues, and readiness checks.
+
+Common commands:
+```bash
+karakana requirements prd --from-note "..."
+```
+
+Safe default behavior: Artifact generation only.
+
+Write/execute flags: --create-issues is explicit if supported
+
+Example:
+```bash
+karakana requirements list
+```
+
+## crosslink
+
+Purpose: Detect reusable cross-project patterns.
+
+Common commands:
+```bash
+karakana crosslink scan --workspace nimr
+```
+
+Safe default behavior: Scan/propose only; apply is dry-run.
+
+Write/execute flags: --write, --allow-high-risk
+
+Example:
+```bash
+karakana crosslink list
+```
+
+## release
+
+Purpose: Run release checks and generate release artifacts.
+
+Common commands:
+```bash
+karakana release check
+karakana release notes
+```
+
+Safe default behavior: No publishing by default.
+
+Write/execute flags: --full runs slower local checks
+
+Example:
+```bash
+karakana release checklist
+```
+
+## docs
+
+Purpose: Generate and check documentation.
+
+Common commands:
+```bash
+karakana docs command-reference
+karakana docs check
+```
+
+Safe default behavior: Preview by default.
+
+Write/execute flags: --write
+
+Example:
+```bash
+karakana docs check
+```

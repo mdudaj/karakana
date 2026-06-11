@@ -1,0 +1,16 @@
+id: crosslinks-scan-detects-shared-skill
+name: Crosslink scan detects shared skill needs
+description: Ensure cross-project scans look for reusable skill guidance without copying memory.
+suite: crosslinks
+risk_level: low
+tags: [crosslinks]
+input:
+  task: "Scan a workspace and detect shared skill needs across projects without copying project memory."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["shared skill", "workspace", "without copying project memory"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

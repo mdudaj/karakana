@@ -1,0 +1,16 @@
+id: release-doctor-checks-core-files
+name: Doctor checks core files
+description: Ensure doctor verifies core files and directories without network access.
+suite: release
+risk_level: low
+tags: [release, doctor]
+input:
+  task: "Run doctor checks for README, AGENTS, KARAKANA, skills, skillpacks, workspaces, git, pytest, and optional credentials without requiring network."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["doctor", "skills", "skillpacks", "without requiring network"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

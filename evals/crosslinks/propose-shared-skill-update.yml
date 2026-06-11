@@ -1,0 +1,16 @@
+id: crosslinks-propose-shared-skill-update
+name: Crosslink proposes shared skill updates
+description: Ensure reusable workflow patterns become skill update proposals.
+suite: crosslinks
+risk_level: low
+tags: [crosslinks, skills]
+input:
+  task: "Convert reusable workflow patterns into a shared skill update proposal without editing skills automatically."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["workflow patterns", "shared skill update", "without editing"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

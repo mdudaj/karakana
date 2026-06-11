@@ -46,6 +46,9 @@ karakana model route --task-type planning
 karakana model route --task-type routine_code_implementation
 karakana skillpack list
 karakana skillpack validate-all
+karakana workspace list
+karakana workspace status
+karakana crosslink scan --workspace nimr
 ```
 
 ## Model Routing
@@ -76,6 +79,7 @@ See:
 
 - `docs/skills.md`
 - `docs/skillpacks.md`
+- `docs/workspaces.md`
 - `docs/skill-vs-tool-policy.md`
 
 ## Repository Layout
@@ -86,6 +90,7 @@ karakana/
 ├── skills/            # reusable skill instructions
 ├── evals/             # built-in evaluation cases
 ├── ubongo/            # durable project and global memory
+├── workspaces/        # multi-project workspace definitions
 ├── docs/              # governance and contributor guidance
 ├── AGENTS.md          # coding-agent instructions
 ├── KARAKANA.md        # project contract
@@ -103,3 +108,33 @@ karakana/
 ## Development Status
 
 Live model calls, Codex execution, GitHub writes, and proposal application remain explicit opt-in paths. The default workflow is local, deterministic, artifact-based, and reviewable.
+
+## Workspaces
+
+Workspaces group projects while keeping their memory, skillpacks, paths, and status separate.
+
+```bash
+karakana workspace list
+karakana workspace validate nimr
+karakana workspace activate nimr
+karakana workspace status --project nhrdm
+karakana workspace handoff --project nhrdm
+```
+
+Workspace commands are read-only by default and do not run arbitrary project commands, execute Codex, apply patches, push, create PRs, deploy, or mix project memory.
+
+The `nimr` workspace includes `msc-platform` at `../stemgen-platform`, the MSc research implementation and evaluation platform. This repository was previously named `msc-dissertation`; Karakana treats it as software for prototype workflow, evaluation support, and evidence generation rather than as a dissertation manuscript repository.
+
+## Cross-Project Knowledge Links
+
+Crosslinks scan workspace metadata, skillpacks, and safe artifact summaries to find reusable patterns without copying project memory:
+
+```bash
+karakana crosslink scan --workspace nimr
+karakana crosslink scan --workspace nimr --projects billing,lims
+karakana crosslink review <crosslink-id>
+karakana crosslink propose <crosslink-id>
+karakana crosslink apply <crosslink-id>
+```
+
+Crosslink apply is dry-run by default. Explicit writes are limited to shared knowledge paths and must not write to `ubongo/projects/*/`, mutate source code, execute Codex, push, create PRs, or deploy.

@@ -1,0 +1,16 @@
+id: dogfood-findings-classify-failures
+name: Dogfood findings classify failures
+description: Ensure dogfood analysis turns failed commands and warnings into findings.
+suite: dogfood
+risk_level: medium
+tags: [dogfood, findings]
+input:
+  task: "Classify dogfood failed commands, warnings, missing artifacts, missing docs, missing evals, safety warnings, and unclear UX into findings."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["failed commands", "missing evals", "findings"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

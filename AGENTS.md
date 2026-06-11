@@ -40,6 +40,9 @@ Use project skillpacks when available:
 karakana skillpack list
 karakana skillpack activate karakana
 karakana plan --use-current-skillpack --task "Review project risk"
+karakana workspace list
+karakana workspace status
+karakana workspace handoff --project karakana
 ```
 
 ## Model Routing
@@ -97,6 +100,35 @@ karakana eval run --suite safety
 ```
 
 Eval reports are written under `.karakana/eval-runs/` and must not be committed.
+
+## How to Use Workspaces
+
+Use workspaces for multi-project visibility without context mixing:
+
+```bash
+karakana workspace validate-all
+karakana workspace activate nimr
+karakana workspace status --project nhrdm
+karakana workspace plan --project billing --task "Review GePG callback issue"
+karakana crosslink scan --workspace nimr --projects billing,lims
+```
+
+Workspace commands must stay read-only unless a later explicit project-specific command is used. Do not use workspace commands to bulk execute Codex, apply patches, ingest all projects, push, create PRs, deploy, or mix one project memory path into another project.
+
+For the MSc implementation platform, use project ID `msc-platform`, skillpack `msc-platform`, and path `../stemgen-platform`. This repository was previously named `msc-dissertation`; treat it as a research software platform, not as the dissertation manuscript.
+
+## How to Use Crosslinks
+
+Use crosslinks to detect reusable lessons, shared risks, skill gaps, and eval opportunities across workspace projects without copying project-specific memory:
+
+```bash
+karakana crosslink scan --workspace nimr
+karakana crosslink review <crosslink-id>
+karakana crosslink propose <crosslink-id>
+karakana crosslink apply <crosslink-id>
+```
+
+Crosslink apply is dry-run by default. Do not use crosslinks to write `ubongo/projects/*/`, mutate source code, execute Codex, push, create PRs, deploy, or move one project's memory into another project.
 
 ## Safety Rules
 

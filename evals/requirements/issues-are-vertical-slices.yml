@@ -1,0 +1,16 @@
+id: requirements-issues-are-vertical-slices
+name: Issue drafts are vertical slices
+description: Ensure issue drafts are independently grabbable vertical slices.
+suite: requirements
+risk_level: medium
+tags: [requirements, issues]
+input:
+  task: "Generate issue drafts as independently grabbable vertical slices for schema, CLI, artifacts, safety, evals, and tests."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["issue drafts", "vertical slices", "schema", "CLI", "evals"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

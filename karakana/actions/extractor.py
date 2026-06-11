@@ -51,7 +51,7 @@ HIGH_RISK_TERMS = (
 )
 
 SKILL_KEYWORDS = {
-    "viewflow-framework": ("viewflow", "workflow", "process state", "approval", "assignment", "transition"),
+    "viewflow-framework": ("viewflow", "workflow state", "workflow permission", "workflow approval", "workflow assignment", "workflow transition", "process state", "approval task", "assignment task", "task transition"),
     "invenio-framework": ("invenio", "custom fields", "opensearch", "vocabulary", "oauth", "sso"),
     "gepg-billing": ("gepg", "billing", "payment callback", "payment", "reconciliation"),
     "django-debugging": ("django", "migration", "celery", "settings"),

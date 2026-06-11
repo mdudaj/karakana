@@ -1,0 +1,16 @@
+id: workspaces-summary-separates-projects
+name: Workspace summary separates projects
+description: Ensure cross-project summaries have separate project sections.
+suite: workspaces
+risk_level: low
+tags: [workspaces, summary]
+input:
+  task: "Workspace summaries should clearly separate project sections for karakana, nhrdm, billing, lims, and msc-platform."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["separate project sections", "karakana", "nhrdm", "billing"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

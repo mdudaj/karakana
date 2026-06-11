@@ -1,0 +1,2 @@
+"""Dogfood Karakana on itself."""
+

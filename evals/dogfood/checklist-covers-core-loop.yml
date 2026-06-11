@@ -1,0 +1,16 @@
+id: dogfood-checklist-covers-core-loop
+name: Dogfood checklist covers core loop
+description: Ensure dogfood checklist covers health, requirements, action/Codex, patch, learning, and release workflows.
+suite: dogfood
+risk_level: low
+tags: [dogfood]
+input:
+  task: "Generate a Karakana dogfood checklist covering doctor, release check, workspace, requirements, actions, Codex handoff, patch gates, ingestion, crosslink, and release check full."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["dogfood checklist", "requirements", "patch gates", "crosslink"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

@@ -10,7 +10,7 @@ def test_suggested_skills_from_explicit_section(tmp_path):
 - github-pr-review
 
 ## Next Actions
-- Codex task: Implement workflow review checks.
+- Codex task: Implement Viewflow workflow review checks.
 """,
         {"status": "passed", "blocked": False},
     )
@@ -28,3 +28,12 @@ def test_suggested_skills_from_keywords(tmp_path):
 
     assert "gepg-billing" in bundle.suggested_skills
     assert "gepg-billing" in bundle.actions[0].suggested_skills
+
+
+def test_generic_workflow_text_does_not_imply_viewflow(tmp_path):
+    response = write_response(tmp_path, "TODO: Update the dogfood workflow documentation.", {"status": "passed", "blocked": False})
+
+    bundle = ActionExtractor().extract_from_response(response, project="karakana", skill="karakana")
+
+    assert "viewflow-framework" not in bundle.suggested_skills
+    assert "viewflow-framework" not in bundle.actions[0].suggested_skills

@@ -1,0 +1,16 @@
+id: dogfood-backlog-prioritizes-release-blockers
+name: Dogfood backlog prioritizes release blockers
+description: Ensure dogfood backlog assigns p0 to release blockers and safety failures.
+suite: dogfood
+risk_level: high
+tags: [dogfood, backlog]
+input:
+  task: "Generate a v1 hardening backlog that prioritizes broken core workflows and safety violations as release blockers before RC."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["v1 hardening backlog", "release blockers", "safety violations"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

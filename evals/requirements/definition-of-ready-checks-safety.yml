@@ -1,0 +1,16 @@
+id: requirements-definition-of-ready-checks-safety
+name: Definition of Ready checks safety
+description: Ensure readiness checks include safety constraints and review requirements.
+suite: requirements
+risk_level: medium
+tags: [requirements, readiness, safety]
+input:
+  task: "Definition of Ready must check safety constraints, model route, test plan, acceptance criteria, and human review."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["Definition of Ready", "safety constraints", "model route", "human review"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

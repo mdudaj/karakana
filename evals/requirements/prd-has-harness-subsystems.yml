@@ -1,0 +1,16 @@
+id: requirements-prd-has-harness-subsystems
+name: PRD maps harness subsystems
+description: Ensure PRDs include Instructions, Tools, Environment, State, and Feedback.
+suite: requirements
+risk_level: medium
+tags: [requirements, harness]
+input:
+  task: "Map requirements across Instructions, Tools, Environment, State, and Feedback before implementation."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["Instructions", "Tools", "Environment", "State", "Feedback"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

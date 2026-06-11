@@ -1,0 +1,91 @@
+name: nimr
+description: NIMR project workspace
+version: 0.1.0
+status: stable
+
+defaults:
+  root: "."
+  require_existing_paths: false
+  use_current_skillpack_if_missing: true
+
+projects:
+  - id: karakana
+    display_name: Karakana Harness
+    path: "."
+    skillpack: karakana
+    memory: ubongo/projects/karakana
+    tags:
+      - harness
+      - self-improvement
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "karakana skill validate-all"
+        - "karakana eval run"
+        - "pytest"
+
+  - id: nhrdm
+    display_name: NHRDM
+    path: "../nhrdm"
+    skillpack: nhrdm
+    memory: ubongo/projects/nhrdm
+    tags:
+      - invenio
+      - repository
+      - opensearch
+      - sso
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "pytest"
+
+  - id: billing
+    display_name: Billing System
+    path: "../billing"
+    skillpack: billing
+    memory: ubongo/projects/billing
+    tags:
+      - django
+      - gepg
+      - payments
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "pytest"
+
+  - id: lims
+    display_name: LIMS / Lab Workflows
+    path: "../lims"
+    skillpack: lims
+    memory: ubongo/projects/lims
+    tags:
+      - django
+      - viewflow
+      - laboratory
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "pytest"
+
+  - id: msc-platform
+    display_name: MSc Research Platform
+    path: "../stemgen-platform"
+    skillpack: msc-platform
+    memory: ubongo/projects/msc-platform
+    tags:
+      - research
+      - platform
+      - evaluation
+      - ai-education
+      - stem
+      - primary-education
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "pytest"
+        - "karakana eval run --skill research-writing"

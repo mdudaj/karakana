@@ -92,3 +92,20 @@ karakana codex handoff <action-run-id> --skillpack nhrdm
 ```
 
 The generated handoff includes skillpack skills, conventions, recommended tests, high-risk paths, blocked paths, and approval requirements.
+
+## Workspaces
+
+Workspaces group multiple projects and assign each project its own skillpack and memory path.
+
+Use:
+
+```bash
+karakana workspace list
+karakana workspace status --project nhrdm
+```
+
+Skillpacks remain project-level configuration. Workspaces coordinate visibility across projects while preserving each project's skillpack, memory, safety paths, and status.
+
+## MSc Research Platform Skillpack
+
+Use `msc-platform` for `stemgen-platform`, the MSc research implementation and evaluation platform. Use `research-platform` with `research-writing` so implementation work stays aligned with research objectives, evaluation activities, evidence generation, privacy, and reproducibility. Keep `msc-research` for manuscript-oriented research writing workflows.

@@ -1,0 +1,16 @@
+id: ingestion-skillpack-guides-targets
+name: Skillpack guides ingestion targets
+description: Ensure skillpack context guides target paths and relevant skills.
+suite: ingestion
+risk_level: medium
+tags: [ingestion, skillpacks]
+input:
+  task: "Skillpack context should guide project memory targets, relevant skills, high-risk paths, and approval requirements."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["Skillpack context", "project memory", "relevant skills", "approval requirements"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

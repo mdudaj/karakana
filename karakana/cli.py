@@ -18,11 +18,40 @@ from karakana.codex.handoff import CodexHandoffBuilder
 from karakana.codex.patch import PatchCapture
 from karakana.codex.reviewer import PatchReviewer
 from karakana.codex.summary import summarize_patch
+from karakana.crosslinks.apply import apply_crosslink
+from karakana.crosslinks.proposer import generate_proposals
+from karakana.crosslinks.reviewer import review_crosslink
+from karakana.crosslinks.scanner import scan_workspace
+from karakana.crosslinks.store import CrosslinkStore
+from karakana.config.loader import load_config
+from karakana.config.summary import render_config, render_config_validation, render_paths
+from karakana.config.validator import validate_config
+from karakana.docs.generator import check_docs, command_reference
+from karakana.dogfood.backlog import generate_backlog
+from karakana.dogfood.checklist import generate_checklist
+from karakana.dogfood.findings import analyze_dogfood
+from karakana.dogfood.report import generate_report
+from karakana.dogfood.requirements import requirements_from_dogfood
+from karakana.dogfood.runner import run_dogfood
+from karakana.dogfood.summary import DogfoodStore
 from karakana.evals.loader import EvalLoader
 from karakana.evals.report import EvalReportStore
 from karakana.evals.runner import EvalRunner
 from karakana.improvement.proposer import ImprovementProposer
 from karakana.improvement.store import ProposalStore
+from karakana.ingestion.apply import apply_ingestion_bundle
+from karakana.ingestion.generator import generate_candidates
+from karakana.ingestion.reviewer import review_ingestion_bundle
+from karakana.ingestion.scanner import scan_sources
+from karakana.ingestion.sources import (
+    load_action_source,
+    load_file_source,
+    load_note_source,
+    load_patch_review_source,
+    load_proposal_source,
+    load_trace_source,
+)
+from karakana.ingestion.store import IngestionStore, create_bundle
 from karakana.memory.ubongo import UbongoMemory
 from karakana.models.config import redacted_model_config
 from karakana.models.errors import ModelProviderError
@@ -38,6 +67,25 @@ from karakana.patch.commit import commit_patch_run
 from karakana.patch.gates import attach_test_evidence, render_gate_markdown, run_patch_gate
 from karakana.patch.status import write_patch_status
 from karakana.patch.summary import summarize_patch_lifecycle
+from karakana.requirements.issues import generate_issues
+from karakana.requirements.prd import generate_prd
+from karakana.requirements.publisher import RequirementsPublisher
+from karakana.requirements.readiness import check_readiness
+from karakana.requirements.sources import (
+    load_action_requirement_source,
+    load_file_requirement_source,
+    load_ingest_requirement_source,
+    load_note_requirement_source,
+    load_patch_review_requirement_source,
+    load_proposal_requirement_source,
+)
+from karakana.requirements.store import RequirementsStore
+from karakana.requirements.stories import generate_stories
+from karakana.requirements.summary import render_requirement_summary
+from karakana.release.checklist import write_release_checklist
+from karakana.release.checks import run_doctor, run_release_check
+from karakana.release.metadata import version_summary
+from karakana.release.notes import generate_release_notes
 from karakana.safety.model_calls import failed_model_checks, validate_model_call
 from karakana.safety.model_routing import validate_model_route
 from karakana.router import select_model
@@ -55,31 +103,54 @@ from karakana.tools.github import GitHubPromptGenerator, load_github_event
 from karakana.tools.github_api import GitHubApiClient
 from karakana.traces.schemas import SafetyCheck, TraceArtifact
 from karakana.traces.store import TraceStore
+from karakana.workspaces.activation import WorkspaceActivation
+from karakana.workspaces.handoff import write_workspace_handoff
+from karakana.workspaces.loader import WorkspaceLoader
+from karakana.workspaces.planner import build_workspace_plan
+from karakana.workspaces.status import collect_workspace_status
+from karakana.workspaces.summary import render_workspace_summary
+from karakana.workspaces.validator import WorkspaceValidator
 
 app = typer.Typer(help="Karakana AI agent harness skeleton.")
 action_app = typer.Typer(help="Extract and publish reviewable action artifacts.")
 codex_app = typer.Typer(help="Generate Codex-ready task prompts.")
+config_app = typer.Typer(help="Inspect and validate Karakana configuration.")
+crosslink_app = typer.Typer(help="Detect reusable cross-project knowledge.")
+dogfood_app = typer.Typer(help="Dogfood Karakana on itself.")
+docs_app = typer.Typer(help="Generate and check Karakana documentation.")
 eval_app = typer.Typer(help="Run deterministic Karakana evaluations.")
 github_app = typer.Typer(help="Generate safe GitHub workflow artifacts.")
 improve_app = typer.Typer(help="Generate self-improvement proposals from traces.")
+ingest_app = typer.Typer(help="Distill selected sources into reviewable candidates.")
 memory_app = typer.Typer(help="Inspect ubongo durable memory.")
 model_app = typer.Typer(help="Inspect and invoke model providers.")
 patch_app = typer.Typer(help="Gate, apply, and summarize captured patches.")
+requirements_app = typer.Typer(help="Generate PRDs, stories, and issue drafts.")
+release_app = typer.Typer(help="Run local release readiness commands.")
 skill_app = typer.Typer(help="Inspect and validate Karakana skills.")
 skillpack_app = typer.Typer(help="Inspect and activate project skillpacks.")
 trace_app = typer.Typer(help="Inspect local Karakana run traces.")
+workspace_app = typer.Typer(help="Coordinate read-only multi-project workspaces.")
 
 app.add_typer(action_app, name="action")
 app.add_typer(codex_app, name="codex")
+app.add_typer(config_app, name="config")
+app.add_typer(crosslink_app, name="crosslink")
+app.add_typer(dogfood_app, name="dogfood")
+app.add_typer(docs_app, name="docs")
 app.add_typer(eval_app, name="eval")
 app.add_typer(github_app, name="github")
 app.add_typer(improve_app, name="improve")
+app.add_typer(ingest_app, name="ingest")
 app.add_typer(memory_app, name="memory")
 app.add_typer(model_app, name="model")
 app.add_typer(patch_app, name="patch")
+app.add_typer(requirements_app, name="requirements")
+app.add_typer(release_app, name="release")
 app.add_typer(skill_app, name="skill")
 app.add_typer(skillpack_app, name="skillpack")
 app.add_typer(trace_app, name="trace")
+app.add_typer(workspace_app, name="workspace")
 
 
 @app.callback()
@@ -90,7 +161,322 @@ def main() -> None:
 @app.command()
 def version() -> None:
     """Print the installed Karakana version."""
-    typer.echo(f"karakana {__version__}")
+    metadata = version_summary()
+    typer.echo(f"Karakana version: {metadata['version']}")
+    typer.echo(f"karakana {metadata['version']}")
+    typer.echo(f"Package: {metadata['package']}")
+    typer.echo(f"Python: {metadata['python']}")
+    typer.echo(f"Status: {metadata['status']}")
+
+
+@app.command()
+def doctor(json_output: bool = typer.Option(False, "--json", help="Print doctor JSON.")) -> None:
+    """Run local health checks without network access."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="doctor", task_type="doctor", inputs={})
+    try:
+        report, path = run_doctor(repo_root)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"operation": "doctor", "doctor_run_id": report.run_id, "status": report.status, "warnings": report.warnings, "errors": report.errors})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="doctor", description="Doctor report JSON"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Doctor status: {report.status}")
+    typer.echo(f"Doctor report: {path.parent}")
+    for check in report.checks:
+        typer.echo(f"{check.status}: {check.name} - {check.message}")
+    if json_output:
+        typer.echo(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+
+
+@config_app.command("show")
+def config_show() -> None:
+    """Print effective Karakana configuration with redaction."""
+    typer.echo(render_config(load_config(Path.cwd())), nl=False)
+
+
+@config_app.command("validate")
+def config_validate() -> None:
+    """Validate effective Karakana configuration."""
+    repo_root = Path.cwd()
+    errors, warnings = validate_config(load_config(repo_root), repo_root)
+    typer.echo(render_config_validation(errors, warnings), nl=False)
+    if errors:
+        raise typer.Exit(code=1)
+
+
+@config_app.command("paths")
+def config_paths() -> None:
+    """Print resolved Karakana paths."""
+    repo_root = Path.cwd()
+    typer.echo(render_paths(repo_root, load_config(repo_root)), nl=False)
+
+
+@release_app.command("check")
+def release_check(full: bool = typer.Option(False, "--full", help="Run full local validation, evals, and tests."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Run local release readiness checks."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="release check", task_type="release_check", inputs={"full": full})
+    try:
+        report, path = run_release_check(repo_root, full=full)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"operation": "release_check", "release_check_id": report.run_id, "status": report.status, "warnings": report.warnings, "errors": report.errors})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="release_check", description="Release check JSON"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Release check status: {report.status}")
+    typer.echo(f"Release check report: {path.parent}")
+    if json_output:
+        typer.echo(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    if report.errors:
+        raise typer.Exit(code=1)
+
+
+@release_app.command("notes")
+def release_notes(since: str | None = typer.Option(None, "--since", help="Git ref or date."), version: str | None = typer.Option(None, "--version", help="Version label."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Generate draft release notes from local evidence."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="release notes", task_type="release_notes", inputs={"since": since, "version": version})
+    try:
+        notes_id, path = generate_release_notes(repo_root, version=version, since=since)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"operation": "release_notes", "release_notes_id": notes_id, "artifacts": [str(path)]})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="release_notes", description="Draft release notes"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Release notes written to: {path}")
+    if json_output:
+        typer.echo(json.dumps({"release_notes_id": notes_id, "path": str(path)}, indent=2, sort_keys=True))
+
+
+@release_app.command("checklist")
+def release_checklist(json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Generate a copy-ready release checklist."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="release checklist", task_type="release_checklist", inputs={})
+    try:
+        checklist_id, path = write_release_checklist(repo_root)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"operation": "release_checklist", "release_checklist_id": checklist_id, "artifacts": [str(path)]})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="release_checklist", description="Release checklist"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Release checklist written to: {path}")
+    if json_output:
+        typer.echo(json.dumps({"release_checklist_id": checklist_id, "path": str(path)}, indent=2, sort_keys=True))
+
+
+@docs_app.command("command-reference")
+def docs_command_reference(write: bool = typer.Option(False, "--write", help="Write docs/command-reference.md.")) -> None:
+    """Preview or write the CLI command reference."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="docs command-reference", task_type="docs", inputs={"write": write})
+    try:
+        text, path = command_reference(repo_root, write=write)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"operation": "docs_command_reference", "docs_generated": write, "artifacts": [str(path)]})
+    if write:
+        trace.artifacts.append(TraceArtifact(path=str(path), kind="docs", description="Command reference"))
+    _success_trace(trace_store, trace)
+    if write:
+        typer.echo(f"Command reference written to: {path}")
+    else:
+        typer.echo(text)
+
+
+@docs_app.command("check")
+def docs_check() -> None:
+    """Check that required documentation files exist."""
+    repo_root = Path.cwd()
+    missing, warnings = check_docs(repo_root)
+    status = "passed" if not missing else "warning"
+    typer.echo(f"Docs check: {status}")
+    for warning in warnings:
+        typer.echo(f"warning: {warning}")
+    if not warnings:
+        typer.echo("All required docs exist.")
+
+
+@dogfood_app.command("checklist")
+def dogfood_checklist(project: str = typer.Option("karakana", "--project", help="Project being dogfooded."), skillpack: str | None = typer.Option("karakana", "--skillpack", help="Skillpack context."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Generate a dogfood checklist without executing commands."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="dogfood checklist", project=project, skill=skillpack, task_type="dogfood", inputs={"project": project, "skillpack": skillpack})
+    try:
+        dogfood_id, path = generate_checklist(repo_root, project, skillpack)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"dogfood_id": dogfood_id, "project": project, "skillpack": skillpack, "operation": "checklist", "commands_planned": [], "commands_executed": [], "status": "draft", "artifacts": [str(path)]})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="dogfood_checklist", description="Dogfood checklist"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Dogfood checklist written to: {path}")
+    typer.echo(f"Dogfood ID: {dogfood_id}")
+    if json_output:
+        typer.echo(json.dumps({"dogfood_id": dogfood_id, "path": str(path)}, indent=2, sort_keys=True))
+
+
+@dogfood_app.command("run")
+def dogfood_run(project: str = typer.Option("karakana", "--project", help="Project being dogfooded."), skillpack: str | None = typer.Option("karakana", "--skillpack", help="Skillpack context."), full: bool = typer.Option(False, "--full", help="Run full allowlisted workflow."), command: str | None = typer.Option(None, "--command", help="Run or plan one allowlisted command ID."), dry_run: bool = typer.Option(False, "--dry-run/--no-dry-run", help="Plan commands instead of executing the safe allowlist."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Plan or run the safe allowlisted dogfood workflow."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="dogfood run", project=project, skill=skillpack, task_type="dogfood", inputs={"project": project, "skillpack": skillpack, "full": full, "command": command, "dry_run": dry_run})
+    try:
+        run, path = run_dogfood(repo_root, project, skillpack, full=full, command_id=command, dry_run=dry_run)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    nested_artifacts = []
+    for command_result in run.command_results:
+        nested_artifacts.extend(command_result.artifact_paths)
+    trace_artifacts = [str(path), *nested_artifacts]
+    trace.outputs.update({"dogfood_id": run.dogfood_id, "project": project, "skillpack": skillpack, "operation": "run", "commands_planned": [result.command for result in run.command_results if result.status == "planned"], "commands_executed": [result.command for result in run.command_results if result.status != "planned"], "status": run.status, "warnings": run.warnings, "errors": run.errors, "artifacts": trace_artifacts})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="dogfood_run", description="Dogfood run JSON"))
+    for artifact_path in nested_artifacts:
+        trace.artifacts.append(TraceArtifact(path=artifact_path, kind="dogfood_nested_artifact", description="Artifact generated during dogfood run"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Dogfood run written to: {path.parent}")
+    typer.echo(f"Dogfood ID: {run.dogfood_id}")
+    typer.echo(f"Status: {run.status}")
+    typer.echo(f"Commands: {len(run.command_results)}")
+    if json_output:
+        typer.echo(json.dumps(run.to_dict(), indent=2, sort_keys=True))
+
+
+@dogfood_app.command("analyze")
+def dogfood_analyze(dogfood_id: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Classify findings from a dogfood run."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="dogfood analyze", task_type="dogfood", inputs={"dogfood_id": dogfood_id})
+    try:
+        findings, path = analyze_dogfood(repo_root, dogfood_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"dogfood_id": dogfood_id, "operation": "analyze", "findings_count": len(findings), "status": "completed", "artifacts": [str(path)]})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="dogfood_findings", description="Dogfood findings"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Dogfood findings written to: {path}")
+    typer.echo(f"Findings: {len(findings)}")
+    if json_output:
+        typer.echo(json.dumps([finding.to_dict() for finding in findings], indent=2, sort_keys=True))
+
+
+@dogfood_app.command("backlog")
+def dogfood_backlog(dogfood_id: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Generate v1 hardening backlog from dogfood findings."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="dogfood backlog", task_type="dogfood", inputs={"dogfood_id": dogfood_id})
+    try:
+        items, path = generate_backlog(repo_root, dogfood_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"dogfood_id": dogfood_id, "operation": "backlog", "backlog_count": len(items), "status": "completed", "artifacts": [str(path)]})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="dogfood_backlog", description="Dogfood backlog"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Dogfood backlog written to: {path}")
+    typer.echo(f"Backlog items: {len(items)}")
+    if json_output:
+        typer.echo(json.dumps([item.to_dict() for item in items], indent=2, sort_keys=True))
+
+
+@dogfood_app.command("report")
+def dogfood_report(dogfood_id: str) -> None:
+    """Generate dogfood report markdown."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="dogfood report", task_type="dogfood", inputs={"dogfood_id": dogfood_id})
+    try:
+        path = generate_report(repo_root, dogfood_id)
+        run = DogfoodStore(repo_root).load(dogfood_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"dogfood_id": dogfood_id, "operation": "report", "findings_count": len(run.findings), "backlog_count": len(run.backlog), "status": run.status, "artifacts": [str(path)]})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="dogfood_report", description="Dogfood report"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Dogfood report written to: {path}")
+
+
+@dogfood_app.command("requirements")
+def dogfood_requirements(dogfood_id: str, project: str | None = typer.Option(None, "--project", help="Project override."), skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack override."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Convert dogfood backlog into requirements, stories, issues, and readiness artifacts."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="dogfood requirements", project=project, skill=skillpack, task_type="dogfood", inputs={"dogfood_id": dogfood_id, "project": project, "skillpack": skillpack})
+    try:
+        req_id, paths = requirements_from_dogfood(repo_root, dogfood_id, project=project, skillpack=skillpack)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"dogfood_id": dogfood_id, "operation": "requirements", "req_id": req_id, "artifacts": [str(path) for path in paths]})
+    for path in paths:
+        trace.artifacts.append(TraceArtifact(path=str(path), kind="dogfood_requirements", description="Dogfood requirements artifact"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Dogfood requirements written for: {req_id}")
+    if json_output:
+        typer.echo(json.dumps({"req_id": req_id, "paths": [str(path) for path in paths]}, indent=2, sort_keys=True))
+
+
+@dogfood_app.command("list")
+def dogfood_list(limit: int = typer.Option(20, "--limit", help="Maximum runs to show.")) -> None:
+    """List recent dogfood runs."""
+    runs = DogfoodStore(Path.cwd()).list(limit=limit)
+    if not runs:
+        typer.echo("No dogfood runs found.")
+        return
+    for run in runs:
+        typer.echo(f"{run.dogfood_id}\t{run.project}\t{run.status}\t{len(run.command_results)} command(s)\t{len(run.findings)} finding(s)")
+
+
+@dogfood_app.command("show")
+def dogfood_show(dogfood_id: str) -> None:
+    """Show dogfood report markdown."""
+    store = DogfoodStore(Path.cwd())
+    try:
+        store.load(dogfood_id)
+    except FileNotFoundError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo((store.run_dir(dogfood_id) / "dogfood.md").read_text(encoding="utf-8"))
+
+
+@dogfood_app.command("latest")
+def dogfood_latest() -> None:
+    """Show latest dogfood report markdown."""
+    store = DogfoodStore(Path.cwd())
+    run = store.latest()
+    if not run:
+        typer.echo("No dogfood runs found.")
+        return
+    typer.echo((store.run_dir(run.dogfood_id) / "dogfood.md").read_text(encoding="utf-8"))
 
 
 @action_app.command("extract")
@@ -507,6 +893,126 @@ def codex_summarize_patch(patch_run: str = typer.Option(..., "--patch-run", help
     trace.artifacts.append(TraceArtifact(path=str(summary_path), kind="patch_summary", description="Patch summary"))
     _success_trace(trace_store, trace)
     typer.echo(f"Patch summary written to: {summary_path}")
+
+
+@crosslink_app.command("scan")
+def crosslink_scan(
+    workspace: str = typer.Option(..., "--workspace", help="Workspace name."),
+    projects: str | None = typer.Option(None, "--projects", help="Comma-separated project IDs."),
+    include: list[str] | None = typer.Option(None, "--include", help="Artifact kind to include."),
+    since: str | None = typer.Option(None, "--since", help="Reserved future scan window."),
+    max_artifacts: int = typer.Option(20, "--max-artifacts", help="Maximum artifacts to inspect per kind."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Scan a workspace for reusable cross-project patterns."""
+    repo_root = Path.cwd()
+    project_ids = [item.strip() for item in projects.split(",") if item.strip()] if projects else None
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="crosslink scan", task_type="crosslink_scan", inputs={"workspace": workspace, "projects": project_ids, "include": include, "since": since, "max_artifacts": max_artifacts})
+    try:
+        bundle = scan_workspace(repo_root, workspace, project_ids=project_ids, includes=include, max_artifacts=max_artifacts)
+        path = CrosslinkStore(repo_root).save(bundle)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"crosslink_id": bundle.crosslink_id, "workspace": workspace, "projects": [project.project_id for project in bundle.projects], "source_artifact_types": include or ["workspace", "skillpacks", "skills"], "patterns_detected": len(bundle.patterns), "risk_levels": [pattern.risk_level for pattern in bundle.patterns], "crosslink_path": str(path)})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="crosslink_bundle", description="Crosslink bundle JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "crosslink.md"), kind="crosslink_markdown", description="Crosslink markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Crosslink written to: {path.parent}")
+    typer.echo(f"Crosslink ID: {bundle.crosslink_id}")
+    typer.echo(f"Patterns: {len(bundle.patterns)}")
+    if json_output:
+        typer.echo(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
+
+
+@crosslink_app.command("list")
+def crosslink_list(limit: int = typer.Option(20, "--limit", help="Maximum crosslinks to show.")) -> None:
+    """List recent crosslink bundles."""
+    bundles = CrosslinkStore(Path.cwd()).list(limit=limit)
+    if not bundles:
+        typer.echo("No crosslinks found.")
+        return
+    for bundle in bundles:
+        typer.echo(f"{bundle.crosslink_id}\t{bundle.workspace}\t{bundle.status}\t{len(bundle.patterns)} pattern(s)")
+
+
+@crosslink_app.command("show")
+def crosslink_show(crosslink_id: str) -> None:
+    """Show a crosslink markdown summary."""
+    store = CrosslinkStore(Path.cwd())
+    try:
+        store.load(crosslink_id)
+    except FileNotFoundError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo((store.bundle_dir(crosslink_id) / "crosslink.md").read_text(encoding="utf-8"))
+
+
+@crosslink_app.command("review")
+def crosslink_review(crosslink_id: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Review a crosslink for boundary and safety issues."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="crosslink review", task_type="crosslink_review", inputs={"crosslink_id": crosslink_id})
+    try:
+        result, path = review_crosslink(repo_root, crosslink_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"crosslink_id": crosslink_id, "review_status": result["status"], "blocked": result["blocked"], "review_path": str(path)})
+    trace.warnings.extend(result.get("warnings") or [])
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="crosslink_review", description="Crosslink review markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Crosslink review written to: {path}")
+    typer.echo(f"Status: {result['status']}")
+    if json_output:
+        typer.echo(json.dumps(result, indent=2, sort_keys=True))
+
+
+@crosslink_app.command("propose")
+def crosslink_propose(crosslink_id: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Generate proposal artifacts for crosslink patterns."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="crosslink propose", task_type="crosslink_propose", inputs={"crosslink_id": crosslink_id})
+    try:
+        proposals, path = generate_proposals(repo_root, crosslink_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"crosslink_id": crosslink_id, "proposals_generated": len(proposals), "proposal_types": [proposal.proposal_type for proposal in proposals], "crosslink_path": str(path)})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="crosslink_bundle", description="Crosslink with proposals"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Crosslink proposals written under: {path.parent / 'proposed-updates'}")
+    typer.echo(f"Proposals: {len(proposals)}")
+    if json_output:
+        typer.echo(json.dumps([proposal.to_dict() for proposal in proposals], indent=2, sort_keys=True))
+
+
+@crosslink_app.command("apply")
+def crosslink_apply(crosslink_id: str, write: bool = typer.Option(False, "--write", help="Apply eligible proposals."), proposal: str | None = typer.Option(None, "--proposal", help="Apply one proposal ID."), allow_high_risk: bool = typer.Option(False, "--allow-high-risk", help="Allow high-risk writes."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Dry-run or explicitly apply crosslink proposals."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="crosslink apply", task_type="crosslink_apply", inputs={"crosslink_id": crosslink_id, "write": write, "proposal": proposal, "allow_high_risk": allow_high_risk})
+    try:
+        result, path = apply_crosslink(repo_root, crosslink_id, write=write, proposal_id=proposal, allow_high_risk=allow_high_risk)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"crosslink_id": crosslink_id, "apply_requested": True, "write_requested": write, "applied_proposals": result.get("applied_proposals"), "blocked_proposals": result.get("blocked_proposals"), "apply_path": str(path)})
+    trace.warnings.extend(result.get("warnings") or [])
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="crosslink_apply", description="Crosslink apply result"))
+    _success_trace(trace_store, trace)
+    typer.echo("Dry run: no files written." if not write else "Crosslink apply completed.")
+    typer.echo(f"Status: {result['status']}")
+    if json_output:
+        typer.echo(json.dumps(result, indent=2, sort_keys=True))
 
 
 @patch_app.command("gate")
@@ -1428,6 +1934,188 @@ def improve_apply(
     typer.echo(f"Applied {len(changed)} file(s).")
 
 
+@ingest_app.command("file")
+def ingest_file(
+    path: Path,
+    project: str | None = typer.Option(None, "--project", help="Project context."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context."),
+    classify: bool = typer.Option(False, "--classify", help="Classify and generate candidates."),
+    max_size: int = typer.Option(200_000, "--max-size", help="Maximum source size in bytes."),
+    json_output: bool = typer.Option(False, "--json", help="Print bundle JSON."),
+) -> None:
+    """Ingest one selected text file into reviewable candidates."""
+    repo_root = Path.cwd()
+    try:
+        source_tuple = load_file_source(repo_root, path, project=project, skillpack=skillpack, max_size=max_size)
+        _save_ingestion_from_sources(repo_root, "ingest file", [source_tuple], project, skillpack, classify=classify, json_output=json_output)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("trace")
+def ingest_trace(run_id: str, project: str | None = typer.Option(None, "--project"), skillpack: str | None = typer.Option(None, "--skillpack"), classify: bool = typer.Option(False, "--classify"), json_output: bool = typer.Option(False, "--json")) -> None:
+    """Ingest a local Karakana trace."""
+    repo_root = Path.cwd()
+    try:
+        source_tuple = load_trace_source(repo_root, run_id, project=project, skillpack=skillpack)
+        _save_ingestion_from_sources(repo_root, "ingest trace", [source_tuple], project, skillpack, classify=classify, json_output=json_output)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("action")
+def ingest_action(action_run_id: str, project: str | None = typer.Option(None, "--project"), skillpack: str | None = typer.Option(None, "--skillpack"), classify: bool = typer.Option(False, "--classify"), json_output: bool = typer.Option(False, "--json")) -> None:
+    """Ingest an extracted action bundle."""
+    repo_root = Path.cwd()
+    try:
+        source_tuple = load_action_source(repo_root, action_run_id, project=project, skillpack=skillpack)
+        _save_ingestion_from_sources(repo_root, "ingest action", [source_tuple], project, skillpack, classify=classify, json_output=json_output)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("patch-review")
+def ingest_patch_review(patch_review_id: str, project: str | None = typer.Option(None, "--project"), skillpack: str | None = typer.Option(None, "--skillpack"), classify: bool = typer.Option(False, "--classify"), json_output: bool = typer.Option(False, "--json")) -> None:
+    """Ingest a patch review artifact."""
+    repo_root = Path.cwd()
+    try:
+        source_tuple = load_patch_review_source(repo_root, patch_review_id, project=project, skillpack=skillpack)
+        _save_ingestion_from_sources(repo_root, "ingest patch-review", [source_tuple], project, skillpack, classify=classify, json_output=json_output)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("proposal")
+def ingest_proposal(proposal_id: str, project: str | None = typer.Option(None, "--project"), skillpack: str | None = typer.Option(None, "--skillpack"), classify: bool = typer.Option(False, "--classify"), json_output: bool = typer.Option(False, "--json")) -> None:
+    """Ingest a self-improvement proposal."""
+    repo_root = Path.cwd()
+    try:
+        source_tuple = load_proposal_source(repo_root, proposal_id, project=project, skillpack=skillpack)
+        _save_ingestion_from_sources(repo_root, "ingest proposal", [source_tuple], project, skillpack, classify=classify, json_output=json_output)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("note")
+def ingest_note(
+    text: str = typer.Option(..., "--text", help="Manual note to classify."),
+    project: str | None = typer.Option(None, "--project"),
+    skillpack: str | None = typer.Option(None, "--skillpack"),
+    json_output: bool = typer.Option(False, "--json"),
+) -> None:
+    """Create ingestion candidates from a manual note."""
+    repo_root = Path.cwd()
+    try:
+        source_tuple = load_note_source(text, project=project, skillpack=skillpack)
+        _save_ingestion_from_sources(repo_root, "ingest note", [source_tuple], project, skillpack, classify=True, json_output=json_output)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("scan")
+def ingest_scan(
+    project: str | None = typer.Option(None, "--project", help="Project context."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context."),
+    include: list[str] | None = typer.Option(None, "--include", help="Source kind to include: docs, traces, actions, patch-reviews, proposals."),
+    max_files: int = typer.Option(20, "--max-files", help="Maximum sources to inspect."),
+    since: str | None = typer.Option(None, "--since", help="Reserved future scan window."),
+    classify: bool = typer.Option(False, "--classify", help="Classify and generate candidates."),
+    json_output: bool = typer.Option(False, "--json", help="Print bundle JSON."),
+) -> None:
+    """Conservatively scan documentation and selected Karakana artifacts."""
+    repo_root = Path.cwd()
+    try:
+        sources = scan_sources(repo_root, project=project, skillpack=skillpack, includes=include, max_files=max_files)
+        _save_ingestion_from_sources(repo_root, "ingest scan", sources, project, skillpack, classify=classify, json_output=json_output, extra_inputs={"include": include, "max_files": max_files, "since": since})
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@ingest_app.command("list")
+def ingest_list(limit: int = typer.Option(20, "--limit", help="Maximum bundles to show.")) -> None:
+    """List recent ingestion bundles."""
+    bundles = IngestionStore(Path.cwd()).list(limit=limit)
+    if not bundles:
+        typer.echo("No ingestion bundles found.")
+        return
+    for bundle in bundles:
+        typer.echo(f"{bundle.ingest_id}\t{bundle.created_at}\t{bundle.status}\t{bundle.project or ''}\t{len(bundle.candidates)} candidate(s)")
+
+
+@ingest_app.command("show")
+def ingest_show(ingest_id: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Show an ingestion bundle."""
+    store = IngestionStore(Path.cwd())
+    try:
+        bundle = store.load(ingest_id)
+    except FileNotFoundError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    if json_output:
+        typer.echo(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
+    else:
+        typer.echo((store.bundle_dir(ingest_id) / "candidates.md").read_text(encoding="utf-8"))
+
+
+@ingest_app.command("review")
+def ingest_review(ingest_id: str, json_output: bool = typer.Option(False, "--json", help="Print review JSON.")) -> None:
+    """Review an ingestion bundle without applying it."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="ingest review", task_type="ingestion_review", inputs={"ingest_id": ingest_id})
+    try:
+        result, review_path = review_ingestion_bundle(repo_root, ingest_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"ingest_id": ingest_id, "review_status": result["status"], "blocked": result["blocked"], "review_path": str(review_path)})
+    trace.warnings.extend(result.get("warnings") or [])
+    trace.artifacts.append(TraceArtifact(path=str(review_path), kind="ingestion_review", description="Ingestion review markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Ingestion review written to: {review_path}")
+    typer.echo(f"Status: {result['status']}")
+    if json_output:
+        typer.echo(json.dumps(result, indent=2, sort_keys=True))
+
+
+@ingest_app.command("apply")
+def ingest_apply(
+    ingest_id: str,
+    write: bool = typer.Option(False, "--write", help="Apply candidates."),
+    candidate: str | None = typer.Option(None, "--candidate", help="Apply one candidate ID."),
+    allow_high_risk: bool = typer.Option(False, "--allow-high-risk", help="Allow high-risk candidate apply."),
+    allow_behavior_update: bool = typer.Option(False, "--allow-behavior-update", help="Allow behavior memory updates."),
+    json_output: bool = typer.Option(False, "--json", help="Print apply JSON."),
+) -> None:
+    """Dry-run or explicitly apply ingestion candidates."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="ingest apply", task_type="ingestion_apply", inputs={"ingest_id": ingest_id, "write": write, "candidate": candidate, "allow_high_risk": allow_high_risk, "allow_behavior_update": allow_behavior_update})
+    try:
+        result, result_path = apply_ingestion_bundle(repo_root, ingest_id, write=write, candidate_id=candidate, allow_high_risk=allow_high_risk, allow_behavior_update=allow_behavior_update)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"ingest_id": ingest_id, "apply_requested": True, "write_requested": write, "applied_candidates": result.get("applied_candidates"), "blocked_candidates": result.get("blocked_candidates"), "apply_path": str(result_path)})
+    trace.warnings.extend(result.get("warnings") or [])
+    trace.artifacts.append(TraceArtifact(path=str(result_path), kind="ingestion_apply", description="Ingestion apply result"))
+    _success_trace(trace_store, trace)
+    typer.echo("Dry run: no files written." if not write else "Ingestion apply completed.")
+    typer.echo(f"Status: {result['status']}")
+    typer.echo(f"Result: {result_path}")
+    if json_output:
+        typer.echo(json.dumps(result, indent=2, sort_keys=True))
+
+
 @memory_app.command("list-projects")
 def memory_list_projects() -> None:
     """List projects available under ubongo/projects."""
@@ -1481,6 +2169,192 @@ def memory_show(
             typer.echo(f"- {filename}")
         raise typer.Exit(code=1)
     typer.echo(memory.summarize_project_context(project))
+
+
+@requirements_app.command("prd")
+def requirements_prd(
+    from_action: str | None = typer.Option(None, "--from-action", help="Action bundle ID."),
+    from_ingest: str | None = typer.Option(None, "--from-ingest", help="Ingestion bundle ID."),
+    from_patch_review: str | None = typer.Option(None, "--from-patch-review", help="Patch review ID."),
+    from_proposal: str | None = typer.Option(None, "--from-proposal", help="Improvement proposal ID."),
+    from_file: Path | None = typer.Option(None, "--from-file", help="Markdown or text file."),
+    from_note: str | None = typer.Option(None, "--from-note", help="Manual note text."),
+    project: str | None = typer.Option(None, "--project", help="Project context."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context."),
+    no_current_skillpack: bool = typer.Option(False, "--no-current-skillpack", help="Do not use active skillpack."),
+    json_output: bool = typer.Option(False, "--json", help="Print PRD JSON."),
+) -> None:
+    """Generate a reviewable PRD from one selected source."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(
+        command="requirements prd",
+        project=project,
+        task_type="requirements_prd",
+        inputs={
+            "from_action": from_action,
+            "from_ingest": from_ingest,
+            "from_patch_review": from_patch_review,
+            "from_proposal": from_proposal,
+            "from_file": str(from_file) if from_file else None,
+            "from_note": from_note,
+            "project": project,
+            "skillpack": skillpack,
+            "no_current_skillpack": no_current_skillpack,
+        },
+    )
+    try:
+        skillpack_context = SkillpackResolver(repo_root).resolve_for_project(skillpack) if skillpack else (None if no_current_skillpack else _resolve_optional_skillpack(repo_root, None))
+        source, content = _load_requirement_source(repo_root, from_action, from_ingest, from_patch_review, from_proposal, from_file, from_note, project, skillpack_context.skillpack.name if skillpack_context else skillpack)
+        prd = generate_prd(source, content, project=project, skillpack_context=skillpack_context)
+        path = RequirementsStore(repo_root).save_prd(prd)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"req_id": prd.req_id, "source_type": source.source_type, "source_id": source.source_id, "project": prd.project, "skillpack": prd.skillpack, "generated_prd": str(path), "warnings": source.metadata.get("warnings", [])})
+    trace.warnings.extend(source.metadata.get("warnings", []))
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="requirements_prd", description="Requirement PRD JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "prd.md"), kind="requirements_prd_markdown", description="Requirement PRD markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Requirement PRD written to: {path.parent}")
+    typer.echo(f"Requirement ID: {prd.req_id}")
+    if json_output:
+        typer.echo(json.dumps(prd.to_dict(), indent=2, sort_keys=True))
+
+
+@requirements_app.command("stories")
+def requirements_stories(from_prd: str = typer.Option(..., "--from-prd", help="Requirement ID."), json_output: bool = typer.Option(False, "--json", help="Print stories JSON.")) -> None:
+    """Generate user stories from a PRD."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="requirements stories", task_type="requirements_stories", inputs={"req_id": from_prd})
+    try:
+        store = RequirementsStore(repo_root)
+        prd = store.load_prd(from_prd)
+        stories = generate_stories(prd)
+        path = store.save_stories(from_prd, stories)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"req_id": from_prd, "generated_stories": str(path), "story_count": len(stories)})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="requirements_stories", description="User stories JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "stories.md"), kind="requirements_stories_markdown", description="User stories markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"User stories written to: {path.parent / 'stories.md'}")
+    typer.echo(f"Stories: {len(stories)}")
+    if json_output:
+        typer.echo(json.dumps([story.to_dict() for story in stories], indent=2, sort_keys=True))
+
+
+@requirements_app.command("issues")
+def requirements_issues(from_prd: str = typer.Option(..., "--from-prd", help="Requirement ID."), json_output: bool = typer.Option(False, "--json", help="Print issues JSON.")) -> None:
+    """Generate issue drafts from a PRD."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="requirements issues", task_type="requirements_issues", inputs={"req_id": from_prd})
+    try:
+        store = RequirementsStore(repo_root)
+        prd = store.load_prd(from_prd)
+        try:
+            stories = store.load_stories(from_prd)
+        except FileNotFoundError:
+            stories = generate_stories(prd)
+            store.save_stories(from_prd, stories)
+        issues = generate_issues(prd, stories)
+        path = store.save_issues(from_prd, issues)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"req_id": from_prd, "generated_issues": str(path), "issue_count": len(issues)})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="requirements_issues", description="Issue drafts JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "issues.md"), kind="requirements_issues_markdown", description="Issue drafts markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Issue drafts written to: {path.parent / 'issues.md'}")
+    typer.echo(f"Issues: {len(issues)}")
+    if json_output:
+        typer.echo(json.dumps([issue.to_dict() for issue in issues], indent=2, sort_keys=True))
+
+
+@requirements_app.command("ready")
+def requirements_ready(req_id: str, json_output: bool = typer.Option(False, "--json", help="Print readiness JSON.")) -> None:
+    """Run Definition of Ready checks."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="requirements ready", task_type="requirements_readiness", inputs={"req_id": req_id})
+    try:
+        store = RequirementsStore(repo_root)
+        check = check_readiness(store.load_prd(req_id))
+        path = store.save_readiness(check)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"req_id": req_id, "readiness_status": check.status, "ready": check.ready, "readiness_path": str(path)})
+    trace.warnings.extend(check.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="requirements_readiness", description="Readiness JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "readiness.md"), kind="requirements_readiness_markdown", description="Readiness markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Readiness written to: {path.parent / 'readiness.md'}")
+    typer.echo(f"Status: {check.status}")
+    typer.echo(f"Ready: {check.ready}")
+    if json_output:
+        typer.echo(json.dumps(check.to_dict(), indent=2, sort_keys=True))
+
+
+@requirements_app.command("list")
+def requirements_list(limit: int = typer.Option(20, "--limit", help="Maximum requirements to show.")) -> None:
+    """List recent requirements."""
+    items = RequirementsStore(Path.cwd()).list_requirements(limit=limit)
+    if not items:
+        typer.echo("No requirements found.")
+        return
+    for req_id in items:
+        typer.echo(req_id)
+
+
+@requirements_app.command("latest")
+def requirements_latest() -> None:
+    """Show latest requirement summary."""
+    store = RequirementsStore(Path.cwd())
+    req_id = store.latest()
+    if not req_id:
+        typer.echo("No requirements found.")
+        return
+    _print_requirement_summary(store, req_id)
+
+
+@requirements_app.command("show")
+def requirements_show(req_id: str) -> None:
+    """Show one requirement summary."""
+    store = RequirementsStore(Path.cwd())
+    try:
+        store.load_prd(req_id)
+    except FileNotFoundError as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    _print_requirement_summary(store, req_id)
+
+
+@requirements_app.command("publish")
+def requirements_publish(req_id: str, create_issues: bool = typer.Option(False, "--create-issues", help="Create GitHub issues if implemented."), json_output: bool = typer.Option(False, "--json", help="Print publish JSON.")) -> None:
+    """Dry-run publish requirement issue drafts."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="requirements publish", task_type="requirements_publish", inputs={"req_id": req_id, "create_issues": create_issues})
+    try:
+        result = RequirementsPublisher(repo_root).publish(req_id, create_issues=create_issues)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"req_id": req_id, "publish_requested": create_issues, "issues_created": result.get("created_issues", []), "publish_result": result})
+    _success_trace(trace_store, trace)
+    typer.echo(result["message"])
+    if json_output:
+        typer.echo(json.dumps(result, indent=2, sort_keys=True))
 
 
 @skill_app.command("list")
@@ -1659,6 +2533,166 @@ def skillpack_summary(name: str) -> None:
     except Exception as exc:
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
+
+
+@workspace_app.command("list")
+def workspace_list() -> None:
+    """List available workspaces."""
+    for name in WorkspaceLoader(Path.cwd()).list_workspaces():
+        typer.echo(name)
+
+
+@workspace_app.command("show")
+def workspace_show(name: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Show one workspace."""
+    try:
+        workspace = WorkspaceLoader(Path.cwd()).load(name)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(workspace.to_dict(), indent=2, sort_keys=True) if json_output else render_workspace_summary(workspace))
+
+
+@workspace_app.command("validate")
+def workspace_validate(name: str) -> None:
+    """Validate one workspace."""
+    result = WorkspaceValidator(Path.cwd()).validate(name)
+    _print_workspace_validation(result)
+    if not result.ok:
+        raise typer.Exit(code=1)
+
+
+@workspace_app.command("validate-all")
+def workspace_validate_all() -> None:
+    """Validate all workspaces."""
+    failed = False
+    for result in WorkspaceValidator(Path.cwd()).validate_all():
+        _print_workspace_validation(result)
+        failed = failed or not result.ok
+    if failed:
+        raise typer.Exit(code=1)
+
+
+@workspace_app.command("activate")
+def workspace_activate(name: str) -> None:
+    """Activate a workspace locally."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="workspace activate", task_type="workspace_activation", inputs={"workspace": name})
+    try:
+        state = WorkspaceActivation(repo_root).activate(name)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"workspace": name, "workspace_path": str(repo_root / "workspaces" / f"{name}.yml"), "operation": "activate"})
+    _success_trace(trace_store, trace)
+    typer.echo(f"Activated workspace: {state['workspace']}")
+    typer.echo(f"Activated at: {state['activated_at']}")
+
+
+@workspace_app.command("current")
+def workspace_current(json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Show current active workspace."""
+    state = WorkspaceActivation(Path.cwd()).current()
+    if not state:
+        typer.echo("No active workspace.")
+        return
+    typer.echo(json.dumps(state, indent=2, sort_keys=True) if json_output else f"Workspace: {state['workspace']}\nActivated at: {state['activated_at']}")
+
+
+@workspace_app.command("status")
+def workspace_status_cmd(
+    workspace_name: str | None = typer.Option(None, "--workspace", help="Workspace name."),
+    project: str | None = typer.Option(None, "--project", help="Project ID."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Collect read-only workspace status."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="workspace status", project=project, task_type="workspace_status", inputs={"workspace": workspace_name, "project": project})
+    try:
+        workspace = _load_workspace_for_cli(repo_root, workspace_name)
+        status = collect_workspace_status(repo_root, workspace, project_id=project)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"workspace": workspace.name, "project": project, "status_collected": True, "project_count": len(status.project_statuses), "warnings": status.warnings, "errors": status.errors})
+    trace.warnings.extend(status.warnings)
+    trace.errors.extend(status.errors)
+    _success_trace(trace_store, trace)
+    if json_output:
+        typer.echo(json.dumps(status.to_dict(), indent=2, sort_keys=True))
+    else:
+        typer.echo(render_workspace_summary(workspace, status))
+
+
+@workspace_app.command("summary")
+def workspace_summary_cmd(name: str) -> None:
+    """Print workspace summary."""
+    repo_root = Path.cwd()
+    try:
+        workspace = WorkspaceLoader(repo_root).load(name)
+        status = collect_workspace_status(repo_root, workspace)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo(render_workspace_summary(workspace, status))
+
+
+@workspace_app.command("plan")
+def workspace_plan(
+    project: str = typer.Option(..., "--project", help="Project ID."),
+    task: str = typer.Option(..., "--task", help="Planning task."),
+    workspace_name: str | None = typer.Option(None, "--workspace", help="Workspace name."),
+    live: bool = typer.Option(False, "--live", help="Reserved: workspace plan remains dry-run in this milestone."),
+    provider: str | None = typer.Option(None, "--provider", help="Reserved model override."),
+    model: str | None = typer.Option(None, "--model", help="Reserved model override."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Generate a project-specific workspace planning prompt."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="workspace plan", project=project, task=task, task_type="workspace_plan", inputs={"workspace": workspace_name, "project": project, "task": task, "live": live, "provider": provider, "model": model})
+    if live:
+        trace.warnings.append("Workspace planning does not execute live models in this milestone.")
+    try:
+        workspace = _load_workspace_for_cli(repo_root, workspace_name)
+        output = build_workspace_plan(repo_root, workspace, project, task)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"workspace": workspace.name, "project": project, "prompt_artifact": str(output), "operation": "plan"})
+    trace.artifacts.append(TraceArtifact(path=str(output), kind="workspace_plan", description="Workspace project planning prompt"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Workspace plan written to: {output}")
+    if json_output:
+        typer.echo(json.dumps({"workspace": workspace.name, "project": project, "prompt_artifact": str(output)}, indent=2, sort_keys=True))
+
+
+@workspace_app.command("handoff")
+def workspace_handoff(project: str = typer.Option(..., "--project", help="Project ID."), workspace_name: str | None = typer.Option(None, "--workspace", help="Workspace name."), json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Generate a project-specific workspace handoff."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="workspace handoff", project=project, task_type="workspace_handoff", inputs={"workspace": workspace_name, "project": project})
+    try:
+        workspace = _load_workspace_for_cli(repo_root, workspace_name)
+        status = collect_workspace_status(repo_root, workspace, project_id=project)
+        handoff_id, path = write_workspace_handoff(repo_root, workspace, status, project)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"workspace": workspace.name, "project": project, "handoff_id": handoff_id, "handoff_path": str(path), "operation": "handoff"})
+    trace.warnings.extend(status.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="workspace_handoff", description="Workspace project handoff"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Workspace handoff written to: {path}")
+    if json_output:
+        typer.echo(json.dumps({"workspace": workspace.name, "project": project, "handoff_id": handoff_id, "handoff_path": str(path)}, indent=2, sort_keys=True))
 
 
 @trace_app.command("list")
@@ -1910,8 +2944,134 @@ def _resolve_optional_skillpack(repo_root: Path, name: str | None):
     return SkillpackResolver(repo_root).resolve_current()
 
 
+def _save_ingestion_from_sources(
+    repo_root: Path,
+    command: str,
+    source_tuples: list[tuple],
+    project: str | None,
+    skillpack: str | None,
+    *,
+    classify: bool,
+    json_output: bool,
+    extra_inputs: dict | None = None,
+) -> None:
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command=command, project=project, task_type="ingestion", inputs={"project": project, "skillpack": skillpack, "classify": classify, **(extra_inputs or {})})
+    try:
+        skillpack_context = _resolve_optional_skillpack(repo_root, skillpack)
+    except Exception:
+        skillpack_context = None
+    try:
+        sources = []
+        candidates = []
+        warnings = []
+        redaction_applied = False
+        for source, content, applied, source_warnings in source_tuples:
+            sources.append(source)
+            redaction_applied = redaction_applied or applied
+            warnings.extend(source_warnings)
+            if classify:
+                candidates.extend(generate_candidates(source, content, project=project, skillpack_context=skillpack_context))
+        bundle = create_bundle(project, skillpack_context.skillpack.name if skillpack_context else skillpack, sources, candidates, redaction_applied, warnings)
+        path = IngestionStore(repo_root).save(bundle)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        raise
+    trace.outputs.update(
+        {
+            "ingest_id": bundle.ingest_id,
+            "project": project,
+            "skillpack": bundle.skillpack,
+            "source_types": [source.source_type for source in bundle.sources],
+            "source_paths": [source.path for source in bundle.sources],
+            "candidate_count": len(bundle.candidates),
+            "candidate_types": [candidate.candidate_type for candidate in bundle.candidates],
+            "redaction_applied": bundle.redaction_applied,
+            "risk_levels": [candidate.risk_level for candidate in bundle.candidates],
+            "candidates_path": str(path),
+            "candidates_markdown": str(path.parent / "candidates.md"),
+        }
+    )
+    trace.warnings.extend(bundle.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="ingestion_candidates", description="Ingestion candidates JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "candidates.md"), kind="ingestion_candidates_markdown", description="Ingestion candidates markdown"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Ingestion bundle written to: {path.parent}")
+    typer.echo(f"Ingest ID: {bundle.ingest_id}")
+    typer.echo(f"Sources: {len(bundle.sources)}")
+    typer.echo(f"Candidates: {len(bundle.candidates)}")
+    if bundle.redaction_applied:
+        typer.echo("Redaction applied: true")
+    if json_output:
+        typer.echo(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
+
+
+def _load_requirement_source(
+    repo_root: Path,
+    from_action: str | None,
+    from_ingest: str | None,
+    from_patch_review: str | None,
+    from_proposal: str | None,
+    from_file: Path | None,
+    from_note: str | None,
+    project: str | None,
+    skillpack: str | None,
+):
+    selected = [
+        bool(from_action),
+        bool(from_ingest),
+        bool(from_patch_review),
+        bool(from_proposal),
+        bool(from_file),
+        bool(from_note),
+    ]
+    if sum(selected) != 1:
+        raise ValueError("Provide exactly one requirements source.")
+    if from_action:
+        return load_action_requirement_source(repo_root, from_action, project=project, skillpack=skillpack)
+    if from_ingest:
+        return load_ingest_requirement_source(repo_root, from_ingest, project=project, skillpack=skillpack)
+    if from_patch_review:
+        return load_patch_review_requirement_source(repo_root, from_patch_review, project=project, skillpack=skillpack)
+    if from_proposal:
+        return load_proposal_requirement_source(repo_root, from_proposal, project=project, skillpack=skillpack)
+    if from_file:
+        return load_file_requirement_source(repo_root, from_file, project=project, skillpack=skillpack)
+    return load_note_requirement_source(str(from_note), project=project, skillpack=skillpack)
+
+
+def _print_requirement_summary(store: RequirementsStore, req_id: str) -> None:
+    req_dir = store.req_dir(req_id)
+    paths = {
+        "PRD": str(req_dir / "prd.md"),
+        "Stories": str(req_dir / "stories.md") if (req_dir / "stories.md").exists() else "not generated",
+        "Issues": str(req_dir / "issues.md") if (req_dir / "issues.md").exists() else "not generated",
+        "Readiness": str(req_dir / "readiness.md") if (req_dir / "readiness.md").exists() else "not generated",
+    }
+    typer.echo(render_requirement_summary(req_id, paths))
+
+
 def _print_skillpack_validation(result) -> None:
     typer.echo(f"Validating skillpack: {result.name}")
+    for error in result.errors:
+        typer.echo(f"ERROR: {error}")
+    for warning in result.warnings:
+        typer.echo(f"WARNING: {warning}")
+    if result.ok:
+        typer.echo("OK")
+
+
+def _load_workspace_for_cli(repo_root: Path, name: str | None):
+    if name:
+        return WorkspaceLoader(repo_root).load(name)
+    current = WorkspaceActivation(repo_root).current()
+    if current:
+        return WorkspaceLoader(repo_root).load(current["workspace"])
+    return WorkspaceLoader(repo_root).load("default")
+
+
+def _print_workspace_validation(result) -> None:
+    typer.echo(f"Validating workspace: {result.name}")
     for error in result.errors:
         typer.echo(f"ERROR: {error}")
     for warning in result.warnings:

@@ -1,0 +1,16 @@
+id: ingestion-behavior-update-requires-override
+name: Behavior updates require override
+description: Ensure stable behavior updates require explicit approval.
+suite: ingestion
+risk_level: medium
+tags: [ingestion, behavior]
+input:
+  task: "Behavior update candidates for preferred style or copy-ready markdown require --allow-behavior-update."
+  project: karakana
+  skill: karakana-handoff
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["Behavior update", "copy-ready markdown", "--allow-behavior-update"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]
