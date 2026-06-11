@@ -40,7 +40,11 @@ model_routes:
 
 safety:
   high_risk_paths:
+    - "docs/evaluation/**"
+    - "docs/curriculum/**"
+    - "docs/adr/**"
     - "evaluation/**"
+    - "curriculum/**"
     - "data/**"
     - "datasets/**"
     - "exports/**"
@@ -58,9 +62,14 @@ safety:
     - evaluation_protocol_change
     - data_collection_change
     - participant_data_change
+    - curriculum_source_change
+    - official_curriculum_snapshot_change
+    - automated_curriculum_review_change
+    - whatsapp_message_template_change
     - model_provider_change
     - production_config_change
     - destructive_command
+    - remote_push
 
 tests:
   commands:
@@ -71,8 +80,12 @@ tests:
 
 conventions:
   notes:
-    - "Keep implementation aligned with research objectives."
-    - "Avoid overbuilding features that do not support evaluation."
-    - "Track which platform features support which research objective."
-    - "Preserve reproducibility of evaluation runs."
+    - "Every platform feature must map to a research objective, evaluation activity, evidence artifact, or reproducibility requirement."
+    - "Official TIE curriculum sources are the primary source of curriculum facts."
+    - "Deterministic extraction is the source-of-truth curriculum dataset."
+    - "Optional LLM enrichment and automated review must not overwrite deterministic curriculum extraction."
+    - "Automated curriculum review must not auto-accept topics."
+    - "Human topic selection is required before promotion to the accepted shortlist."
+    - "WhatsApp is a secondary evaluator communication channel; web remains the canonical review interface."
+    - "Project repository push is allowed only with explicit opt-in, branch safety checks, and clean patch review."
     - "Do not store participant-sensitive data in Git."
