@@ -1,0 +1,270 @@
+"""Project-specific requirement slices for stemgen-platform."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class MscPlatformSlice:
+    suffix: str
+    title: str
+    research_objective: str
+    research_question: str
+    platform_capability: str
+    workflow: str
+    evidence_artifact: str
+    schema_artifact: str
+    target_files: tuple[str, ...]
+    out_of_scope: tuple[str, ...]
+    acceptance_criteria: tuple[str, ...]
+    verification_command: str
+    safety_constraints: tuple[str, ...]
+    definition_of_done: tuple[str, ...]
+    risk_level: str = "medium"
+
+
+MSC_PLATFORM_SLICES: tuple[MscPlatformSlice, ...] = (
+    MscPlatformSlice(
+        suffix="slice-1a",
+        title="Slice 1A: Curriculum source registry schema",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Which official curriculum sources provide authoritative topic facts?",
+        platform_capability="Tiered curriculum source registry.",
+        workflow="curriculum intake",
+        evidence_artifact="source_registry.json",
+        schema_artifact="schemas/curriculum/source_registry.schema.json",
+        target_files=("schemas/curriculum/source_registry.schema.json", "docs/schemas/README.md"),
+        out_of_scope=("live TIE downloads", "curriculum extraction", "topic screening"),
+        acceptance_criteria=(
+            "Schema requires source_id, title, official_url, publisher, source_tier, expected local snapshot path, and checksum requirement.",
+            "Schema examples cover the four required TIE sources.",
+            "Validation fails if Tier 2-4 sources are allowed to override Tier 1 facts.",
+        ),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Do not read .env files.", "Do not fetch live sources in this slice."),
+        definition_of_done=("Schema validates.", "Example fixture validates.", "Documentation links schema to curriculum source registry evidence."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1b",
+        title="Slice 1B: TIE source registry fixture",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Are the official TIE sources registered reproducibly?",
+        platform_capability="Versioned source registry fixture.",
+        workflow="curriculum intake",
+        evidence_artifact="source_registry.json",
+        schema_artifact="schemas/curriculum/source_registry.schema.json",
+        target_files=("fixtures/examples/source_registry.example.json",),
+        out_of_scope=("live source download", "checksum generation from remote files", "manual topic acceptance"),
+        acceptance_criteria=(
+            "Fixture includes Primary Education Curriculum, Science, Mathematics, and Geography TIE URLs.",
+            "Each fixture item records Tier 1 source status and expected local snapshot path.",
+            "Fixture validates against the source registry schema.",
+        ),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Use official public URLs only.", "Do not include downloaded copyrighted PDF content in Git."),
+        definition_of_done=("All four TIE entries are present.", "Fixture validates offline.", "No secrets or participant data are present."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1c",
+        title="Slice 1C: Curriculum source snapshot manifest schema",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can a curriculum source snapshot be reconstructed and audited?",
+        platform_capability="Snapshot manifest contract.",
+        workflow="curriculum intake",
+        evidence_artifact="curriculum_snapshot_manifest.json",
+        schema_artifact="schemas/curriculum/curriculum_snapshot_manifest.schema.json",
+        target_files=("schemas/curriculum/curriculum_snapshot_manifest.schema.json", "fixtures/examples/curriculum_snapshot_manifest.example.json"),
+        out_of_scope=("actual PDF download", "OCR/text extraction", "candidate topic generation"),
+        acceptance_criteria=(
+            "Schema records snapshot_id, created_at, source registry reference, downloaded source entries, checksums, and retrieval method.",
+            "Example manifest references the four TIE source IDs without embedding source document contents.",
+            "Manifest validates offline.",
+        ),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Do not store source document contents in the manifest.", "Do not require network access."),
+        definition_of_done=("Schema validates.", "Example validates.", "Manifest fields are sufficient for later replay/audit."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1d",
+        title="Slice 1D: Local downloaded-source archive layout",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Where are official source snapshots stored for reproducibility?",
+        platform_capability="Local archive layout convention.",
+        workflow="curriculum intake",
+        evidence_artifact="downloaded_sources/",
+        schema_artifact="schemas/curriculum/curriculum_snapshot_manifest.schema.json",
+        target_files=("docs/schemas/README.md", "docs/curriculum/tie-source-snapshot-plan.md"),
+        out_of_scope=("committing large binary PDFs", "live downloads", "data extraction"),
+        acceptance_criteria=(
+            "Archive layout is documented under artifacts/curriculum-snapshots/<snapshot_id>/downloaded_sources/.",
+            "The layout separates registry, manifests, downloaded files, checksums, and extracted data.",
+            "Docs warn against committing copyrighted source binaries unless explicitly approved.",
+        ),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Do not commit generated datasets by default.", "Do not commit copyrighted PDFs by default."),
+        definition_of_done=("Layout is documented.", "Snapshot manifest example reflects the layout.", "Validation command remains offline."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1e",
+        title="Slice 1E: SHA-256 checksum manifest",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can source snapshots be verified against recorded hashes?",
+        platform_capability="Checksum manifest contract.",
+        workflow="curriculum intake",
+        evidence_artifact="checksums.sha256",
+        schema_artifact="schemas/curriculum/fetch_manifest.schema.json",
+        target_files=("schemas/curriculum/fetch_manifest.schema.json", "scripts/validate_json.py"),
+        out_of_scope=("remote checksum verification", "live fetch retries", "PDF parsing"),
+        acceptance_criteria=(
+            "Fetch manifest schema records source_id, URL, local path, retrieval status, and SHA-256 checksum.",
+            "Validation guidance explains checksum manifest expectations.",
+            "Example data validates without network access.",
+        ),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Do not fetch remote files in validation.", "Do not log credentials."),
+        definition_of_done=("Fetch manifest schema validates.", "Checksum fields are required.", "Offline validation passes."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1f",
+        title="Slice 1F: Snapshot validation command",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can operators validate source registry and snapshot evidence before extraction?",
+        platform_capability="Offline schema validation command.",
+        workflow="curriculum intake",
+        evidence_artifact="validation report for source registry and snapshot manifests",
+        schema_artifact="scripts/validate_json.py",
+        target_files=("scripts/validate_json.py",),
+        out_of_scope=("live model calls", "live WhatsApp messaging", "live TIE downloads"),
+        acceptance_criteria=(
+            "Command validates JSON syntax for tracked JSON files.",
+            "Command validates known example fixtures against schemas.",
+            "Command fails clearly on invalid JSON or schema validation errors.",
+        ),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Validation must not require network access.", "Validation must not read .env or secrets."),
+        definition_of_done=("Validation passes on examples.", "Failure messages include file and schema paths.", "Command is documented in VERIFICATION.md."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1g",
+        title="Slice 1G: Snapshot docs and tests",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Is Slice 1 ready for implementation without ambiguity?",
+        platform_capability="Schema-backed snapshot documentation and verification.",
+        workflow="curriculum intake",
+        evidence_artifact="source registry, fetch manifest, snapshot manifest, checksum manifest",
+        schema_artifact="docs/schemas/README.md",
+        target_files=("docs/schemas/README.md", "VERIFICATION.md"),
+        out_of_scope=("deterministic extraction", "topic screening", "human topic selection"),
+        acceptance_criteria=(
+            "Docs identify Slice 1 required schemas.",
+            "Verification docs include ./init.sh and python3 scripts/validate_json.py.",
+            "Docs explain that schema changes are research-contract changes.",
+        ),
+        verification_command="./init.sh && python3 scripts/validate_json.py",
+        safety_constraints=("No live TIE fetch is required.", "No generated evaluation data is committed."),
+        definition_of_done=("Docs are updated.", "Examples validate.", "Slice 1 acceptance criteria are explicit."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-2a",
+        title="Slice 2A: Normalized curriculum item schema",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can extracted curriculum facts be represented without LLM overwrite?",
+        platform_capability="Deterministic curriculum extraction contract.",
+        workflow="deterministic curriculum extraction",
+        evidence_artifact="normalized_curriculum_items.json",
+        schema_artifact="schemas/curriculum/curriculum_item.schema.json",
+        target_files=("schemas/curriculum/curriculum_item.schema.json", "fixtures/examples/curriculum_item.example.json"),
+        out_of_scope=("OCR implementation", "LLM enrichment", "topic promotion"),
+        acceptance_criteria=("Schema captures source references, subject, standard, topic, subtopic, learning objective, content reference, and provenance.",),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("LLM output must not overwrite deterministic fields.",),
+        definition_of_done=("Schema and example validate.",),
+    ),
+    MscPlatformSlice(
+        suffix="slice-3a",
+        title="Slice 3A: Rule-based topic screening schema",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can animation suitability be screened deterministically before review?",
+        platform_capability="Candidate topic dataset contract.",
+        workflow="topic screening",
+        evidence_artifact="candidate_topic_dataset.json",
+        schema_artifact="schemas/curriculum/candidate_topic_dataset.schema.json",
+        target_files=("schemas/curriculum/candidate_topic_dataset.schema.json",),
+        out_of_scope=("LLM review", "human acceptance", "generation run"),
+        acceptance_criteria=("Schema records suitability signals, deprioritization reasons, source item IDs, and review status.",),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Screening cannot auto-accept topics.",),
+        definition_of_done=("Schema validates.",),
+    ),
+    MscPlatformSlice(
+        suffix="slice-4a",
+        title="Slice 4A: Automated curriculum review distribution schema",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can optional automated review expose uncertainty before human selection?",
+        platform_capability="Verbalized-sampling-inspired review artifact.",
+        workflow="automated curriculum review",
+        evidence_artifact="candidate_topic_review_distribution.json",
+        schema_artifact="schemas/curriculum/candidate_topic_review_distribution.schema.json",
+        target_files=("schemas/curriculum/candidate_topic_review_distribution.schema.json", "fixtures/examples/candidate_topic_review_distribution.example.json"),
+        out_of_scope=("live LLM calls", "topic auto-selection", "curriculum fact mutation"),
+        acceptance_criteria=("Schema requires judgment distributions, rationales, uncertainty flags, input hashes, and human_review_required=true.",),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("LLM review is optional and assistive only.", "Human review remains required."),
+        definition_of_done=("Schema and example validate.",),
+        risk_level="high",
+    ),
+    MscPlatformSlice(
+        suffix="slice-5a",
+        title="Slice 5A: Human topic selection decision schema",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can accepted topics be traced to human review decisions?",
+        platform_capability="Human topic selection gate.",
+        workflow="human topic selection",
+        evidence_artifact="topic_selection_decisions.json",
+        schema_artifact="schemas/curriculum/topic_selection_decisions.schema.json",
+        target_files=("schemas/curriculum/topic_selection_decisions.schema.json", "fixtures/examples/topic_selection_decisions.example.json"),
+        out_of_scope=("automated acceptance", "generation runs", "classroom deployment"),
+        acceptance_criteria=("Schema records reviewer, decision, reviewed_at, source checks, automated review considered, and rationale.",),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("No topic promotion without human acceptance.",),
+        definition_of_done=("Schema and example validate.",),
+    ),
+    MscPlatformSlice(
+        suffix="slice-8a",
+        title="Slice 8A: Expert review submission schema",
+        research_objective="Evaluate feasibility in terms of curriculum alignment, scientific accuracy, pedagogical appropriateness, clarity, usability, and production practicality.",
+        research_question="Can expert evaluations be captured as analysis-ready evidence?",
+        platform_capability="Rubric response contract.",
+        workflow="expert review submission",
+        evidence_artifact="rubric_response.json",
+        schema_artifact="schemas/evaluation/rubric_response.schema.json",
+        target_files=("schemas/evaluation/rubric.schema.json", "schemas/evaluation/rubric_response.schema.json"),
+        out_of_scope=("participant-sensitive classroom data", "WhatsApp-only review", "statistical effectiveness claims"),
+        acceptance_criteria=("Schema links evaluator, invitation, artifact set, scores, comments, and submitted_at.",),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Do not store participant-sensitive data in fixtures.",),
+        definition_of_done=("Rubric and response schemas validate.",),
+    ),
+    MscPlatformSlice(
+        suffix="slice-9a",
+        title="Slice 9A: Evidence export manifest schema",
+        research_objective="Evaluate feasibility in terms of curriculum alignment, scientific accuracy, pedagogical appropriateness, clarity, usability, and production practicality.",
+        research_question="Can evidence bundles be exported for descriptive analysis?",
+        platform_capability="Evidence export contract.",
+        workflow="export for descriptive analysis",
+        evidence_artifact="export_manifest.json",
+        schema_artifact="schemas/evaluation/export_manifest.schema.json",
+        target_files=("schemas/evaluation/export_manifest.schema.json",),
+        out_of_scope=("publication upload", "PR creation", "live dashboard analytics"),
+        acceptance_criteria=("Schema records export batch, included files, formats, hashes, and privacy notes.",),
+        verification_command="python3 scripts/validate_json.py",
+        safety_constraints=("Exports must not include secrets or unredacted sensitive data.",),
+        definition_of_done=("Schema validates.",),
+    ),
+)
+
+
+def is_msc_platform(project: str | None) -> bool:
+    return project == "msc-platform"
+

@@ -9,6 +9,22 @@ from karakana.ingestion.sources import load_action_source, load_file_source, loa
 
 DEFAULT_DOC_FILES = ("README.md", "KARAKANA.md", "AGENTS.md")
 
+MSC_PLATFORM_DOC_PATTERNS = (
+    "docs/research/**/*.md",
+    "docs/curriculum/**/*.md",
+    "docs/evaluation/**/*.md",
+    "docs/platform/vertical-slice-roadmap.md",
+    "docs/platform/configurable-research-workflow-engine.md",
+    "docs/platform/lims-workflow-patterns-review.md",
+    "docs/adr/**/*.md",
+    "PRODUCT.md",
+    "RESEARCH-SCOPE.md",
+    "ARCHITECTURE.md",
+    "VERIFICATION.md",
+)
+
+BLOCKED_SCAN_PARTS = {".env", "secrets", "artifacts", "exports", "datasets"}
+
 
 def scan_sources(
     repo_root: Path,
@@ -22,8 +38,14 @@ def scan_sources(
     requested = set(includes or ["docs"])
     items: list[tuple] = []
     if "docs" in requested:
-        for path in _doc_paths(repo_root, max_files=max_files):
-            items.append(load_file_source(repo_root, path.relative_to(repo_root), project=project, skillpack=skillpack))
+        if project == "msc-platform":
+            for base_root, source_path in _msc_platform_doc_paths(repo_root, max_files=max_files):
+                items.append(load_file_source(base_root, source_path, project=project, skillpack=skillpack))
+                if len(items) >= max_files:
+                    return items
+        else:
+            for path in _doc_paths(repo_root, max_files=max_files):
+                items.append(load_file_source(repo_root, path.relative_to(repo_root), project=project, skillpack=skillpack))
             if len(items) >= max_files:
                 return items
     if "traces" in requested:
@@ -43,6 +65,39 @@ def _doc_paths(repo_root: Path, max_files: int) -> list[Path]:
     if docs.exists():
         paths.extend(sorted(path for path in docs.rglob("*.md") if path.is_file()))
     return paths[:max_files]
+
+
+def _msc_platform_doc_paths(repo_root: Path, max_files: int) -> list[tuple[Path, Path]]:
+    project_root = repo_root.parent / "stemgen-platform"
+    if not project_root.exists():
+        return [(repo_root, path.relative_to(repo_root)) for path in _doc_paths(repo_root, max_files)]
+
+    selected: list[Path] = []
+    for pattern in MSC_PLATFORM_DOC_PATTERNS:
+        selected.extend(sorted(path for path in project_root.glob(pattern) if path.is_file() and _safe_scan_path(path)))
+
+    unique: list[Path] = []
+    seen: set[Path] = set()
+    for path in selected:
+        resolved = path.resolve()
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        unique.append(path)
+        if len(unique) >= max_files:
+            break
+    return [(project_root, path.relative_to(project_root)) for path in unique]
+
+
+def _safe_scan_path(path: Path) -> bool:
+    parts = set(path.parts)
+    if parts & BLOCKED_SCAN_PARTS:
+        return False
+    if path.name.startswith(".env"):
+        return False
+    if path.suffix.lower() not in {".md", ".json", ".yml", ".yaml"}:
+        return False
+    return True
 
 
 def _latest_artifacts(root: Path, _kind: str, loader, repo_root: Path, project: str | None, skillpack: str | None, limit: int) -> list[tuple]:

@@ -43,6 +43,7 @@ safety:
     - "docs/evaluation/**"
     - "docs/curriculum/**"
     - "docs/adr/**"
+    - "schemas/**"
     - "evaluation/**"
     - "curriculum/**"
     - "data/**"
@@ -64,6 +65,10 @@ safety:
     - participant_data_change
     - curriculum_source_change
     - official_curriculum_snapshot_change
+    - schema_contract_change
+    - curriculum_schema_change
+    - evaluation_schema_change
+    - workflow_schema_change
     - automated_curriculum_review_change
     - whatsapp_message_template_change
     - model_provider_change
@@ -88,4 +93,6 @@ conventions:
     - "Human topic selection is required before promotion to the accepted shortlist."
     - "WhatsApp is a secondary evaluator communication channel; web remains the canonical review interface."
     - "Project repository push is allowed only with explicit opt-in, branch safety checks, and clean patch review."
+    - "Schemas are part of the research evidence contract."
+    - "Schema changes require documentation updates and validation examples."
     - "Do not store participant-sensitive data in Git."

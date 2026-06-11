@@ -165,6 +165,8 @@ def render_issues(issues: list[IssueDraft]) -> str:
 
 {issue.story_id or "None"}
 
+{_issue_metadata(issue)}
+
 ### Scope
 
 {_bullets(issue.scope)}
@@ -214,6 +216,30 @@ def render_issues(issues: list[IssueDraft]) -> str:
 """
         )
     return "\n".join(body)
+
+
+def _issue_metadata(issue: IssueDraft) -> str:
+    if not issue.metadata:
+        return ""
+    lines = ["### Research and Evidence Mapping", ""]
+    labels = [
+        ("project_context", "Project context"),
+        ("research_objective", "Research objective supported"),
+        ("research_question", "Research question supported"),
+        ("platform_capability", "Platform capability"),
+        ("workflow", "Workflow"),
+        ("evidence_artifact", "Evidence artifact produced"),
+        ("schema_artifact", "Schema artifact"),
+        ("verification_command", "Verification command"),
+    ]
+    for key, label in labels:
+        if issue.metadata.get(key):
+            lines.append(f"- {label}: {issue.metadata[key]}")
+    target_files = issue.metadata.get("target_files")
+    if target_files:
+        lines.append("- Target files:")
+        lines.extend(f"  - {path}" for path in target_files)
+    return "\n".join(lines) + "\n"
 
 
 def render_readiness(check: ReadinessCheck) -> str:

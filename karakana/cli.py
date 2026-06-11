@@ -2286,7 +2286,12 @@ def requirements_ready(req_id: str, json_output: bool = typer.Option(False, "--j
     trace = trace_store.create_run(command="requirements ready", task_type="requirements_readiness", inputs={"req_id": req_id})
     try:
         store = RequirementsStore(repo_root)
-        check = check_readiness(store.load_prd(req_id))
+        prd = store.load_prd(req_id)
+        try:
+            issues = store.load_issues(req_id)
+        except FileNotFoundError:
+            issues = None
+        check = check_readiness(prd, issues)
         path = store.save_readiness(check)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)

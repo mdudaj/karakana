@@ -8,3 +8,10 @@ def test_classifies_memory_skill_eval_prompt_safety_behavior():
     assert classify_content("missing section weak prompt wrong model route", project="demo").category == "prompt_update"
     assert classify_content("secret exposure destructive command bypass review", project="demo").category == "safety_update"
     assert classify_content("preferred style copy-ready markdown", project="demo").category == "behavior_update"
+
+
+def test_msc_platform_classifies_research_platform_docs():
+    result = classify_content("TIE source registry Tier 1 official_url Tanzania Institute of Education", project="msc-platform")
+
+    assert result.category == "curriculum_source_registry"
+    assert result.suggested_targets == ["ubongo/projects/msc-platform/curriculum-data.md"]

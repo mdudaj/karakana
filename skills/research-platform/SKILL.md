@@ -56,6 +56,7 @@ Do not use this skill for dissertation chapter writing, literature review editin
 - Participant-sensitive data must not be stored in Git or exposed in artifacts.
 - Result exports should make evidence reviewable without requiring production deployment.
 - Research platforms are instruments: preserve objective, workflow, evidence, provenance, and replay links.
+- Prefer schema-backed evidence artifacts for curriculum, workflow, evaluation, export, and repository-safety records.
 - Configurable workflows should separate governed definitions, runtime capture, evidence projection, and reconstruction.
 - Deterministic curriculum extraction is the source of truth when official curriculum sources are involved.
 - Optional LLM enrichment and automated review are assistive only and must not overwrite deterministic facts.
@@ -90,6 +91,9 @@ Use this guidance for `stemgen-platform` and similar research instruments for cu
 - Evidence exports should include analysis tables, structured provenance JSON, artifact bundles, and reporting summaries.
 - Replay should distinguish deterministic replay expectations from external AI generation runs that may only be explainable, not bit-for-bit reproducible.
 - Project repository commits and pushes require explicit opt-in, branch checks, clean patch review/gates, no secrets, no main/master push, and no force push.
+- Do not implement a workflow artifact before its schema exists, unless the implementation task explicitly creates the schema first.
+- Validate example fixtures before implementation begins.
+- Treat schema changes as research-contract changes that require matching documentation and validation updates.
 - Flag overengineering when a feature does not support a research objective, evaluation activity, evidence artifact, or reproducibility requirement.
 
 ## Safety rules
@@ -113,6 +117,8 @@ Use this guidance for `stemgen-platform` and similar research instruments for cu
 - Is deterministic source-of-truth data separated from optional enrichment/review output?
 - Is the human gate explicit and auditable?
 - Is the implementation slice smaller than the full research platform?
+- Does the artifact have a schema and example fixture?
+- Has schema validation been run?
 - Is any commit or push path explicit, gated, and auditable?
 
 ## Output format
@@ -150,3 +156,4 @@ Return a concise assessment with research objective alignment, evaluation readin
 - Check result export paths and logs for sensitive data risks.
 - Check tests cover the prototype workflow and evidence generation path.
 - Validate workflow definitions, manifests, candidate topic datasets, review distributions, topic decisions, evidence projections, exports, and push-safety checks before implementation slices are considered ready.
+- Validate schema files and example fixtures before implementing producers or consumers of the evidence artifacts.

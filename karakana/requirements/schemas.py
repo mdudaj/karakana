@@ -149,6 +149,7 @@ class IssueDraft:
     definition_of_done: list[str] = field(default_factory=list)
     labels: list[str] = field(default_factory=list)
     risk_level: str = "low"
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.risk_level not in RISK_LEVELS:

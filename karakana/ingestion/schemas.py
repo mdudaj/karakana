@@ -6,7 +6,32 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 SOURCE_TYPES = {"file", "trace", "action", "patch_review", "proposal", "codex_task", "test_run", "github_event", "manual_note", "scan"}
-CANDIDATE_TYPES = {"ubongo_memory", "skill_update", "eval_update", "prompt_update", "safety_update", "project_convention", "behavior_update", "manual_review"}
+CANDIDATE_TYPES = {
+    "ubongo_memory",
+    "skill_update",
+    "eval_update",
+    "prompt_update",
+    "safety_update",
+    "project_convention",
+    "behavior_update",
+    "manual_review",
+    "research_objective_mapping",
+    "curriculum_source_registry",
+    "curriculum_snapshot",
+    "deterministic_extraction",
+    "topic_screening",
+    "automated_curriculum_review",
+    "human_topic_selection_gate",
+    "evaluation_workflow",
+    "evidence_artifact",
+    "rubric",
+    "export_plan",
+    "provenance_replay",
+    "whatsapp_evaluator_channel",
+    "configurable_workflow_engine",
+    "commit_push_safety",
+    "vertical_implementation_slice",
+}
 BUNDLE_STATUSES = {"draft", "ready_for_review", "accepted", "rejected", "partially_applied", "applied", "blocked", "error"}
 CANDIDATE_STATUSES = {"draft", "ready_for_review", "accepted", "rejected", "applied", "superseded", "blocked"}
 RISK_LEVELS = {"low", "medium", "high", "critical"}

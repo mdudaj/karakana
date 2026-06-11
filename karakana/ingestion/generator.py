@@ -16,6 +16,22 @@ TYPE_MAP = {
     "project_convention": "project_convention",
     "behavior_update": "behavior_update",
     "manual_review": "manual_review",
+    "research_objective_mapping": "research_objective_mapping",
+    "curriculum_source_registry": "curriculum_source_registry",
+    "curriculum_snapshot": "curriculum_snapshot",
+    "deterministic_extraction": "deterministic_extraction",
+    "topic_screening": "topic_screening",
+    "automated_curriculum_review": "automated_curriculum_review",
+    "human_topic_selection_gate": "human_topic_selection_gate",
+    "evaluation_workflow": "evaluation_workflow",
+    "evidence_artifact": "evidence_artifact",
+    "rubric": "rubric",
+    "export_plan": "export_plan",
+    "provenance_replay": "provenance_replay",
+    "whatsapp_evaluator_channel": "whatsapp_evaluator_channel",
+    "configurable_workflow_engine": "configurable_workflow_engine",
+    "commit_push_safety": "commit_push_safety",
+    "vertical_implementation_slice": "vertical_implementation_slice",
 }
 
 
