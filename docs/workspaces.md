@@ -56,9 +56,26 @@ karakana workspace plan --project billing --task "Review GePG callback issue"
 
 It does not execute Codex or mutate project files.
 
+Workspace planning autoloads or recovers the selected project's session handoff. Use `--no-handoff` only when intentionally starting without prior continuation context.
+
+After reviewing workspace status, optionally include that project-specific state in a next-milestone decision:
+
+```bash
+karakana milestone next --workspace nimr --project msc-platform --skillpack msc-platform --write-instructions
+```
+
+The command reads one project's workspace status and keeps project memory boundaries intact.
+
 ## Handoff
 
 Workspace handoff creates `.karakana/workspace-handoffs/<handoff-id>/` with a project-specific handoff document.
+
+Workspace handoff is a status snapshot. Cross-session continuation uses the project handoff store:
+
+```bash
+karakana handoff load --workspace nimr --project msc-platform --skillpack msc-platform
+karakana handoff refresh --workspace nimr --project msc-platform --skillpack msc-platform --purpose "End of task handoff"
+```
 
 ## Cross-Project Knowledge Links
 

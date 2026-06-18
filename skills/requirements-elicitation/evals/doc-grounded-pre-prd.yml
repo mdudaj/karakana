@@ -1,0 +1,25 @@
+id: requirements-elicitation-doc-grounded-pre-prd
+name: Requirements elicitation is document-grounded and pre-PRD
+description: Check elicitation reads project evidence, uses verbalized sampling for ambiguous choices, and hands off to existing PRD generation.
+suite: skills
+risk_level: medium
+tags: [skills, requirements, elicitation]
+input:
+  task: "Review the requirements elicitation workflow."
+  skill: requirements-elicitation
+  task_type: planning
+  prompt_file: skills/requirements-elicitation/SKILL.md
+expectations:
+  must_include:
+    - "Document Grounding"
+    - "Verbalized-Sampling Decision Step"
+    - "Ready for Specification / PRD?"
+    - "karakana requirements prd"
+    - "--from-file"
+    - "Do not invent user intent"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "auto-publish"
+    - "GITHUB_TOKEN"

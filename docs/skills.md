@@ -83,6 +83,62 @@ karakana skill validate-all
 
 Validation checks required metadata, allowed risk levels, list-valued tool fields, optional governance metadata, and markdown sections.
 
+One skill can be validated by name or path:
+
+```bash
+karakana skill validate brainstorm-verbalized-sampling
+karakana skill validate skills/brainstorm-verbalized-sampling
+```
+
+## Pre-PRD Elicitation
+
+These are general-purpose skills for software, research, infrastructure, documentation, operations, and product projects. They do not require Django, Karakana-specific memory, a particular repository layout, or a PRD-based workflow.
+
+For ambiguous work, use `requirements-elicitation` before the project's existing specification or planning workflow. Use `grill-with-docs` to challenge the plan against whatever authoritative evidence the project provides, and use `brainstorm-verbalized-sampling` only when several plausible approaches remain.
+
+For Karakana-managed projects, save the reviewed elicitation result and pass it into the existing PRD workflow:
+
+```bash
+karakana requirements prd \
+  --from-file .karakana/requirements-elicitation/<elicit-id>.md \
+  --project msc-platform \
+  --skillpack msc-platform
+karakana requirements stories --from-prd <req-id>
+karakana requirements issues --from-prd <req-id>
+karakana requirements ready <req-id>
+```
+
+Karakana does not currently define a `requirements elicit` command or elicitation store. The markdown handoff preserves the boundary between conversational decision work and the existing structured PRD/story/issue/readiness artifacts. Add a command only after a stable elicitation schema and repeated artifact lifecycle justify it.
+
+## Next-Milestone Decisions
+
+Use `next-milestone-decision` after completing or reviewing a milestone. It gathers project evidence, prioritizes unresolved blockers, compares candidate directions with `brainstorm-verbalized-sampling` when needed, and generates a copy-ready instruction.
+
+```bash
+karakana milestone next \
+  --project <project> \
+  --skillpack <skillpack> \
+  --write-instructions
+```
+
+Strict mode returns non-zero when required context is missing or P0/P1 planning blockers remain. The command writes local decision artifacts only; execution is always a separate explicit step.
+
+## Session Handoffs
+
+Use `karakana-handoff` to create a compact continuation package, not a conversational summary. Start a task with:
+
+```bash
+karakana handoff load --project <project> --skillpack <skillpack>
+```
+
+End with:
+
+```bash
+karakana handoff refresh --project <project> --skillpack <skillpack> --purpose "End of task handoff"
+```
+
+Reference durable artifacts instead of duplicating them. Verify recovered, stale, or missing references with `karakana handoff doctor --project <project>`.
+
 ## Skill Indexes
 
 Generate a public skill index in dry-run mode with:

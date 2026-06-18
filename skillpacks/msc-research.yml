@@ -12,6 +12,10 @@ skills:
     - research-writing
     - karakana-handoff
   optional:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
     - write-karakana-skill
 model_routes:
   planning:

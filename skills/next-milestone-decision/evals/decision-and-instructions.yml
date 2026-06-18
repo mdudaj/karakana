@@ -1,0 +1,29 @@
+id: next-milestone-decision-generates-grounded-instructions
+name: Next milestone decision uses evidence, weighted candidates, and safe instructions
+description: Check the skill defines blocker handling, verbalized-sampling candidates, copy-ready instructions, verification, and Definition of Done.
+suite: skills
+risk_level: medium
+tags: [skills, milestones, planning, verbalized-sampling]
+input:
+  task: "Review the next-milestone decision workflow."
+  skill: next-milestone-decision
+  task_type: planning
+  prompt_file: skills/next-milestone-decision/SKILL.md
+expectations:
+  must_include:
+    - "State Sources"
+    - "Candidate Milestones"
+    - "Verbalized-Sampling Decision Step"
+    - "criterion matrix"
+    - "sensitivity"
+    - "Generated Instructions"
+    - "Verification Plan"
+    - "Definition of Done"
+    - "Do not recommend implementation when P0/P1"
+    - "not probabilities"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

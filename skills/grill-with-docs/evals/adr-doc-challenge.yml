@@ -1,0 +1,26 @@
+id: grill-with-docs-adr-doc-challenge
+name: Grill-with-docs challenges plans against ADRs and evidence
+description: Check the grill workflow covers domain terms, ADR conflicts, scope, evidence, tests, and unsafe defaults.
+suite: skills
+risk_level: medium
+tags: [skills, requirements, docs, adr]
+input:
+  task: "Review the grill-with-docs workflow."
+  skill: grill-with-docs
+  task_type: planning
+  prompt_file: skills/grill-with-docs/SKILL.md
+expectations:
+  must_include:
+    - "ADRs"
+    - "Domain Terms"
+    - "overbroad scope"
+    - "missing evidence"
+    - "missing tests"
+    - "unsafe defaults"
+    - "Ready for Specification / PRD?"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

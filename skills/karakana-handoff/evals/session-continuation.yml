@@ -1,0 +1,27 @@
+id: karakana-handoff-session-continuation
+name: Handoff is a compact safe continuation artifact
+description: Check the handoff skill preserves project continuity without duplicating artifacts or secrets.
+suite: skills
+risk_level: low
+tags: [skills, handoff, sessions, continuity]
+input:
+  task: "Review the project session handoff workflow."
+  skill: karakana-handoff
+  task_type: planning
+  prompt_file: skills/karakana-handoff/SKILL.md
+expectations:
+  must_include:
+    - "A handoff is not a normal summary"
+    - "Files to Inspect First"
+    - "Files Not to Reread"
+    - "Artifacts to Reference, Not Duplicate"
+    - "Suggested Skills"
+    - "Exact Next Action"
+    - "Return Handoff Expectations"
+    - "append-only"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN="
+    - "OPENAI_API_KEY="

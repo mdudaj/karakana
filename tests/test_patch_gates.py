@@ -28,6 +28,22 @@ def test_patch_gate_pass_docs_patch(tmp_path):
     assert gate.blocked is False
 
 
+def test_patch_review_and_gate_preserve_project_scope(tmp_path):
+    init_repo(tmp_path)
+    (tmp_path / "README.md").write_text("new\n", encoding="utf-8")
+    artifact = PatchCapture(tmp_path).capture_diff(project="demo", skillpack="demo-pack")
+    diff = tmp_path / ".karakana" / "patches" / artifact.patch_run_id / "changes.diff"
+    review_path = PatchReviewer(tmp_path).review_diff(diff)
+
+    review = json.loads(review_path.read_text(encoding="utf-8"))
+    gate, _ = run_patch_gate(tmp_path, artifact.patch_run_id)
+
+    assert review["project"] == "demo"
+    assert review["skillpack"] == "demo-pack"
+    assert gate.metadata["project"] == "demo"
+    assert gate.metadata["skillpack"] == "demo-pack"
+
+
 def test_patch_gate_blocks_secret(tmp_path):
     init_repo(tmp_path)
     (tmp_path / ".env").write_text("client_secret=abc\n", encoding="utf-8")

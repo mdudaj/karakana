@@ -34,6 +34,29 @@ karakana trace latest
 karakana skillpack validate-all
 ```
 
+## Start Every Task
+
+Codex should run the project-local `.codex/hooks.json` `SessionStart` hook on trusted projects. If Codex reports that hooks need review, open `/hooks`, review the Karakana handoff hook, and trust it before relying on automatic loading.
+
+1. Run `karakana handoff load --project <project> --skillpack <skillpack>`.
+   If `karakana` is not on PATH, run `.venv/bin/karakana handoff load --project <project> --skillpack <skillpack>` from the repository root.
+2. Read mandatory repository instructions, then inspect only the files listed under `Files to Inspect First`.
+3. Treat `Files Not to Reread` as advisory; it never overrides `AGENTS.md`, `KARAKANA.md`, safety rules, or files required by the current task.
+4. Verify recovered or stale handoffs before acting.
+
+## End Every Task
+
+Run:
+
+```bash
+karakana handoff refresh \
+  --project <project> \
+  --skillpack <skillpack> \
+  --purpose "End of task handoff"
+```
+
+Record verification, unresolved findings, changed references, and the exact next action. Handoffs are append-only runtime artifacts under `.karakana/handoffs/` and must not be committed.
+
 Use project skillpacks when available:
 
 ```bash

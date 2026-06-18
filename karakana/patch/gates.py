@@ -79,6 +79,14 @@ def run_patch_gate(repo_root: Path, patch_run_id: str, skillpack_context=None) -
         metadata["git_branch"] = artifact.git_branch
     else:
         warnings.append("Branch state is not known.")
+    if artifact:
+        metadata.update(
+            {
+                "project": artifact.project,
+                "skillpack": artifact.skillpack or metadata.get("skillpack"),
+                "repository_path": artifact.repository_path,
+            }
+        )
     review_risk = review.risk_level if review else "medium"
     risk_level = _max_risk([review_risk, "high" if high_risk else "low", "critical" if blocking else "low"])
     if risk_level in {"high", "critical"}:

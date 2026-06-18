@@ -15,6 +15,10 @@ skills:
     - karakana-handoff
     - write-karakana-skill
   optional:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
     - django-debugging
 model_routes:
   planning:

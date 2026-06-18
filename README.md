@@ -46,6 +46,8 @@ karakana model route --task-type planning
 karakana model route --task-type routine_code_implementation
 karakana skillpack list
 karakana skillpack validate-all
+karakana handoff load --project msc-platform --skillpack msc-platform
+karakana milestone next --project msc-platform --skillpack msc-platform --write-instructions
 karakana workspace list
 karakana workspace status
 karakana crosslink scan --workspace nimr
@@ -124,6 +126,52 @@ karakana workspace handoff --project nhrdm
 Workspace commands are read-only by default and do not run arbitrary project commands, execute Codex, apply patches, push, create PRs, deploy, or mix project memory.
 
 The `nimr` workspace includes `msc-platform` at `../stemgen-platform`, the MSc research implementation and evaluation platform. This repository was previously named `msc-dissertation`; Karakana treats it as software for prototype workflow, evaluation support, and evidence generation rather than as a dissertation manuscript repository.
+
+## Next Milestone Decisions
+
+Before returning to an external assistant to ask "what next?", generate a local evidence-based decision:
+
+```bash
+karakana milestone next \
+  --project msc-platform \
+  --skillpack msc-platform \
+  --workspace nimr \
+  --write-instructions
+```
+
+The command inspects local project context and recent artifacts, writes a multi-criteria candidate decision under `.karakana/milestones/`, refreshes the project handoff unless opted out, and never executes, pushes, or deploys the generated instruction.
+
+## Session Handoffs
+
+This repository includes a project-local Codex `SessionStart` hook in `.codex/hooks.json`. In a trusted Codex project, the hook runs `.codex/hooks/karakana_session_start.sh` on startup or resume, loads the Karakana handoff, and writes the rendered session context to `.karakana/session-start.md`. Treat the hook as a durable local artifact writer; Codex hook stdout can appear after the first prompt in local UI builds.
+
+Codex requires review and trust for non-managed project hooks. If a new session warns that hooks need review, open `/hooks`, inspect the Karakana handoff hook, and trust it before relying on automatic loading.
+
+Start every task by loading the latest project handoff. If none exists, Karakana recovers a lightweight handoff from bounded recent artifacts:
+
+```bash
+karakana handoff load --project <project> --skillpack <skillpack>
+```
+
+To start an interactive agent while making the handoff visible before the agent UI takes over, use the Karakana launchers:
+
+```bash
+karakana codex start --project <project> --skillpack <skillpack> -- [codex args...]
+karakana copilot start --project <project> --skillpack <skillpack> -- [copilot args...]
+```
+
+The launchers write `.karakana/session-start.md`, print and flush the session-start context, and then start the target CLI. For fresh interactive Codex launches, `karakana codex start` also writes `.karakana/codex-initial-prompt.md` and passes that context as Codex's initial prompt, so the model receives the handoff before the first user task instead of relying on delayed hook stdout. It skips prompt injection for Codex subcommands such as `resume`, for existing user prompts, and when `--no-inject-prompt` is used. `karakana codex start` bootstraps a missing project `.venv` by running `python -m venv .venv` and `.venv/bin/python -m pip install -e ".[dev]"` before launching Codex when a Karakana entrypoint is already available. If `karakana` is not on `PATH` and `.venv` is missing, run `python -m karakana codex start --project <project>` from the source checkout to bootstrap and re-enter through the new venv. Use `--no-bootstrap` to skip setup. `--print-only` previews without creating the environment or launching Codex. `karakana codex start --inline` passes `--no-alt-screen` to Codex so the printed context remains in terminal scrollback. Without `--inline`, both launchers pause before starting the target CLI unless `--no-pause` is used.
+
+Read mandatory repository instructions and the listed inspect-first files. Do not reread files marked advisory unless the current task needs them.
+
+End every task with an append-only refresh:
+
+```bash
+karakana handoff refresh --project <project> --skillpack <skillpack> --purpose "End of task handoff"
+karakana handoff doctor --project <project>
+```
+
+Planning commands autoload the matching handoff unless `--no-handoff` is used. `milestone next` appends a handoff unless `--no-handoff-refresh` is used. Other project commands record a refresh reminder in their trace.
 
 ## Cross-Project Knowledge Links
 

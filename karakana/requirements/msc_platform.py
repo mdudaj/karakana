@@ -265,6 +265,99 @@ MSC_PLATFORM_SLICES: tuple[MscPlatformSlice, ...] = (
 )
 
 
+MSC_PLATFORM_CURRICULUM_INTAKE_UX_SLICES: tuple[MscPlatformSlice, ...] = (
+    MscPlatformSlice(
+        suffix="slice-1-1a",
+        title="Slice 1.1A: Staff curriculum intake management surface",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can staff operators prepare official TIE source evidence before extraction?",
+        platform_capability="Staff-only curriculum intake management UX.",
+        workflow="curriculum intake management",
+        evidence_artifact="source registry and snapshot status handoff",
+        schema_artifact="schemas/curriculum/source_registry.schema.json",
+        target_files=("apps/curriculum/views.py", "apps/curriculum/urls.py", "templates/curriculum/", "templates/app/page.html"),
+        out_of_scope=("curriculum extraction", "topic screening", "automated curriculum review", "human topic selection"),
+        acceptance_criteria=(
+            "Staff users can reach a curriculum intake management page from dashboard or curriculum navigation.",
+            "The page shows active source count, Tier 1 count, latest snapshot status, validation status, warning count, and artifact paths when present.",
+            "Anonymous and non-staff users cannot access intake management actions.",
+        ),
+        verification_command="python manage.py test apps.curriculum",
+        safety_constraints=("Keep intake actions staff-only.", "Do not expose secrets or source document contents."),
+        definition_of_done=("Staff-only access is tested.", "Dashboard/navigation link is tested.", "Existing read-only snapshot pages still pass."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1-1b",
+        title="Slice 1.1B: Seed default TIE source action",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Are the default official TIE sources registered reproducibly?",
+        platform_capability="Idempotent default TIE source seeding.",
+        workflow="curriculum intake management",
+        evidence_artifact="source_registry.json",
+        schema_artifact="schemas/curriculum/source_registry.schema.json",
+        target_files=("apps/curriculum/services.py", "apps/curriculum/views.py", "fixtures/curriculum/tie_sources.json"),
+        out_of_scope=("live TIE downloads", "fixture schema redesign", "topic acceptance"),
+        acceptance_criteria=(
+            "Staff users can seed default Tier 1 TIE sources through a POST action.",
+            "The action reuses seed_curriculum_sources and is idempotent by source_id.",
+            "The UI reports created or updated source count without creating duplicate rows.",
+        ),
+        verification_command="python manage.py test apps.curriculum",
+        safety_constraints=("Use the existing fixture as the source of default TIE entries.", "Do not commit downloaded PDFs."),
+        definition_of_done=("Seed action is tested through the view.", "Repeated seed action does not duplicate sources.", "Dashboard source count reflects seeded active sources."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1-1c",
+        title="Slice 1.1C: Add or update TIE source action",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can missing official TIE links be registered with enough metadata for reproducible snapshots?",
+        platform_capability="Validated TIE source registration form.",
+        workflow="curriculum intake management",
+        evidence_artifact="source_registry.json",
+        schema_artifact="schemas/curriculum/source_registry.schema.json",
+        target_files=("apps/curriculum/models.py", "apps/curriculum/views.py", "templates/curriculum/"),
+        out_of_scope=("source approval workflow", "non-TIE source tiers unless explicitly approved", "curriculum extraction"),
+        acceptance_criteria=(
+            "Staff users can add or deliberately update a TIE source with source_id, title, official URL, subject, coverage, standards, expected filename, tier, and active flag.",
+            "Validation rejects invalid source IDs, invalid URLs, missing metadata, unsafe filenames, and unintended duplicate source IDs.",
+            "Tier 1 source actions are limited to official TIE URLs unless a later approved requirement expands source tiers.",
+        ),
+        verification_command="python manage.py test apps.curriculum",
+        safety_constraints=("Curriculum source changes remain approval-gated.", "Do not allow user input to create unsafe filenames or paths."),
+        definition_of_done=("Valid add-source flow is tested.", "Validation failures are tested.", "Duplicate-source behavior is explicit and tested."),
+    ),
+    MscPlatformSlice(
+        suffix="slice-1-1d",
+        title="Slice 1.1D: Capture snapshot action",
+        research_objective="Identify Tanzanian primary STEM curriculum topics suitable for animation-based representation.",
+        research_question="Can staff operators capture or rehearse official source snapshots while preserving audit evidence?",
+        platform_capability="Explicit-mode source snapshot capture.",
+        workflow="curriculum intake management",
+        evidence_artifact="fetch_manifest.json, checksums.sha256, curriculum_snapshot_manifest.json",
+        schema_artifact="schemas/curriculum/curriculum_snapshot_manifest.schema.json",
+        target_files=("apps/curriculum/services.py", "apps/curriculum/views.py", "templates/curriculum/"),
+        out_of_scope=("network-dependent tests", "PDF parsing", "candidate topic generation"),
+        acceptance_criteria=(
+            "Staff users can capture a snapshot through existing create_snapshot service behavior.",
+            "The action exposes explicit snapshot_id, validate, no-download, local-cache reuse, and live retrieval choices.",
+            "Duplicate snapshot IDs or existing artifact directories are shown as action errors rather than server errors.",
+            "Tests use no-download, local-cache, or injected fetch behavior and do not require live network access.",
+        ),
+        verification_command="python manage.py test apps.curriculum",
+        safety_constraints=("Live retrieval must be an explicit staff action.", "Do not commit generated local snapshot artifacts."),
+        definition_of_done=("No-download or local-cache capture is tested through the view.", "Duplicate snapshot failure is tested.", "Warnings and validation errors are visible in the UI."),
+    ),
+)
+
+
 def is_msc_platform(project: str | None) -> bool:
     return project == "msc-platform"
 
+
+def slices_for_prd(project: str | None, title: str, goal: str, context: str) -> tuple[MscPlatformSlice, ...]:
+    if not is_msc_platform(project):
+        return ()
+    text = f"{title}\n{goal}\n{context}".lower()
+    if "slice 1.1" in text or "curriculum intake management ux" in text or "tie source actions" in text:
+        return MSC_PLATFORM_CURRICULUM_INTAKE_UX_SLICES
+    return MSC_PLATFORM_SLICES

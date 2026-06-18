@@ -10,6 +10,16 @@ python -m venv .venv
 .venv/bin/karakana --help
 ```
 
+When the `karakana` command is already available from an activated environment or another install, `karakana codex start --project <project>` can bootstrap a missing project `.venv` automatically before launching Codex. It runs the same local editable install command shown above. Use `--no-bootstrap` to skip automatic setup.
+
+If `karakana` is not on `PATH` and the project `.venv` does not exist yet, start from the source checkout with Python instead:
+
+```bash
+python -m karakana codex start --project <project>
+```
+
+That source-tree entrypoint uses the standard library to create `.venv`, installs the local package, and then re-enters Karakana through the new environment.
+
 ## Python Version
 
 The package metadata requires Python 3.11 or newer.

@@ -11,6 +11,10 @@ project:
 
 skills:
   required:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
     - research-platform
     - research-writing
     - github-pr-review
@@ -81,6 +85,10 @@ tests:
     - "pytest"
   recommended_before_commit:
     - "karakana skill validate-all"
+    - "karakana eval run --skill brainstorm-verbalized-sampling"
+    - "karakana eval run --skill requirements-elicitation"
+    - "karakana eval run --skill grill-with-docs"
+    - "karakana eval run --skill next-milestone-decision"
     - "karakana eval run --skill research-writing"
 
 conventions:

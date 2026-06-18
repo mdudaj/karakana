@@ -26,6 +26,14 @@ def test_skill_validate_cli():
     assert "OK" in result.output
 
 
+def test_skill_validate_cli_accepts_skill_name():
+    result = CliRunner().invoke(app, ["skill", "validate", "brainstorm-verbalized-sampling"])
+
+    assert result.exit_code == 0
+    assert "skills/brainstorm-verbalized-sampling/SKILL.md" in result.output
+    assert "OK" in result.output
+
+
 def test_skill_validate_all_cli():
     result = CliRunner().invoke(app, ["skill", "validate-all"])
 

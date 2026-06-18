@@ -15,6 +15,10 @@ skills:
     - ci-failure-analysis
     - karakana-handoff
   optional:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
     - gepg-billing
     - write-karakana-skill
 model_routes:

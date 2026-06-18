@@ -19,7 +19,7 @@ class PatchCapture:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
 
-    def capture_diff(self, source_task: str | None = None, include_staged: bool = False, output_dir: Path | None = None) -> PatchArtifact:
+    def capture_diff(self, source_task: str | None = None, include_staged: bool = False, output_dir: Path | None = None, project: str | None = None, skillpack: str | None = None) -> PatchArtifact:
         patch_run_id = generate_patch_run_id()
         root = _safe_output_root(self.repo_root, output_dir, "patches", patch_run_id)
         root.mkdir(parents=True, exist_ok=True)
@@ -46,6 +46,9 @@ class PatchCapture:
             tests_path=None,
             files_changed=files,
             warnings=warnings,
+            project=project,
+            skillpack=skillpack,
+            repository_path=str(self.repo_root.resolve()),
         )
         (root / "patch.json").write_text(json.dumps(artifact.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
         (root / "summary.md").write_text(render_patch_summary(artifact), encoding="utf-8")
@@ -88,6 +91,9 @@ def render_patch_summary(artifact: PatchArtifact) -> str:
 
 - Patch run ID: {artifact.patch_run_id}
 - Source task ID: {artifact.source_task_id or ""}
+- Project: {artifact.project or ""}
+- Skillpack: {artifact.skillpack or ""}
+- Repository: {artifact.repository_path or ""}
 - Git branch: {artifact.git_branch or ""}
 - Diff: {artifact.diff_path or ""}
 - Files changed: {len(artifact.files_changed)}

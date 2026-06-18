@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
+import shlex
+import shutil
 import subprocess
+import sys
 
 import typer
 
@@ -52,6 +56,10 @@ from karakana.ingestion.sources import (
     load_trace_source,
 )
 from karakana.ingestion.store import IngestionStore, create_bundle
+from karakana.handoffs.builder import create_handoff
+from karakana.handoffs.doctor import diagnose_handoff
+from karakana.handoffs.store import HandoffStore
+from karakana.handoffs.summary import render_handoff, render_session_start
 from karakana.memory.ubongo import UbongoMemory
 from karakana.models.config import redacted_model_config
 from karakana.models.errors import ModelProviderError
@@ -61,6 +69,8 @@ from karakana.models.registry import default_registry
 from karakana.models.review.report import render_review_markdown, write_review_artifacts
 from karakana.models.review.reviewer import review_response
 from karakana.models.router import available_task_types, route_model
+from karakana.milestones.decision import generate_next_milestone
+from karakana.milestones.store import MilestoneStore
 from karakana.patch.apply import apply_patch_run
 from karakana.patch.branch import create_patch_branch, plan_patch_branch
 from karakana.patch.commit import commit_patch_run
@@ -115,6 +125,7 @@ app = typer.Typer(help="Karakana AI agent harness skeleton.")
 action_app = typer.Typer(help="Extract and publish reviewable action artifacts.")
 codex_app = typer.Typer(help="Generate Codex-ready task prompts.")
 config_app = typer.Typer(help="Inspect and validate Karakana configuration.")
+copilot_app = typer.Typer(help="Start GitHub Copilot CLI with Karakana handoff context.")
 crosslink_app = typer.Typer(help="Detect reusable cross-project knowledge.")
 dogfood_app = typer.Typer(help="Dogfood Karakana on itself.")
 docs_app = typer.Typer(help="Generate and check Karakana documentation.")
@@ -122,7 +133,9 @@ eval_app = typer.Typer(help="Run deterministic Karakana evaluations.")
 github_app = typer.Typer(help="Generate safe GitHub workflow artifacts.")
 improve_app = typer.Typer(help="Generate self-improvement proposals from traces.")
 ingest_app = typer.Typer(help="Distill selected sources into reviewable candidates.")
+handoff_app = typer.Typer(help="Create and load project session handoffs.")
 memory_app = typer.Typer(help="Inspect ubongo durable memory.")
+milestone_app = typer.Typer(help="Decide and generate instructions for the next project milestone.")
 model_app = typer.Typer(help="Inspect and invoke model providers.")
 patch_app = typer.Typer(help="Gate, apply, and summarize captured patches.")
 requirements_app = typer.Typer(help="Generate PRDs, stories, and issue drafts.")
@@ -135,6 +148,7 @@ workspace_app = typer.Typer(help="Coordinate read-only multi-project workspaces.
 app.add_typer(action_app, name="action")
 app.add_typer(codex_app, name="codex")
 app.add_typer(config_app, name="config")
+app.add_typer(copilot_app, name="copilot")
 app.add_typer(crosslink_app, name="crosslink")
 app.add_typer(dogfood_app, name="dogfood")
 app.add_typer(docs_app, name="docs")
@@ -142,7 +156,9 @@ app.add_typer(eval_app, name="eval")
 app.add_typer(github_app, name="github")
 app.add_typer(improve_app, name="improve")
 app.add_typer(ingest_app, name="ingest")
+app.add_typer(handoff_app, name="handoff")
 app.add_typer(memory_app, name="memory")
+app.add_typer(milestone_app, name="milestone")
 app.add_typer(model_app, name="model")
 app.add_typer(patch_app, name="patch")
 app.add_typer(requirements_app, name="requirements")
@@ -479,6 +495,262 @@ def dogfood_latest() -> None:
     typer.echo((store.run_dir(run.dogfood_id) / "dogfood.md").read_text(encoding="utf-8"))
 
 
+@handoff_app.command("create")
+def handoff_create(
+    project: str = typer.Option(..., "--project", help="Project identity."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack; defaults to project."),
+    workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace identity."),
+    purpose: str | None = typer.Option(None, "--purpose", help="Purpose of the next session."),
+    current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
+    from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
+    from_dogfood: str | None = typer.Option(None, "--from-dogfood", help="Specific dogfood artifact."),
+    from_requirements: str | None = typer.Option(None, "--from-requirements", help="Specific requirements artifact."),
+    from_milestone: str | None = typer.Option(None, "--from-milestone", help="Specific milestone decision."),
+    write: bool = typer.Option(True, "--write/--no-write", help="Write the durable artifact."),
+    json_output: bool = typer.Option(False, "--json", help="Print handoff JSON."),
+) -> None:
+    """Create a project-aware continuation handoff."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="handoff create", project=project, skill="karakana-handoff", task_type="handoff", inputs={"project": project, "skillpack": skillpack, "workspace": workspace, "purpose": purpose, "current_milestone": current_milestone, "from_note": from_note, "from_dogfood": from_dogfood, "from_requirements": from_requirements, "from_milestone": from_milestone, "write": write})
+    try:
+        handoff = create_handoff(repo_root, project, skillpack, workspace, purpose, current_milestone, from_note, from_dogfood, from_requirements, from_milestone)
+        markdown_path = json_path = None
+        if write:
+            markdown_path, json_path = HandoffStore(repo_root).save(handoff)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"handoff_id": handoff.handoff_id, "project": project, "skillpack": handoff.skillpack, "written": write, "markdown_path": str(markdown_path) if markdown_path else None})
+    if markdown_path and json_path:
+        trace.artifacts.extend([
+            TraceArtifact(path=str(markdown_path), kind="session_handoff", description="Project session handoff"),
+            TraceArtifact(path=str(json_path), kind="session_handoff_json", description="Project session handoff JSON"),
+        ])
+    trace.finish("success")
+    trace_store.save(trace)
+    typer.echo(f"Handoff ID: {handoff.handoff_id}")
+    if markdown_path:
+        typer.echo(f"Handoff written to: {markdown_path}")
+    else:
+        typer.echo(render_handoff(handoff))
+    if json_output:
+        typer.echo(json.dumps(handoff.to_dict(), indent=2, sort_keys=True))
+
+
+@handoff_app.command("show")
+def handoff_show(
+    project: str = typer.Option(..., "--project", help="Project identity."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Optional skillpack filter."),
+    full: bool = typer.Option(False, "--full", help="Print the complete handoff."),
+) -> None:
+    """Show the latest project handoff path and summary."""
+    store = HandoffStore(Path.cwd())
+    handoff = store.latest(project, skillpack)
+    if not handoff:
+        typer.echo(f"No handoff found for project: {project}")
+        raise typer.Exit(code=1)
+    path = store.run_dir(handoff.handoff_id) / "handoff.md"
+    typer.echo(f"Handoff: {path}")
+    typer.echo(f"Purpose: {handoff.purpose}")
+    typer.echo(f"Current milestone: {handoff.current_milestone}")
+    typer.echo(f"Exact next action: {handoff.exact_next_action}")
+    if full:
+        typer.echo(path.read_text(encoding="utf-8"))
+
+
+@handoff_app.command("load")
+def handoff_load(
+    project: str = typer.Option(..., "--project", help="Project identity."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack; defaults to project."),
+    workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace identity."),
+    no_create: bool = typer.Option(False, "--no-create", help="Do not recover a handoff when none exists."),
+) -> None:
+    """Load compact session-start context, recovering bounded state if absent."""
+    repo_root = Path.cwd()
+    store = HandoffStore(repo_root)
+    skillpack_name = skillpack or project
+    handoff = store.latest(project, skillpack_name)
+    if not handoff:
+        if no_create:
+            typer.echo(f"No handoff found for project: {project}")
+            raise typer.Exit(code=1)
+        try:
+            handoff = create_handoff(repo_root, project, skillpack_name, workspace, purpose="Recovered session entry handoff", recovered=True)
+            store.save(handoff)
+        except Exception as exc:
+            typer.echo(str(exc))
+            raise typer.Exit(code=1) from exc
+    path = store.run_dir(handoff.handoff_id) / "handoff.md"
+    typer.echo(render_session_start(handoff, str(path)))
+
+
+@handoff_app.command("refresh")
+def handoff_refresh(
+    project: str = typer.Option(..., "--project", help="Project identity."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack; defaults to project."),
+    workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace identity."),
+    purpose: str = typer.Option("End of task handoff", "--purpose", help="Purpose of the next session."),
+    current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
+    from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
+) -> None:
+    """Append a refreshed handoff while preserving prior handoff history."""
+    repo_root = Path.cwd()
+    store = HandoffStore(repo_root)
+    skillpack_name = skillpack or project
+    previous = store.latest(project, skillpack_name)
+    try:
+        handoff = create_handoff(repo_root, project, skillpack_name, workspace, purpose, current_milestone, from_note, previous_handoff_id=previous.handoff_id if previous else None)
+        markdown_path, _ = store.save(handoff)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"Handoff refreshed: {handoff.handoff_id}")
+    typer.echo(f"Previous handoff: {handoff.previous_handoff_id or 'None'}")
+    typer.echo(f"Handoff written to: {markdown_path}")
+
+
+@handoff_app.command("list")
+def handoff_list(
+    project: str | None = typer.Option(None, "--project", help="Optional project filter."),
+    limit: int = typer.Option(20, "--limit", help="Maximum handoffs."),
+) -> None:
+    """List recent project handoffs."""
+    handoffs = HandoffStore(Path.cwd()).list(project=project, limit=limit)
+    if not handoffs:
+        typer.echo("No handoffs found.")
+        return
+    for item in handoffs:
+        typer.echo(f"{item.handoff_id}\t{item.project}\t{item.updated_at}\t{item.purpose}\t{item.current_milestone}")
+
+
+@handoff_app.command("doctor")
+def handoff_doctor(
+    project: str = typer.Option(..., "--project", help="Project identity."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Optional skillpack filter."),
+    stale_after_days: int = typer.Option(7, "--stale-after-days", min=0, help="Staleness threshold."),
+    json_output: bool = typer.Option(False, "--json", help="Print report JSON."),
+) -> None:
+    """Check latest handoff freshness, references, skills, scope, and redaction."""
+    report = diagnose_handoff(Path.cwd(), project, skillpack, stale_after_days)
+    typer.echo(f"Handoff doctor: {report.status}")
+    for name, passed in report.checks.items():
+        typer.echo(f"{'passed' if passed else 'failed'}: {name}")
+    for warning in report.warnings:
+        typer.echo(f"warning: {warning}")
+    for error in report.errors:
+        typer.echo(f"error: {error}")
+    if json_output:
+        typer.echo(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    if report.errors:
+        raise typer.Exit(code=1)
+
+
+@milestone_app.command("next")
+def milestone_next(
+    project: str = typer.Option(..., "--project", help="Project context."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context; defaults to the project name."),
+    workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace to inspect."),
+    from_dogfood: str | None = typer.Option(None, "--from-dogfood", help="Use one dogfood run instead of the latest project run."),
+    from_requirements: str | None = typer.Option(None, "--from-requirements", help="Use one requirements artifact instead of the latest project artifact."),
+    from_note: str | None = typer.Option(None, "--from-note", help="Add current user-reported state."),
+    write_instructions: bool = typer.Option(False, "--write-instructions", help="Write a separate copy-ready instructions.md file."),
+    output_format: str = typer.Option("markdown", "--format", help="Console output: markdown or json."),
+    no_brainstorm: bool = typer.Option(False, "--no-brainstorm", help="Use deterministic ranking without the brainstorming step."),
+    strict: bool = typer.Option(False, "--strict", help="Block on unresolved P0/P1 or missing required planning context."),
+    no_handoff_refresh: bool = typer.Option(False, "--no-handoff-refresh", help="Do not append a session handoff for this decision."),
+) -> None:
+    """Decide the next project milestone and write copy-ready instructions."""
+    if output_format not in {"markdown", "json"}:
+        typer.echo("--format must be markdown or json")
+        raise typer.Exit(code=2)
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(
+        command="milestone next",
+        project=project,
+        skill="next-milestone-decision",
+        task_type="planning",
+        inputs={
+            "project": project,
+            "skillpack": skillpack,
+            "workspace": workspace,
+            "from_dogfood": from_dogfood,
+            "from_requirements": from_requirements,
+            "from_note": from_note,
+            "write_instructions": write_instructions,
+            "format": output_format,
+            "no_brainstorm": no_brainstorm,
+            "strict": strict,
+        },
+    )
+    try:
+        decision = generate_next_milestone(
+            repo_root,
+            project=project,
+            skillpack=skillpack,
+            workspace=workspace,
+            from_dogfood=from_dogfood,
+            from_requirements=from_requirements,
+            from_note=from_note,
+            no_brainstorm=no_brainstorm,
+            strict=strict,
+        )
+        markdown_path, json_path = MilestoneStore(repo_root).save(decision, write_instructions=write_instructions)
+        handoff_path = None
+        if not no_handoff_refresh:
+            handoff = create_handoff(
+                repo_root,
+                project,
+                skillpack or project,
+                workspace,
+                purpose=f"Continue after milestone decision: {decision.recommended_milestone}",
+                current_milestone=decision.recommended_milestone,
+                from_milestone=decision.run_id,
+            )
+            handoff_path, _ = HandoffStore(repo_root).save(handoff)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update(
+        {
+            "milestone_run_id": decision.run_id,
+            "recommended_milestone": decision.recommended_milestone,
+            "blocked": decision.blocked,
+            "blockers": decision.blockers,
+            "markdown_path": str(markdown_path),
+            "json_path": str(json_path),
+            "handoff_path": str(handoff_path) if handoff_path else None,
+        }
+    )
+    trace.warnings.extend(decision.warnings)
+    trace.artifacts.append(TraceArtifact(path=str(markdown_path), kind="next_milestone", description="Next-milestone decision markdown"))
+    trace.artifacts.append(TraceArtifact(path=str(json_path), kind="next_milestone_json", description="Next-milestone decision JSON"))
+    if write_instructions:
+        trace.artifacts.append(TraceArtifact(path=str(markdown_path.parent / "instructions.md"), kind="next_milestone_instructions", description="Copy-ready milestone instructions"))
+    if handoff_path:
+        trace.artifacts.append(TraceArtifact(path=str(handoff_path), kind="session_handoff", description="Automatic post-milestone session handoff"))
+    trace.safety_checks.append(SafetyCheck("artifact-only", "passed", "The command generated local artifacts and did not execute, push, or deploy the recommendation."))
+    if decision.blocked:
+        trace.errors.extend(decision.blockers)
+        trace.next_actions.append("Resolve strict-mode blockers and rerun milestone next.")
+        trace.finish("failed")
+        trace_store.save(trace)
+    else:
+        _success_trace(trace_store, trace)
+    typer.echo(f"Milestone run ID: {decision.run_id}")
+    typer.echo(f"Recommended milestone: {decision.recommended_milestone}")
+    typer.echo(f"Artifact: {markdown_path}")
+    if output_format == "json":
+        typer.echo(json.dumps(decision.to_dict(), indent=2, sort_keys=True))
+    else:
+        typer.echo(markdown_path.read_text(encoding="utf-8"))
+    if decision.blocked:
+        raise typer.Exit(code=1)
+
+
 @action_app.command("extract")
 def action_extract(
     from_response: Path = typer.Option(..., "--from-response", help="Model response artifact path."),
@@ -617,6 +889,7 @@ def plan(
     strict_review: bool = typer.Option(False, "--strict-review", help="Block live responses missing expected sections."),
     use_skillpack: bool = typer.Option(False, "--use-skillpack", help="Load skillpack matching --project."),
     use_current_skillpack: bool = typer.Option(False, "--use-current-skillpack", help="Use active local skillpack."),
+    no_handoff: bool = typer.Option(False, "--no-handoff", help="Skip session handoff autoload/recovery."),
 ) -> None:
     """Compose a model-ready planning prompt without calling a model."""
     repo_root = Path.cwd()
@@ -647,6 +920,15 @@ def plan(
     _record_route_outputs(trace, model_route)
     try:
         prompt = compose_planning_prompt(project=project, skill=skill, task=task, repo_root=repo_root, skillpack_context=_render_resolved_skillpack_context(resolved_skillpack), allow_missing_memory=bool(resolved_skillpack))
+        if not no_handoff:
+            skillpack_name = resolved_skillpack.skillpack.name if resolved_skillpack else project
+            try:
+                handoff, handoff_path = _ensure_session_handoff(repo_root, project, skillpack_name)
+            except (FileNotFoundError, ValueError) as exc:
+                trace.warnings.append(f"Session handoff autoload skipped: {exc}")
+            else:
+                prompt = prompt.rstrip() + "\n\n" + render_session_start(handoff, str(handoff_path))
+                trace.outputs["session_handoff"] = str(handoff_path)
         output_path = write_planning_prompt(prompt, repo_root=repo_root, output_path=output)
     except FileNotFoundError as exc:
         _fail_trace(trace_store, trace, exc)
@@ -709,6 +991,64 @@ def codex_run(
     if print_prompt:
         typer.echo("")
         typer.echo(prompt)
+
+
+@codex_app.command("start", context_settings={"allow_extra_args": True, "ignore_unknown_options": True})
+def codex_start(
+    ctx: typer.Context,
+    project: str = typer.Option(..., "--project", "-p", help="Project memory key."),
+    skillpack: str | None = typer.Option(None, "--skillpack", "-s", help="Skillpack to load; defaults to project."),
+    workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace name."),
+    no_create: bool = typer.Option(False, "--no-create", help="Do not recover a handoff when none exists."),
+    no_pause: bool = typer.Option(False, "--no-pause", help="Do not pause before launching Codex."),
+    bootstrap: bool = typer.Option(True, "--bootstrap/--no-bootstrap", help="Create .venv and install Karakana when the project environment is missing."),
+    inline: bool = typer.Option(False, "--inline", help="Pass --no-alt-screen to Codex unless already supplied."),
+    inject_prompt: bool = typer.Option(True, "--inject-prompt/--no-inject-prompt", help="Pass Karakana session-start context as Codex's initial prompt for fresh interactive launches."),
+    print_only: bool = typer.Option(False, "--print-only", help="Print startup context and launch command without starting Codex."),
+) -> None:
+    """Print Karakana session context, then start Codex CLI."""
+    forwarded = list(ctx.args)
+    if inline and "--no-alt-screen" not in forwarded:
+        forwarded.append("--no-alt-screen")
+    _start_agent_cli(
+        binary="codex",
+        display_name="Codex",
+        project=project,
+        skillpack=skillpack,
+        workspace=workspace,
+        forwarded_args=forwarded,
+        no_create=no_create,
+        no_pause=no_pause,
+        bootstrap_venv=bootstrap,
+        inject_codex_prompt=inject_prompt,
+        print_only=print_only,
+    )
+
+
+@copilot_app.command("start", context_settings={"allow_extra_args": True, "ignore_unknown_options": True})
+def copilot_start(
+    ctx: typer.Context,
+    project: str = typer.Option(..., "--project", "-p", help="Project memory key."),
+    skillpack: str | None = typer.Option(None, "--skillpack", "-s", help="Skillpack to load; defaults to project."),
+    workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace name."),
+    no_create: bool = typer.Option(False, "--no-create", help="Do not recover a handoff when none exists."),
+    no_pause: bool = typer.Option(False, "--no-pause", help="Do not pause before launching Copilot."),
+    print_only: bool = typer.Option(False, "--print-only", help="Print startup context and launch command without starting Copilot."),
+) -> None:
+    """Print Karakana session context, then start GitHub Copilot CLI."""
+    _start_agent_cli(
+        binary="copilot",
+        display_name="Copilot",
+        project=project,
+        skillpack=skillpack,
+        workspace=workspace,
+        forwarded_args=list(ctx.args),
+        no_create=no_create,
+        no_pause=no_pause,
+        bootstrap_venv=False,
+        inject_codex_prompt=False,
+        print_only=print_only,
+    )
 
 
 @codex_app.command("handoff")
@@ -799,6 +1139,8 @@ def codex_execute(codex_task_path: Path, execute: bool = typer.Option(False, "--
 @codex_app.command("capture-diff")
 def codex_capture_diff(
     source_task: str | None = typer.Option(None, "--source-task", help="Source Codex task ID."),
+    project: str | None = typer.Option(None, "--project", help="Project identity for artifact scoping."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack identity for artifact scoping."),
     include_staged: bool = typer.Option(False, "--include-staged", help="Capture staged diff too."),
     output: Path | None = typer.Option(None, "--output", help="Custom output directory under .karakana/."),
     json_output: bool = typer.Option(False, "--json", help="Print patch JSON."),
@@ -808,14 +1150,14 @@ def codex_capture_diff(
 
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
-    trace = trace_store.create_run(command="codex capture-diff", task_type="patch_capture", inputs={"source_task": source_task, "include_staged": include_staged, "output": str(output) if output else None})
+    trace = trace_store.create_run(command="codex capture-diff", project=project, skill=skillpack, task_type="patch_capture", inputs={"source_task": source_task, "project": project, "skillpack": skillpack, "include_staged": include_staged, "output": str(output) if output else None})
     try:
-        artifact = PatchCapture(repo_root).capture_diff(source_task=source_task, include_staged=include_staged, output_dir=output)
+        artifact = PatchCapture(repo_root).capture_diff(source_task=source_task, include_staged=include_staged, output_dir=output, project=project, skillpack=skillpack)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
-    trace.outputs.update({"patch_run_id": artifact.patch_run_id, "files_changed": artifact.files_changed, "diff_path": artifact.diff_path, "summary_path": artifact.summary_path})
+    trace.outputs.update({"patch_run_id": artifact.patch_run_id, "project": artifact.project, "skillpack": artifact.skillpack, "repository_path": artifact.repository_path, "files_changed": artifact.files_changed, "diff_path": artifact.diff_path, "summary_path": artifact.summary_path})
     trace.warnings.extend(artifact.warnings)
     trace.artifacts.append(TraceArtifact(path=str(artifact.diff_path), kind="patch_diff", description="Captured working tree diff"))
     trace.artifacts.append(TraceArtifact(path=str(artifact.summary_path), kind="patch_summary", description="Patch summary"))
@@ -850,16 +1192,16 @@ def codex_capture_tests(command: str = typer.Option(..., "--command", help="Expl
 
 
 @codex_app.command("review-patch")
-def codex_review_patch(diff: Path = typer.Option(..., "--diff", help="Diff file to review."), skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context for high-risk paths.")) -> None:
+def codex_review_patch(diff: Path = typer.Option(..., "--diff", help="Diff file to review."), project: str | None = typer.Option(None, "--project", help="Project identity for artifact scoping."), skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context for high-risk paths.")) -> None:
     """Review a captured patch diff using deterministic checks."""
     import json
 
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
-    trace = trace_store.create_run(command="codex review-patch", task_type="patch_review", inputs={"diff": str(diff), "skillpack": skillpack})
+    trace = trace_store.create_run(command="codex review-patch", project=project, skill=skillpack, task_type="patch_review", inputs={"diff": str(diff), "project": project, "skillpack": skillpack})
     try:
         skillpack_context = _resolve_optional_skillpack(repo_root, skillpack)
-        review_path = PatchReviewer(repo_root).review_diff(diff, skillpack_context=skillpack_context)
+        review_path = PatchReviewer(repo_root).review_diff(diff, skillpack_context=skillpack_context, project=project)
         data = json.loads(review_path.read_text(encoding="utf-8"))
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
@@ -2395,13 +2737,18 @@ def skill_show(name: str) -> None:
 
 @skill_app.command("validate")
 def skill_validate(path: Path) -> None:
-    """Validate one skill directory or SKILL.md file."""
+    """Validate one skill by name, directory, or SKILL.md file."""
+    requested_path = path
+    if not path.exists() and len(path.parts) == 1:
+        named_skill = Path.cwd() / "skills" / path
+        if named_skill.exists():
+            path = named_skill
     trace_store = TraceStore(Path.cwd())
     trace = trace_store.create_run(
         command="skill validate",
         skill=path.parent.name if path.name == "SKILL.md" else path.name,
         task_type="skill_validation",
-        inputs={"path": str(path)},
+        inputs={"path": str(path), "requested_path": str(requested_path)},
     )
     result = SkillValidator().validate(path)
     trace.outputs["errors"] = result.errors
@@ -2655,6 +3002,7 @@ def workspace_plan(
     provider: str | None = typer.Option(None, "--provider", help="Reserved model override."),
     model: str | None = typer.Option(None, "--model", help="Reserved model override."),
     json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+    no_handoff: bool = typer.Option(False, "--no-handoff", help="Skip session handoff autoload/recovery."),
 ) -> None:
     """Generate a project-specific workspace planning prompt."""
     repo_root = Path.cwd()
@@ -2664,7 +3012,13 @@ def workspace_plan(
         trace.warnings.append("Workspace planning does not execute live models in this milestone.")
     try:
         workspace = _load_workspace_for_cli(repo_root, workspace_name)
-        output = build_workspace_plan(repo_root, workspace, project, task)
+        project_config = next(item for item in workspace.projects if item.id == project)
+        handoff_context = None
+        if not no_handoff:
+            handoff, handoff_path = _ensure_session_handoff(repo_root, project, project_config.skillpack or project, workspace.name)
+            handoff_context = render_session_start(handoff, str(handoff_path))
+            trace.outputs["session_handoff"] = str(handoff_path)
+        output = build_workspace_plan(repo_root, workspace, project, task, handoff_context=handoff_context)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
@@ -3134,8 +3488,194 @@ def _safe_apply_path(repo_root: Path, target_path: str) -> Path:
 
 
 def _success_trace(trace_store: TraceStore, trace) -> None:
+    if trace.project and not trace.command.startswith("handoff "):
+        trace.next_actions.append(
+            f"Before ending the task, run `karakana handoff refresh --project {trace.project} --purpose \"End of task handoff\"`."
+        )
     trace.finish("success")
     trace_store.save(trace)
+
+
+def _ensure_session_handoff(repo_root: Path, project: str, skillpack: str, workspace: str | None = None):
+    store = HandoffStore(repo_root)
+    handoff = store.latest(project, skillpack)
+    if handoff is None:
+        handoff = create_handoff(
+            repo_root,
+            project,
+            skillpack,
+            workspace,
+            purpose="Recovered session entry handoff",
+            recovered=True,
+        )
+        store.save(handoff)
+    return handoff, store.run_dir(handoff.handoff_id) / "handoff.md"
+
+
+def _start_agent_cli(
+    *,
+    binary: str,
+    display_name: str,
+    project: str,
+    skillpack: str | None,
+    workspace: str | None,
+    forwarded_args: list[str],
+    no_create: bool,
+    no_pause: bool,
+    bootstrap_venv: bool,
+    inject_codex_prompt: bool,
+    print_only: bool,
+) -> None:
+    repo_root = Path.cwd()
+    skillpack_name = skillpack or project
+    store = HandoffStore(repo_root)
+    handoff = store.latest(project, skillpack_name)
+    if handoff is None:
+        if no_create:
+            typer.echo(f"No handoff found for project: {project}")
+            raise typer.Exit(code=1)
+        handoff = create_handoff(
+            repo_root,
+            project,
+            skillpack_name,
+            workspace,
+            purpose="Recovered session entry handoff",
+            recovered=True,
+        )
+        store.save(handoff)
+    handoff_path = store.run_dir(handoff.handoff_id) / "handoff.md"
+    session_start = render_session_start(handoff, str(handoff_path))
+    session_start_path = repo_root / ".karakana" / "session-start.md"
+    session_start_path.parent.mkdir(parents=True, exist_ok=True)
+    session_start_path.write_text(session_start, encoding="utf-8")
+    initial_prompt_path = repo_root / ".karakana" / "codex-initial-prompt.md"
+
+    launch_args = list(forwarded_args)
+    if binary == "codex" and inject_codex_prompt and _codex_accepts_initial_prompt(launch_args):
+        initial_prompt = _render_codex_initial_prompt(session_start, session_start_path)
+        initial_prompt_path.write_text(initial_prompt, encoding="utf-8")
+        launch_args.append(initial_prompt)
+    elif binary == "codex" and initial_prompt_path.exists():
+        initial_prompt_path.unlink()
+
+    typer.echo(session_start)
+    typer.echo(f"Session start written to: {session_start_path}")
+    if binary == "codex" and initial_prompt_path.exists():
+        typer.echo(f"Codex initial prompt written to: {initial_prompt_path}")
+    display_command = [binary, *_display_launch_args(binary, launch_args)]
+    typer.echo(f"{'Would launch' if print_only else 'Launching'} {display_name}: {_quote_command(display_command)}")
+    _flush_terminal_output()
+    if print_only:
+        return
+
+    if bootstrap_venv:
+        _ensure_project_venv(repo_root)
+        _flush_terminal_output()
+
+    executable = shutil.which(binary)
+    if not executable:
+        typer.echo(f"{display_name} CLI was not found on PATH: {binary}")
+        _flush_terminal_output()
+        raise typer.Exit(code=127)
+    if not no_pause and sys.stdin.isatty() and sys.stdout.isatty():
+        _flush_terminal_output()
+        input(f"Press Enter to launch {display_name}...")
+    _flush_terminal_output()
+    os.execvp(executable, [executable, *launch_args])
+
+
+_CODEX_OPTIONS_WITH_VALUES = {
+    "-c",
+    "--config",
+    "--remote",
+    "--remote-auth-token-env",
+    "-i",
+    "--image",
+    "-m",
+    "--model",
+    "-p",
+    "--profile",
+    "-s",
+    "--sandbox",
+    "-C",
+    "--cd",
+    "--add-dir",
+    "-a",
+    "--ask-for-approval",
+    "--enable",
+    "--disable",
+}
+
+
+def _codex_accepts_initial_prompt(args: list[str]) -> bool:
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        if arg == "--":
+            return index == len(args) - 1
+        if arg.startswith("--") and "=" in arg:
+            index += 1
+            continue
+        if arg in _CODEX_OPTIONS_WITH_VALUES:
+            index += 2
+            continue
+        if arg.startswith("-"):
+            index += 1
+            continue
+        return False
+    return True
+
+
+def _render_codex_initial_prompt(session_start: str, session_start_path: Path) -> str:
+    return (
+        "Karakana session-start context was loaded before the first user task.\n\n"
+        f"Durable copy: `{session_start_path}`\n\n"
+        "Use this as startup context, then wait for the user's task. Do not modify files, run commands, "
+        "push, deploy, or continue the milestone until the user asks.\n\n"
+        f"{session_start.rstrip()}\n"
+    )
+
+
+def _display_launch_args(binary: str, args: list[str]) -> list[str]:
+    if binary != "codex" or not args:
+        return args
+    if _looks_like_karakana_initial_prompt(args[-1]):
+        return [*args[:-1], "<karakana-session-start-prompt>"]
+    return args
+
+
+def _looks_like_karakana_initial_prompt(value: str) -> bool:
+    return value.startswith("Karakana session-start context was loaded before the first user task.")
+
+
+def _ensure_project_venv(repo_root: Path) -> bool:
+    venv_dir = repo_root / ".venv"
+    venv_python = _venv_python(venv_dir)
+    if venv_python.exists():
+        return False
+
+    typer.echo("Project .venv was not found; creating it and installing Karakana.")
+    subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], cwd=repo_root, check=True)
+    subprocess.run([str(venv_python), "-m", "pip", "install", "-e", ".[dev]"], cwd=repo_root, check=True)
+    typer.echo("Project .venv is ready.")
+    return True
+
+
+def _venv_python(venv_dir: Path) -> Path:
+    if os.name == "nt":
+        return venv_dir / "Scripts" / "python.exe"
+    return venv_dir / "bin" / "python"
+
+
+def _quote_command(command: list[str]) -> str:
+    return " ".join(shlex.quote(part) for part in command)
+
+
+def _flush_terminal_output() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        flush = getattr(stream, "flush", None)
+        if callable(flush):
+            flush()
 
 
 def _fail_trace(trace_store: TraceStore, trace, exc: Exception) -> None:

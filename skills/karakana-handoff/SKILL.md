@@ -1,7 +1,7 @@
 ---
 name: karakana-handoff
-description: Use this skill to summarize current work into a compact handoff for another agent, Codex task, future session, or GitHub issue.
-version: 0.1.0
+description: Create, load, recover, or refresh compact project-aware continuation artifacts for task endings, new sessions, agent switches, context-window failures, and milestone transitions.
+version: 0.2.0
 risk_level: low
 category: productivity
 scope: bundled
@@ -12,10 +12,10 @@ activation:
   keywords:
     - handoff
     - transfer
-    - summarize current work
     - continue later
+    - next session
     - next agent
-    - codex task
+    - context window
   required_files: []
   optional_tools:
     - git
@@ -29,87 +29,133 @@ requires_approval_for: []
 
 ## Purpose
 
-Create compact, accurate handoffs that let another agent or future session continue without rediscovering context.
+Create a compact Karakana handoff artifact so a fresh agent or session can continue without rereading the full chat or repository.
+
+A handoff is not a normal summary. A handoff is a compact continuation package for another agent or session.
+
+## When To Use
+
+- before ending a task;
+- after completing a milestone;
+- before switching agents;
+- before starting a long Codex session;
+- after a context-window failure;
+- when asked to preserve continuation state.
 
 ## When to use this skill
 
-Use when pausing work, transferring work to another agent, preparing a Codex task, summarizing a long session, or creating a GitHub issue from current state.
+Use for the task endings, session starts, agent switches, milestone transitions, and context recovery cases listed above.
 
 ## When not to use this skill
 
-Do not use as a substitute for tests, code review, or formal release notes. Do not include secrets or raw credential material.
+Do not use a handoff to replace current code inspection, tests, review, release notes, or mandatory repository instructions.
 
-## Quick Reference
+## What To Include
 
-- Capture the current goal, what changed, what remains, and where evidence lives.
-- Include commands already run and commands still needed.
-- Recommend the next skill only when it clearly helps the next step.
+- current milestone and current state;
+- decisions already made and unresolved findings;
+- files to inspect first and files not to reread;
+- durable artifacts to reference rather than duplicate;
+- suggested skills for the next task;
+- one exact next action;
+- safety constraints and return-handoff expectations;
+- staleness, recovery, and missing-reference warnings.
+
+## What Not To Do
+
+- Do not duplicate long PRDs, plans, ADRs, diffs, logs, or transcripts.
+- Do not copy secrets, `.env` values, tokens, passwords, private keys, or credential-bearing URLs.
+- Do not claim recovered or stale context is current.
+- Do not omit unresolved P0/P1 findings.
+- Do not let “files not to reread” override mandatory repository instructions.
+- Do not overwrite prior handoffs; preserve append-only history.
+
+## Process
+
+1. Resolve project, skillpack, optional workspace, and next-session purpose.
+2. Load the latest project handoff. If absent, recover only from configured memory, skillpack/workspace files, and latest known artifact stores.
+3. Verify project ownership, artifact existence, current milestone, findings, and next action.
+4. Reference authoritative files by path. Summarize only the continuation facts not already durable elsewhere.
+5. Suggest only installed, relevant skills.
+6. Redact all user notes and generated fields before persistence and rendering.
+7. Write `handoff.md` and `handoff.json` under a new `.karakana/handoffs/<handoff-id>/` directory.
+8. Run `karakana handoff doctor --project <project>`.
+9. Before the next task ends, append a refreshed return handoff.
 
 ## Core concepts
 
-- Handoffs preserve decision context, not every line of chat.
-- The next agent needs exact files, artifacts, commands, risks, and definition of done.
-- Unverified claims should be marked as assumptions or risks.
+- Continuation artifacts preserve decisions and next actions, not transcript history.
+- Project scope and current durable evidence outrank recency alone.
+- Recovery is bounded and provisional.
+- Refresh is append-only.
 
 ## Standard workflow
 
-1. Identify the active goal and latest user request.
-2. Summarize completed work with file and artifact references.
-3. Record current repository state, failing checks, and unresolved questions.
-4. Recommend next actions and relevant Karakana skills.
-5. State risks, constraints, and definition of done.
+Load or recover at task entry, verify references, perform the bounded task, refresh before exit, and run doctor when validity is uncertain.
+
+## Quick Reference
+
+```bash
+karakana handoff load --project <project> --skillpack <skillpack>
+karakana handoff refresh --project <project> --skillpack <skillpack> --purpose "End of task handoff"
+karakana handoff doctor --project <project>
+```
 
 ## Pitfalls
 
-- Do not omit failed commands or partial work.
-- Do not include secrets, tokens, `.env` content, or private credentials.
-- Do not claim completion without evidence.
+- Treating the handoff as a replacement for current code or tests.
+- Copying artifact bodies instead of linking them.
+- Loading a handoff by recency without checking project and skillpack.
+- Hiding stale or missing references.
+- Creating hidden lifecycle behavior that users cannot opt out of.
 
 ## Verification
 
-- Check `git status` and relevant test output before finalizing.
-- Confirm file paths and artifact paths exist.
-- Ensure the handoff is short enough to be read quickly.
-
-## Safety rules
-
-- Redact secret-like values.
-- Preserve human review gates.
-- Do not tell the next agent to deploy, push to main, or bypass tests.
+- Confirm `handoff.md` and `handoff.json` exist.
+- Confirm the latest selected handoff matches project and skillpack.
+- Confirm all reference artifacts and suggested skills exist.
+- Confirm secret detection passes after rendering.
+- Confirm one exact next action and return-handoff expectation are present.
+- Confirm recovered handoffs explicitly require verification.
 
 ## Required checks
 
-- Current goal is explicit.
-- Relevant files and artifacts are listed.
-- Suggested next actions are actionable.
-- Risks and constraints are documented.
-- Definition of done is testable.
+- Project and skillpack match.
+- Required fields and one exact next action are present.
+- Referenced artifacts and suggested skills exist.
+- Staleness and recovery status are visible.
+- Rendered content contains no unredacted secret-like values.
+
+## Examples
+
+- Load a project handoff after a context-window failure.
+- Refresh after a milestone decision without copying its full instruction artifact.
+- Recover a lightweight handoff from project-scoped stores when no explicit handoff exists.
+
+## Safety rules
+
+- Never persist raw secrets or full sensitive command logs.
+- Preserve approval, review, patch, push, and deployment gates.
+- Do not use handoff instructions to authorize implementation or external writes.
+- Keep automatic creation bounded, append-only, visible, and opt-out capable.
 
 ## Output format
 
 ```markdown
-# Handoff
+# Karakana Handoff
 
-## Current Goal
-
-## What Was Done
-
-## Current State
-
-## Relevant Files and Artifacts
-
+## Run Metadata
+## Current State Summary
+## Current Milestone
+## Decisions Already Made
+## Open Findings
+## Files to Inspect First
+## Files Not to Reread
+## Artifacts to Reference, Not Duplicate
 ## Suggested Skills
-
-## Suggested Next Actions
-
-## Risks and Constraints
-
-## Commands to Run
-
-## Definition of Done
+## Exact Next Action
+## Safety Constraints
+## Return Handoff Expectations
+## Staleness / Validity Notes
+## Notes for Fresh Agent
 ```
-
-## Examples
-
-- Summarize a partially implemented milestone with files changed, commands run, failing tests, and next skill recommendations.
-- Convert a finished implementation session into a compact future-session handoff.

@@ -24,3 +24,13 @@ def test_patch_capture_with_working_tree_diff(tmp_path):
 
     assert "README.md" in artifact.files_changed
     assert "new" in (tmp_path / ".karakana" / "patches" / artifact.patch_run_id / "changes.diff").read_text(encoding="utf-8")
+
+
+def test_patch_capture_records_project_scope(tmp_path):
+    subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
+
+    artifact = PatchCapture(tmp_path).capture_diff(project="demo", skillpack="demo-pack")
+
+    assert artifact.project == "demo"
+    assert artifact.skillpack == "demo-pack"
+    assert artifact.repository_path == str(tmp_path.resolve())

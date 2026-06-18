@@ -61,6 +61,9 @@ class PatchArtifact:
     files_changed: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    project: str | None = None
+    skillpack: str | None = None
+    repository_path: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return redact_value(asdict(self))
@@ -94,6 +97,9 @@ class PatchReview:
     blocked: bool = False
     requires_human_review: bool = True
     recommended_next_actions: list[str] = field(default_factory=list)
+    project: str | None = None
+    skillpack: str | None = None
+    repository_path: str | None = None
 
     def __post_init__(self) -> None:
         if self.status not in REVIEW_STATUSES:
@@ -115,4 +121,7 @@ class PatchReview:
             blocked=bool(data.get("blocked", False)),
             requires_human_review=bool(data.get("requires_human_review", True)),
             recommended_next_actions=list(data.get("recommended_next_actions", [])),
+            project=data.get("project"),
+            skillpack=data.get("skillpack"),
+            repository_path=data.get("repository_path"),
         )

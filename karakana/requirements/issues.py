@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from karakana.requirements.schemas import IssueDraft, RequirementPRD, UserStory
-from karakana.requirements.msc_platform import MSC_PLATFORM_SLICES, is_msc_platform
+from karakana.requirements.msc_platform import is_msc_platform, slices_for_prd
 
 
 def generate_issues(prd: RequirementPRD, stories: list[UserStory]) -> list[IssueDraft]:
@@ -39,7 +39,7 @@ def generate_issues(prd: RequirementPRD, stories: list[UserStory]) -> list[Issue
 def _generate_msc_platform_issues(prd: RequirementPRD, stories: list[UserStory]) -> list[IssueDraft]:
     story_by_title = {story.title: story for story in stories}
     issues: list[IssueDraft] = []
-    for index, item in enumerate(MSC_PLATFORM_SLICES, start=1):
+    for index, item in enumerate(slices_for_prd(prd.project, prd.title, prd.goal, prd.context), start=1):
         story = story_by_title.get(item.title)
         safety = list(dict.fromkeys([*item.safety_constraints, *prd.safety_constraints]))
         issues.append(

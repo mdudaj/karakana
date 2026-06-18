@@ -74,6 +74,43 @@ Example:
 karakana memory validate --project karakana
 ```
 
+## handoff
+
+Purpose: Create and load project session handoffs.
+
+Common commands:
+```bash
+karakana handoff load --project msc-platform --skillpack msc-platform
+karakana handoff refresh --project msc-platform --skillpack msc-platform
+```
+
+Safe default behavior: Append-only local artifacts; load recovers bounded state when absent.
+
+Write/execute flags: --no-create, --no-write, --no-handoff
+
+Example:
+```bash
+karakana handoff doctor --project msc-platform
+```
+
+## milestone
+
+Purpose: Decide the next project milestone and generate instructions.
+
+Common commands:
+```bash
+karakana milestone next --project msc-platform --skillpack msc-platform
+```
+
+Safe default behavior: Artifact-only; strict mode blocks unresolved planning risk.
+
+Write/execute flags: --write-instructions
+
+Example:
+```bash
+Review .karakana/milestones/<run-id>/next-milestone.md
+```
+
 ## skill
 
 Purpose: Inspect, validate, and index skills.
@@ -223,20 +260,39 @@ karakana action list
 
 ## codex
 
-Purpose: Generate Codex handoffs, capture diffs, review patches.
+Purpose: Generate Codex handoffs, capture diffs, review patches, or start Codex with visible Karakana context.
 
 Common commands:
 ```bash
+karakana codex start --project karakana --skillpack karakana -- --model gpt-5.5
 karakana codex handoff <action-run-id>
 ```
 
-Safe default behavior: No Codex execution by default.
+Safe default behavior: No Codex execution by default except explicit `codex start`; launcher prints and flushes handoff context before exec, injects session context as Codex's initial prompt for fresh interactive launches, and bootstraps a missing project .venv unless --no-bootstrap is used. If `karakana` is not on PATH and .venv is missing, use `python -m karakana codex start --project <project>` from the source checkout.
 
-Write/execute flags: --execute
+Write/execute flags: --execute, --print-only, --no-create, --no-pause, --inline, --no-bootstrap, --no-inject-prompt
 
 Example:
 ```bash
-karakana codex capture-diff
+karakana codex start --project karakana --skillpack karakana --print-only
+```
+
+## copilot
+
+Purpose: Start GitHub Copilot CLI with visible Karakana handoff context.
+
+Common commands:
+```bash
+karakana copilot start --project karakana --skillpack karakana -- --model gpt-5.4
+```
+
+Safe default behavior: Explicit launcher prints handoff context before exec; --print-only previews without launch.
+
+Write/execute flags: --print-only, --no-create, --no-pause
+
+Example:
+```bash
+karakana copilot start --project karakana --skillpack karakana --print-only
 ```
 
 ## patch

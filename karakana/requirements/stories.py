@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from karakana.requirements.schemas import RequirementPRD, UserStory
-from karakana.requirements.msc_platform import MSC_PLATFORM_SLICES, is_msc_platform
+from karakana.requirements.msc_platform import is_msc_platform, slices_for_prd
 
 
 SLICES = [
@@ -44,7 +44,7 @@ def generate_stories(prd: RequirementPRD) -> list[UserStory]:
 
 def _generate_msc_platform_stories(prd: RequirementPRD) -> list[UserStory]:
     stories: list[UserStory] = []
-    for index, item in enumerate(MSC_PLATFORM_SLICES, start=1):
+    for index, item in enumerate(slices_for_prd(prd.project, prd.title, prd.goal, prd.context), start=1):
         stories.append(
             UserStory(
                 story_id=f"{prd.req_id}-story-{index}",

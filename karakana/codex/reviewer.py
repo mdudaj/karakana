@@ -36,10 +36,18 @@ class PatchReviewer:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
 
-    def review_diff(self, diff_path: Path, output_dir: Path | None = None, skillpack_context=None) -> Path:
+    def review_diff(self, diff_path: Path, output_dir: Path | None = None, skillpack_context=None, project: str | None = None) -> Path:
         diff = diff_path.read_text(encoding="utf-8")
         patch_run_id = _patch_run_id_from_path(diff_path)
-        review = review_patch_text(diff, patch_run_id=patch_run_id, skillpack_context=skillpack_context)
+        patch_metadata = _patch_metadata(diff_path)
+        review = review_patch_text(
+            diff,
+            patch_run_id=patch_run_id,
+            skillpack_context=skillpack_context,
+            project=project or patch_metadata.get("project"),
+            skillpack=skillpack_context.skillpack.name if skillpack_context else patch_metadata.get("skillpack"),
+            repository_path=patch_metadata.get("repository_path"),
+        )
         root = _review_dir(self.repo_root, output_dir)
         root.mkdir(parents=True, exist_ok=True)
         (root / "evidence").mkdir(exist_ok=True)
@@ -48,7 +56,7 @@ class PatchReviewer:
         return root / "review.json"
 
 
-def review_patch_text(diff: str, patch_run_id: str | None = None, skillpack_context=None) -> PatchReview:
+def review_patch_text(diff: str, patch_run_id: str | None = None, skillpack_context=None, project: str | None = None, skillpack: str | None = None, repository_path: str | None = None) -> PatchReview:
     findings: list[PatchReviewFinding] = []
     files = changed_files_from_diff(diff)
     lowered = diff.lower()
@@ -91,6 +99,9 @@ def review_patch_text(diff: str, patch_run_id: str | None = None, skillpack_cont
         findings=findings,
         blocked=blocked,
         recommended_next_actions=_next_actions(blocked, risk),
+        project=project,
+        skillpack=skillpack,
+        repository_path=repository_path,
     )
 
 
@@ -106,7 +117,9 @@ def render_patch_review(review: PatchReview, diff: str, skillpack_name: str | No
 - Status: {review.status}
 - Risk level: {review.risk_level}
 - Blocked: {review.blocked}
-- Skillpack: {skillpack_name or ""}
+- Skillpack: {skillpack_name or review.skillpack or ""}
+- Project: {review.project or ""}
+- Repository: {review.repository_path or ""}
 
 ## Files Changed
 
@@ -177,6 +190,16 @@ def generate_patch_review_id() -> str:
 
 def _patch_run_id_from_path(path: Path) -> str:
     return path.parent.name if path.parent.name else "unknown"
+
+
+def _patch_metadata(diff_path: Path) -> dict:
+    patch_json = diff_path.parent / "patch.json"
+    if not patch_json.exists():
+        return {}
+    try:
+        return json.loads(patch_json.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
 
 
 def _is_test_file(path: str) -> bool:

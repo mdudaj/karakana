@@ -10,7 +10,7 @@ from karakana.workspaces.boundaries import find_project, resolve_project_root
 from karakana.workspaces.schemas import Workspace
 
 
-def build_workspace_plan(repo_root: Path, workspace: Workspace, project_id: str, task: str, output: Path | None = None) -> Path:
+def build_workspace_plan(repo_root: Path, workspace: Workspace, project_id: str, task: str, output: Path | None = None, handoff_context: str | None = None) -> Path:
     project = find_project(workspace, project_id)
     project_root = resolve_project_root(workspace, project_id, repo_root=repo_root)
     skill = _primary_skill(repo_root, project.skillpack)
@@ -19,7 +19,7 @@ def build_workspace_plan(repo_root: Path, workspace: Workspace, project_id: str,
         skill=skill,
         task=task,
         repo_root=repo_root,
-        skillpack_context=_workspace_context(workspace, project_id, project_root),
+        skillpack_context=_workspace_context(workspace, project_id, project_root) + ("\n\n" + handoff_context if handoff_context else ""),
         allow_missing_memory=True,
     )
     path = output or (repo_root / ".karakana" / "workspace-plans" / f"{workspace.name}-{project_id}-plan.md")

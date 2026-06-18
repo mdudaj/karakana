@@ -14,6 +14,10 @@ skills:
     - ci-failure-analysis
     - karakana-handoff
   optional:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
     - django-debugging
     - viewflow-framework
     - write-karakana-skill
