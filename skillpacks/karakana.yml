@@ -9,12 +9,15 @@ project:
   contract: KARAKANA.md
 skills:
   required:
+    - delivery-artifact-gate
+    - design-system-governance
     - karakana-self-improvement
     - github-pr-review
     - ci-failure-analysis
     - karakana-handoff
     - write-karakana-skill
   optional:
+    - viewflow-material-ui
     - next-milestone-decision
     - brainstorm-verbalized-sampling
     - requirements-elicitation

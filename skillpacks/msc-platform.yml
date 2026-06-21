@@ -11,12 +11,15 @@ project:
 
 skills:
   required:
+    - delivery-artifact-gate
+    - design-system-governance
     - next-milestone-decision
     - brainstorm-verbalized-sampling
     - requirements-elicitation
     - grill-with-docs
     - research-platform
     - research-writing
+    - viewflow-material-ui
     - github-pr-review
     - ci-failure-analysis
     - karakana-handoff
