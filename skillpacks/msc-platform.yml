@@ -1,0 +1,109 @@
+name: msc-platform
+description: MSc research prototype/platform implementation profile
+version: 0.1.0
+status: experimental
+
+project:
+  id: msc-platform
+  display_name: MSc Research Platform
+  memory: ubongo/projects/msc-platform
+  contract: KARAKANA.md
+
+skills:
+  required:
+    - delivery-artifact-gate
+    - design-system-governance
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
+    - research-platform
+    - research-writing
+    - viewflow-material-ui
+    - github-pr-review
+    - ci-failure-analysis
+    - karakana-handoff
+  optional:
+    - django-debugging
+    - viewflow-framework
+    - write-karakana-skill
+
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+  documentation:
+    provider: github
+    model: claude-haiku-4.5
+  routine_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4-mini
+  framework_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4
+  high_risk_code_review:
+    provider: openai_codex
+    model: gpt-5.5
+
+safety:
+  high_risk_paths:
+    - "docs/evaluation/**"
+    - "docs/curriculum/**"
+    - "docs/adr/**"
+    - "schemas/**"
+    - "evaluation/**"
+    - "curriculum/**"
+    - "data/**"
+    - "datasets/**"
+    - "exports/**"
+    - "experiments/**"
+    - "generation/**"
+    - "prompts/**"
+    - "models/**"
+    - "settings/**"
+    - ".github/workflows/**"
+  blocked_paths:
+    - ".env"
+    - ".env.*"
+    - "secrets/**"
+  requires_approval_for:
+    - evaluation_protocol_change
+    - data_collection_change
+    - participant_data_change
+    - curriculum_source_change
+    - official_curriculum_snapshot_change
+    - schema_contract_change
+    - curriculum_schema_change
+    - evaluation_schema_change
+    - workflow_schema_change
+    - automated_curriculum_review_change
+    - whatsapp_message_template_change
+    - model_provider_change
+    - production_config_change
+    - destructive_command
+    - remote_push
+
+tests:
+  commands:
+    - "pytest"
+  recommended_before_commit:
+    - "karakana skill validate-all"
+    - "karakana eval run --skill brainstorm-verbalized-sampling"
+    - "karakana eval run --skill requirements-elicitation"
+    - "karakana eval run --skill grill-with-docs"
+    - "karakana eval run --skill next-milestone-decision"
+    - "karakana eval run --skill research-writing"
+
+conventions:
+  notes:
+    - "Every platform feature must map to a research objective, evaluation activity, evidence artifact, or reproducibility requirement."
+    - "Official TIE curriculum sources are the primary source of curriculum facts."
+    - "Deterministic extraction is the source-of-truth curriculum dataset."
+    - "Optional LLM enrichment and automated review must not overwrite deterministic curriculum extraction."
+    - "Automated curriculum review must not auto-accept topics."
+    - "Human topic selection is required before promotion to the accepted shortlist."
+    - "WhatsApp is a secondary evaluator communication channel; web remains the canonical review interface."
+    - "Project repository push is allowed only with explicit opt-in, branch safety checks, and clean patch review."
+    - "Schemas are part of the research evidence contract."
+    - "Schema changes require documentation updates and validation examples."
+    - "Do not store participant-sensitive data in Git."

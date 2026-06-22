@@ -1,0 +1,15 @@
+id: patch-status-includes-next-actions
+name: Patch status includes next actions
+description: Ensure patch status reports next safe steps.
+suite: patch
+risk_level: medium
+tags: [patch, status]
+input:
+  task: "Verify patch status includes gate, review, test evidence, branch state, and recommended next actions."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "Run relevant tests"
+    - "human approval"

@@ -1,0 +1,253 @@
+"""Deterministic PRD generation."""
+
+from __future__ import annotations
+
+from karakana.models.router import route_model
+from karakana.requirements.schemas import HarnessSubsystemImpact, RequirementPRD, RequirementSource, StandardsSpecContext
+from karakana.requirements.store import generate_req_id
+
+
+def generate_prd(
+    source: RequirementSource,
+    content: str,
+    *,
+    project: str | None = None,
+    skillpack_context=None,
+) -> RequirementPRD:
+    project_key = project or source.project or (skillpack_context.skillpack.project.id if skillpack_context else None)
+    skillpack_name = source.skillpack or (skillpack_context.skillpack.name if skillpack_context else None)
+    route = route_model("planning", skillpack_routes=skillpack_context.model_routes if skillpack_context else None)
+    title = _title(source, content)
+    standards_spec = _standards_spec(content)
+    non_goals = standards_spec.non_goals or ["Do not execute Codex automatically.", "Do not publish issues or pull requests by default.", "Do not mutate repository files from requirements artifacts."]
+    skills = _skills(content, skillpack_context)
+    safety = _safety(content, skillpack_context)
+    tests = _tests(content, skillpack_context)
+    return RequirementPRD(
+        req_id=generate_req_id(),
+        title=title,
+        project=project_key,
+        skillpack=skillpack_name,
+        status="ready_for_review",
+        source=source,
+        context=_excerpt(content),
+        problem=_problem(content),
+        goal=_goal(content),
+        non_goals=non_goals,
+        users_or_actors=_users_or_actors(content),
+        functional_requirements=_functional_requirements(content),
+        non_functional_requirements=_non_functional_requirements(content),
+        harness_impact=_harness_impact(content, skillpack_context),
+        standards_spec=standards_spec,
+        risks=_risks(content),
+        safety_constraints=safety,
+        suggested_skills=skills,
+        suggested_skillpack=skillpack_name,
+        model_route=route,
+        test_and_eval_plan=tests,
+        rollout_or_review_plan=["Generate PRD artifact.", "Review stories and issue drafts.", "Run readiness checks.", "Hand off only after human review."],
+        metadata={"inferred": True, "source_type": source.source_type},
+    )
+
+
+def _title(source: RequirementSource, content: str) -> str:
+    if source.title and source.title != "Manual note":
+        return f"Requirements for {source.title}"
+    seed = _section(content, "Specification / PRD Seed")
+    if seed:
+        first = next((line.strip(" -#") for line in seed.splitlines() if line.strip()), "")
+        if first.lower().startswith("create a reviewable prd for "):
+            return first.removeprefix("Create a reviewable PRD for ").rstrip(".")[:90]
+        if first:
+            return first[:90]
+    first = next((line.strip("# -") for line in content.splitlines() if line.strip()), "Requirement")
+    return first[:90]
+
+
+def _problem(content: str) -> str:
+    seed = _section(content, "Specification / PRD Seed")
+    value = _labeled_paragraph(seed or content, "Problem")
+    if value:
+        return value
+    return "Needs review: source describes intent, but problem statement should be confirmed."
+
+
+def _goal(content: str) -> str:
+    seed = _section(content, "Specification / PRD Seed")
+    value = _labeled_paragraph(seed or content, "Goal")
+    if value:
+        return value
+    first = next((line.strip(" -#") for line in content.splitlines() if line.strip()), "Produce structured requirements before implementation.")
+    return f"Convert the source intent into reviewable requirements: {first[:180]}"
+
+
+def _functional_requirements(content: str) -> list[str]:
+    lowered = content.lower()
+    seed = _section(content, "Specification / PRD Seed")
+    explicit = _labeled_bullets(seed or content, "Functional requirements")
+    if explicit:
+        return explicit
+    requirements = ["Generate a PRD with context, problem, goal, requirements, risks, safety constraints, and review plan.", "Generate user stories and issue drafts as separate reviewable artifacts.", "Run Definition of Ready checks before handoff."]
+    if "codex" in lowered:
+        requirements.append("Preserve Codex handoff boundaries and do not execute Codex.")
+    if "issue" in lowered:
+        requirements.append("Create issue drafts only; do not publish GitHub issues by default.")
+    if "ingest" in lowered or "memory" in lowered:
+        requirements.append("Preserve ingestion evidence and avoid direct memory or skill writes.")
+    return requirements
+
+
+def _non_functional_requirements(content: str) -> list[str]:
+    seed = _section(content, "Specification / PRD Seed")
+    explicit = _labeled_bullets(seed or content, "Non-functional requirements")
+    if explicit:
+        return explicit
+    return ["Requirements must be deterministic and reviewable.", "Artifacts must stay under .karakana/requirements/.", "Live models, Codex execution, publishing, and deployment remain opt-in or out of scope."]
+
+
+def _harness_impact(content: str, skillpack_context=None) -> HarnessSubsystemImpact:
+    return HarnessSubsystemImpact(
+        instructions=["Clarify developer intent before implementation.", "Preserve Standards-vs-Spec context.", "Keep generated tasks reviewable."],
+        tools=["karakana requirements", "karakana eval run --suite requirements", "pytest"],
+        environment=["Local repository only.", "No live model calls required.", "No GitHub publishing by default."],
+        state=["Source artifact metadata.", "Skillpack context when available.", "Requirement, story, issue, and readiness artifacts."],
+        feedback=["Definition of Ready review.", "Requirements eval suite.", "Human review before Codex handoff or publishing."] + (skillpack_context.test_commands if skillpack_context else []),
+    )
+
+
+def _standards_spec(content: str) -> StandardsSpecContext:
+    lowered = content.lower()
+    standards = ["Engineering changes must be reviewable, tested, and safety-gated.", "No secrets, deployments, pushes, PRs, or live model calls by default."]
+    spec = ["Needs review: confirm exact user-facing behavior and scope."]
+    seed = _section(content, "Specification / PRD Seed")
+    acceptance = _labeled_bullets(seed or content, "Acceptance criteria") or ["PRD includes all required sections.", "Stories include acceptance criteria.", "Issues are independently grabbable vertical slices.", "Readiness check reports missing information."]
+    non_goals = _section_bullets(content, "Out of Scope")
+    if "standards review" in lowered:
+        standards.append("Source included Standards Review context; preserve it during decomposition.")
+    if "spec review" in lowered:
+        spec.append("Source included Spec Review context; preserve acceptance criteria and scope gaps.")
+    return StandardsSpecContext(standards=standards, spec=spec, acceptance_criteria=acceptance, non_goals=non_goals)
+
+
+def _skills(content: str, skillpack_context=None) -> list[str]:
+    skills = list(skillpack_context.required_skills) if skillpack_context else []
+    lowered = content.lower()
+    mapping = {
+        "viewflow-framework": ["viewflow", "workflow", "process state"],
+        "invenio-framework": ["invenio", "opensearch", "custom field"],
+        "gepg-billing": ["gepg", "billing", "payment"],
+        "github-pr-review": ["pr review", "acceptance criteria"],
+        "karakana-handoff": ["handoff", "next agent"],
+    }
+    for skill, terms in mapping.items():
+        if any(term in lowered for term in terms) and skill not in skills:
+            skills.append(skill)
+    return skills or ["karakana-self-improvement"]
+
+
+def _safety(content: str, skillpack_context=None) -> list[str]:
+    safety = ["Do not execute Codex.", "Do not call live models by default.", "Do not publish GitHub issues by default.", "Do not push, deploy, or create PRs."]
+    if skillpack_context:
+        safety.extend([f"Approval required: {item}" for item in skillpack_context.skillpack.safety.requires_approval_for])
+    if any(term in content.lower() for term in ["auth", "payment", "migration", "secret", "production", "process state"]):
+        safety.append("High-risk domain terms require explicit review and model escalation.")
+    return safety
+
+
+def _tests(content: str, skillpack_context=None) -> list[str]:
+    seed = _section(content, "Specification / PRD Seed")
+    tests = _labeled_bullets(seed or content, "Verification") or ["karakana eval run --suite requirements", "pytest"]
+    if skillpack_context:
+        tests.extend(skillpack_context.test_commands)
+    if "ingest" in content.lower():
+        tests.append("karakana eval run --suite ingestion")
+    return list(dict.fromkeys(tests))
+
+
+def _risks(content: str) -> list[str]:
+    risks = ["Vague source material can produce vague stories without human review."]
+    if any(term in content.lower() for term in ["auth", "payment", "migration", "production", "secret", "workflow"]):
+        risks.append("High-risk project behavior may require stronger review before implementation.")
+    return risks
+
+
+def _excerpt(content: str, limit: int = 1200) -> str:
+    text = content.strip()
+    return text if len(text) <= limit else text[: limit - 3].rstrip() + "..."
+
+
+def _users_or_actors(content: str) -> list[str]:
+    lowered = content.lower()
+    actors = ["developer", "reviewer", "Karakana operator"]
+    if "staff operator" in lowered or "staff-only" in lowered:
+        actors.insert(0, "staff operator")
+    return list(dict.fromkeys(actors))
+
+
+def _section(content: str, heading: str) -> str:
+    lines = content.splitlines()
+    start: int | None = None
+    heading_marker = f"## {heading}".lower()
+    for index, line in enumerate(lines):
+        if line.strip().lower() == heading_marker:
+            start = index + 1
+            break
+    if start is None:
+        return ""
+    collected: list[str] = []
+    for line in lines[start:]:
+        if line.startswith("## "):
+            break
+        collected.append(line)
+    return "\n".join(collected).strip()
+
+
+def _section_bullets(content: str, heading: str) -> list[str]:
+    return _bullets_from_text(_section(content, heading))
+
+
+def _labeled_paragraph(content: str, label: str) -> str:
+    prefix = f"{label.lower()}:"
+    lines = content.splitlines()
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.lower().startswith(prefix):
+            value = stripped[len(prefix) :].strip()
+            extra: list[str] = []
+            for follow in lines[index + 1 :]:
+                follow_stripped = follow.strip()
+                if not follow_stripped:
+                    break
+                if follow_stripped.endswith(":") or follow_stripped.startswith("- "):
+                    break
+                extra.append(follow_stripped)
+            return " ".join([value, *extra]).strip()
+    return ""
+
+
+def _labeled_bullets(content: str, label: str) -> list[str]:
+    prefix = f"{label.lower()}:"
+    lines = content.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip().lower() == prefix:
+            collected: list[str] = []
+            for follow in lines[index + 1 :]:
+                stripped = follow.strip()
+                if not stripped:
+                    if collected:
+                        break
+                    continue
+                if stripped.endswith(":") and not stripped.startswith("- "):
+                    break
+                collected.append(follow)
+            return _bullets_from_text("\n".join(collected))
+    return []
+
+
+def _bullets_from_text(text: str) -> list[str]:
+    bullets: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("- "):
+            bullets.append(stripped[2:].strip())
+    return bullets

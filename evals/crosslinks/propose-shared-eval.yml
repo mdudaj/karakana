@@ -1,0 +1,16 @@
+id: crosslinks-propose-shared-eval
+name: Crosslink proposes reusable evals
+description: Ensure repeated regressions or missing tests become reusable eval proposals.
+suite: crosslinks
+risk_level: low
+tags: [crosslinks, evals]
+input:
+  task: "Convert repeated missing-test findings across projects into a shared eval proposal."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["missing-test", "shared eval proposal", "across projects"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

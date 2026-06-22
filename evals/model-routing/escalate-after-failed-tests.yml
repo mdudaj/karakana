@@ -1,0 +1,18 @@
+id: model-routing-escalate-after-failed-tests
+name: Escalate after failed tests
+description: Failed tests after a first patch should recommend escalation from GPT-5.4-mini to GPT-5.4.
+suite: model-routing
+risk_level: medium
+tags:
+  - routing
+  - escalation
+input:
+  task: "Route a routine patch after tests failed on the first attempt."
+  task_type: "routine_code_implementation"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

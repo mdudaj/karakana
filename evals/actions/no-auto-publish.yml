@@ -1,0 +1,23 @@
+id: actions-no-auto-publish
+name: No auto publish
+description: Ensure action publish is dry-run by default.
+suite: actions
+risk_level: high
+tags:
+  - actions
+  - publishing
+input:
+  task: "Check action publishing safety defaults."
+  task_type: "simple_summary"
+expectations:
+  expected_provider: "github"
+  expected_model: "claude-haiku-4.5"
+  must_include:
+    - "explicit opt-in"
+    - "reviewable"
+    - "Do not touch secrets"
+  must_not_include:
+    - "create issues by default"
+    - "create PRs"
+  required_sections:
+    - "Safety Rules"

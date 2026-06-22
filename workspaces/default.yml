@@ -1,0 +1,26 @@
+name: default
+description: Default Karakana workspace
+version: 0.1.0
+status: stable
+
+defaults:
+  root: "."
+  require_existing_paths: false
+  use_current_skillpack_if_missing: true
+
+projects:
+  - id: karakana
+    display_name: Karakana Harness
+    path: "."
+    skillpack: karakana
+    memory: ubongo/projects/karakana
+    tags:
+      - harness
+      - self-improvement
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "karakana skill validate-all"
+        - "karakana eval run"
+        - "pytest"

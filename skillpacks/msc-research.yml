@@ -1,0 +1,51 @@
+name: msc-research
+description: MSc research writing and methodology project profile
+version: 0.1.0
+status: stable
+project:
+  id: msc-research
+  display_name: MSc Research
+  memory: ubongo/projects/msc-research
+  contract: KARAKANA.md
+skills:
+  required:
+    - research-writing
+    - karakana-handoff
+  optional:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
+    - write-karakana-skill
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+  documentation:
+    provider: github
+    model: claude-haiku-4.5
+  simple_summary:
+    provider: github
+    model: claude-haiku-4.5
+safety:
+  high_risk_paths:
+    - chapters/**
+    - proposal/**
+    - references/**
+    - submission/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - submission_change
+    - citation_or_reference_policy_change
+tests:
+  commands:
+    - karakana eval run --skill research-writing
+  recommended_before_commit:
+    - karakana skill validate-all
+conventions:
+  notes:
+    - Preserve citations and distinguish evidence from interpretation.
+    - Keep methodology, literature review, and results sections consistent.

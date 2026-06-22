@@ -1,0 +1,32 @@
+name: stable
+description: Safe default Karakana operating profile
+version: 0.1.0
+defaults:
+  dry_run: true
+  live_models: false
+  github_writes: false
+  codex_execution: false
+  patch_apply: false
+  patch_commit: false
+  push: false
+  deploy: false
+required_checks:
+  - karakana doctor
+  - karakana config validate
+  - karakana skill validate-all
+  - karakana skillpack validate-all
+  - karakana workspace validate-all
+  - karakana eval run
+allowed_by_default:
+  - read
+  - summarize
+  - plan
+  - generate_artifacts
+  - dry_run
+requires_explicit_flag:
+  - live_model_call
+  - github_comment
+  - github_issue
+  - codex_execute
+  - patch_apply
+  - patch_commit

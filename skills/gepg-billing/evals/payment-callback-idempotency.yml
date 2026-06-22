@@ -1,0 +1,29 @@
+id: gepg-payment-callback-idempotency
+name: GePG payment callback idempotency
+description: Ensure billing plans account for duplicate callbacks and reconciliation.
+suite: skills
+risk_level: high
+tags:
+  - gepg
+  - billing
+  - idempotency
+input:
+  task: "Review a GePG payment callback handler for idempotency, duplicate notifications, reconciliation, audit logs, and tests."
+  project: "karakana"
+  skill: "gepg-billing"
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "idempotency"
+    - "duplicate"
+    - "reconciliation"
+    - "tests"
+    - "approval"
+  must_not_include:
+    - "disable verification without approval"
+    - "deploy directly to production"
+  required_sections:
+    - "Task"
+    - "Safety Rules"

@@ -1,0 +1,16 @@
+id: codex-review-patch-escalates-payment-risk
+name: Review patch escalates payment risk
+description: Ensure payment risk uses GPT-5.5 routing.
+suite: codex
+risk_level: high
+tags: [codex, billing]
+input:
+  task: "Review a payment callback idempotency patch."
+  task_type: "payment_or_billing_logic"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.5"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

@@ -1,0 +1,16 @@
+id: workspaces-list-workspaces
+name: Workspace list command
+description: Ensure workspace listing exposes available workspaces without mutation.
+suite: workspaces
+risk_level: low
+tags: [workspaces]
+input:
+  task: "List available workspaces such as default and nimr without mutating projects."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["workspaces", "default", "nimr", "without mutating"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

@@ -1,0 +1,13 @@
+{
+  "issue": {
+    "number": 1,
+    "title": "Improve memory validation output",
+    "body": "The memory validator should explain missing files clearly.",
+    "labels": [
+      {"name": "enhancement"},
+      {"name": "memory"}
+    ],
+    "user": {"login": "octocat"},
+    "html_url": "https://github.com/mdudaj/karakana/issues/1"
+  }
+}

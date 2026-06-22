@@ -1,0 +1,16 @@
+id: skillpacks-patch-gate-uses-high-risk-paths
+name: Patch gate uses high-risk paths
+description: Ensure skillpack high-risk path metadata affects gates.
+suite: skillpacks
+risk_level: high
+tags: [skillpacks, patch]
+input:
+  task: "Verify patch gates use project high-risk and blocked path metadata."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "Risks"
+    - "Tests"
+    - "Approval"

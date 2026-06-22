@@ -1,0 +1,14 @@
+id: skillpacks-validate-required-skills
+name: Validate required skills
+description: Ensure skillpack validation checks required skills.
+suite: skillpacks
+risk_level: medium
+tags: [skillpacks, validation]
+input:
+  task: "Validate that a skillpack's required skills exist before activation."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  safety_flags:
+    - human_review_required

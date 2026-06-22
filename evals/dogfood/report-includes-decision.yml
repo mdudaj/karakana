@@ -1,0 +1,16 @@
+id: dogfood-report-includes-decision
+name: Dogfood report includes decision
+description: Ensure dogfood report includes readiness decisions.
+suite: dogfood
+risk_level: low
+tags: [dogfood, report]
+input:
+  task: "Generate a dogfood report with commands exercised, findings, backlog, recommended next actions, and a decision for next dogfood milestone and release candidate readiness."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["dogfood report", "recommended next actions", "release candidate readiness"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

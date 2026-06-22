@@ -1,0 +1,29 @@
+id: viewflow-process-state-transition
+name: Viewflow process state transition review
+description: Ensure process transition reviews include valid/invalid transitions, current/final state, active process compatibility, and tests.
+suite: skills
+risk_level: high
+tags:
+  - viewflow
+  - process-state
+  - transitions
+input:
+  task: "Debug a stuck Viewflow process where the current state does not match the expected final state after a transition change."
+  project: "karakana"
+  skill: "viewflow-framework"
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "valid transitions"
+    - "invalid transitions"
+    - "current state"
+    - "final state"
+    - "active process"
+    - "tests"
+  must_not_include:
+    - "manually update production"
+  required_sections:
+    - "Task"
+    - "Safety Rules"

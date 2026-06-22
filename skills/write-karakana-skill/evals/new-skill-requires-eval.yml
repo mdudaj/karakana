@@ -1,0 +1,24 @@
+id: new-skill-requires-eval
+name: New skill requires eval
+description: Ensure non-trivial skill creation guidance includes metadata, examples, safety rules, validation, eval cases, and index updates.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - self-improvement
+input:
+  task: "Create a new non-trivial Karakana skill for a recurring engineering workflow."
+  project: karakana
+  skill: write-karakana-skill
+  task_type: planning
+expectations:
+  must_include:
+    - "metadata"
+    - "examples"
+    - "safety rules"
+    - "validation"
+    - "eval cases"
+    - "index"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

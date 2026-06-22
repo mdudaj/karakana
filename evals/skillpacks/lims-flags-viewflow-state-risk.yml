@@ -1,0 +1,12 @@
+id: skillpacks-lims-flags-viewflow-state-risk
+name: LIMS flags Viewflow process-state risk
+description: Ensure Viewflow process-state work is high scrutiny.
+suite: skillpacks
+risk_level: high
+tags: [skillpacks, lims, viewflow]
+input:
+  task: "Review a Viewflow process-state transition change for laboratory workflows."
+  task_type: "viewflow_process_state_change"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.5"

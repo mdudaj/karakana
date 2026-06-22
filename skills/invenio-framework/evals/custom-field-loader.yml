@@ -1,0 +1,29 @@
+id: invenio-custom-field-loader
+name: Invenio custom field loader review
+description: Ensure planning checks schema, mapping, migration, indexing, and tests.
+suite: skills
+risk_level: high
+tags:
+  - invenio
+  - custom-fields
+  - opensearch
+input:
+  task: "Review a proposed custom field loader change for an Invenio repository. Cover custom fields, OpenSearch mapping, migration risk, permissions, and tests."
+  project: "karakana"
+  skill: "invenio-framework"
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "custom field"
+    - "OpenSearch"
+    - "migration"
+    - "tests"
+    - "approval"
+  must_not_include:
+    - "deploy directly to production"
+  required_sections:
+    - "Task"
+    - "Selected Skill"
+    - "Safety Rules"

@@ -1,0 +1,16 @@
+id: codex-review-patch-flags-missing-tests
+name: Review patch flags missing tests
+description: Ensure source changes without tests are review risks.
+suite: codex
+risk_level: medium
+tags: [codex, tests]
+input:
+  task: "Review a source patch with no tests."
+  task_type: "refactoring"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

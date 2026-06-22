@@ -1,0 +1,27 @@
+id: brainstorm-verbalized-sampling-option-distribution
+name: Brainstorm skill exposes an option distribution and uncertainty
+description: Check the reusable skill separates diverse option generation from MCDA selection, calibration claims, and sensitivity analysis.
+suite: skills
+risk_level: low
+tags: [skills, brainstorming, verbalized-sampling]
+input:
+  task: "Review the verbalized-sampling brainstorming workflow."
+  skill: brainstorm-verbalized-sampling
+  task_type: planning
+  prompt_file: skills/brainstorm-verbalized-sampling/SKILL.md
+expectations:
+  must_include:
+    - "Option Distribution"
+    - "Criterion Matrix"
+    - "Sensitivity Analysis"
+    - "Uncertainty Flags"
+    - "Decision Rule"
+    - "not calibrated"
+    - "score shares"
+    - "Reversibility"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

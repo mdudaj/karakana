@@ -1,0 +1,67 @@
+name: nhrdm
+description: NHRDM Invenio Framework repository project profile
+version: 0.1.0
+status: stable
+project:
+  id: nhrdm
+  display_name: NHRDM
+  memory: ubongo/projects/nhrdm
+  contract: KARAKANA.md
+skills:
+  required:
+    - invenio-framework
+    - github-pr-review
+    - ci-failure-analysis
+    - karakana-handoff
+  optional:
+    - next-milestone-decision
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
+    - django-debugging
+    - viewflow-framework
+    - write-karakana-skill
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+  documentation:
+    provider: github
+    model: claude-haiku-4.5
+  framework_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4
+  database_or_index_migration:
+    provider: openai_codex
+    model: gpt-5.5
+  high_risk_code_review:
+    provider: openai_codex
+    model: gpt-5.5
+safety:
+  high_risk_paths:
+    - site/nhrdm/oauthclient/**
+    - site/nhrdm/deposit/**
+    - site/nhrdm/projects/**
+    - site/nhrdm/analytics/**
+    - .github/workflows/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - authentication_change
+    - permission_change
+    - database_migration
+    - opensearch_index_change
+    - production_config_change
+tests:
+  commands:
+    - pytest
+  recommended_before_commit:
+    - karakana skill validate-all
+    - karakana eval run
+conventions:
+  notes:
+    - Check OpenSearch mapping and indexing risks for custom field changes.
+    - Check OAuth redirect URI, client ID, and provider configuration for SSO work.
+    - Prefer reviewable pull requests over direct changes.

@@ -1,0 +1,26 @@
+id: handoff-includes-suggested-skills
+name: Handoff includes project continuation context
+description: Ensure handoffs include project state, referenced artifacts, suggested skills, one next action, safety constraints, and return expectations.
+suite: skills
+risk_level: low
+tags:
+  - handoff
+  - productivity
+input:
+  task: "Create a handoff for a partially completed Karakana milestone."
+  project: karakana
+  skill: karakana-handoff
+  task_type: planning
+expectations:
+  must_include:
+    - "Current State"
+    - "Current Milestone"
+    - "Files to Inspect First"
+    - "Artifacts to Reference, Not Duplicate"
+    - "Suggested Skills"
+    - "Exact Next Action"
+    - "Safety Constraints"
+    - "Return Handoff Expectations"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

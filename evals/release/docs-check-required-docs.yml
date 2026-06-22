@@ -1,0 +1,16 @@
+id: release-docs-check-required-docs
+name: Docs check required docs
+description: Ensure docs check covers the required documentation set.
+suite: release
+risk_level: low
+tags: [release, docs]
+input:
+  task: "Check that installation, configuration, daily workflow, safety, release, troubleshooting, and command reference docs exist."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["installation", "configuration", "command reference docs"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

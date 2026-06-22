@@ -1,0 +1,16 @@
+id: workspaces-handoff-includes-project-state
+name: Workspace handoff includes project state
+description: Ensure handoffs include project state, skillpack, memory, artifacts, and commands.
+suite: workspaces
+risk_level: medium
+tags: [workspaces, handoff]
+input:
+  task: "Workspace handoff should include project state, skillpack, memory path, recent artifacts, next actions, constraints, and commands."
+  project: karakana
+  skill: karakana-handoff
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["project state", "skillpack", "memory path", "recent artifacts", "commands"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

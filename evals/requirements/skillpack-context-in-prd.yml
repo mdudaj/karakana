@@ -1,0 +1,16 @@
+id: requirements-skillpack-context-in-prd
+name: Skillpack context appears in PRD
+description: Ensure PRDs include project skillpack skills, tests, conventions, and approvals.
+suite: requirements
+risk_level: medium
+tags: [requirements, skillpacks]
+input:
+  task: "PRD generation with a skillpack should include suggested skillpack, required skills, recommended tests, conventions, high-risk paths, and approval requirements."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["suggested skillpack", "required skills", "recommended tests", "approval requirements"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

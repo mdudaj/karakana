@@ -1,0 +1,28 @@
+name: Karakana CI Failure Analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      log_file:
+        description: "Path to a checked-in or uploaded CI log file"
+        required: true
+        type: string
+
+jobs:
+  ci-failure-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Karakana
+        run: python -m pip install -e .[dev]
+      - name: Generate CI failure analysis artifact
+        run: karakana github ci-failure --project karakana --skill ci-failure-analysis --log-file "${{ inputs.log_file }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: karakana-ci-failure-analysis
+          path: .karakana/ci-failure-analysis.md

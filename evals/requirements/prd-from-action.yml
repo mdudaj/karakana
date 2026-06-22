@@ -1,0 +1,16 @@
+id: requirements-prd-from-action
+name: PRD from action bundle
+description: Ensure action bundles can become structured PRDs.
+suite: requirements
+risk_level: medium
+tags: [requirements, prd, actions]
+input:
+  task: "Generate a PRD from an action bundle with context, problem, goal, acceptance criteria, risks, and review plan."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["PRD", "action bundle", "acceptance criteria", "review plan"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

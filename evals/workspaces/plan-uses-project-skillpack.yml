@@ -1,0 +1,16 @@
+id: workspaces-plan-uses-project-skillpack
+name: Workspace plan uses project skillpack
+description: Ensure workspace planning uses the selected project skillpack.
+suite: workspaces
+risk_level: medium
+tags: [workspaces, planning]
+input:
+  task: "Workspace plan for billing should use the billing project path, billing skillpack, project memory, and boundary notes."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["billing", "skillpack", "project memory", "boundary notes"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

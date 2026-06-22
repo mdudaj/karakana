@@ -1,0 +1,17 @@
+id: ingestion-scan-is-conservative
+name: Ingestion scan is conservative
+description: Ensure scan avoids whole repository ingestion.
+suite: ingestion
+risk_level: medium
+tags: [ingestion, scanning]
+input:
+  task: "Ingestion scan should be conservative and inspect README, KARAKANA, AGENTS, docs, traces, actions, patch reviews, and proposals only."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["conservative", "README", "docs", "traces"]
+  must_not_include: ["scan every source file"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

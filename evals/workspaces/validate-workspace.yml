@@ -1,0 +1,16 @@
+id: workspaces-validate-workspace
+name: Workspace validation
+description: Ensure workspace validation checks project IDs, paths, skillpacks, memory, and commands.
+suite: workspaces
+risk_level: medium
+tags: [workspaces, validation]
+input:
+  task: "Validate a workspace by checking project IDs, paths, skillpacks, memory paths, and standard commands."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["project IDs", "paths", "skillpacks", "memory paths", "standard commands"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

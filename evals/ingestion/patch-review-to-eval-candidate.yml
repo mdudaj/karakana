@@ -1,0 +1,16 @@
+id: ingestion-patch-review-to-eval-candidate
+name: Patch review ingestion proposes eval candidate
+description: Ensure patch review findings can become regression eval candidates.
+suite: ingestion
+risk_level: high
+tags: [ingestion, evals, patch-review]
+input:
+  task: "Classify a patch review missed issue and missing test as an eval update candidate."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["missed issue", "missing test", "eval update candidate"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

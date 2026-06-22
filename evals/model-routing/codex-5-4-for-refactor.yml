@@ -1,0 +1,18 @@
+id: model-routing-codex-5-4-for-refactor
+name: Codex GPT-5.4 for refactor
+description: Serious refactoring should use GPT-5.4.
+suite: model-routing
+risk_level: medium
+tags:
+  - routing
+  - refactoring
+input:
+  task: "Route a multi-file refactoring task."
+  task_type: "refactoring"
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4"
+  must_include:
+    - "Safety Rules"
+  required_sections:
+    - "Safety Rules"

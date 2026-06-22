@@ -1,0 +1,16 @@
+id: crosslinks-scan-detects-shared-risk
+name: Crosslink scan detects shared risks
+description: Ensure crosslink scans identify repeated high-risk themes across projects.
+suite: crosslinks
+risk_level: medium
+tags: [crosslinks, safety]
+input:
+  task: "Detect shared risks such as authentication, payment, migration, and workflow state across projects."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["shared risk", "authentication", "payment", "workflow state"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

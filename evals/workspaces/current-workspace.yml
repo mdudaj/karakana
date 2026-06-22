@@ -1,0 +1,16 @@
+id: workspaces-current-workspace
+name: Current workspace
+description: Ensure current workspace activation is local and reviewable.
+suite: workspaces
+risk_level: low
+tags: [workspaces, activation]
+input:
+  task: "Activate a workspace locally under .karakana/current-workspace.json and show the current workspace."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["current-workspace.json", "Activate", "local"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

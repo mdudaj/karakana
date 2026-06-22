@@ -1,0 +1,16 @@
+id: requirements-model-route-in-issue
+name: Issue includes model route
+description: Ensure issue drafts include recommended model route and escalation conditions.
+suite: requirements
+risk_level: medium
+tags: [requirements, model-routing]
+input:
+  task: "Issue drafts should include Recommended Model Route with provider, model, rationale, and escalation conditions."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: github
+  expected_model: gpt-5-mini
+  must_include: ["Recommended Model Route", "provider", "model", "escalation conditions"]
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]
