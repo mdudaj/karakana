@@ -43,6 +43,8 @@ def create_handoff(
     from_milestone: str | None = None,
     recovered: bool = False,
     previous_handoff_id: str | None = None,
+    okf_concepts_loaded: list[str] | None = None,
+    okf_concepts_changed: list[str] | None = None,
 ) -> HandoffArtifact:
     skillpack_name = skillpack or project
     loaded_skillpack = SkillpackLoader(repo_root).load(skillpack_name)
@@ -85,6 +87,8 @@ def create_handoff(
         inspect_first=inspect_first,
         do_not_reread=_do_not_reread(repo_root, project),
         reference_artifacts=_unique(state.source_artifacts),
+        okf_concepts_loaded=_unique(okf_concepts_loaded or []),
+        okf_concepts_changed=_unique(okf_concepts_changed or []),
         suggested_skills=_suggested_skills(loaded_skillpack.skills.required, loaded_skillpack.skills.optional, milestone, state.suggested_skills),
         exact_next_action=exact_next_action,
         safety_constraints=_safety_constraints(loaded_skillpack.safety.requires_approval_for),

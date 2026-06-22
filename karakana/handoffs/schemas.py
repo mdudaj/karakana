@@ -26,6 +26,8 @@ class HandoffArtifact:
     inspect_first: list[str] = field(default_factory=list)
     do_not_reread: list[str] = field(default_factory=list)
     reference_artifacts: list[str] = field(default_factory=list)
+    okf_concepts_loaded: list[str] = field(default_factory=list)
+    okf_concepts_changed: list[str] = field(default_factory=list)
     suggested_skills: list[str] = field(default_factory=list)
     exact_next_action: str = ""
     safety_constraints: list[str] = field(default_factory=list)
@@ -43,8 +45,8 @@ class HandoffArtifact:
         self.exact_next_action = redact_handoff_text(self.exact_next_action)
         for name in (
             "source_artifacts", "decisions", "open_findings", "inspect_first", "do_not_reread",
-            "reference_artifacts", "suggested_skills", "safety_constraints", "staleness_notes",
-            "notes_for_fresh_agent", "warnings",
+            "reference_artifacts", "okf_concepts_loaded", "okf_concepts_changed", "suggested_skills",
+            "safety_constraints", "staleness_notes", "notes_for_fresh_agent", "warnings",
         ):
             setattr(self, name, [redact_handoff_text(item) for item in getattr(self, name)])
 

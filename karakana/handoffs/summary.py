@@ -50,6 +50,14 @@ def render_handoff(handoff: HandoffArtifact) -> str:
 
 {_bullets(handoff.reference_artifacts)}
 
+## OKF Concepts Loaded
+
+{_bullets(handoff.okf_concepts_loaded)}
+
+## OKF Concepts Changed
+
+{_bullets(handoff.okf_concepts_changed)}
+
 ## Suggested Skills
 
 {_bullets(handoff.suggested_skills)}
@@ -96,6 +104,14 @@ def render_session_start(handoff: HandoffArtifact, path: str) -> str:
 ## Suggested Skills
 
 {_bullets(handoff.suggested_skills)}
+
+## OKF Concepts
+
+Loaded:
+{_bullets(handoff.okf_concepts_loaded)}
+
+Changed:
+{_bullets(handoff.okf_concepts_changed)}
 
 ## Exact Next Action
 

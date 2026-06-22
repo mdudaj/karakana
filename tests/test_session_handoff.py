@@ -141,6 +141,28 @@ def test_handoff_refresh_preserves_history(tmp_path, monkeypatch):
     assert HandoffStore(tmp_path).run_dir(first.handoff_id).exists()
 
 
+def test_handoff_records_okf_concept_ids(tmp_path, monkeypatch):
+    write_project_context(tmp_path)
+    monkeypatch.chdir(tmp_path)
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "handoff", "create", "--project", "demo", "--skillpack", "demo",
+            "--okf-concept", "demo.project",
+            "--changed-okf-concept", "demo.design.dashboard",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    handoff = HandoffStore(tmp_path).latest("demo", "demo")
+    assert handoff.okf_concepts_loaded == ["demo.project"]
+    assert handoff.okf_concepts_changed == ["demo.design.dashboard"]
+    markdown = (HandoffStore(tmp_path).run_dir(handoff.handoff_id) / "handoff.md").read_text(encoding="utf-8")
+    assert "## OKF Concepts Loaded" in markdown
+    assert "demo.project" in markdown
+
+
 def test_handoff_selection_is_project_aware(tmp_path):
     write_project_context(tmp_path, "alpha")
     write_project_context(tmp_path, "beta")

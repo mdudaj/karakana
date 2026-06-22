@@ -71,6 +71,8 @@ from karakana.models.review.reviewer import review_response
 from karakana.models.router import available_task_types, route_model
 from karakana.milestones.decision import generate_next_milestone
 from karakana.milestones.store import MilestoneStore
+from karakana.okf.summary import render_validation_result
+from karakana.okf.validator import OkfValidator
 from karakana.patch.apply import apply_patch_run
 from karakana.patch.branch import create_patch_branch, plan_patch_branch
 from karakana.patch.commit import commit_patch_run
@@ -138,6 +140,7 @@ memory_app = typer.Typer(help="Inspect ubongo durable memory.")
 milestone_app = typer.Typer(help="Decide and generate instructions for the next project milestone.")
 model_app = typer.Typer(help="Inspect and invoke model providers.")
 patch_app = typer.Typer(help="Gate, apply, and summarize captured patches.")
+okf_app = typer.Typer(help="Validate and inspect Open Knowledge Format concepts.")
 requirements_app = typer.Typer(help="Generate PRDs, stories, and issue drafts.")
 release_app = typer.Typer(help="Run local release readiness commands.")
 skill_app = typer.Typer(help="Inspect and validate Karakana skills.")
@@ -160,6 +163,7 @@ app.add_typer(handoff_app, name="handoff")
 app.add_typer(memory_app, name="memory")
 app.add_typer(milestone_app, name="milestone")
 app.add_typer(model_app, name="model")
+app.add_typer(okf_app, name="okf")
 app.add_typer(patch_app, name="patch")
 app.add_typer(requirements_app, name="requirements")
 app.add_typer(release_app, name="release")
@@ -229,6 +233,19 @@ def config_paths() -> None:
     """Print resolved Karakana paths."""
     repo_root = Path.cwd()
     typer.echo(render_paths(repo_root, load_config(repo_root)), nl=False)
+
+
+@okf_app.command("validate")
+def okf_validate(
+    path: Path | None = typer.Argument(None, help="OKF file or directory. Defaults to ./okf."),
+    strict: bool = typer.Option(False, "--strict", help="Treat warnings as errors."),
+    allow_unknown_types: bool = typer.Option(False, "--allow-unknown-types", help="Allow types outside the Karakana OKF profile."),
+) -> None:
+    """Validate Karakana OKF concept files."""
+    result = OkfValidator(Path.cwd()).validate(path, strict=strict, allow_unknown_types=allow_unknown_types)
+    typer.echo(render_validation_result(result), nl=False)
+    if not result.ok:
+        raise typer.Exit(code=1)
 
 
 @release_app.command("check")
@@ -506,6 +523,8 @@ def handoff_create(
     from_dogfood: str | None = typer.Option(None, "--from-dogfood", help="Specific dogfood artifact."),
     from_requirements: str | None = typer.Option(None, "--from-requirements", help="Specific requirements artifact."),
     from_milestone: str | None = typer.Option(None, "--from-milestone", help="Specific milestone decision."),
+    okf_concept: list[str] | None = typer.Option(None, "--okf-concept", help="OKF concept ID loaded for this handoff."),
+    changed_okf_concept: list[str] | None = typer.Option(None, "--changed-okf-concept", help="OKF concept ID changed by this work."),
     write: bool = typer.Option(True, "--write/--no-write", help="Write the durable artifact."),
     json_output: bool = typer.Option(False, "--json", help="Print handoff JSON."),
 ) -> None:
@@ -514,7 +533,20 @@ def handoff_create(
     trace_store = TraceStore(repo_root)
     trace = trace_store.create_run(command="handoff create", project=project, skill="karakana-handoff", task_type="handoff", inputs={"project": project, "skillpack": skillpack, "workspace": workspace, "purpose": purpose, "current_milestone": current_milestone, "from_note": from_note, "from_dogfood": from_dogfood, "from_requirements": from_requirements, "from_milestone": from_milestone, "write": write})
     try:
-        handoff = create_handoff(repo_root, project, skillpack, workspace, purpose, current_milestone, from_note, from_dogfood, from_requirements, from_milestone)
+        handoff = create_handoff(
+            repo_root,
+            project,
+            skillpack,
+            workspace,
+            purpose,
+            current_milestone,
+            from_note,
+            from_dogfood,
+            from_requirements,
+            from_milestone,
+            okf_concepts_loaded=okf_concept,
+            okf_concepts_changed=changed_okf_concept,
+        )
         markdown_path = json_path = None
         if write:
             markdown_path, json_path = HandoffStore(repo_root).save(handoff)
@@ -594,6 +626,8 @@ def handoff_refresh(
     purpose: str = typer.Option("End of task handoff", "--purpose", help="Purpose of the next session."),
     current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
+    okf_concept: list[str] | None = typer.Option(None, "--okf-concept", help="OKF concept ID loaded for this handoff."),
+    changed_okf_concept: list[str] | None = typer.Option(None, "--changed-okf-concept", help="OKF concept ID changed by this work."),
 ) -> None:
     """Append a refreshed handoff while preserving prior handoff history."""
     repo_root = Path.cwd()
@@ -601,7 +635,18 @@ def handoff_refresh(
     skillpack_name = skillpack or project
     previous = store.latest(project, skillpack_name)
     try:
-        handoff = create_handoff(repo_root, project, skillpack_name, workspace, purpose, current_milestone, from_note, previous_handoff_id=previous.handoff_id if previous else None)
+        handoff = create_handoff(
+            repo_root,
+            project,
+            skillpack_name,
+            workspace,
+            purpose,
+            current_milestone,
+            from_note,
+            previous_handoff_id=previous.handoff_id if previous else None,
+            okf_concepts_loaded=okf_concept,
+            okf_concepts_changed=changed_okf_concept,
+        )
         markdown_path, _ = store.save(handoff)
     except Exception as exc:
         typer.echo(str(exc))
