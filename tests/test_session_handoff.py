@@ -125,6 +125,38 @@ def test_handoff_load_recovers_when_none_exists(tmp_path, monkeypatch):
     assert any("Verify before acting" in note for note in handoff.staleness_notes)
 
 
+def test_handoff_load_includes_okf_context_when_available(tmp_path, monkeypatch):
+    write_project_context(tmp_path)
+    okf_dir = tmp_path / "okf"
+    okf_dir.mkdir()
+    (okf_dir / "demo.md").write_text(
+        """---
+id: demo.project
+type: Project
+title: Demo Project
+status: active
+owner: demo
+project: demo
+summary: Demo OKF context.
+source: KARAKANA.md
+tags: [demo]
+updated: 2026-06-22
+---
+
+# Demo Project
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.chdir(tmp_path)
+
+    result = CliRunner().invoke(app, ["handoff", "load", "--project", "demo", "--skillpack", "demo"])
+
+    assert result.exit_code == 0, result.output
+    assert "## OKF Concepts" in result.output
+    assert result.output.index("## OKF Concepts") < result.output.index("## Inspect First")
+    assert "demo.project" in result.output
+
+
 def test_handoff_refresh_preserves_history(tmp_path, monkeypatch):
     write_project_context(tmp_path)
     monkeypatch.chdir(tmp_path)

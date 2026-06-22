@@ -71,6 +71,8 @@ from karakana.models.review.reviewer import review_response
 from karakana.models.router import available_task_types, route_model
 from karakana.milestones.decision import generate_next_milestone
 from karakana.milestones.store import MilestoneStore
+from karakana.okf.context import render_context, select_concepts
+from karakana.okf.promotion import scan_promotion_candidates, write_promotion_proposal
 from karakana.okf.summary import render_validation_result
 from karakana.okf.validator import OkfValidator
 from karakana.patch.apply import apply_patch_run
@@ -246,6 +248,74 @@ def okf_validate(
     typer.echo(render_validation_result(result), nl=False)
     if not result.ok:
         raise typer.Exit(code=1)
+
+
+@okf_app.command("context")
+def okf_context(
+    project: str = typer.Option(..., "--project", help="Project ID."),
+    concept_type: list[str] | None = typer.Option(None, "--type", help="Concept type filter. Repeatable."),
+    tag: list[str] | None = typer.Option(None, "--tag", help="Tag filter. Repeatable."),
+    status: list[str] | None = typer.Option(None, "--status", help="Status filter. Repeatable."),
+    depth: int = typer.Option(1, "--depth", min=0, help="Relationship traversal depth."),
+    limit: int = typer.Option(20, "--limit", min=1, help="Maximum concepts."),
+) -> None:
+    """Preview OKF concepts selected as agent workflow context."""
+    concepts = select_concepts(
+        Path.cwd(),
+        project=project,
+        concept_types=set(concept_type or []) or None,
+        tags=set(tag or []) or None,
+        statuses=set(status or []) or None,
+        relationship_depth=depth,
+        limit=limit,
+    )
+    typer.echo(render_context(concepts), nl=False)
+
+
+@okf_app.command("scan-promotions")
+def okf_scan_promotions(
+    path: list[Path] | None = typer.Argument(None, help="Optional artifact path(s). Defaults to known promotion sources."),
+    project: str = typer.Option("karakana", "--project", help="Owning project for generated concept IDs."),
+    eligible_only: bool = typer.Option(False, "--eligible-only", help="Show only eligible candidates."),
+) -> None:
+    """Scan artifacts and classify OKF promotion candidates."""
+    candidates = scan_promotion_candidates(Path.cwd(), list(path or []) or None, project=project)
+    for candidate in candidates:
+        if eligible_only and not candidate.eligible:
+            continue
+        status = "eligible" if candidate.eligible else "ineligible"
+        typer.echo(
+            f"{status}: {candidate.source_artifact} -> {candidate.suggested_type} "
+            f"{candidate.concept_id} ({candidate.reason})"
+        )
+
+
+@okf_app.command("propose")
+def okf_propose(
+    artifact: Path = typer.Option(..., "--from", help="Artifact to propose for OKF promotion."),
+    project: str = typer.Option("karakana", "--project", help="Owning project for generated concept ID."),
+    reviewer: str = typer.Option("REVIEW_REQUIRED", "--reviewer", help="Reviewer marker for the promotion record."),
+) -> None:
+    """Write a reviewable OKF promotion proposal without applying it."""
+    try:
+        proposal = write_promotion_proposal(Path.cwd(), artifact, project=project, reviewer=reviewer)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"OKF proposal written: {proposal.proposal_id}")
+    typer.echo(f"Concept draft: {proposal.concept_path}")
+    typer.echo(f"Promotion record: {proposal.promotion_record_path}")
+
+
+def _okf_handoff_concepts(repo_root: Path, project: str, tags: list[str], depth: int, limit: int):
+    return select_concepts(
+        repo_root,
+        project=project,
+        tags=set(tags) or None,
+        statuses={"active", "proposed", "draft"},
+        relationship_depth=depth,
+        limit=limit,
+    )
 
 
 @release_app.command("check")
@@ -598,6 +668,10 @@ def handoff_load(
     skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack; defaults to project."),
     workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace identity."),
     no_create: bool = typer.Option(False, "--no-create", help="Do not recover a handoff when none exists."),
+    okf_context: bool = typer.Option(True, "--okf-context/--no-okf-context", help="Select OKF concepts as entry context."),
+    okf_tag: list[str] | None = typer.Option(None, "--okf-tag", help="OKF tag filter. Repeatable."),
+    okf_depth: int = typer.Option(1, "--okf-depth", min=0, help="OKF relationship traversal depth."),
+    okf_limit: int = typer.Option(8, "--okf-limit", min=1, help="Maximum OKF concepts."),
 ) -> None:
     """Load compact session-start context, recovering bounded state if absent."""
     repo_root = Path.cwd()
@@ -609,11 +683,23 @@ def handoff_load(
             typer.echo(f"No handoff found for project: {project}")
             raise typer.Exit(code=1)
         try:
-            handoff = create_handoff(repo_root, project, skillpack_name, workspace, purpose="Recovered session entry handoff", recovered=True)
+            selected = _okf_handoff_concepts(repo_root, project, okf_tag or [], okf_depth, okf_limit) if okf_context else []
+            handoff = create_handoff(
+                repo_root,
+                project,
+                skillpack_name,
+                workspace,
+                purpose="Recovered session entry handoff",
+                recovered=True,
+                okf_concepts_loaded=[concept.concept_id for concept in selected],
+            )
             store.save(handoff)
         except Exception as exc:
             typer.echo(str(exc))
             raise typer.Exit(code=1) from exc
+    elif okf_context:
+        selected = _okf_handoff_concepts(repo_root, project, okf_tag or [], okf_depth, okf_limit)
+        handoff.okf_concepts_loaded = [concept.concept_id for concept in selected]
     path = store.run_dir(handoff.handoff_id) / "handoff.md"
     typer.echo(render_session_start(handoff, str(path)))
 

@@ -14,6 +14,7 @@ relationships:
     - karakana.project
     - karakana.skill.delivery-artifact-gate
     - karakana.skill.self-improvement
+    - karakana.skill.okf-promotion-agent
 ---
 
 # Karakana Skillpack

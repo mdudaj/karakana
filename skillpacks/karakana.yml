@@ -17,6 +17,7 @@ skills:
     - karakana-handoff
     - write-karakana-skill
   optional:
+    - okf-promotion-agent
     - viewflow-material-ui
     - next-milestone-decision
     - brainstorm-verbalized-sampling

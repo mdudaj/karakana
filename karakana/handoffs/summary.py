@@ -93,6 +93,14 @@ def render_session_start(handoff: HandoffArtifact, path: str) -> str:
 - Purpose: {handoff.purpose}
 - Recovered: {handoff.recovered}
 
+## OKF Concepts
+
+Loaded:
+{_bullets(handoff.okf_concepts_loaded)}
+
+Changed:
+{_bullets(handoff.okf_concepts_changed)}
+
 ## Inspect First
 
 {_bullets(handoff.inspect_first)}
@@ -104,14 +112,6 @@ def render_session_start(handoff: HandoffArtifact, path: str) -> str:
 ## Suggested Skills
 
 {_bullets(handoff.suggested_skills)}
-
-## OKF Concepts
-
-Loaded:
-{_bullets(handoff.okf_concepts_loaded)}
-
-Changed:
-{_bullets(handoff.okf_concepts_changed)}
 
 ## Exact Next Action
 

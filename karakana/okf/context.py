@@ -50,6 +50,19 @@ def select_concepts(
     return sorted(expanded, key=_sort_key)[:limit]
 
 
+def render_context(concepts: list[OkfConcept]) -> str:
+    lines = [f"OKF concepts: {len(concepts)}"]
+    for concept in concepts:
+        relationship_count = sum(len(values) for values in concept.relationships.values())
+        source = concept.metadata.get("source", "")
+        summary = concept.metadata.get("summary", "")
+        lines.append(
+            f"- {concept.concept_id} [{concept.concept_type}, {concept.status}] "
+            f"{summary} (source: {source}; relationships: {relationship_count})"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def _matches(
     concept: OkfConcept,
     *,
