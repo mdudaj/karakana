@@ -43,6 +43,12 @@ class SkillpackTests:
 
 
 @dataclass
+class SkillpackProtocols:
+    default: str | None = None
+    categories: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
 class SkillpackConventions:
     notes: list[str] = field(default_factory=list)
 
@@ -56,6 +62,7 @@ class Skillpack:
     project: SkillpackProject
     skills: SkillpackSkills
     model_routes: dict[str, SkillpackModelRoute] = field(default_factory=dict)
+    protocols: SkillpackProtocols = field(default_factory=SkillpackProtocols)
     safety: SkillpackSafety = field(default_factory=SkillpackSafety)
     tests: SkillpackTests = field(default_factory=SkillpackTests)
     conventions: SkillpackConventions = field(default_factory=SkillpackConventions)
@@ -89,6 +96,7 @@ class ResolvedSkillpackContext:
     optional_skills: list[str]
     memory_path: str | None
     model_routes: dict[str, dict]
+    protocols: dict[str, str]
     high_risk_paths: list[str]
     blocked_paths: list[str]
     test_commands: list[str]

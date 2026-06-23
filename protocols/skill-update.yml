@@ -1,0 +1,48 @@
+protocol_id: skill-update
+name: Skill Update
+version: 0.1.0
+category: skill
+risk_floor: medium
+summary: Deterministic protocol for creating or updating Karakana skills and skillpacks.
+roles: [planner, implementer, reviewer, tester]
+standards:
+  - Skill changes require metadata, workflow guidance, pitfalls, verification, and eval coverage when non-trivial.
+required_inputs:
+  - skill objective
+  - affected skill or skillpack
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify skill scope, consumers, safety gates, and eval needs.
+  - step_id: inspect
+    action: inspect
+    instruction: Read affected skills, skillpack, evals, and index.
+  - step_id: plan
+    action: plan
+    instruction: Define skill content, examples, evals, and rollout.
+  - step_id: modify
+    action: modify
+    instruction: Update skill files and related evals.
+  - step_id: verify
+    action: verify
+    instruction: Run skill validation and relevant evals.
+  - step_id: handoff
+    action: handoff
+    instruction: Record changed skills and next action.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: requirements_note
+  - kind: test_or_eval_rationale
+  - kind: verification_summary
+  - kind: handoff
+approval_gates:
+  - skill_update
+  - workflow_change
+verification:
+  - Run karakana skill validate-all.
+  - Run affected skill evals.
+blocked_actions:
+  - unvalidated_skill_update
+  - silent_self_modification
+

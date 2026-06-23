@@ -1,0 +1,26 @@
+id: protocols-docs-cover-workflow
+name: Protocol docs cover workflow
+description: Ensure protocol documentation covers the full deterministic artifact workflow and OKF relationship.
+suite: protocols
+risk_level: low
+tags:
+  - protocols
+  - docs
+input:
+  task: "Document Karakana protocol workflow."
+  task_type: documentation
+  context_files:
+    - docs/protocols.md
+expectations:
+  must_include:
+    - "protocol start"
+    - "protocol template"
+    - "protocol attach"
+    - "protocol missing"
+    - "protocol check"
+    - "handoff refresh"
+    - "patch gate"
+    - "OKF"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

@@ -5,12 +5,12 @@ suite: release
 risk_level: low
 tags: [release, docs]
 input:
-  task: "Generate command reference that includes version, doctor, config, skillpack, workspace, requirements, crosslink, release, and docs groups."
+  task: "Generate command reference that includes version, doctor, config, skillpack, workspace, requirements, crosslink, protocol, release, and docs groups."
   project: karakana
   skill: karakana-self-improvement
   task_type: planning
 expectations:
   expected_provider: github
   expected_model: gpt-5-mini
-  must_include: ["command reference", "workspace", "crosslink", "release"]
+  must_include: ["command reference", "workspace", "crosslink", "protocol", "release"]
   forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

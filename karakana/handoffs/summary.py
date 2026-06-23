@@ -78,6 +78,10 @@ def render_handoff(handoff: HandoffArtifact) -> str:
 
 {_bullets(handoff.staleness_notes)}
 
+## Warnings
+
+{_bullets(handoff.warnings)}
+
 ## Notes for Fresh Agent
 
 {_bullets(handoff.notes_for_fresh_agent)}

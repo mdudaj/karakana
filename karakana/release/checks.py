@@ -67,7 +67,7 @@ def run_release_check(repo_root: Path, full: bool = False) -> tuple[CheckReport,
     checks.append(CheckResult("package-import", "pass", f"karakana {package_version()}"))
     checks.append(CheckResult("cli-loads", "pass", "karakana.cli imports"))
     checks.append(CheckResult("version-available", "pass", package_version()))
-    for path in ["README.md", "AGENTS.md", "KARAKANA.md", "docs", "docs/installation.md", "docs/configuration.md", "docs/daily-workflow.md", "docs/safety.md", "docs/release.md", "docs/troubleshooting.md", "docs/command-reference.md"]:
+    for path in ["README.md", "AGENTS.md", "KARAKANA.md", "docs", "docs/installation.md", "docs/configuration.md", "docs/daily-workflow.md", "docs/protocols.md", "docs/safety.md", "docs/release.md", "docs/troubleshooting.md", "docs/command-reference.md"]:
         _path_check(checks, repo_root / path, path)
     gitignore = (repo_root / ".gitignore").read_text(encoding="utf-8") if (repo_root / ".gitignore").exists() else ""
     checks.append(CheckResult("karakana-gitignored", "pass" if ".karakana/" in gitignore else "fail", ".karakana/ is gitignored" if ".karakana/" in gitignore else ".karakana/ missing from .gitignore"))

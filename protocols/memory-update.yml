@@ -1,0 +1,48 @@
+protocol_id: memory-update
+name: Memory Update
+version: 0.1.0
+category: memory
+risk_floor: medium
+summary: Deterministic protocol for durable memory and OKF knowledge updates.
+roles: [memory_curator, reviewer]
+standards:
+  - Durable memory must remain human-readable and must not contain secrets.
+  - OKF concepts require validation and source references.
+required_inputs:
+  - memory source evidence
+  - target memory or OKF concept
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify memory type, project scope, source authority, and secrecy risk.
+  - step_id: inspect
+    action: inspect
+    instruction: Read existing memory, OKF concepts, and source evidence.
+  - step_id: plan
+    action: plan
+    instruction: Define minimal memory update and validation.
+  - step_id: modify
+    action: modify
+    instruction: Update memory or OKF concepts without copying secrets.
+  - step_id: verify
+    action: verify
+    instruction: Validate memory and OKF.
+  - step_id: handoff
+    action: handoff
+    instruction: Record changed concepts/files and next action.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: requirements_note
+  - kind: verification_summary
+  - kind: handoff
+approval_gates:
+  - memory_update
+  - safety_policy_change
+verification:
+  - Run karakana memory validate for affected project.
+  - Run karakana okf validate when OKF changes.
+blocked_actions:
+  - store_secrets
+  - cross_project_memory_mixing
+

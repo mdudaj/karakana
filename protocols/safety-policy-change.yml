@@ -1,0 +1,52 @@
+protocol_id: safety-policy-change
+name: Safety Policy Change
+version: 0.1.0
+category: safety
+risk_floor: high
+summary: Deterministic protocol for safety, security, permission, and policy changes.
+roles: [planner, safety_reviewer, reviewer]
+standards:
+  - Safety changes require threat or abuse-case notes and explicit approval.
+  - Do not weaken guardrails without reviewable rationale.
+required_inputs:
+  - proposed safety or permission change
+  - current policy or guardrail
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify security, permission, secret, approval, and production risk.
+  - step_id: inspect
+    action: inspect
+    instruction: Read safety rules, affected code, tests, and prior incidents.
+  - step_id: plan
+    action: plan
+    instruction: Define threat model, mitigations, approval requirements, and verification.
+  - step_id: modify
+    action: modify
+    instruction: Apply policy or safety changes with tests.
+  - step_id: verify
+    action: verify
+    instruction: Run safety tests/evals and inspect for bypasses.
+  - step_id: handoff
+    action: handoff
+    instruction: Record approvals, residual risk, and exact next action.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: safety_review
+  - kind: threat_or_abuse_case_note
+  - kind: approval_record
+  - kind: verification_summary
+  - kind: handoff
+approval_gates:
+  - safety_policy_change
+  - permission_change
+  - authentication_change
+  - secret_handling
+verification:
+  - Run safety evals and affected pytest coverage.
+  - Validate redaction and approval behavior.
+blocked_actions:
+  - weaken_policy_without_approval
+  - expose_secrets
+

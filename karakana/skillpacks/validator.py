@@ -7,6 +7,8 @@ from pathlib import Path
 import yaml
 
 from karakana.models.router import DEFAULT_MODEL_ROUTING
+from karakana.protocols.loader import ProtocolLoader
+from karakana.protocols.schemas import WORK_CATEGORIES
 from karakana.skillpacks.loader import SkillpackLoader
 from karakana.skillpacks.schemas import ALLOWED_SKILLPACK_STATUSES, SkillpackValidationResult
 from karakana.skills.loader import SkillLoader
@@ -18,6 +20,7 @@ class SkillpackValidator:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
         self.loader = SkillpackLoader(repo_root)
+        self.protocol_loader = ProtocolLoader(repo_root)
         self.skill_loader = SkillLoader(repo_root / "skills")
 
     def validate(self, name: str, strict: bool = False) -> SkillpackValidationResult:
@@ -64,6 +67,23 @@ class SkillpackValidator:
                 result.errors.append(f"Unknown provider for route {task_type}: {route.get('provider')}")
             if not route.get("model"):
                 result.errors.append(f"Missing model for route: {task_type}")
+        protocols = raw.get("protocols") or {}
+        if "default" in protocols:
+            default_protocol = protocols.get("default")
+            if not isinstance(default_protocol, str) or not default_protocol:
+                result.errors.append("protocols.default must be a non-empty string")
+            elif not self.protocol_loader.exists(default_protocol):
+                result.errors.append(f"Referenced protocol not found: {default_protocol}")
+        categories = protocols.get("categories") or {}
+        if categories and not isinstance(categories, dict):
+            result.errors.append("protocols.categories must be a mapping")
+        for category, protocol_id in categories.items() if isinstance(categories, dict) else []:
+            if category not in WORK_CATEGORIES:
+                result.errors.append(f"Unknown protocol category: {category}")
+            if not isinstance(protocol_id, str) or not protocol_id:
+                result.errors.append(f"protocols.categories.{category} must be a non-empty string")
+            elif not self.protocol_loader.exists(protocol_id):
+                result.errors.append(f"Referenced protocol not found: {protocol_id}")
         safety = raw.get("safety") or {}
         for field in ["high_risk_paths", "blocked_paths", "requires_approval_for"]:
             if field in safety and not _string_list(safety[field]):

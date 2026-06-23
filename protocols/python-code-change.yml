@@ -1,0 +1,135 @@
+protocol_id: python-code-change
+name: Python Code Change
+version: 0.1.0
+category: implementation
+risk_floor: low
+summary: Deterministic protocol for reviewable Python implementation changes.
+roles:
+  - planner
+  - implementer
+  - tester
+  - reviewer
+standards:
+  - PEP 8 style guidance
+  - PEP 257 docstring conventions where public docstrings are warranted
+  - PEP 484 type-hint conventions where annotations improve contracts
+  - Project-local patterns and existing test strategy take precedence over generic style preferences
+required_inputs:
+  - task request or approved requirement
+  - repository instructions
+  - affected code and tests
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify category, risk, affected subsystem, behavior change, UX change, architecture change, data/migration change, and safety/permission impact.
+  - step_id: inspect
+    action: inspect
+    instruction: Read repository instructions, durable project context, affected code, existing tests, and local patterns before editing.
+  - step_id: plan
+    action: plan
+    instruction: Define bounded scope, non-goals, expected artifacts, verification commands, and approval needs.
+  - step_id: modify
+    action: modify
+    instruction: Apply the smallest reviewable patch consistent with the existing codebase.
+  - step_id: verify
+    action: verify
+    instruction: Run focused tests first, then broader checks when risk or blast radius requires them.
+  - step_id: review
+    action: review
+    instruction: Review the diff for scope drift, safety regressions, missing tests, and unresolved artifact requirements.
+  - step_id: handoff
+    action: handoff
+    instruction: Record verification, changed references, unresolved risks, and the next exact action.
+artifacts:
+  - kind: task_classification
+    description: Category, risk, affected subsystem, and conditional artifact flags.
+  - kind: trace
+    description: Machine-readable record of inputs, outputs, commands, warnings, errors, and produced artifacts.
+  - kind: change_summary
+    description: Files changed, behavior changed, non-goals, and review notes.
+  - kind: verification_summary
+    description: Commands run, outcomes, skipped checks, and residual risk.
+  - kind: handoff
+    description: End-of-task continuation artifact.
+  - kind: requirements_note
+    description: Requirement or PRD reference for behavior-changing work.
+    condition:
+      behavior_change: true
+  - kind: acceptance_criteria
+    description: Concrete observable criteria for behavior-changing work.
+    condition:
+      behavior_change: true
+  - kind: user_story
+    description: Actor, need, and outcome for behavior-changing work.
+    condition:
+      behavior_change: true
+  - kind: definition_of_done
+    description: Completion gate including tests and review expectations.
+    condition:
+      behavior_change: true
+  - kind: test_or_eval_rationale
+    description: Regression coverage or explicit rationale for no new test/eval.
+    condition:
+      behavior_change: true
+  - kind: ux_description
+    description: Affected user workflow, before/after behavior, states, and edge cases.
+    condition:
+      ux_change: true
+  - kind: accessibility_checklist
+    description: Keyboard, screen reader, contrast, focus, and responsive considerations.
+    condition:
+      ux_change: true
+  - kind: screenshot_or_render_evidence
+    description: Screenshot, Playwright, or template-render evidence for visible UX changes.
+    condition:
+      ux_change: true
+  - kind: adr
+    description: Decision record or ADR update for architectural changes.
+    condition:
+      architecture_change: true
+  - kind: rollback_plan
+    description: Reversal or mitigation path for architecture, data, migration, or high-risk changes.
+    condition:
+      architecture_change: true
+  - kind: schema_contract
+    description: Data shape, API, storage, migration, or compatibility contract.
+    condition:
+      data_or_migration_change: true
+  - kind: migration_plan
+    description: Forward and backward migration expectations, data safety, and rollout notes.
+    condition:
+      data_or_migration_change: true
+  - kind: approval_record
+    description: Human approval reference for data, migration, safety, or permission-sensitive work.
+    condition:
+      data_or_migration_change: true
+  - kind: safety_review
+    description: Review of security, permission, policy, or production-risk impact.
+    condition:
+      safety_or_permission_change: true
+  - kind: threat_or_abuse_case_note
+    description: Misuse, escalation, data exposure, or authorization-risk notes.
+    condition:
+      safety_or_permission_change: true
+  - kind: approval_record
+    description: Human approval reference for safety or permission-sensitive work.
+    condition:
+      safety_or_permission_change: true
+approval_gates:
+  - destructive_command
+  - database_migration
+  - authentication_change
+  - permission_change
+  - safety_policy_change
+  - model_execution_change
+  - deployment
+verification:
+  - Run focused tests covering changed behavior.
+  - Run protocol validation when governance artifacts change.
+  - Run broader pytest/eval suites when shared behavior or safety gates change.
+  - Document any skipped verification with reason and residual risk.
+blocked_actions:
+  - expose_secrets
+  - deploy_without_approval
+  - push_to_protected_branch
+  - silent_self_modification
