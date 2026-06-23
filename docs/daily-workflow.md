@@ -44,6 +44,7 @@ Use `karakana protocol missing --trace <run-id>` and `karakana protocol attach -
 ## Local Review Loop
 
 Patch apply, staging, and commit are dry-run by default and require explicit flags.
+Do not work directly on `main`: create a task branch before editing, open a pull request for the completed work, and squash merge the PR after validation when integration is approved.
 
 ```bash
 karakana patch apply --patch-run <patch-run-id>

@@ -53,6 +53,8 @@ Use GPT-5.5 only when the work is high-risk, complex, or stuck.
 ## Safety rules
 
 - Never push directly to protected branches.
+- Do all repository work on a task branch and integrate it through a pull request.
+- Use squash merge for accepted work unless explicitly instructed otherwise.
 - Never commit or print secrets.
 - Never modify production secrets.
 - Never run destructive database commands.
