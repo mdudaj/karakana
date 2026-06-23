@@ -28,6 +28,7 @@ ALLOWED_CONCEPT_TYPES = {
     "Lesson",
     "ImprovementProposal",
     "RuntimeEvidence",
+    "WorkProtocol",
 }
 
 ALLOWED_STATUSES = {"draft", "active", "deprecated", "superseded", "runtime-evidence", "proposed"}

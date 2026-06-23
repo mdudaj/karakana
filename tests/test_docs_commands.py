@@ -10,7 +10,7 @@ from karakana.docs.generator import check_docs, command_reference
 def test_command_reference_includes_core_groups():
     text = render_command_reference()
 
-    for group in ["version", "doctor", "config", "workspace", "requirements", "crosslink", "release", "docs"]:
+    for group in ["version", "doctor", "config", "workspace", "requirements", "crosslink", "protocol", "release", "docs"]:
         assert f"## {group}" in text
 
 
@@ -42,4 +42,3 @@ def test_docs_check_required_docs():
     missing, warnings = check_docs(Path.cwd())
     assert missing == []
     assert warnings == []
-

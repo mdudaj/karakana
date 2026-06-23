@@ -1,0 +1,48 @@
+protocol_id: requirements-change
+name: Requirements Change
+version: 0.1.0
+category: requirements
+risk_floor: low
+summary: Deterministic protocol for requirements, user story, and acceptance-criteria work.
+roles: [requester, planner, reviewer]
+standards:
+  - Requirements must preserve standards-vs-spec context.
+  - Requirements must be reviewable before implementation.
+required_inputs:
+  - source request or evidence
+  - project contract and skillpack
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify actors, scope, non-goals, safety constraints, and readiness risk.
+  - step_id: inspect
+    action: inspect
+    instruction: Read source artifacts, project contract, and related requirements.
+  - step_id: plan
+    action: plan
+    instruction: Draft bounded requirements, user stories, and acceptance criteria.
+  - step_id: review
+    action: review
+    instruction: Check readiness, ambiguity, risks, and implementation independence.
+  - step_id: handoff
+    action: handoff
+    instruction: Record requirement artifact paths and exact next action.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: requirements_note
+  - kind: acceptance_criteria
+  - kind: user_story
+  - kind: definition_of_done
+  - kind: verification_summary
+  - kind: handoff
+approval_gates:
+  - safety_policy_change
+  - workflow_change
+verification:
+  - Run requirements readiness checks when artifacts are generated.
+  - Run requirements evals when requirement generation behavior changes.
+blocked_actions:
+  - publish_without_review
+  - silent_scope_expansion
+

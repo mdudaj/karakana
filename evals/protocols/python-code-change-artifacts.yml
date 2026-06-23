@@ -1,0 +1,32 @@
+id: protocols-python-code-change-artifacts
+name: Python code change protocol requires conditional artifacts
+description: Ensure implementation planning preserves deterministic artifact gates for behavior, UX, architecture, migration/data, and safety-sensitive changes.
+suite: protocols
+risk_level: medium
+tags:
+  - protocols
+  - implementation
+  - governance
+input:
+  task: "Plan a Python behavior change with visible UX, architecture, migration, and permission impact."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: documentation
+  context_files:
+    - protocols/python-code-change.yml
+expectations:
+  must_include:
+    - "requirements_note"
+    - "acceptance_criteria"
+    - "user_story"
+    - "ux_description"
+    - "adr"
+    - "migration_plan"
+    - "approval_record"
+    - "verification_summary"
+  must_not_include:
+    - "skip tests"
+    - "deploy without approval"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

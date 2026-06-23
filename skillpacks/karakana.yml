@@ -35,6 +35,18 @@ model_routes:
   high_risk_code_review:
     provider: openai_codex
     model: gpt-5.5
+protocols:
+  default: python-code-change
+  categories:
+    architecture: architecture-decision
+    frontend: ux-change
+    implementation: python-code-change
+    memory: memory-update
+    migration: data-migration
+    release: release-change
+    requirements: requirements-change
+    safety: safety-policy-change
+    skill: skill-update
 safety:
   high_risk_paths:
     - karakana/models/**

@@ -1,0 +1,50 @@
+protocol_id: release-change
+name: Release Change
+version: 0.1.0
+category: release
+risk_floor: high
+summary: Deterministic protocol for release, packaging, and publication readiness changes.
+roles: [planner, release_operator, tester, reviewer]
+standards:
+  - Release work must preserve reviewability and avoid publishing by default.
+required_inputs:
+  - release objective
+  - current release checks
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify release scope, publication risk, and approval gates.
+  - step_id: inspect
+    action: inspect
+    instruction: Read release docs, checks, changelog, and workflows.
+  - step_id: plan
+    action: plan
+    instruction: Define release checklist, rollback, and verification.
+  - step_id: verify
+    action: verify
+    instruction: Run release checks and tests.
+  - step_id: publish
+    action: publish
+    instruction: Publish only with explicit approval.
+    required: false
+  - step_id: handoff
+    action: handoff
+    instruction: Record release readiness and next action.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: change_summary
+  - kind: rollback_plan
+  - kind: approval_record
+  - kind: verification_summary
+  - kind: handoff
+approval_gates:
+  - deployment
+  - publish
+  - workflow_change
+verification:
+  - Run release check.
+  - Run relevant tests and evals before publication.
+blocked_actions:
+  - publish_without_approval
+  - deploy_without_approval

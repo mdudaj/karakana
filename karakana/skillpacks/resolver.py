@@ -36,6 +36,7 @@ def resolve_skillpack(skillpack: Skillpack) -> ResolvedSkillpackContext:
         optional_skills=list(skillpack.skills.optional),
         memory_path=skillpack.project.memory,
         model_routes={task_type: asdict(route) for task_type, route in skillpack.model_routes.items()},
+        protocols=({"default": skillpack.protocols.default} if skillpack.protocols.default else {}) | skillpack.protocols.categories,
         high_risk_paths=list(skillpack.safety.high_risk_paths),
         blocked_paths=list(skillpack.safety.blocked_paths),
         test_commands=list(skillpack.tests.commands) + list(skillpack.tests.recommended_before_commit),

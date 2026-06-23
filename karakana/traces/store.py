@@ -26,8 +26,23 @@ class TraceStore:
         task: str | None = None,
         task_type: str | None = None,
         selected_model: str | None = None,
+        protocol_id: str | None = None,
+        work_category: str | None = None,
+        risk_level: str | None = None,
+        required_artifacts: list[str] | None = None,
         inputs: dict | None = None,
     ) -> RunTrace:
+        if task and not protocol_id:
+            try:
+                from karakana.protocols.classifier import ProtocolClassifier
+
+                classification = ProtocolClassifier(self.repo_root).classify(task, project=project)
+                protocol_id = classification.protocol_id
+                work_category = classification.work_category
+                risk_level = classification.risk_level
+                required_artifacts = classification.required_artifacts
+            except Exception:
+                pass
         return RunTrace(
             run_id=generate_run_id(),
             command=command,
@@ -36,6 +51,10 @@ class TraceStore:
             task=task,
             task_type=task_type,
             selected_model=selected_model,
+            protocol_id=protocol_id,
+            work_category=work_category,
+            risk_level=risk_level,
+            required_artifacts=required_artifacts or [],
             status="started",
             started_at=now_utc(),
             inputs=inputs or {},

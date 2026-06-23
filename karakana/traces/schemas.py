@@ -52,6 +52,10 @@ class RunTrace:
     selected_model: str | None
     status: str
     started_at: str
+    protocol_id: str | None = None
+    work_category: str | None = None
+    risk_level: str | None = None
+    required_artifacts: list[str] = field(default_factory=list)
     finished_at: str | None = None
     inputs: dict[str, Any] = field(default_factory=dict)
     outputs: dict[str, Any] = field(default_factory=dict)
@@ -66,6 +70,7 @@ class RunTrace:
             raise ValueError(f"Invalid trace status: {self.status}")
         self.inputs = redact_value(self.inputs)
         self.outputs = redact_value(self.outputs)
+        self.required_artifacts = redact_value(self.required_artifacts)
 
     def finish(self, status: str) -> None:
         if status not in TRACE_STATUSES:
@@ -93,6 +98,10 @@ class RunTrace:
             selected_model=data.get("selected_model"),
             status=data["status"],
             started_at=data["started_at"],
+            protocol_id=data.get("protocol_id"),
+            work_category=data.get("work_category"),
+            risk_level=data.get("risk_level"),
+            required_artifacts=list(data.get("required_artifacts", [])),
             finished_at=data.get("finished_at"),
             inputs=data.get("inputs", {}),
             outputs=data.get("outputs", {}),

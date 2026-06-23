@@ -59,6 +59,7 @@ Use GPT-5.5 only when the work is high-risk, complex, or stuck.
 - All authentication and permission changes require human approval.
 - All behavior changes require tests.
 - Self-improvement must produce reviewable proposals.
+- Non-trivial work should start with `karakana protocol start` and end with a protocol check when required artifacts are present.
 
 ## Test commands
 

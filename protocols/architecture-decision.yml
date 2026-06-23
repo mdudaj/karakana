@@ -1,0 +1,51 @@
+protocol_id: architecture-decision
+name: Architecture Decision
+version: 0.1.0
+category: architecture
+risk_floor: medium
+summary: Deterministic protocol for architecture decisions and ADR updates.
+roles: [planner, reviewer, safety_reviewer]
+standards:
+  - Architecture decisions require alternatives and consequences.
+  - High-risk decisions require rollback or migration notes.
+required_inputs:
+  - problem statement
+  - current architecture context
+  - affected constraints
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify decision scope, affected contracts, risk, and approval gates.
+  - step_id: inspect
+    action: inspect
+    instruction: Read architecture, decisions, project contract, and affected code boundaries.
+  - step_id: plan
+    action: plan
+    instruction: Compare options and select a bounded decision.
+  - step_id: review
+    action: review
+    instruction: Review consequences, rollback, compatibility, and safety impact.
+  - step_id: handoff
+    action: handoff
+    instruction: Record ADR path, unresolved questions, and next action.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: adr
+  - kind: rollback_plan
+  - kind: verification_summary
+  - kind: handoff
+  - kind: safety_review
+    condition:
+      safety_or_permission_change: true
+approval_gates:
+  - architecture_change
+  - safety_policy_change
+  - model_execution_change
+verification:
+  - Validate ADR references.
+  - Run affected protocol and OKF validation when governance changes.
+blocked_actions:
+  - implement_without_decision
+  - bypass_review
+

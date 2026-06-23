@@ -43,6 +43,7 @@ Codex should run the project-local `.codex/hooks.json` `SessionStart` hook on tr
 2. Read mandatory repository instructions, then inspect only the files listed under `Files to Inspect First`.
 3. Treat `Files Not to Reread` as advisory; it never overrides `AGENTS.md`, `KARAKANA.md`, safety rules, or files required by the current task.
 4. Verify recovered or stale handoffs before acting.
+5. For non-trivial work, run `karakana protocol start --task "<task>" --project <project> --write-plan` or classify the task with the active protocol before editing.
 
 ## End Every Task
 
@@ -57,11 +58,14 @@ karakana handoff refresh \
 
 Record verification, unresolved findings, changed references, and the exact next action. Handoffs are append-only runtime artifacts under `.karakana/handoffs/` and must not be committed.
 
+If the active trace has protocol-required artifacts, run `karakana protocol check --trace <run-id>` before or during handoff refresh. Use `karakana protocol missing`, `karakana protocol template`, and `karakana protocol attach` to close artifact gaps.
+
 Use project skillpacks when available:
 
 ```bash
 karakana skillpack list
 karakana skillpack activate karakana
+karakana protocol start --task "Review project risk" --project karakana --write-plan
 karakana plan --use-current-skillpack --task "Review project risk"
 karakana workspace list
 karakana workspace status

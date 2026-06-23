@@ -81,6 +81,14 @@ from karakana.patch.commit import commit_patch_run
 from karakana.patch.gates import attach_test_evidence, render_gate_markdown, run_patch_gate
 from karakana.patch.status import write_patch_status
 from karakana.patch.summary import summarize_patch_lifecycle
+from karakana.protocols.artifacts import attach_artifact_to_trace, list_template_kinds, missing_artifact_suggestions, render_template, write_template
+from karakana.protocols.checks import run_protocol_check
+from karakana.protocols.classifier import ProtocolClassifier
+from karakana.protocols.loader import ProtocolLoader
+from karakana.protocols.resolver import ProtocolResolver
+from karakana.protocols.start import ProtocolStartStore, build_protocol_start, render_protocol_start
+from karakana.protocols.summary import render_protocol_summary
+from karakana.protocols.validator import ProtocolValidator
 from karakana.requirements.issues import generate_issues
 from karakana.requirements.prd import generate_prd
 from karakana.requirements.publisher import RequirementsPublisher
@@ -143,6 +151,7 @@ milestone_app = typer.Typer(help="Decide and generate instructions for the next 
 model_app = typer.Typer(help="Inspect and invoke model providers.")
 patch_app = typer.Typer(help="Gate, apply, and summarize captured patches.")
 okf_app = typer.Typer(help="Validate and inspect Open Knowledge Format concepts.")
+protocol_app = typer.Typer(help="Inspect deterministic Karakana work protocols.")
 requirements_app = typer.Typer(help="Generate PRDs, stories, and issue drafts.")
 release_app = typer.Typer(help="Run local release readiness commands.")
 skill_app = typer.Typer(help="Inspect and validate Karakana skills.")
@@ -167,6 +176,7 @@ app.add_typer(milestone_app, name="milestone")
 app.add_typer(model_app, name="model")
 app.add_typer(okf_app, name="okf")
 app.add_typer(patch_app, name="patch")
+app.add_typer(protocol_app, name="protocol")
 app.add_typer(requirements_app, name="requirements")
 app.add_typer(release_app, name="release")
 app.add_typer(skill_app, name="skill")
@@ -714,6 +724,7 @@ def handoff_refresh(
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
     okf_concept: list[str] | None = typer.Option(None, "--okf-concept", help="OKF concept ID loaded for this handoff."),
     changed_okf_concept: list[str] | None = typer.Option(None, "--changed-okf-concept", help="OKF concept ID changed by this work."),
+    require_protocol_pass: bool = typer.Option(False, "--require-protocol-pass", help="Fail if latest protocol artifact check does not pass."),
 ) -> None:
     """Append a refreshed handoff while preserving prior handoff history."""
     repo_root = Path.cwd()
@@ -721,6 +732,10 @@ def handoff_refresh(
     skillpack_name = skillpack or project
     previous = store.latest(project, skillpack_name)
     try:
+        protocol_result, protocol_path = _check_latest_project_protocol_trace(repo_root, project)
+        if protocol_result and not protocol_result.ok and require_protocol_pass:
+            typer.echo(f"Protocol check failed for trace {protocol_result.trace_id}: {', '.join(protocol_result.missing_artifacts)}")
+            raise typer.Exit(code=1)
         handoff = create_handoff(
             repo_root,
             project,
@@ -733,8 +748,18 @@ def handoff_refresh(
             okf_concepts_loaded=okf_concept,
             okf_concepts_changed=changed_okf_concept,
         )
+        if protocol_result and protocol_path:
+            handoff.source_artifacts.append(str(protocol_path.parent / "check.md"))
+            handoff.reference_artifacts.append(str(protocol_path.parent / "check.md"))
+            handoff.warnings.append(
+                f"Protocol check {protocol_result.check_id} for trace {protocol_result.trace_id} is {protocol_result.status}."
+            )
+            if protocol_result.missing_artifacts:
+                handoff.open_findings.append("Missing protocol artifacts: " + ", ".join(protocol_result.missing_artifacts))
         markdown_path, _ = store.save(handoff)
     except Exception as exc:
+        if isinstance(exc, typer.Exit):
+            raise
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
     typer.echo(f"Handoff refreshed: {handoff.handoff_id}")
@@ -1489,7 +1514,12 @@ def crosslink_apply(crosslink_id: str, write: bool = typer.Option(False, "--writ
 
 
 @patch_app.command("gate")
-def patch_gate(patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."), skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context for path gates."), json_output: bool = typer.Option(False, "--json", help="Print gate JSON.")) -> None:
+def patch_gate(
+    patch_run: str = typer.Option(..., "--patch-run", help="Patch run ID."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack context for path gates."),
+    require_protocol_pass: bool = typer.Option(False, "--require-protocol-pass", help="Block when linked protocol artifact check does not pass."),
+    json_output: bool = typer.Option(False, "--json", help="Print gate JSON."),
+) -> None:
     """Run patch lifecycle gates for a captured patch."""
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
@@ -1497,14 +1527,33 @@ def patch_gate(patch_run: str = typer.Option(..., "--patch-run", help="Patch run
     try:
         skillpack_context = _resolve_optional_skillpack(repo_root, skillpack)
         result, gate_path = run_patch_gate(repo_root, patch_run, skillpack_context=skillpack_context)
+        protocol_result, protocol_path = _check_patch_protocol_trace(repo_root, patch_run)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
         raise typer.Exit(code=1) from exc
+    if protocol_result:
+        result.metadata["protocol_check_id"] = protocol_result.check_id
+        result.metadata["protocol_check_status"] = protocol_result.status
+        result.metadata["protocol_check_missing_artifacts"] = protocol_result.missing_artifacts
+        if protocol_result.missing_artifacts:
+            result.warnings.append("Protocol artifacts missing: " + ", ".join(protocol_result.missing_artifacts))
+            result.required_actions.extend(protocol_result.recommended_next_actions)
+            if require_protocol_pass:
+                result.status = "blocked"
+                result.blocked = True
+                result.checks_failed.append("protocol_artifacts_present")
+        gate_path.write_text(json.dumps(result.to_dict(), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        (gate_path.parent / "gate.md").write_text(render_gate_markdown(result), encoding="utf-8")
     trace.outputs.update({"patch_run_id": patch_run, "gate_run_id": gate_path.parent.name, "risk_level": result.risk_level, "blocked": result.blocked, "gate_path": str(gate_path), "skillpack": skillpack_context.skillpack.name if skillpack_context else None})
+    if protocol_result and protocol_path:
+        trace.outputs.update({"protocol_check_id": protocol_result.check_id, "protocol_check_status": protocol_result.status, "protocol_check_path": str(protocol_path)})
     trace.warnings.extend(result.warnings)
     trace.artifacts.append(TraceArtifact(path=str(gate_path), kind="patch_gate", description="Patch gate JSON"))
     trace.artifacts.append(TraceArtifact(path=str(gate_path.parent / "gate.md"), kind="patch_gate_markdown", description="Patch gate markdown"))
+    if protocol_path:
+        trace.artifacts.append(TraceArtifact(path=str(protocol_path), kind="protocol_check", description="Protocol artifact check JSON"))
+        trace.artifacts.append(TraceArtifact(path=str(protocol_path.parent / "check.md"), kind="protocol_check_markdown", description="Protocol artifact check markdown"))
     _success_trace(trace_store, trace)
     typer.echo(f"Patch gate written to: {gate_path.parent}")
     typer.echo(f"Status: {result.status}")
@@ -1512,6 +1561,8 @@ def patch_gate(patch_run: str = typer.Option(..., "--patch-run", help="Patch run
     typer.echo(f"Blocked: {result.blocked}")
     if json_output:
         typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+    if require_protocol_pass and protocol_result and not protocol_result.ok:
+        raise typer.Exit(code=1)
 
 
 @patch_app.command("branch")
@@ -3056,6 +3107,331 @@ def workspace_validate_all() -> None:
         raise typer.Exit(code=1)
 
 
+@protocol_app.command("list")
+def protocol_list() -> None:
+    """List available deterministic work protocols."""
+    for protocol_id in ProtocolLoader(Path.cwd()).list_protocols():
+        typer.echo(protocol_id)
+
+
+@protocol_app.command("show")
+def protocol_show(protocol_id: str, json_output: bool = typer.Option(False, "--json", help="Print JSON.")) -> None:
+    """Show one deterministic work protocol."""
+    try:
+        protocol = ProtocolLoader(Path.cwd()).load(protocol_id)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    typer.echo(json.dumps(protocol.to_dict(), indent=2, sort_keys=True) if json_output else render_protocol_summary(protocol))
+
+
+@protocol_app.command("validate")
+def protocol_validate(protocol_id: str, strict: bool = typer.Option(False, "--strict", help="Treat warnings as errors.")) -> None:
+    """Validate one deterministic work protocol."""
+    result = ProtocolValidator(Path.cwd()).validate(protocol_id, strict=strict)
+    _print_protocol_validation(result)
+    if not result.ok:
+        raise typer.Exit(code=1)
+
+
+@protocol_app.command("validate-all")
+def protocol_validate_all(strict: bool = typer.Option(False, "--strict", help="Treat warnings as errors.")) -> None:
+    """Validate all deterministic work protocols."""
+    failed = False
+    for result in ProtocolValidator(Path.cwd()).validate_all(strict=strict):
+        _print_protocol_validation(result)
+        failed = failed or not result.ok
+    if failed:
+        raise typer.Exit(code=1)
+
+
+@protocol_app.command("artifacts")
+def protocol_artifacts(
+    protocol_id: str,
+    risk_level: str = typer.Option("low", "--risk-level", help="Risk level for conditional artifact resolution."),
+    behavior_change: bool = typer.Option(False, "--behavior-change", help="Include behavior-change artifacts."),
+    ux_change: bool = typer.Option(False, "--ux-change", help="Include UX-change artifacts."),
+    architecture_change: bool = typer.Option(False, "--architecture-change", help="Include architecture-change artifacts."),
+    data_or_migration_change: bool = typer.Option(False, "--data-or-migration-change", help="Include data or migration artifacts."),
+    safety_or_permission_change: bool = typer.Option(False, "--safety-or-permission-change", help="Include safety or permission artifacts."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Resolve required artifacts for a protocol and task conditions."""
+    conditions = {
+        "risk_level": risk_level,
+        "behavior_change": behavior_change,
+        "ux_change": ux_change,
+        "architecture_change": architecture_change,
+        "data_or_migration_change": data_or_migration_change,
+        "safety_or_permission_change": safety_or_permission_change,
+    }
+    try:
+        artifacts = ProtocolResolver(Path.cwd()).required_artifacts(protocol_id, conditions)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    if json_output:
+        typer.echo(json.dumps([artifact.__dict__ for artifact in artifacts], indent=2, sort_keys=True))
+        return
+    for artifact in artifacts:
+        suffix = f" when {artifact.condition}" if artifact.condition else ""
+        typer.echo(f"{artifact.kind}{suffix}: {artifact.description}")
+
+
+@protocol_app.command("classify")
+def protocol_classify(
+    task: str = typer.Option(..., "--task", help="Task text to classify."),
+    project: str | None = typer.Option(None, "--project", help="Project id used for skillpack protocol mapping."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack name used for protocol mapping."),
+    category: str | None = typer.Option(None, "--category", help="Override inferred work category."),
+    risk_level: str | None = typer.Option(None, "--risk-level", help="Override inferred risk level."),
+    protocol_id: str | None = typer.Option(None, "--protocol", help="Override selected protocol id."),
+    behavior_change: bool | None = typer.Option(None, "--behavior-change/--no-behavior-change", help="Override behavior-change flag."),
+    ux_change: bool | None = typer.Option(None, "--ux-change/--no-ux-change", help="Override UX-change flag."),
+    architecture_change: bool | None = typer.Option(None, "--architecture-change/--no-architecture-change", help="Override architecture-change flag."),
+    data_or_migration_change: bool | None = typer.Option(None, "--data-or-migration-change/--no-data-or-migration-change", help="Override data or migration flag."),
+    safety_or_permission_change: bool | None = typer.Option(None, "--safety-or-permission-change/--no-safety-or-permission-change", help="Override safety or permission flag."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Classify a task and resolve protocol artifact requirements."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    try:
+        classification = ProtocolClassifier(repo_root).classify(
+            task,
+            project=project,
+            skillpack=skillpack,
+            category=category,
+            risk_level=risk_level,
+            protocol_id=protocol_id,
+            behavior_change=behavior_change,
+            ux_change=ux_change,
+            architecture_change=architecture_change,
+            data_or_migration_change=data_or_migration_change,
+            safety_or_permission_change=safety_or_permission_change,
+        )
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace = trace_store.create_run(
+        command="protocol classify",
+        project=project,
+        skill=skillpack,
+        task=task,
+        task_type="protocol_classification",
+        protocol_id=classification.protocol_id,
+        work_category=classification.work_category,
+        risk_level=classification.risk_level,
+        required_artifacts=classification.required_artifacts,
+        inputs=classification.to_dict(),
+    )
+    trace.outputs.update(classification.to_dict())
+    _success_trace(trace_store, trace)
+    if json_output:
+        typer.echo(json.dumps(classification.to_dict(), indent=2, sort_keys=True))
+        return
+    typer.echo(f"Protocol: {classification.protocol_id}")
+    typer.echo(f"Category: {classification.work_category}")
+    typer.echo(f"Risk: {classification.risk_level}")
+    typer.echo("Flags:")
+    typer.echo(f"- behavior_change: {classification.behavior_change}")
+    typer.echo(f"- ux_change: {classification.ux_change}")
+    typer.echo(f"- architecture_change: {classification.architecture_change}")
+    typer.echo(f"- data_or_migration_change: {classification.data_or_migration_change}")
+    typer.echo(f"- safety_or_permission_change: {classification.safety_or_permission_change}")
+    typer.echo("Required artifacts:")
+    for artifact in classification.required_artifacts:
+        typer.echo(f"- {artifact}")
+
+
+@protocol_app.command("check")
+def protocol_check(
+    trace_id: str = typer.Option(..., "--trace", help="Trace run ID to check."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Check whether a trace satisfies its required protocol artifacts."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="protocol check", task_type="protocol_check", inputs={"trace_id": trace_id})
+    try:
+        result, path = run_protocol_check(repo_root, trace_id)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update(
+        {
+            "protocol_check_id": result.check_id,
+            "checked_trace_id": trace_id,
+            "status": result.status,
+            "missing_artifacts": result.missing_artifacts,
+            "check_path": str(path),
+            "check_markdown": str(path.parent / "check.md"),
+        }
+    )
+    trace.artifacts.append(TraceArtifact(path=str(path), kind="protocol_check", description="Protocol artifact check JSON"))
+    trace.artifacts.append(TraceArtifact(path=str(path.parent / "check.md"), kind="protocol_check_markdown", description="Protocol artifact check markdown"))
+    if result.ok:
+        _success_trace(trace_store, trace)
+    else:
+        trace.errors.extend(result.missing_artifacts)
+        trace.next_actions.extend(result.recommended_next_actions)
+        trace.finish("failed")
+        trace_store.save(trace)
+    if json_output:
+        typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+    else:
+        typer.echo(f"Protocol check: {result.status}")
+        typer.echo(f"Check ID: {result.check_id}")
+        typer.echo(f"Trace ID: {result.trace_id}")
+        if result.missing_artifacts:
+            typer.echo("Missing artifacts:")
+            for artifact in result.missing_artifacts:
+                typer.echo(f"- {artifact}")
+    if not result.ok:
+        raise typer.Exit(code=1)
+
+
+@protocol_app.command("template")
+def protocol_template(
+    artifact_kind: str | None = typer.Argument(None, help="Protocol artifact kind. Omit to list available templates."),
+    output: Path | None = typer.Option(None, "--output", help="Write template to this path instead of printing."),
+    overwrite: bool = typer.Option(False, "--overwrite", help="Overwrite output path if it exists."),
+) -> None:
+    """Print or write a protocol artifact template."""
+    repo_root = Path.cwd()
+    if artifact_kind is None:
+        for kind in list_template_kinds(repo_root):
+            typer.echo(kind)
+        return
+    try:
+        if output:
+            path = write_template(repo_root, artifact_kind, output, overwrite=overwrite)
+            typer.echo(f"Template written to: {path}")
+            return
+        typer.echo(render_template(repo_root, artifact_kind))
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+
+
+@protocol_app.command("attach")
+def protocol_attach(
+    trace_id: str = typer.Option(..., "--trace", help="Trace run ID to update."),
+    artifact_kind: str = typer.Option(..., "--kind", help="Artifact kind satisfied by the file."),
+    path: Path = typer.Option(..., "--path", help="Existing artifact path."),
+    description: str | None = typer.Option(None, "--description", help="Optional trace artifact description."),
+) -> None:
+    """Attach an existing file to a trace as protocol artifact evidence."""
+    repo_root = Path.cwd()
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(command="protocol attach", task_type="protocol_attach", inputs={"trace_id": trace_id, "artifact_kind": artifact_kind, "path": str(path)})
+    try:
+        updated = attach_artifact_to_trace(repo_root, trace_id, artifact_kind, path, description)
+    except Exception as exc:
+        _fail_trace(trace_store, trace, exc)
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace.outputs.update({"updated_trace_id": updated.run_id, "artifact_kind": artifact_kind, "path": str(path)})
+    trace.artifacts.append(TraceArtifact(path=str(path), kind=artifact_kind, description=description or f"Attached protocol artifact: {artifact_kind}"))
+    _success_trace(trace_store, trace)
+    typer.echo(f"Attached {artifact_kind} to trace {trace_id}: {path}")
+
+
+@protocol_app.command("missing")
+def protocol_missing(trace_id: str = typer.Option(..., "--trace", help="Trace run ID to inspect.")) -> None:
+    """Print missing protocol artifacts with template and attach commands."""
+    try:
+        suggestions = missing_artifact_suggestions(Path.cwd(), trace_id)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    if not suggestions:
+        typer.echo("No missing protocol artifacts.")
+        return
+    for suggestion in suggestions:
+        typer.echo(f"{suggestion.artifact_kind}")
+        if suggestion.template_command:
+            typer.echo(f"  template: {suggestion.template_command}")
+        typer.echo(f"  attach: {suggestion.attach_command}")
+
+
+@protocol_app.command("start")
+def protocol_start(
+    task: str | None = typer.Option(None, "--task", help="Task text to start."),
+    from_note: str | None = typer.Option(None, "--from-note", help="Use a note as the task source."),
+    from_requirements: str | None = typer.Option(None, "--from-requirements", help="Use a requirement PRD as the task source."),
+    project: str | None = typer.Option(None, "--project", help="Project id used for skillpack protocol mapping."),
+    skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack name used for protocol mapping."),
+    category: str | None = typer.Option(None, "--category", help="Override inferred work category."),
+    risk_level: str | None = typer.Option(None, "--risk-level", help="Override inferred risk level."),
+    write_plan: bool = typer.Option(False, "--write-plan", help="Write .karakana/protocol-starts artifacts."),
+    json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+) -> None:
+    """Start a task with protocol classification, required artifacts, and template guidance."""
+    repo_root = Path.cwd()
+    source_count = len([value for value in (task, from_note, from_requirements) if value])
+    if source_count != 1:
+        typer.echo("Provide exactly one of --task, --from-note, or --from-requirements.")
+        raise typer.Exit(code=1)
+    source = {"source_type": "task"}
+    if from_requirements:
+        try:
+            prd = RequirementsStore(repo_root).load_prd(from_requirements)
+        except Exception as exc:
+            typer.echo(str(exc))
+            raise typer.Exit(code=1) from exc
+        task_text = f"{prd.title}. {prd.goal}"
+        project = project or prd.project
+        skillpack = skillpack or prd.skillpack
+        source = {"source_type": "requirements", "req_id": from_requirements}
+    elif from_note:
+        task_text = from_note
+        source = {"source_type": "note"}
+    else:
+        task_text = str(task)
+    try:
+        classification = ProtocolClassifier(repo_root).classify(
+            task_text,
+            project=project,
+            skillpack=skillpack,
+            category=category,
+            risk_level=risk_level,
+        )
+        artifact = build_protocol_start(repo_root, classification, source=source)
+    except Exception as exc:
+        typer.echo(str(exc))
+        raise typer.Exit(code=1) from exc
+    trace_store = TraceStore(repo_root)
+    trace = trace_store.create_run(
+        command="protocol start",
+        project=classification.project,
+        skill=classification.skillpack,
+        task=task_text,
+        task_type="protocol_start",
+        protocol_id=classification.protocol_id,
+        work_category=classification.work_category,
+        risk_level=classification.risk_level,
+        required_artifacts=classification.required_artifacts,
+        inputs=artifact.to_dict(),
+    )
+    path = None
+    if write_plan:
+        path = ProtocolStartStore(repo_root).save(artifact)
+        trace.outputs.update({"protocol_start_id": artifact.start_id, "start_path": str(path), "start_markdown": str(path.parent / "start.md")})
+        trace.artifacts.append(TraceArtifact(path=str(path), kind="protocol_start", description="Protocol task start JSON"))
+        trace.artifacts.append(TraceArtifact(path=str(path.parent / "start.md"), kind="protocol_start_markdown", description="Protocol task start markdown"))
+    else:
+        trace.outputs.update({"protocol_start_id": artifact.start_id, "written": False})
+    _success_trace(trace_store, trace)
+    if json_output:
+        typer.echo(json.dumps(artifact.to_dict(), indent=2, sort_keys=True))
+        return
+    typer.echo(render_protocol_start(artifact))
+    if path:
+        typer.echo(f"\nProtocol start written to: {path.parent}")
+
+
 @workspace_app.command("activate")
 def workspace_activate(name: str) -> None:
     """Activate a workspace locally."""
@@ -3549,6 +3925,74 @@ def _print_skillpack_validation(result) -> None:
         typer.echo(f"WARNING: {warning}")
     if result.ok:
         typer.echo("OK")
+
+
+def _print_protocol_validation(result) -> None:
+    typer.echo(f"Validating protocol: {result.protocol_id}")
+    for error in result.errors:
+        typer.echo(f"ERROR: {error}")
+    for warning in result.warnings:
+        typer.echo(f"WARNING: {warning}")
+    if result.ok:
+        typer.echo("OK")
+
+
+def _check_latest_project_protocol_trace(repo_root: Path, project: str):
+    trace = _latest_project_protocol_trace(repo_root, project)
+    if not trace:
+        return None, None
+    return run_protocol_check(repo_root, trace.run_id)
+
+
+def _latest_project_protocol_trace(repo_root: Path, project: str):
+    for trace in TraceStore(repo_root).list_runs(limit=50):
+        if trace.project != project:
+            continue
+        if not trace.required_artifacts:
+            continue
+        if trace.command in {"handoff refresh", "protocol check"} or trace.command.startswith("handoff "):
+            continue
+        return trace
+    return None
+
+
+def _check_patch_protocol_trace(repo_root: Path, patch_run: str):
+    trace_id = _patch_source_trace_id(repo_root, patch_run)
+    if trace_id:
+        try:
+            trace = TraceStore(repo_root).load(trace_id)
+            if trace.required_artifacts:
+                return run_protocol_check(repo_root, trace.run_id)
+        except FileNotFoundError:
+            pass
+    project = _patch_project(repo_root, patch_run)
+    if project:
+        return _check_latest_project_protocol_trace(repo_root, project)
+    return None, None
+
+
+def _patch_source_trace_id(repo_root: Path, patch_run: str) -> str | None:
+    patch_json = repo_root / ".karakana" / "patches" / patch_run / "patch.json"
+    if not patch_json.exists():
+        return None
+    try:
+        data = json.loads(patch_json.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    source_task_id = data.get("source_task_id")
+    return str(source_task_id) if source_task_id else None
+
+
+def _patch_project(repo_root: Path, patch_run: str) -> str | None:
+    patch_json = repo_root / ".karakana" / "patches" / patch_run / "patch.json"
+    if not patch_json.exists():
+        return None
+    try:
+        data = json.loads(patch_json.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    project = data.get("project")
+    return str(project) if project else None
 
 
 def _load_workspace_for_cli(repo_root: Path, name: str | None):

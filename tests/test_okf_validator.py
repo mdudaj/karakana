@@ -58,6 +58,8 @@ def test_validator_accepts_curated_repository_bundle():
     assert result.counts_by_project["karakana"] >= 8
     assert result.counts_by_project["msc-platform"] >= 6
     assert result.counts_by_type["Project"] >= 2
+    assert result.counts_by_type["WorkProtocol"] >= 6
+    assert result.counts_by_type["Verification"] >= 2
 
 
 def test_validator_rejects_missing_type(tmp_path):

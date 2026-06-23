@@ -10,6 +10,7 @@ from karakana.skillpacks.schemas import (
     Skillpack,
     SkillpackConventions,
     SkillpackModelRoute,
+    SkillpackProtocols,
     SkillpackProject,
     SkillpackSafety,
     SkillpackSkills,
@@ -52,6 +53,7 @@ def skillpack_from_dict(data: dict, path: Path | None = None) -> Skillpack:
     skills = data.get("skills") or {}
     safety = data.get("safety") or {}
     tests = data.get("tests") or {}
+    protocols = data.get("protocols") or {}
     conventions = data.get("conventions") or {}
     routes = {
         str(task_type): SkillpackModelRoute(
@@ -80,8 +82,12 @@ def skillpack_from_dict(data: dict, path: Path | None = None) -> Skillpack:
             blocked_paths=list(safety.get("blocked_paths") or []),
             requires_approval_for=list(safety.get("requires_approval_for") or []),
         ),
+        protocols=SkillpackProtocols(
+            default=protocols.get("default"),
+            categories={str(category): str(protocol_id) for category, protocol_id in (protocols.get("categories") or {}).items()},
+        ),
         tests=SkillpackTests(commands=list(tests.get("commands") or []), recommended_before_commit=list(tests.get("recommended_before_commit") or [])),
         conventions=SkillpackConventions(notes=list(conventions.get("notes") or [])),
         path=str(path) if path else None,
-        metadata={key: value for key, value in data.items() if key not in {"name", "description", "version", "status", "project", "skills", "model_routes", "safety", "tests", "conventions"}},
+        metadata={key: value for key, value in data.items() if key not in {"name", "description", "version", "status", "project", "skills", "model_routes", "protocols", "safety", "tests", "conventions"}},
     )

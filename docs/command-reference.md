@@ -367,6 +367,28 @@ Example:
 karakana crosslink list
 ```
 
+## protocol
+
+Purpose: Classify work, produce protocol artifacts, and gate reproducibility.
+
+Common commands:
+```bash
+karakana protocol start --task "Plan a database schema migration" --project karakana
+karakana protocol template requirements_note
+karakana protocol missing --trace <run-id>
+karakana protocol attach --trace <run-id> --kind requirements_note --path docs/requirements/example.md
+karakana protocol check --trace <run-id>
+```
+
+Safe default behavior: Local artifact generation and trace updates only.
+
+Write/execute flags: --write-plan writes protocol-start artifacts; --output writes templates; handoff and patch gates use --require-protocol-pass for enforcement.
+
+Example:
+```bash
+karakana protocol validate-all
+```
+
 ## release
 
 Purpose: Run release checks and generate release artifacts.

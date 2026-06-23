@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from karakana.traces.schemas import TraceArtifact
 from karakana.traces.store import TraceStore
 
@@ -11,6 +13,10 @@ def test_create_save_load_trace(tmp_path):
         task="Task",
         task_type="planning",
         selected_model="gpt-5-mini",
+        protocol_id="python-code-change",
+        work_category="implementation",
+        risk_level="medium",
+        required_artifacts=["trace", "verification_summary"],
         inputs={"client_secret": "hidden"},
     )
     trace.outputs["prompt_path"] = ".karakana/planning-task.md"
@@ -22,6 +28,10 @@ def test_create_save_load_trace(tmp_path):
 
     assert trace_path == tmp_path / ".karakana" / "runs" / trace.run_id / "trace.json"
     assert loaded.run_id == trace.run_id
+    assert loaded.protocol_id == "python-code-change"
+    assert loaded.work_category == "implementation"
+    assert loaded.risk_level == "medium"
+    assert loaded.required_artifacts == ["trace", "verification_summary"]
     assert loaded.inputs["client_secret"] == "[REDACTED]"
     assert loaded.artifacts[0].path == ".karakana/planning-task.md"
     assert (tmp_path / ".karakana" / "runs" / trace.run_id / "summary.md").exists()
@@ -42,3 +52,14 @@ def test_list_and_latest_runs(tmp_path):
     assert [run.command for run in runs[:2]] == ["second", "first"]
     assert latest is not None
     assert latest.command == "second"
+
+
+def test_trace_store_attaches_protocol_for_task_when_available():
+    store = TraceStore(Path.cwd())
+
+    trace = store.create_run(command="plan", project="karakana", task="Implement a Python behavior change.")
+
+    assert trace.protocol_id == "python-code-change"
+    assert trace.work_category == "implementation"
+    assert trace.risk_level in {"low", "medium", "high", "critical"}
+    assert "trace" in trace.required_artifacts

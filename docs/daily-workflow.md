@@ -11,6 +11,7 @@ karakana workspace status
 ## Plan Work
 
 ```bash
+karakana protocol start --task "Describe the intended change" --project billing --write-plan
 karakana workspace plan --project billing --task "Review GePG callback issue"
 karakana skill show requirements-elicitation
 karakana skill show brainstorm-verbalized-sampling
@@ -37,6 +38,8 @@ karakana codex capture-diff
 karakana codex review-patch --diff <diff-path>
 karakana patch gate --patch-run <patch-run-id>
 ```
+
+Use `karakana protocol missing --trace <run-id>` and `karakana protocol attach --trace <run-id> --kind <artifact> --path <path>` to close required artifact gaps before handoff or patch gate enforcement.
 
 ## Local Review Loop
 
