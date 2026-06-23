@@ -173,6 +173,7 @@ Before planning or editing code:
 Never commit or print secrets, tokens, `.env` contents, API keys, authorization headers, or private key material.
 Do not deploy, auto-merge, push to protected branches, or run destructive commands without explicit approval.
 Live model calls and GitHub writes must remain explicit opt-in.
+All repository work must happen on a non-protected branch and be delivered through a pull request. When the user asks to merge completed work, squash merge the PR into the target branch after validation instead of committing or merging directly on `main`.
 
 ## Files Requiring Extra Caution
 
@@ -190,8 +191,10 @@ Live model calls and GitHub writes must remain explicit opt-in.
 
 ## Pull Request Expectations
 
-Prefer reviewable patches and pull requests over direct changes.
+Use reviewable patches and pull requests for all repository changes.
+Create or switch to a task branch before editing files.
 Every behavior change should include tests or eval coverage.
+When work is accepted for integration, use a squash merge unless the user explicitly requests a different merge strategy.
 Summaries should list changed files, commands run, test results, risks, and remaining TODOs.
 Generated runtime artifacts under `.karakana/` must not be committed.
 
