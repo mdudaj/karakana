@@ -14,6 +14,8 @@ def test_patch_capture_with_no_diff(tmp_path):
 
 def test_patch_capture_with_working_tree_diff(tmp_path):
     subprocess.run(["git", "init"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "tests@example.invalid"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Karakana Tests"], cwd=tmp_path, check=True)
     path = tmp_path / "README.md"
     path.write_text("old\n", encoding="utf-8")
     subprocess.run(["git", "add", "README.md"], cwd=tmp_path, check=True)
