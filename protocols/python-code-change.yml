@@ -75,6 +75,10 @@ artifacts:
     description: Affected user workflow, before/after behavior, states, and edge cases.
     condition:
       ux_change: true
+  - kind: requirements_note
+    description: Behavior and look-and-feel requirements for UX-impacting implementation, including best-practice research and design-system fit.
+    condition:
+      ux_change: true
   - kind: accessibility_checklist
     description: Keyboard, screen reader, contrast, focus, and responsive considerations.
     condition:

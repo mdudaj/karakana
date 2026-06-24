@@ -174,6 +174,7 @@ Never commit or print secrets, tokens, `.env` contents, API keys, authorization 
 Do not deploy, auto-merge, push to protected branches, or run destructive commands without explicit approval.
 Live model calls and GitHub writes must remain explicit opt-in.
 All repository work must happen on a non-protected branch and be delivered through a pull request. When the user asks to merge completed work, squash merge the PR into the target branch after validation instead of committing or merging directly on `main`.
+Features with UX impact must have requirements that describe both intended behavior and look and feel before implementation. Default to researching current best practices for the delivered task and applying them through the existing project design system rather than inventing page-local styling.
 
 ## Files Requiring Extra Caution
 
