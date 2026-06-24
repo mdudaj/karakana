@@ -7,20 +7,24 @@ summary: Deterministic protocol for visible UX, frontend, and interaction change
 roles: [planner, implementer, tester, reviewer]
 standards:
   - UX changes must describe affected users and workflow states.
+  - UX feature requirements must describe both intended behavior and look and feel.
+  - Default UX planning must research current best practices for the delivered task and adapt them to the existing design system.
   - Browser-visible changes require render evidence when feasible.
 required_inputs:
   - target workflow or screen
   - affected templates/components
+  - behavior and look-and-feel requirement description
+  - existing design-system conventions
 steps:
   - step_id: classify
     action: classify
     instruction: Classify user, screen, states, accessibility, and responsive risk.
   - step_id: inspect
     action: inspect
-    instruction: Read existing UI conventions and affected frontend code.
+    instruction: Read existing UI conventions, design-system artifacts, relevant best-practice references for the task, and affected frontend code.
   - step_id: plan
     action: plan
-    instruction: Define before/after workflow, states, and verification.
+    instruction: Define behavior requirements, look-and-feel requirements, before/after workflow, states, design-system fit, and verification.
   - step_id: modify
     action: modify
     instruction: Apply UI changes consistently with the design system.
@@ -39,6 +43,8 @@ artifacts:
   - kind: verification_summary
   - kind: handoff
   - kind: requirements_note
+    description: Behavior and look-and-feel requirements, including best-practice research and design-system fit.
+  - kind: requirements_note
     condition:
       behavior_change: true
   - kind: user_story
@@ -53,4 +59,3 @@ verification:
 blocked_actions:
   - skip_render_verification
   - bypass_accessibility_review
-

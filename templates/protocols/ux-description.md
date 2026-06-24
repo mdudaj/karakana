@@ -6,6 +6,14 @@
 
 ## Workflow After
 
+## Behavior Requirements
+
+## Look And Feel Requirements
+
+## Best-Practice Research
+
+## Design-System Fit
+
 ## States
 
 - Empty:
@@ -16,4 +24,3 @@
 ## Accessibility
 
 ## Responsive Verification
-

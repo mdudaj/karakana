@@ -59,7 +59,7 @@ def test_protocol_artifacts_are_tiered_by_task_conditions():
     assert {"task_classification", "trace", "change_summary", "verification_summary", "handoff"} <= base
     assert "requirements_note" not in base
     assert {"requirements_note", "acceptance_criteria", "user_story", "definition_of_done", "test_or_eval_rationale"} <= behavior
-    assert {"ux_description", "accessibility_checklist", "screenshot_or_render_evidence"} <= ux
+    assert {"requirements_note", "ux_description", "accessibility_checklist", "screenshot_or_render_evidence"} <= ux
     assert {"adr", "rollback_plan"} <= architecture
     assert {"schema_contract", "migration_plan", "approval_record"} <= data
     assert {"safety_review", "threat_or_abuse_case_note", "approval_record"} <= safety
@@ -146,6 +146,7 @@ def test_protocol_artifacts_differ_by_category():
     assert "migration_plan" not in requirements
     assert "migration_plan" in migration
     assert "schema_contract" in migration
+    assert "requirements_note" in ux
     assert "ux_description" in ux
     assert "screenshot_or_render_evidence" in ux
 
@@ -186,3 +187,14 @@ def test_protocol_templates_exist():
         "user-story.md",
     ]:
         assert (root / name).exists()
+
+
+def test_ux_templates_capture_behavior_look_and_feel_research_and_design_system():
+    requirements_template = (Path.cwd() / "templates" / "protocols" / "requirements-note.md").read_text()
+    ux_template = (Path.cwd() / "templates" / "protocols" / "ux-description.md").read_text()
+
+    for template in [requirements_template, ux_template]:
+        assert "Behavior" in template
+        assert "Look And Feel" in template
+        assert "Best-Practice Research" in template
+        assert "Design-System Fit" in template

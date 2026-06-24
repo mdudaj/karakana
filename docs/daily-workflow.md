@@ -20,6 +20,7 @@ karakana requirements ready <req-id>
 ```
 
 For ambiguous work, first produce a reviewed `Requirements Elicitation Result` using `requirements-elicitation`. Run `grill-with-docs` against relevant ADRs and project plans, and use `brainstorm-verbalized-sampling` when multiple valid paths remain. Pass the saved artifact to `requirements prd --from-file`; do not generate implementation issues until the material decisions are resolved.
+For features with UX impact, requirements must describe intended behavior and look and feel. Default to task-specific best-practice research and fit the result into the existing project design system, including tokens, reusable components, states, accessibility, and responsive behavior.
 
 ## Move Toward Implementation
 

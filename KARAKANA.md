@@ -60,6 +60,7 @@ Use GPT-5.5 only when the work is high-risk, complex, or stuck.
 - Never run destructive database commands.
 - All authentication and permission changes require human approval.
 - All behavior changes require tests.
+- Features with UX impact require behavior requirements, look-and-feel requirements, best-practice research for the task, and alignment with the existing design system before implementation.
 - Self-improvement must produce reviewable proposals.
 - Non-trivial work should start with `karakana protocol start` and end with a protocol check when required artifacts are present.
 

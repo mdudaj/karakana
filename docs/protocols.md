@@ -53,6 +53,8 @@ Attach an artifact to a trace:
 karakana protocol attach --trace <run-id> --kind requirements_note --path docs/requirements/example.md
 ```
 
+For UX-impacting feature work, the `requirements_note` must cover both behavior and look and feel. Use task-specific best-practice research by default, then adapt those findings to the existing design system instead of adding page-local styling.
+
 Inspect missing artifacts and suggested commands:
 
 ```bash
