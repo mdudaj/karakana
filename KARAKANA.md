@@ -61,6 +61,7 @@ Use GPT-5.5 only when the work is high-risk, complex, or stuck.
 - All authentication and permission changes require human approval.
 - All behavior changes require tests.
 - Features with UX impact require behavior requirements, look-and-feel requirements, best-practice research for the task, and alignment with the existing design system before implementation.
+- Non-trivial delivery requires an artifact-readiness check before implementation and before marking work done. Required requirements, ADR, milestone, delivery, UX, schema/example, test/eval, and handoff artifacts must exist, or the PR must explicitly record why a normally required artifact is not applicable.
 - Self-improvement must produce reviewable proposals.
 - Non-trivial work should start with `karakana protocol start` and end with a protocol check when required artifacts are present.
 
