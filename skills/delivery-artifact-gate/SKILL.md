@@ -37,6 +37,7 @@ bucket: productivity
 
 - Decide the required artifact set before code.
 - Create missing requirements, UX, ADR, story, milestone, schema/example, readiness, or dogfood artifacts first.
+- Treat missing required artifacts as a delivery blocker unless explicitly marked not applicable with rationale.
 - Implement only artifact-backed scope.
 - Add regression tests for durable rules.
 - End with a refreshed handoff.
@@ -64,6 +65,8 @@ Do not block tiny mechanical fixes when the artifact cost would exceed the chang
 
 No meaningful implementation should start until the implementation-guiding artifact set is known. If a required artifact is missing, create or update it first, then implement against it.
 
+No non-trivial delivery is complete until every required artifact exists or the PR, handoff, or delivery note records why the artifact is not applicable. Passing tests and merged code do not override missing requirements, ADR, milestone, delivery, UX, schema/example, verification, or handoff artifacts.
+
 ## Artifact Decision Matrix
 
 Create or update the smallest relevant set:
@@ -75,6 +78,7 @@ Create or update the smallest relevant set:
 - **Milestone**: multi-step delivery, dependency sequencing, or a new bounded implementation slice.
 - **Schema/example artifact**: data contracts, evidence manifests, imports/exports, generated IDs, evaluation records, or reproducibility outputs.
 - **Implementation readiness note**: when requirements exist but the code change needs a scoped execution checklist.
+- **Delivery readiness note**: when accepting a slice, list reused artifacts, new or updated artifacts, not-applicable artifacts, verification, residual gaps, and exact next action.
 - **Dogfood/review artifact**: when using the project against itself, validating workflow ergonomics, or capturing self-improvement findings.
 - **Tests/evals**: every behavior, access, schema, safety, and UX rule that can regress.
 - **Handoff**: always at end of task in Karakana-managed projects.
@@ -90,7 +94,8 @@ Create or update the smallest relevant set:
 7. Implement only the artifact-backed scope.
 8. Add or update tests/evals for the artifact rules.
 9. Run focused verification.
-10. Refresh the handoff with changed artifacts, verification, risks, and exact next action.
+10. Before marking delivery done, check that required artifacts exist or are explicitly not applicable.
+11. Refresh the handoff with changed artifacts, verification, risks, and exact next action.
 
 ## Safety rules
 
@@ -107,6 +112,8 @@ Create or update the smallest relevant set:
 - Which tests/evals protect the rule from regression?
 - Which handoff entry will let the next agent continue without repeating instructions?
 - Is this implementation going beyond the artifact-backed scope?
+- Are any required artifacts missing, renamed, or only implied by chat?
+- If an expected artifact is not applicable, where is that rationale recorded?
 
 ## Output format
 
@@ -135,6 +142,7 @@ When implementing, include this gate in the working notes or artifact, then proc
 ## Pitfalls
 
 - Treating chat instructions as the only source of truth.
+- Treating a passing test suite as proof that requirements and evidence artifacts were complete.
 - Implementing UI before UX/navigation rules are written.
 - Creating ADRs for trivial details while missing important user-story acceptance criteria.
 - Updating code without updating schemas/examples.
