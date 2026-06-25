@@ -40,6 +40,7 @@ def test_model_complete_non_mock_dry_run(tmp_path, monkeypatch):
 def test_model_complete_live_missing_credentials_fails(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("GH_TOKEN", raising=False)
 
     result = CliRunner().invoke(app, ["model", "complete", "--provider", "github", "--model", "gpt-5-mini", "--prompt", "Hello", "--live"])
 

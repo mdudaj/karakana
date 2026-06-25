@@ -49,7 +49,7 @@ def validate_model_call(
         ModelCallCheck("prompt_redacted", not _has_secret_like_value(prompt), "Prompt appears to contain secret-like content."),
         ModelCallCheck(
             "no_raw_secret_patterns",
-            "github_token=" not in lowered and "openai_api_key=" not in lowered and "bearer " not in lowered,
+            "github_token=" not in lowered and "gh_token=" not in lowered and "openai_api_key=" not in lowered and "bearer " not in lowered,
             "Prompt appears to contain raw credential content.",
         ),
     ]

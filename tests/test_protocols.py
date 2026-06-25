@@ -12,6 +12,7 @@ from karakana.skillpacks.resolver import SkillpackResolver
 from karakana.skillpacks.validator import SkillpackValidator
 
 CORE_PROTOCOLS = {
+    "assessment-review",
     "architecture-decision",
     "data-migration",
     "memory-update",
@@ -73,6 +74,7 @@ def test_karakana_skillpack_references_existing_protocols():
     assert result.ok
     assert skillpack.protocols.default == "python-code-change"
     assert skillpack.protocols.categories["implementation"] == "python-code-change"
+    assert skillpack.protocols.categories["assessment"] == "assessment-review"
     assert skillpack.protocols.categories["requirements"] == "requirements-change"
     assert skillpack.protocols.categories["architecture"] == "architecture-decision"
     assert skillpack.protocols.categories["frontend"] == "ux-change"
@@ -82,6 +84,7 @@ def test_karakana_skillpack_references_existing_protocols():
     assert skillpack.protocols.categories["memory"] == "memory-update"
     assert skillpack.protocols.categories["release"] == "release-change"
     assert context.protocols["implementation"] == "python-code-change"
+    assert context.protocols["assessment"] == "assessment-review"
 
 
 def test_protocol_cli_lists_validates_and_resolves_artifacts():
@@ -130,6 +133,7 @@ def test_protocol_classifier_selects_category_specific_protocols():
         "Update a Karakana skill with evals.": "skill-update",
         "Update ubongo memory with a new lesson.": "memory-update",
         "Prepare release checklist and version notes.": "release-change",
+        "Assess harness state and recommendations.": "assessment-review",
     }
 
     for task, protocol_id in cases.items():

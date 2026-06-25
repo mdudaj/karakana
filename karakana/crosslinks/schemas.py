@@ -147,5 +147,5 @@ def _redact_crosslink_text(value: Any) -> Any:
     if isinstance(value, list):
         return [_redact_crosslink_text(item) for item in value]
     if isinstance(value, str):
-        return re.sub(r"\b(GITHUB_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b", "[REDACTED_SECRET_NAME]", value)
+        return re.sub(r"\b(GITHUB_TOKEN|GH_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b", "[REDACTED_SECRET_NAME]", value)
     return value

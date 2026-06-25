@@ -134,7 +134,7 @@ def _command_args(repo_root: Path, command: str) -> list[str]:
 
 def _redact_excerpt(text: str | None, limit: int = 1200) -> str:
     redacted = redact_value(text or "")
-    redacted = re.sub(r"\b(GITHUB_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b", "[REDACTED_SECRET_NAME]", str(redacted))
+    redacted = re.sub(r"\b(GITHUB_TOKEN|GH_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b", "[REDACTED_SECRET_NAME]", str(redacted))
     return redacted[:limit]
 
 

@@ -80,7 +80,8 @@ def test_openai_provider_parses_content_usage_and_finish_reason(monkeypatch):
 
 
 def test_github_provider_rejects_malformed_response(monkeypatch):
-    monkeypatch.setenv("GITHUB_TOKEN", "test-token")
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.setenv("GH_TOKEN", "test-token")
 
     def fake_urlopen(_request, timeout):
         return FakeResponse({"choices": []})

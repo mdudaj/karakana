@@ -1,0 +1,58 @@
+protocol_id: assessment-review
+name: Assessment Review
+version: 0.1.0
+category: assessment
+risk_floor: low
+summary: Lightweight protocol for analysis-only reviews and recommendations without implementation-side artifact burden.
+roles:
+  - planner
+  - reviewer
+standards:
+  - Ground findings in current repository state and durable project context.
+  - Separate observations, risks, and recommendations from implementation approval.
+  - Do not treat an assessment as permission to mutate code, workflows, model execution, or GitHub state.
+required_inputs:
+  - task request or assessment question
+  - repository instructions
+  - relevant durable memory, handoff, and current source files
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Classify the assessment scope, risk, and whether it remains non-mutating.
+  - step_id: inspect
+    action: inspect
+    instruction: Load handoff context, inspect only relevant source artifacts, and verify stale or recovered state.
+  - step_id: review
+    action: review
+    instruction: Compare actual implementation against documented expectations, current tooling, and safety constraints.
+  - step_id: plan
+    action: plan
+    instruction: Produce prioritized recommendations and identify which items need separate implementation protocols.
+  - step_id: handoff
+    action: handoff
+    instruction: Record unresolved findings, referenced artifacts, and the next exact action.
+artifacts:
+  - kind: task_classification
+    description: Assessment scope, risk, and non-mutating status.
+  - kind: trace
+    description: Machine-readable record of inputs, outputs, commands, warnings, errors, and produced artifacts.
+  - kind: verification_summary
+    description: Commands or source checks used to support the assessment.
+  - kind: handoff
+    description: End-of-task continuation artifact when the assessment informs future work.
+  - kind: safety_review
+    description: Required when the assessment covers safety, permissions, model execution, or production-risk governance.
+    condition:
+      safety_or_permission_change: true
+approval_gates:
+  - safety_policy_change
+  - model_execution_change
+  - workflow_change
+verification:
+  - Validate protocol and skillpack references when governance mappings change.
+  - Run focused tests for classifier, protocol, and routing changes.
+  - Document follow-up implementation protocols for recommendations that require code changes.
+blocked_actions:
+  - mutate_repository_without_follow_up_protocol
+  - execute_live_models_without_approval
+  - publish_or_push_from_assessment

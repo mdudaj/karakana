@@ -69,7 +69,9 @@ def test_codex_start_print_only_recovers_and_writes_session_start(tmp_path, monk
     assert "Recovered: True" in result.output
     assert "Would launch Codex: codex --model gpt-5.5 '<karakana-session-start-prompt>'" in result.output
     assert (tmp_path / ".karakana" / "session-start.md").read_text(encoding="utf-8").startswith("# Karakana Session Start")
-    assert (tmp_path / ".karakana" / "codex-initial-prompt.md").read_text(encoding="utf-8").startswith("Karakana session-start context was loaded before the first user task.")
+    codex_prompt = (tmp_path / ".karakana" / "codex-initial-prompt.md").read_text(encoding="utf-8")
+    assert codex_prompt.startswith("Karakana session-start context was loaded before the first user task.")
+    assert "Before ending any bounded task, refresh the project handoff" in codex_prompt
     handoff = HandoffStore(tmp_path).latest("demo", "demo")
     assert handoff is not None and handoff.recovered is True
 
@@ -98,7 +100,11 @@ def test_copilot_start_print_only_forwards_args(tmp_path, monkeypatch):
 
     assert result.exit_code == 0, result.output
     assert "# Karakana Session Start" in result.output
+    assert "Copilot session prompt written to:" in result.output
     assert "Would launch Copilot: copilot --model gpt-5.4" in result.output
+    copilot_prompt = (tmp_path / ".karakana" / "copilot-session-prompt.md").read_text(encoding="utf-8")
+    assert copilot_prompt.startswith("Karakana session-start context is available")
+    assert "Before ending any bounded task, refresh the project handoff" in copilot_prompt
 
 
 def test_agent_start_no_create_fails_without_handoff(tmp_path, monkeypatch):

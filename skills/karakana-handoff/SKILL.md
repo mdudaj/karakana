@@ -35,7 +35,8 @@ A handoff is not a normal summary. A handoff is a compact continuation package f
 
 ## When To Use
 
-- before ending a task;
+- at every fresh session or bounded task entry;
+- before ending every bounded task;
 - after completing a milestone;
 - before switching agents;
 - before starting a long Codex session;
@@ -91,7 +92,7 @@ Do not use a handoff to replace current code inspection, tests, review, release 
 
 ## Standard workflow
 
-Load or recover at task entry, verify references, perform the bounded task, refresh before exit, and run doctor when validity is uncertain.
+Load or recover at session and task entry, verify references, perform the bounded task, refresh before exit, and run doctor when validity is uncertain.
 
 ## Quick Reference
 

@@ -100,6 +100,54 @@ def test_plan_cli_writes_prompt(tmp_path, monkeypatch):
     assert "Design the next improvement loop" in output.read_text(encoding="utf-8")
 
 
+def test_plan_cli_routes_deep_planning_from_task_text(tmp_path, monkeypatch):
+    write_memory_tree(tmp_path)
+    write_skill(tmp_path)
+    (tmp_path / "KARAKANA.md").write_text("# Contract\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "plan",
+            "--project",
+            "karakana",
+            "--skill",
+            "karakana-self-improvement",
+            "--task",
+            "Plan a multi-file implementation plan for a protocol workflow change",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Selected model: gpt-5.4" in result.output
+    assert "Planning task type: protocol_workflow_planning" in result.output
+
+
+def test_plan_cli_routes_high_risk_planning_from_task_text(tmp_path, monkeypatch):
+    write_memory_tree(tmp_path)
+    write_skill(tmp_path)
+    (tmp_path / "KARAKANA.md").write_text("# Contract\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "plan",
+            "--project",
+            "karakana",
+            "--skill",
+            "karakana-self-improvement",
+            "--task",
+            "Review model routing policy for high-risk planning",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    assert "Selected model: gpt-5.5" in result.output
+    assert "Planning task type: model_routing_planning" in result.output
+
+
 def test_plan_cli_reports_missing_skill(tmp_path, monkeypatch):
     write_memory_tree(tmp_path)
     monkeypatch.chdir(tmp_path)

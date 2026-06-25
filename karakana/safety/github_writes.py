@@ -18,7 +18,7 @@ class GitHubWriteCheck:
 
 def validate_comment_write(client: GitHubApiClient, explicit: bool, target_number: int | None, body: str) -> list[GitHubWriteCheck]:
     return [
-        GitHubWriteCheck("token_present", bool(client.token), "GITHUB_TOKEN is required."),
+        GitHubWriteCheck("token_present", bool(client.token), "GITHUB_TOKEN or GH_TOKEN is required."),
         GitHubWriteCheck("repository_present", bool(client.repository), "GITHUB_REPOSITORY is required."),
         GitHubWriteCheck("explicit_write_flag_present", explicit, "Write flag is required."),
         GitHubWriteCheck("target_issue_or_pr_present", bool(target_number), "Issue or PR number is required."),
@@ -31,7 +31,7 @@ def validate_comment_write(client: GitHubApiClient, explicit: bool, target_numbe
 
 def validate_issue_create(client: GitHubApiClient, explicit: bool, title: str, body: str) -> list[GitHubWriteCheck]:
     return [
-        GitHubWriteCheck("token_present", bool(client.token), "GITHUB_TOKEN is required."),
+        GitHubWriteCheck("token_present", bool(client.token), "GITHUB_TOKEN or GH_TOKEN is required."),
         GitHubWriteCheck("repository_present", bool(client.repository), "GITHUB_REPOSITORY is required."),
         GitHubWriteCheck("explicit_write_flag_present", explicit, "Write flag is required."),
         GitHubWriteCheck("body_not_empty", bool(body.strip()), "Issue body must not be empty."),
@@ -50,7 +50,7 @@ def validate_pr_create(
     base: str | None,
 ) -> list[GitHubWriteCheck]:
     return [
-        GitHubWriteCheck("token_present", bool(client.token), "GITHUB_TOKEN is required."),
+        GitHubWriteCheck("token_present", bool(client.token), "GITHUB_TOKEN or GH_TOKEN is required."),
         GitHubWriteCheck("repository_present", bool(client.repository), "GITHUB_REPOSITORY is required."),
         GitHubWriteCheck("explicit_write_flag_present", explicit, "Write flag is required."),
         GitHubWriteCheck("body_not_empty", bool(body.strip()), "PR body must not be empty."),

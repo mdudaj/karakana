@@ -13,6 +13,24 @@ def test_route_model_defaults_for_planning():
     assert "GitHub inference" in route["token_policy"]
 
 
+def test_route_model_deep_planning_uses_stronger_model():
+    route = route_model("implementation_planning")
+
+    assert route["provider"] == "openai_codex"
+    assert route["model"] == "gpt-5.4"
+    assert route["role"] == "deep_planner"
+    assert route["token_budget"] == "large"
+
+
+def test_route_model_high_risk_planning_uses_principal_model():
+    route = route_model("model_routing_planning")
+
+    assert route["provider"] == "openai_codex"
+    assert route["model"] == "gpt-5.5"
+    assert route["role"] == "principal_planner"
+    assert route["token_budget"] == "reserved"
+
+
 def test_route_model_overrides():
     route = route_model("planning", provider="mock", model="mock-model")
 

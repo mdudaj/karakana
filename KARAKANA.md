@@ -24,6 +24,8 @@ Use:
 - `ubongo/projects/karakana/known-issues.md`
 - `ubongo/projects/karakana/open-issues.md`
 
+Every fresh session must load the latest matching project handoff before planning or editing. Every bounded task must finish by refreshing an append-only handoff summary that records verification, unresolved findings, changed references, and the exact next action.
+
 ## Required skills
 
 Use:
@@ -38,11 +40,18 @@ Use:
 
 ## Model routing
 
-- Triage summarizer: GitHub inference with Claude Haiku 4.5 for issue triage, documentation, changelog, and simple summaries.
-- Planner: GitHub inference with GPT-5 mini for planning, architecture review, requirements reasoning, reflection, skill design, and action extraction review.
-- Routine implementer: Codex GPT-5.4-mini for bounded implementation, test generation, and Codex task drafting after requirements and design context exist.
-- Serious implementer: Codex GPT-5.4 for CI repair, refactors, framework work, and repository-aware PR review.
-- Principal reviewer: Codex GPT-5.5 for high-risk or stuck work, including authentication, authorization, billing, migrations, workflow state changes, and cross-project architecture.
+- Triage summarizer: GitHub inference with Claude Haiku 4.5 for issue triage and simple summaries.
+- Documentation writer: GitHub inference with Claude Haiku 4.5 for documentation, changelog, release-note, and cleanup prose.
+- Routine planner: GitHub inference with GPT-5 mini for bounded planning, requirements reasoning, reflection, action extraction review, and low-risk assessments.
+- Researcher / reflection reviewer: GitHub inference with GPT-5 mini for non-mutating repository research, evidence review, trace review, and improvement opportunity analysis.
+- Deep planner: Codex GPT-5.4 for consequential planning before mutation, including multi-file implementation planning, architecture review, framework design, protocol/workflow changes, skill design, and system-impact assessment.
+- Principal planner: Codex GPT-5.5 for high-risk planning, including model routing, safety policy, authentication, authorization, billing, migrations, workflow state changes, production-risk planning, and cross-project architecture.
+- Task author: Codex GPT-5.4-mini for bounded task drafting after requirements, skill, and safety context exist.
+- Test designer: Codex GPT-5.4-mini for routine test generation and regression coverage planning.
+- Routine implementer: Codex GPT-5.4-mini for bounded implementation after requirements and design context exist.
+- Serious implementer: Codex GPT-5.4 for refactors, framework work, and non-routine repository edits.
+- Code reviewer / CI analyst: Codex GPT-5.4 for repository-aware PR review, diff reasoning, CI failure analysis, log triage, and repair recommendations.
+- Principal reviewer: Codex GPT-5.5 for high-risk code review or stuck work, including authentication, authorization, billing, migrations, workflow state changes, and production-risk review.
 - Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.5 when risk requires it.
 - Skill improvement review: GitHub inference with GPT-5 mini.
 
@@ -56,6 +65,8 @@ Prefer Copilot Max/GitHub inference for non-mutating context, planning, requirem
 - Never commit or print secrets.
 - Never modify production secrets.
 - Never run destructive database commands.
+- Load the latest matching project handoff at session and task entry before planning or editing.
+- Refresh the project handoff at the end of every bounded task so the next session has current continuation context.
 - All authentication and permission changes require human approval.
 - All behavior changes require tests.
 - Features with UX impact require behavior requirements, look-and-feel requirements, best-practice research for the task, and alignment with the existing design system before implementation.

@@ -9,6 +9,10 @@ import urllib.request
 from dataclasses import dataclass
 
 
+def github_token_from_env() -> str | None:
+    return os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+
+
 @dataclass(frozen=True)
 class GitHubApiError(Exception):
     message: str
@@ -25,7 +29,7 @@ class GitHubApiClient:
         repository: str | None = None,
         api_url: str | None = None,
     ):
-        self.token = token if token is not None else os.environ.get("GITHUB_TOKEN")
+        self.token = token if token is not None else github_token_from_env()
         self.repository = repository if repository is not None else os.environ.get("GITHUB_REPOSITORY")
         self.api_url = (api_url or os.environ.get("GITHUB_API_URL") or "https://api.github.com").rstrip("/")
 
@@ -50,7 +54,7 @@ class GitHubApiClient:
 
     def _request(self, method: str, path: str, payload: dict) -> dict:
         if not self.token:
-            raise GitHubApiError("GITHUB_TOKEN is required for GitHub write operations")
+            raise GitHubApiError("GITHUB_TOKEN or GH_TOKEN is required for GitHub write operations")
         if not self.repository:
             raise GitHubApiError("GITHUB_REPOSITORY is required for GitHub write operations")
         request = urllib.request.Request(

@@ -38,6 +38,8 @@ karakana skillpack validate-all
 
 Codex should run the project-local `.codex/hooks.json` `SessionStart` hook on trusted projects. If Codex reports that hooks need review, open `/hooks`, review the Karakana handoff hook, and trust it before relying on automatic loading.
 
+Every fresh agent session and every new bounded task starts from the latest project handoff summary.
+
 1. Run `karakana handoff load --project <project> --skillpack <skillpack>`.
    If `karakana` is not on PATH, run `.venv/bin/karakana handoff load --project <project> --skillpack <skillpack>` from the repository root.
 2. Read mandatory repository instructions, then inspect only the files listed under `Files to Inspect First`.
@@ -46,6 +48,8 @@ Codex should run the project-local `.codex/hooks.json` `SessionStart` hook on tr
 5. For non-trivial work, run `karakana protocol start --task "<task>" --project <project> --write-plan` or classify the task with the active protocol before editing.
 
 ## End Every Task
+
+Every bounded task must finish with an append-only handoff refresh so the next session can load current continuation context.
 
 Run:
 
@@ -66,6 +70,7 @@ Use project skillpacks when available:
 karakana skillpack list
 karakana skillpack activate karakana
 karakana protocol start --task "Review project risk" --project karakana --write-plan
+karakana protocol start --task "Assess harness state" --project karakana --category assessment --write-plan
 karakana plan --use-current-skillpack --task "Review project risk"
 karakana workspace list
 karakana workspace status
@@ -76,13 +81,16 @@ karakana workspace handoff --project karakana
 
 Use cost-effective routing by default:
 
-- Claude Haiku 4.5 for lightweight documentation, issue triage, changelog, and summary work.
-- GPT-5 mini for planning, architecture reasoning, reflection, skill design, and action extraction review.
-- Codex GPT-5.4-mini for routine code edits, simple tests, and Codex task drafting.
-- Codex GPT-5.4 for refactoring, CI repair, deep PR review, and framework-level implementation.
-- Codex GPT-5.5 only for high-risk or stuck work: authentication, authorization, payment, billing, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, or repeated failures.
+- Claude Haiku 4.5 for issue triage, simple summaries, lightweight documentation, changelog, and release-note prose.
+- GPT-5 mini for routine bounded planning, requirements reasoning, non-mutating repository research, evidence review, reflection, action extraction review, and low-risk assessments.
+- Codex GPT-5.4 for consequential planning before mutation: multi-file implementation planning, architecture review, framework design, protocol/workflow changes, skill design, and system-impact assessment.
+- Codex GPT-5.4-mini for routine code edits, simple tests, test design, and bounded task drafting.
+- Codex GPT-5.4 for refactoring, CI analysis/repair recommendations, deep PR review, framework-level implementation, and non-routine repository edits.
+- Codex GPT-5.5 only for high-risk planning, high-risk review, or stuck work: model routing, safety policy, authentication, authorization, payment, billing, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, cross-project architecture, or repeated failures.
 
 Manual overrides are allowed, but record the rationale in traces or task notes.
+
+Use the `assessment` protocol for analysis-only harness reviews, recommendations, and state assessments that should not require ADR or rollback artifacts unless a later implementation changes architecture or behavior.
 
 ## How to Add a Skill
 

@@ -10,11 +10,15 @@ from karakana.models.providers.http import chat_payload, parse_openai_compatible
 from karakana.models.schemas import ModelRequest, ModelResponse
 
 
+def github_token() -> str | None:
+    return os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+
+
 class GitHubModelsProvider(ModelProvider):
     name = "github"
 
     def __init__(self) -> None:
-        self.token = os.environ.get("GITHUB_TOKEN")
+        self.token = github_token()
         self.endpoint = os.environ.get("GITHUB_MODELS_ENDPOINT", "https://models.inference.ai.azure.com")
 
     def is_configured(self) -> bool:
@@ -23,7 +27,7 @@ class GitHubModelsProvider(ModelProvider):
     def complete(self, request: ModelRequest) -> ModelResponse:
         self.validate_request(request)
         if not self.is_configured():
-            raise ModelProviderNotConfigured("GITHUB_TOKEN is required for GitHub Models live calls")
+            raise ModelProviderNotConfigured("GITHUB_TOKEN or GH_TOKEN is required for GitHub Models live calls")
         raw = post_json(
             self.endpoint.rstrip("/") + "/chat/completions",
             chat_payload(request),
