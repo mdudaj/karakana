@@ -9,3 +9,4 @@ def test_model_routing_evals_are_discoverable():
     assert "model-routing-haiku-for-documentation" in ids
     assert "model-routing-codex-mini-for-routine-code" in ids
     assert "model-routing-codex-5-5-for-payment-logic" in ids
+    assert "model-routing-copilot-max-planner-budget" in ids

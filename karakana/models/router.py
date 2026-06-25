@@ -11,6 +11,67 @@ MODEL_TIERS = {
     "mock-model": {"cost_tier": "none", "capability_tier": "mock"},
 }
 
+ROLE_POLICIES = {
+    "triage_summarizer": {
+        "token_budget": "small",
+        "token_policy": "Use GitHub inference for concise classification, summaries, and handoff notes; do not perform implementation reasoning.",
+        "escalation_policy": "Escalate to planner only when the task needs sequencing, risk analysis, or requirements decisions.",
+    },
+    "planner": {
+        "token_budget": "standard",
+        "token_policy": "Use GitHub inference for planning, requirements, architecture, reflection, and review preparation before code execution.",
+        "escalation_policy": "Escalate to Codex implementation routes only after the plan identifies concrete repository edits.",
+    },
+    "routine_implementer": {
+        "token_budget": "standard",
+        "token_policy": "Use Codex mini for bounded implementation and test drafting after requirements and design context are available.",
+        "escalation_policy": "Escalate to serious implementer after failed tests, broad multi-file coupling, or framework-level complexity.",
+    },
+    "serious_implementer": {
+        "token_budget": "large",
+        "token_policy": "Use stronger Codex routing for refactors, CI repair, framework work, and repository-aware review.",
+        "escalation_policy": "Escalate to principal reviewer only for high-risk domains, production blast radius, or repeated failure.",
+    },
+    "principal_reviewer": {
+        "token_budget": "reserved",
+        "token_policy": "Reserve the highest-cost route for auth, billing, migrations, workflow state, cross-project architecture, and stuck work.",
+        "escalation_policy": "Requires explicit high-risk rationale; do not use for routine docs, triage, or first-pass implementation.",
+    },
+    "dry_run": {
+        "token_budget": "none",
+        "token_policy": "Use mock routing for unknown or dry-run tasks until a concrete task type is selected.",
+        "escalation_policy": "Select a known task type before making live model calls.",
+    },
+}
+
+TASK_ROLE_POLICIES = {
+    "issue_triage": "triage_summarizer",
+    "documentation": "triage_summarizer",
+    "changelog": "triage_summarizer",
+    "simple_summary": "triage_summarizer",
+    "planning": "planner",
+    "architecture_review": "planner",
+    "reflection": "planner",
+    "skill_design": "planner",
+    "action_extraction_review": "planner",
+    "routine_code_implementation": "routine_implementer",
+    "test_generation": "routine_implementer",
+    "codex_task_drafting": "routine_implementer",
+    "code_implementation": "routine_implementer",
+    "ci_repair": "serious_implementer",
+    "refactoring": "serious_implementer",
+    "deep_pr_review": "serious_implementer",
+    "pr_review": "serious_implementer",
+    "ci_failure_analysis": "serious_implementer",
+    "framework_code_implementation": "serious_implementer",
+    "high_risk_code_review": "principal_reviewer",
+    "security_or_auth_change": "principal_reviewer",
+    "payment_or_billing_logic": "principal_reviewer",
+    "database_or_index_migration": "principal_reviewer",
+    "viewflow_process_state_change": "principal_reviewer",
+    "cross_project_architecture": "principal_reviewer",
+}
+
 DEFAULT_MODEL_ROUTING = {
     "issue_triage": {"provider": "github", "model": "claude-haiku-4.5", "mode": "chat", "rationale": "Fast, low-cost issue summarization and classification."},
     "documentation": {"provider": "github", "model": "claude-haiku-4.5", "mode": "chat", "rationale": "Fast documentation and cleanup."},
@@ -40,6 +101,13 @@ DEFAULT_MODEL_ROUTING = {
 }
 
 
+def _apply_role_policy(route: dict, task_type: str) -> None:
+    role = route.get("role") or TASK_ROLE_POLICIES.get(task_type, "dry_run")
+    route["role"] = role
+    for key, value in ROLE_POLICIES[role].items():
+        route.setdefault(key, value)
+
+
 def route_model(task_type: str, provider: str | None = None, model: str | None = None, skillpack_routes: dict | None = None) -> dict:
     route = DEFAULT_MODEL_ROUTING.get(
         task_type,
@@ -65,6 +133,7 @@ def route_model(task_type: str, provider: str | None = None, model: str | None =
         route["route_source"] = "manual_override"
     route["task_type"] = task_type
     route["manual_override"] = manual_override
+    _apply_role_policy(route, task_type)
     route.update(MODEL_TIERS.get(route["model"], {"cost_tier": "unknown", "capability_tier": "unknown"}))
     return route
 

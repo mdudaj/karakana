@@ -2220,6 +2220,10 @@ def model_route(
             "cost_tier": route.get("cost_tier"),
             "risk_tier": risk_level,
             "capability_tier": route.get("capability_tier"),
+            "role": route.get("role"),
+            "token_budget": route.get("token_budget"),
+            "token_policy": route.get("token_policy"),
+            "role_escalation_policy": route.get("escalation_policy"),
             "warnings": warnings,
         }
     )
@@ -2233,6 +2237,10 @@ def model_route(
         "rationale": route.get("rationale"),
         "cost_tier": route.get("cost_tier"),
         "capability_tier": route.get("capability_tier"),
+        "role": route.get("role"),
+        "token_budget": route.get("token_budget"),
+        "token_policy": route.get("token_policy"),
+        "role_escalation_policy": route.get("escalation_policy"),
         "manual_override": route.get("manual_override", False),
         "route_source": route.get("route_source"),
         "skillpack": skillpack_context.skillpack.name if skillpack_context else None,
@@ -2248,6 +2256,9 @@ def model_route(
     typer.echo(f"Mode: {route.get('mode')}")
     typer.echo(f"Cost tier: {route.get('cost_tier')}")
     typer.echo(f"Capability tier: {route.get('capability_tier')}")
+    typer.echo(f"Role: {route.get('role')}")
+    typer.echo(f"Token budget: {route.get('token_budget')}")
+    typer.echo(f"Token policy: {route.get('token_policy')}")
     typer.echo(f"Rationale: {route.get('rationale')}")
     typer.echo(f"Route source: {route.get('route_source')}")
     if skillpack_context:
@@ -3764,6 +3775,10 @@ def _record_route_outputs(trace, route: dict) -> None:
     trace.outputs["route_source"] = route.get("route_source")
     trace.outputs["cost_tier"] = route.get("cost_tier")
     trace.outputs["capability_tier"] = route.get("capability_tier")
+    trace.outputs["role"] = route.get("role")
+    trace.outputs["token_budget"] = route.get("token_budget")
+    trace.outputs["token_policy"] = route.get("token_policy")
+    trace.outputs["role_escalation_policy"] = route.get("escalation_policy")
 
 
 def _render_resolved_skillpack_context(context) -> str | None:
