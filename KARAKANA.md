@@ -38,17 +38,15 @@ Use:
 
 ## Model routing
 
-- Planning: GPT-5 mini
-- Lightweight documentation: Claude Haiku 4.5
-- Routine coding: Codex GPT-5.4-mini
-- Serious coding, refactors, and CI repair: Codex GPT-5.4
-- High-risk or stuck coding: Codex GPT-5.5
-- Code review: Codex GPT-5.4 by default; Codex GPT-5.5 for high-risk review
-- Reflection: GPT-5 mini
-- Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.5 when risk requires it
-- Skill improvement review: GPT-5 mini
+- Triage summarizer: GitHub inference with Claude Haiku 4.5 for issue triage, documentation, changelog, and simple summaries.
+- Planner: GitHub inference with GPT-5 mini for planning, architecture review, requirements reasoning, reflection, skill design, and action extraction review.
+- Routine implementer: Codex GPT-5.4-mini for bounded implementation, test generation, and Codex task drafting after requirements and design context exist.
+- Serious implementer: Codex GPT-5.4 for CI repair, refactors, framework work, and repository-aware PR review.
+- Principal reviewer: Codex GPT-5.5 for high-risk or stuck work, including authentication, authorization, billing, migrations, workflow state changes, and cross-project architecture.
+- Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.5 when risk requires it.
+- Skill improvement review: GitHub inference with GPT-5 mini.
 
-Use GPT-5.5 only when the work is high-risk, complex, or stuck.
+Prefer Copilot Max/GitHub inference for non-mutating context, planning, requirements, and review-preparation work. Use Codex routes for repository mutation and deeper code reasoning. Use GPT-5.5 only when the work is high-risk, complex, or stuck, and record the escalation rationale in traces.
 
 ## Safety rules
 

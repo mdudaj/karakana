@@ -12,6 +12,8 @@ def test_model_route_cli_output():
     assert "Task type: routine_code_implementation" in result.output
     assert "Provider: openai_codex" in result.output
     assert "Model: gpt-5.4-mini" in result.output
+    assert "Role: routine_implementer" in result.output
+    assert "Token budget: standard" in result.output
     assert "Rationale:" in result.output
 
 
@@ -23,6 +25,9 @@ def test_model_route_cli_json_output():
     assert data["provider"] == "openai_codex"
     assert data["model"] == "gpt-5.5"
     assert data["cost_tier"] == "high"
+    assert data["role"] == "principal_reviewer"
+    assert data["token_budget"] == "reserved"
+    assert "highest-cost route" in data["token_policy"]
 
 
 def test_model_route_cli_escalation_signal():

@@ -1,0 +1,20 @@
+id: model-routing-copilot-max-planner-budget
+name: Copilot Max planner budget
+description: Planning and requirements work should stay on GitHub inference with a standard planner budget.
+suite: model-routing
+risk_level: medium
+tags:
+  - routing
+  - copilot-max
+  - token-efficiency
+input:
+  task: "Plan a feature and identify requirements before implementation."
+  task_type: "planning"
+expectations:
+  expected_provider: "github"
+  expected_model: "gpt-5-mini"
+  must_include:
+    - "planner"
+    - "standard"
+  required_sections:
+    - "Token Policy"
