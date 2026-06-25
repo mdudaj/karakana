@@ -39,6 +39,7 @@ protocols:
   default: python-code-change
   categories:
     architecture: architecture-decision
+    assessment: assessment-review
     frontend: ux-change
     implementation: python-code-change
     memory: memory-update

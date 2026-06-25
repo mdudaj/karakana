@@ -17,6 +17,22 @@ def test_escalates_gpt5_mini_to_codex_mini():
     assert result["to_model"] == "gpt-5.4-mini"
 
 
+def test_escalates_gpt5_mini_to_5_4_for_deep_planning():
+    result = recommend_escalation("github", "gpt-5-mini", ["multi_file_implementation_planning"])
+
+    assert result["should_escalate"] is True
+    assert result["to_provider"] == "openai_codex"
+    assert result["to_model"] == "gpt-5.4"
+
+
+def test_escalates_gpt5_mini_to_5_5_for_high_risk_planning():
+    result = recommend_escalation("github", "gpt-5-mini", ["model_routing_change"])
+
+    assert result["should_escalate"] is True
+    assert result["to_provider"] == "openai_codex"
+    assert result["to_model"] == "gpt-5.5"
+
+
 def test_escalates_codex_mini_to_5_4():
     result = recommend_escalation("openai_codex", "gpt-5.4-mini", ["tests_fail_after_first_patch"])
 

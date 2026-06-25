@@ -25,11 +25,11 @@ Each `.karakana/handoffs/<handoff-id>/` contains `handoff.md` and `handoff.json`
 
 ## Automatic End-of-Task Handoff Flow
 
-“After each task” means after a bounded Karakana planning or artifact-producing workflow, not every read-only CLI command. `milestone next` appends a handoff automatically unless `--no-handoff-refresh` is used. Other successful project traces record an explicit refresh next action. Agents follow the End Every Task protocol.
+“After each task” means after every bounded Karakana planning, implementation, review, or artifact-producing workflow, not every read-only CLI command. `milestone next` appends a handoff automatically unless `--no-handoff-refresh` is used. Other successful project traces record an explicit refresh next action. Agents follow the End Every Task protocol and refresh the handoff before handing control back.
 
 ## Session Entry Handoff Load Flow
 
-“New session/task entrypoint” means `karakana plan`, `karakana workspace plan`, or an agent following `AGENTS.md`. Planning entrypoints load the latest matching handoff into the prompt. `--no-handoff` disables this behavior.
+“New session/task entrypoint” means `karakana plan`, `karakana workspace plan`, `karakana codex start`, `karakana copilot start`, or an agent following `AGENTS.md`. Planning and agent-start entrypoints load the latest matching handoff into the prompt or write a session-start prompt artifact. `--no-handoff` disables this behavior for planning entrypoints.
 
 ## Fallback State Recovery Flow
 

@@ -46,6 +46,7 @@ CATEGORY_TERMS = {
     "implementation": {"code", "implement", "fix", "bug", "refactor", "python"},
     "test_eval": {"test", "eval", "regression", "coverage"},
     "documentation": {"docs", "documentation", "readme", "guide"},
+    "assessment": {"assess", "assessment", "analyse", "analyze", "review harness state", "recommendation", "recommendations"},
 }
 
 

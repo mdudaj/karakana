@@ -29,11 +29,22 @@ def test_client_configuration_from_env(monkeypatch):
     assert client.is_configured()
 
 
+def test_client_configuration_accepts_gh_token(monkeypatch):
+    monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.setenv("GH_TOKEN", "token")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "owner/repo")
+
+    client = GitHubApiClient()
+
+    assert client.is_configured()
+
+
 def test_missing_token_behavior(monkeypatch):
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("GH_TOKEN", raising=False)
     client = GitHubApiClient(token=None, repository="owner/repo")
 
-    with pytest.raises(GitHubApiError, match="GITHUB_TOKEN"):
+    with pytest.raises(GitHubApiError, match="GITHUB_TOKEN or GH_TOKEN"):
         client.create_issue("title", "body")
 
 

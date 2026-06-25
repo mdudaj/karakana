@@ -8,6 +8,10 @@ DEFAULT_PROVIDER = "mock"
 DEFAULT_MODEL = "mock-model"
 
 
+def github_token_configured() -> bool:
+    return bool(os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"))
+
+
 def model_config() -> dict:
     provider = os.environ.get("KARAKANA_MODEL_PROVIDER", DEFAULT_PROVIDER)
     model = os.environ.get("KARAKANA_MODEL") or _default_model(provider)
@@ -17,7 +21,7 @@ def model_config() -> dict:
         "live_mode": os.environ.get("KARAKANA_LIVE_MODE", "false").lower() == "true",
         "providers": {
             "github": {
-                "configured": bool(os.environ.get("GITHUB_TOKEN")),
+                "configured": github_token_configured(),
                 "model": os.environ.get("KARAKANA_MODEL") or "gpt-5-mini",
                 "endpoint": os.environ.get("GITHUB_MODELS_ENDPOINT", "https://models.inference.ai.azure.com"),
             },

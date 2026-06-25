@@ -55,7 +55,7 @@ def run_doctor(repo_root: Path) -> tuple[CheckReport, Path]:
     pytest_path = shutil.which("pytest") or (str(repo_root / ".venv" / "bin" / "pytest") if (repo_root / ".venv" / "bin" / "pytest").exists() else None)
     checks.append(CheckResult("pytest-available", "pass" if pytest_path else "warning", pytest_path or "pytest not found"))
     checks.append(CheckResult("codex-cli", "pass" if shutil.which("codex") else "warning", "codex found" if shutil.which("codex") else "codex not found"))
-    for env_name in ["GITHUB_TOKEN", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"]:
+    for env_name in ["GITHUB_TOKEN", "GH_TOKEN", "OPENAI_API_KEY", "ANTHROPIC_API_KEY"]:
         checks.append(CheckResult(env_name.lower(), "pass" if os.environ.get(env_name) else "warning", "configured" if os.environ.get(env_name) else "not configured"))
     _finish_report(report)
     return report, _write_report(repo_root / ".karakana" / "doctor" / report.run_id, "doctor", report)

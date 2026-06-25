@@ -27,7 +27,7 @@ def redact_text(text: str) -> tuple[str, bool, list[str]]:
     redacted = text
     redacted = re.sub(r"\b(" + "|".join(SECRET_TERMS) + r")\s*[:=]\s*\S+", r"\1=[REDACTED]", redacted, flags=re.IGNORECASE)
     redacted = re.sub(r"\bBearer\s+[A-Za-z0-9._~+/=-]+", "Bearer [REDACTED]", redacted, flags=re.IGNORECASE)
-    redacted = re.sub(r"(?m)^.*\b(GITHUB_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b.*$", "[REDACTED SECRET ENV]", redacted)
+    redacted = re.sub(r"(?m)^.*\b(GITHUB_TOKEN|GH_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b.*$", "[REDACTED SECRET ENV]", redacted)
     applied = redacted != text
     if applied:
         warnings.append("Secret-like content was redacted.")

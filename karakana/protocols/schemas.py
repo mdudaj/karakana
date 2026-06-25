@@ -12,6 +12,7 @@ WORK_CATEGORIES = {
     "implementation",
     "test_eval",
     "documentation",
+    "assessment",
     "memory",
     "skill",
     "model_routing",

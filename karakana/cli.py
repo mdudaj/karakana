@@ -1062,16 +1062,17 @@ def plan(
     if not project or not skill:
         typer.echo("--project and --skill are required unless a skillpack supplies them.")
         raise typer.Exit(code=1)
-    model_route = route_model("planning", provider=provider, model=model, skillpack_routes=resolved_skillpack.model_routes if resolved_skillpack else None)
+    planning_task_type = _planning_task_type(task)
+    model_route = route_model(planning_task_type, provider=provider, model=model, skillpack_routes=resolved_skillpack.model_routes if resolved_skillpack else None)
     trace_store = TraceStore(repo_root)
     trace = trace_store.create_run(
         command="plan",
         project=project,
         skill=skill,
         task=task,
-        task_type="planning",
+        task_type=planning_task_type,
         selected_model=model_route["model"],
-        inputs={"project": project, "skill": skill, "task": task, "output": str(output), "live": live, "provider": model_route["provider"], "model": model_route["model"], "use_skillpack": use_skillpack, "use_current_skillpack": use_current_skillpack, "skillpack": resolved_skillpack.skillpack.name if resolved_skillpack else None},
+        inputs={"project": project, "skill": skill, "task": task, "output": str(output), "live": live, "provider": model_route["provider"], "model": model_route["model"], "planning_task_type": planning_task_type, "use_skillpack": use_skillpack, "use_current_skillpack": use_current_skillpack, "skillpack": resolved_skillpack.skillpack.name if resolved_skillpack else None},
     )
     _record_route_outputs(trace, model_route)
     try:
@@ -1095,7 +1096,7 @@ def plan(
     trace.artifacts.append(TraceArtifact(path=str(output_path), kind="planning_prompt", description="Generated planning prompt"))
     if live:
         try:
-            artifacts = _execute_model_to_artifacts(repo_root, prompt, model_route["provider"], model_route["model"], trace, task_type="planning", project=project, skill=skill, expected="plan", strict_review=strict_review)
+            artifacts = _execute_model_to_artifacts(repo_root, prompt, model_route["provider"], model_route["model"], trace, task_type=planning_task_type, project=project, skill=skill, expected="plan", strict_review=strict_review)
             _print_live_artifacts(artifacts)
         except Exception as exc:
             _fail_trace(trace_store, trace, exc)
@@ -1104,6 +1105,7 @@ def plan(
     _success_trace(trace_store, trace)
     typer.echo(f"Selected model: {model_route['model']}")
     typer.echo(f"Selected provider: {model_route['provider']}")
+    typer.echo(f"Planning task type: {planning_task_type}")
     typer.echo(f"Prompt written to: {output_path}")
     typer.echo("")
     typer.echo(prompt)
@@ -3819,6 +3821,35 @@ Approval requirements:
 """
 
 
+def _planning_task_type(task: str) -> str:
+    text = task.lower()
+    if _contains_any(text, {"model routing", "model route", "provider routing"}):
+        return "model_routing_planning"
+    if _contains_any(text, {"safety policy", "approval policy", "permission policy"}):
+        return "safety_policy_planning"
+    if _contains_any(text, {"cross-project", "multi-project", "workspace architecture"}):
+        return "cross_project_architecture"
+    if _contains_any(text, {"authentication", "authorization", "payment", "billing", "migration", "opensearch", "production", "process state", "workflow state"}):
+        return "high_risk_planning"
+    if _contains_any(text, {"framework", "invenio", "viewflow", "django", "gepg", "custom field", "vocabulary"}):
+        return "framework_design"
+    if _contains_any(text, {"protocol", "workflow", "handoff lifecycle"}):
+        return "protocol_workflow_planning"
+    if _contains_any(text, {"architecture", "adr", "system design"}):
+        return "architecture_review"
+    if _contains_any(text, {"assessment", "assess", "analyse", "analyze", "recommendation", "recommendations"}):
+        return "system_assessment"
+    if _contains_any(text, {"multi-file", "multiple files", "refactor", "implementation plan"}):
+        return "implementation_planning"
+    if _contains_any(text, {"skill design", "prompt design", "skill update"}):
+        return "skill_design"
+    return "planning"
+
+
+def _contains_any(value: str, terms: set[str]) -> bool:
+    return any(term in value for term in terms)
+
+
 def _resolve_optional_skillpack(repo_root: Path, name: str | None):
     if name:
         return SkillpackResolver(repo_root).resolve_for_project(name)
@@ -4138,20 +4169,27 @@ def _start_agent_cli(
     session_start_path = repo_root / ".karakana" / "session-start.md"
     session_start_path.parent.mkdir(parents=True, exist_ok=True)
     session_start_path.write_text(session_start, encoding="utf-8")
-    initial_prompt_path = repo_root / ".karakana" / "codex-initial-prompt.md"
+    codex_initial_prompt_path = repo_root / ".karakana" / "codex-initial-prompt.md"
+    copilot_prompt_path = repo_root / ".karakana" / "copilot-session-prompt.md"
 
     launch_args = list(forwarded_args)
     if binary == "codex" and inject_codex_prompt and _codex_accepts_initial_prompt(launch_args):
         initial_prompt = _render_codex_initial_prompt(session_start, session_start_path)
-        initial_prompt_path.write_text(initial_prompt, encoding="utf-8")
+        codex_initial_prompt_path.write_text(initial_prompt, encoding="utf-8")
         launch_args.append(initial_prompt)
-    elif binary == "codex" and initial_prompt_path.exists():
-        initial_prompt_path.unlink()
+    elif binary == "codex" and codex_initial_prompt_path.exists():
+        codex_initial_prompt_path.unlink()
+    if binary == "copilot":
+        copilot_prompt_path.write_text(_render_copilot_session_prompt(session_start_path), encoding="utf-8")
+    elif copilot_prompt_path.exists():
+        copilot_prompt_path.unlink()
 
     typer.echo(session_start)
     typer.echo(f"Session start written to: {session_start_path}")
-    if binary == "codex" and initial_prompt_path.exists():
-        typer.echo(f"Codex initial prompt written to: {initial_prompt_path}")
+    if binary == "codex" and codex_initial_prompt_path.exists():
+        typer.echo(f"Codex initial prompt written to: {codex_initial_prompt_path}")
+    if binary == "copilot" and copilot_prompt_path.exists():
+        typer.echo(f"Copilot session prompt written to: {copilot_prompt_path}")
     display_command = [binary, *_display_launch_args(binary, launch_args)]
     typer.echo(f"{'Would launch' if print_only else 'Launching'} {display_name}: {_quote_command(display_command)}")
     _flush_terminal_output()
@@ -4221,8 +4259,19 @@ def _render_codex_initial_prompt(session_start: str, session_start_path: Path) -
         "Karakana session-start context was loaded before the first user task.\n\n"
         f"Durable copy: `{session_start_path}`\n\n"
         "Use this as startup context, then wait for the user's task. Do not modify files, run commands, "
-        "push, deploy, or continue the milestone until the user asks.\n\n"
+        "push, deploy, or continue the milestone until the user asks. Before ending any bounded task, refresh "
+        "the project handoff with verification, unresolved findings, changed references, and one exact next action.\n\n"
         f"{session_start.rstrip()}\n"
+    )
+
+
+def _render_copilot_session_prompt(session_start_path: Path) -> str:
+    return (
+        "Karakana session-start context is available for this Copilot session.\n\n"
+        f"Read `{session_start_path}` before planning or editing. Treat it as startup context, not as permission "
+        "to modify files, run commands, push, deploy, or continue a milestone before the user asks. Before ending "
+        "any bounded task, refresh the project handoff with verification, unresolved findings, changed references, "
+        "and one exact next action.\n"
     )
 
 

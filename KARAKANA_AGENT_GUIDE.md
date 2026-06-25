@@ -81,6 +81,8 @@ The `ubongo/` directory is the human-readable source of truth for durable knowle
 
 Embeddings or vector indexes may be used for search, but they must not replace the markdown memory files.
 
+Fresh sessions and bounded tasks must start by loading the latest matching project handoff summary. Bounded tasks must end by refreshing an append-only handoff summary with the current state, verification, unresolved findings, changed references, and one exact next action.
+
 ### 2.4 Skills are modular
 
 Reusable capabilities must be packaged as skills under `skills/`.
@@ -102,12 +104,14 @@ Do not treat all models as interchangeable.
 
 The default routing is:
 
-| Model            | Role                                                                        |
-| ---------------- | --------------------------------------------------------------------------- |
-| GPT-5 mini       | planning, reasoning, reflection, architecture analysis, issue decomposition |
-| Claude Haiku 4.5 | fast summaries, documentation, changelogs, lightweight issue triage         |
-| Codex GPT-5.5    | code implementation, refactoring, tests, CI repair, deep PR review          |
-| Human            | approval, prioritization, production-risk decisions                         |
+| Model            | Role                                                                                                           |
+| ---------------- | -------------------------------------------------------------------------------------------------------------- |
+| Claude Haiku 4.5 | issue triage, simple summaries, lightweight documentation, changelogs, release-note prose                      |
+| GPT-5 mini       | routine planning, requirements reasoning, repository research, evidence review, reflection, low-risk assessment |
+| Codex GPT-5.4-mini | routine implementation, test design, simple tests, bounded task drafting after requirements and context exist |
+| Codex GPT-5.4    | consequential planning, framework design, protocol/workflow planning, serious coding, CI analysis, deep review |
+| Codex GPT-5.5    | high-risk planning/review, model routing, safety policy, auth, billing, migrations, workflow state, stuck work |
+| Human            | approval, prioritization, production-risk decisions                                                            |
 
 ### 2.6 Patches before writes
 
@@ -620,13 +624,23 @@ Implement a router that selects a model based on task type.
 
 ```yaml
 planning: gpt-5-mini
-architecture_review: gpt-5-mini
+assessment_review: gpt-5-mini
+implementation_planning: gpt-5.4
+architecture_review: gpt-5.4
+framework_design: gpt-5.4
+protocol_workflow_planning: gpt-5.4
+system_assessment: gpt-5.4
+high_risk_planning: gpt-5.5
+model_routing_planning: gpt-5.5
+safety_policy_planning: gpt-5.5
 reflection: gpt-5-mini
-skill_design: gpt-5-mini
+skill_design: gpt-5.4
 issue_triage: claude-haiku-4.5
 documentation: claude-haiku-4.5
 changelog: claude-haiku-4.5
 simple_summary: claude-haiku-4.5
+research: gpt-5-mini
+evidence_review: gpt-5-mini
 routine_code_implementation: gpt-5.4-mini
 test_generation: gpt-5.4-mini
 codex_task_drafting: gpt-5.4-mini
@@ -640,6 +654,7 @@ security_or_auth_change: gpt-5.5
 payment_or_billing_logic: gpt-5.5
 database_or_index_migration: gpt-5.5
 viewflow_process_state_change: gpt-5.5
+cross_project_architecture: gpt-5.5
 ```
 
 ### 8.2 Escalation rules
@@ -652,6 +667,21 @@ Escalate from Claude Haiku 4.5 to GPT-5 mini when:
 * issue affects production,
 * issue requires multi-step reasoning,
 * previous answer confidence is low.
+
+Escalate from GPT-5 mini to Codex GPT-5.4 when:
+
+* planning spans multiple files or subsystems,
+* framework design is needed,
+* protocol or workflow behavior changes,
+* system-impact assessment is required,
+* architecture reasoning is consequential.
+
+Escalate from GPT-5 mini to Codex GPT-5.5 when:
+
+* high-risk planning is required,
+* model routing or safety policy changes are involved,
+* cross-project architecture is involved,
+* production-risk planning is required.
 
 Escalate from GPT-5 mini to Codex GPT-5.4-mini when:
 
@@ -974,12 +1004,16 @@ Use:
 
 ## Model routing
 
-- Planning: GPT-5 mini
+- Routine planning: GPT-5 mini
+- Consequential planning / architecture / framework / skill design: Codex GPT-5.4
+- High-risk planning / model routing / safety policy / cross-project architecture: Codex GPT-5.5
 - Lightweight documentation: Claude Haiku 4.5
-- Complex coding: Codex GPT-5.5
-- Code review: Codex GPT-5.5 plus GPT-5 mini summary
+- Research and evidence review: GPT-5 mini
+- Routine coding, test design, and bounded task drafting: Codex GPT-5.4-mini
+- Serious coding, CI analysis, and deep PR review: Codex GPT-5.4
+- High-risk code review: Codex GPT-5.5 plus GPT-5 mini summary
 - Reflection: GPT-5 mini
-- Skill improvement implementation: Codex GPT-5.5
+- Skill improvement implementation: Codex GPT-5.4-mini, escalating to GPT-5.4 or GPT-5.5 by risk
 - Skill improvement review: GPT-5 mini
 
 ## Safety rules

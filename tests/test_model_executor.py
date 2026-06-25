@@ -35,6 +35,7 @@ def test_model_executor_unknown_provider_blocked(tmp_path):
 
 def test_model_executor_unconfigured_provider_blocked(tmp_path, monkeypatch):
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("GH_TOKEN", raising=False)
 
     with pytest.raises(ModelProviderError, match="Provider is not configured"):
         ModelExecutor(tmp_path).execute_prompt("Hello", "github", "gpt-5-mini", live=True, output_dir=tmp_path / ".karakana" / "model-runs" / "run")
