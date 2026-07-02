@@ -35,6 +35,8 @@ expectations:
     - "Src/Component"
     - "CanvasComponent"
     - "Control: CanvasComponent"
+    - "Git Integration"
+    - "scaffolds"
   forbidden_patterns:
     - "store all choices in a collection"
     - "make every SharePoint column required"

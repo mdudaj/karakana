@@ -46,6 +46,7 @@ bucket: development
 - Treat layout, spacing, labels, helper text, error text, touch targets, and focus order as implementation requirements, not post-build polish.
 - Use Power Platform CLI/package workflows for source-controlled canvas apps and validate imports in Power Apps Studio.
 - For Source Code `*.pa.yaml`, validate against the Microsoft PA YAML schema. Custom canvas component instances use `Control: CanvasComponent` plus `ComponentName`; `Control: Component` is invalid in Source Code schema.
+- Do not assume schema-valid generated `*.pa.yaml` is importable. Microsoft documents source files as read-only/review/source-control artifacts; external editing is supported through Power Platform Git Integration, and `pac canvas pack/unpack` is preview/deprecated. Keep generated blueprints outside live `Src/` until Studio or supported tooling normalizes them.
 
 ## Purpose
 
@@ -111,7 +112,8 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
    - include `ComponentName` only with `CanvasComponent` or `CodeComponent`,
    - quote Power Fx scalar values that include YAML-sensitive characters such as colons, braces, and multiline formulas,
    - avoid duplicate control names across component definitions.
-10. Validate with App Checker, Monitor, Power Apps Studio import/open, targeted happy-path and invalid-path tests, delegation warning review, and screen-by-screen UX review.
+10. Treat generated screens/components as scaffolds unless they were created in Power Apps Studio, checked in through Git Integration, or round-tripped through verified Power Platform tooling. Do not promote generated YAML directly into importable `Src/` as the primary delivery path.
+11. Validate with App Checker, Monitor, Power Apps Studio import/open, targeted happy-path and invalid-path tests, delegation warning review, and screen-by-screen UX review.
 
 ## Design guidance
 
@@ -164,6 +166,7 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
 - Storing multi-select values as comma-separated text when analytics require one row per selected option.
 - Hand-editing exported canvas YAML heavily without validating against the active Source Code `*.pa.yaml` schema and then through Power Apps Studio.
 - Emitting retired/preview component syntax such as `Control: Component`; Source Code schema requires `Control: CanvasComponent` with `ComponentName`.
+- Treating schema validation as proof that a manually generated Canvas source tree will import/open. Runtime import can still fail if the packed app is not produced by a supported source-control or Studio round-trip.
 - Treating Material Design visual examples as a requirement to imitate Google styling inside a Microsoft 365/Fluent app.
 
 ## Verification

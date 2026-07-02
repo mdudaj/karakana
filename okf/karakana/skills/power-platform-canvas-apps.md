@@ -23,3 +23,5 @@ This skill is the durable pre-implementation context for TACATDP-style Power App
 Key UX constraints include one field per row by default, visible labels, helper/error text near each input, consistent spacing, sectioned wizard navigation, accessible focus order, and explicit validation summaries.
 
 Canvas source-control work must use the active Microsoft Source Code `*.pa.yaml` schema and documented file layout, including component definitions under `Src/Component/`. Custom canvas component instances use `Control: CanvasComponent` with `ComponentName`; retired or preview-style `Control: Component` syntax is not import-safe.
+
+Generated Canvas YAML blueprints are not automatically importable app source. Keep blueprints in artifacts until Power Apps Studio, Git Integration, or a verified Power Platform tooling round-trip normalizes them into the live source tree.
