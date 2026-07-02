@@ -106,7 +106,7 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
    - formulas or named formulas for repeated logic.
 8. Plan save orchestration for parent, section, and child lists, with explicit `IfError`/`Errors` handling and user-visible failure states.
 9. Validate generated `*.pa.yaml` against Source Code schema rules before packing:
-   - keep active source under `Src/`,
+   - keep active source under `Src/`, with component definition files under `Src/Component/`,
    - use `Control: CanvasComponent` for custom component instances,
    - include `ComponentName` only with `CanvasComponent` or `CodeComponent`,
    - quote Power Fx scalar values that include YAML-sensitive characters such as colons, braces, and multiline formulas,

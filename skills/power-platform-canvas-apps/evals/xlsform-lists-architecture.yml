@@ -32,6 +32,7 @@ expectations:
     - "error"
     - "focus order"
     - "Source Code"
+    - "Src/Component"
     - "CanvasComponent"
     - "Control: CanvasComponent"
   forbidden_patterns:
