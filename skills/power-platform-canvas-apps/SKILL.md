@@ -46,7 +46,7 @@ bucket: development
 - Treat layout, spacing, labels, helper text, error text, touch targets, and focus order as implementation requirements, not post-build polish.
 - Use Power Platform CLI/package workflows for source-controlled canvas apps and validate imports in Power Apps Studio.
 - For Source Code `*.pa.yaml`, validate against the Microsoft PA YAML schema. Custom canvas component instances use `Control: CanvasComponent` plus `ComponentName`; `Control: Component` is invalid in Source Code schema.
-- Do not assume schema-valid generated `*.pa.yaml` is importable. Microsoft documents source files as read-only/review/source-control artifacts; external editing is supported through Power Platform Git Integration, and `pac canvas pack/unpack` is preview/deprecated. Keep generated blueprints outside live `Src/` until Studio or supported tooling normalizes them.
+- Do not assume schema-valid generated `*.pa.yaml` is importable. Microsoft documents source files as read-only/review/source-control artifacts in normal app loading; external editing is supported through Power Platform Git Integration, and `pac canvas pack/unpack` is preview/deprecated. `.msapr` is a pack reference archive, not the primary Studio import target; pack it into `.msapp`, and understand whether `packed.json` sets `LoadFromYaml` before relying on YAML changes. Keep generated blueprints outside live `Src/` until Studio or supported tooling normalizes them.
 
 ## Purpose
 
@@ -113,7 +113,8 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
    - quote Power Fx scalar values that include YAML-sensitive characters such as colons, braces, and multiline formulas,
    - avoid duplicate control names across component definitions.
 10. Treat generated screens/components as scaffolds unless they were created in Power Apps Studio, checked in through Git Integration, or round-tripped through verified Power Platform tooling. Do not promote generated YAML directly into importable `Src/` as the primary delivery path.
-11. Validate with App Checker, Monitor, Power Apps Studio import/open, targeted happy-path and invalid-path tests, delegation warning review, and screen-by-screen UX review.
+11. For `.msapr` source folders, pack to `.msapp` before Studio import. Use `--disable-load-from-yaml` for baseline recovery packs when YAML should be ignored; omit it only when intentionally validating Studio loading from normalized YAML.
+12. Validate with App Checker, Monitor, Power Apps Studio import/open, targeted happy-path and invalid-path tests, delegation warning review, and screen-by-screen UX review.
 
 ## Design guidance
 

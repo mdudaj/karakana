@@ -24,4 +24,4 @@ Key UX constraints include one field per row by default, visible labels, helper/
 
 Canvas source-control work must use the active Microsoft Source Code `*.pa.yaml` schema and documented file layout, including component definitions under `Src/Component/`. Custom canvas component instances use `Control: CanvasComponent` with `ComponentName`; retired or preview-style `Control: Component` syntax is not import-safe.
 
-Generated Canvas YAML blueprints are not automatically importable app source. Keep blueprints in artifacts until Power Apps Studio, Git Integration, or a verified Power Platform tooling round-trip normalizes them into the live source tree.
+Generated Canvas YAML blueprints are not automatically importable app source. Keep blueprints in artifacts until Power Apps Studio, Git Integration, or a verified Power Platform tooling round-trip normalizes them into the live source tree. Treat `.msapr` as a pack reference archive that must be packed into `.msapp`; verify whether `packed.json` has `LoadFromYaml` enabled before expecting Studio to consume YAML source.
