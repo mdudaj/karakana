@@ -45,6 +45,7 @@ bucket: development
 - Prefer modern controls and Fluent UI patterns in Power Apps; borrow Material Design principles for form structure, validation, progress, and accessibility.
 - Treat layout, spacing, labels, helper text, error text, touch targets, and focus order as implementation requirements, not post-build polish.
 - Use Power Platform CLI/package workflows for source-controlled canvas apps and validate imports in Power Apps Studio.
+- For Source Code `*.pa.yaml`, validate against the Microsoft PA YAML schema. Custom canvas component instances use `Control: CanvasComponent` plus `ComponentName`; `Control: Component` is invalid in Source Code schema.
 
 ## Purpose
 
@@ -104,7 +105,13 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
    - save eligibility formulas,
    - formulas or named formulas for repeated logic.
 8. Plan save orchestration for parent, section, and child lists, with explicit `IfError`/`Errors` handling and user-visible failure states.
-9. Validate with App Checker, Monitor, Power Apps Studio import/open, targeted happy-path and invalid-path tests, delegation warning review, and screen-by-screen UX review.
+9. Validate generated `*.pa.yaml` against Source Code schema rules before packing:
+   - keep active source under `Src/`,
+   - use `Control: CanvasComponent` for custom component instances,
+   - include `ComponentName` only with `CanvasComponent` or `CodeComponent`,
+   - quote Power Fx scalar values that include YAML-sensitive characters such as colons, braces, and multiline formulas,
+   - avoid duplicate control names across component definitions.
+10. Validate with App Checker, Monitor, Power Apps Studio import/open, targeted happy-path and invalid-path tests, delegation warning review, and screen-by-screen UX review.
 
 ## Design guidance
 
@@ -155,7 +162,8 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
 - Using SharePoint Choice/Lookup columns for large/cascading filters without testing delegation.
 - Making SharePoint columns required when they can be hidden by skip logic.
 - Storing multi-select values as comma-separated text when analytics require one row per selected option.
-- Hand-editing exported canvas YAML heavily without validating through Power Apps Studio.
+- Hand-editing exported canvas YAML heavily without validating against the active Source Code `*.pa.yaml` schema and then through Power Apps Studio.
+- Emitting retired/preview component syntax such as `Control: Component`; Source Code schema requires `Control: CanvasComponent` with `ComponentName`.
 - Treating Material Design visual examples as a requirement to imitate Google styling inside a Microsoft 365/Fluent app.
 
 ## Verification
@@ -163,7 +171,7 @@ Do not use for model-driven apps, Dataverse-only architecture, Dynamics customiz
 - `karakana skill validate skills/power-platform-canvas-apps`
 - `karakana skill validate-all`
 - `karakana eval run --skill power-platform-canvas-apps`
-- For project work: regenerate schema/mapping artifacts, validate scripts compile, review Power Apps delegation warnings, open/import app in Power Apps Studio, and run happy-path/invalid-path manual scenarios.
+- For project work: regenerate schema/mapping artifacts, validate scripts compile, validate generated Source Code `*.pa.yaml` against Microsoft schema constraints, review Power Apps delegation warnings, open/import app in Power Apps Studio, and run happy-path/invalid-path manual scenarios.
 
 ## Output format
 

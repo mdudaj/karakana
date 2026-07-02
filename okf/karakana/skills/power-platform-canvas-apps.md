@@ -21,3 +21,5 @@ relationships:
 This skill is the durable pre-implementation context for TACATDP-style Power Apps canvas app work. It records the requirement to design Microsoft Lists/SharePoint data access, Power Fx validation, skip logic, and screen-level form UX before app implementation starts.
 
 Key UX constraints include one field per row by default, visible labels, helper/error text near each input, consistent spacing, sectioned wizard navigation, accessible focus order, and explicit validation summaries.
+
+Canvas source-control work must use the active Microsoft Source Code `*.pa.yaml` schema. Custom canvas component instances use `Control: CanvasComponent` with `ComponentName`; retired or preview-style `Control: Component` syntax is not import-safe.

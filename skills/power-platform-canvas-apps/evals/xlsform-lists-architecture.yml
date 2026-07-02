@@ -31,6 +31,9 @@ expectations:
     - "helper"
     - "error"
     - "focus order"
+    - "Source Code"
+    - "CanvasComponent"
+    - "Control: CanvasComponent"
   forbidden_patterns:
     - "store all choices in a collection"
     - "make every SharePoint column required"
