@@ -113,6 +113,8 @@ The default routing is:
 | Codex GPT-5.5    | high-risk planning/review, model routing, safety policy, auth, billing, migrations, workflow state, stuck work |
 | Human            | approval, prioritization, production-risk decisions                                                            |
 
+Karakana should infer routing from the current natural-language task by default, then allow explicit task-type or provider/model overrides when a human or protocol needs deterministic control. Planning entrypoints classify planning risk from task text; `model route --task "<task>"` classifies general task routing from task text.
+
 ### 2.6 Patches before writes
 
 The harness should prefer generating patches, pull requests, comments, and plans over direct mutation.

@@ -55,7 +55,7 @@ Use:
 - Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.5 when risk requires it.
 - Skill improvement review: GitHub inference with GPT-5 mini.
 
-Prefer Copilot Max/GitHub inference for non-mutating context, planning, requirements, and review-preparation work. Use Codex routes for repository mutation and deeper code reasoning. Use GPT-5.5 only when the work is high-risk, complex, or stuck, and record the escalation rationale in traces.
+Model routes should be inferred from the natural-language task whenever possible; explicit task types remain available for deterministic overrides. Prefer Copilot Max/GitHub inference for non-mutating context, planning, requirements, and review-preparation work. Use Codex routes for repository mutation and deeper code reasoning. Use GPT-5.5 only when the work is high-risk, complex, or stuck, and record the escalation rationale in traces.
 
 ## Safety rules
 
