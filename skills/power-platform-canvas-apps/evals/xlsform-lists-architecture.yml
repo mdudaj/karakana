@@ -1,0 +1,37 @@
+id: xlsform-lists-architecture
+name: XLSForm to Microsoft Lists architecture
+description: Ensure Power Platform canvas app guidance preserves XLSForm logic, avoids nondelegable large choice patterns, and recommends hybrid list design.
+suite: skills
+risk_level: medium
+tags:
+  - power-platform
+  - microsoft-lists
+  - xlsform
+  - ux
+input:
+  task: "Plan a Power Apps canvas app from an XLSForm with skip logic, required fields, select_multiple questions, and a 60,000-row village choice list backed by Microsoft Lists."
+  project: tacatdp
+  skill: power-platform-canvas-apps
+  task_type: planning
+  prompt_file: skills/power-platform-canvas-apps/SKILL.md
+expectations:
+  must_include:
+    - "delegation"
+    - "reference lists"
+    - "select_multiple"
+    - "required"
+    - "skip logic"
+    - "validation"
+    - "Power Fx"
+    - "accessibility"
+    - "child rows"
+    - "one field per row"
+    - "spacing"
+    - "visible label"
+    - "helper"
+    - "error"
+    - "focus order"
+  forbidden_patterns:
+    - "store all choices in a collection"
+    - "make every SharePoint column required"
+    - "placeholder as the only label"

@@ -24,6 +24,7 @@ skills:
     - requirements-elicitation
     - grill-with-docs
     - django-debugging
+    - power-platform-canvas-apps
 model_routes:
   planning:
     provider: github

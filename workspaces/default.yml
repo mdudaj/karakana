@@ -24,3 +24,22 @@ projects:
         - "karakana skill validate-all"
         - "karakana eval run"
         - "pytest"
+
+  - id: tacatdp
+    display_name: TACATDP
+    path: "../tacatdp"
+    skillpack: tacatdp
+    memory: ubongo/projects/tacatdp
+    tags:
+      - power-platform
+      - canvas-apps
+      - microsoft-lists
+      - sharepoint
+      - xlsform
+      - ux
+    standard_commands:
+      status:
+        - "git status --short"
+      validate:
+        - "karakana skill validate skills/power-platform-canvas-apps"
+        - "karakana eval run --skill power-platform-canvas-apps"

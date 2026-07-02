@@ -14,6 +14,15 @@ If the console script is unavailable in a fresh shell, run the same command thro
 
 Use only the selected project's memory, skillpack, path, and referenced artifacts.
 
+## Registered Projects
+
+| Project | Workspace | Memory | Skillpack | Notes |
+| --- | --- | --- | --- | --- |
+| `karakana` | `default` | `ubongo/projects/karakana` | `skillpacks/karakana.yml` | Harness self-improvement and safety workflows. |
+| `tacatdp` | `default` | `ubongo/projects/tacatdp` | `skillpacks/tacatdp.yml` | Power Apps canvas app and Microsoft Lists delivery. |
+
+For TACATDP-specific instructions, see `docs/workspaces/tacatdp.md`.
+
 ## End Every Task
 
 ```bash

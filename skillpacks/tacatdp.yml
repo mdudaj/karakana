@@ -1,0 +1,54 @@
+name: tacatdp
+description: TACATDP Power Apps canvas app and Microsoft Lists delivery profile
+version: 0.1.0
+status: experimental
+project:
+  id: tacatdp
+  display_name: TACATDP
+  memory: ubongo/projects/tacatdp
+skills:
+  required:
+    - power-platform-canvas-apps
+    - design-system-governance
+    - delivery-artifact-gate
+    - karakana-handoff
+  optional:
+    - requirements-elicitation
+    - write-karakana-skill
+model_routes:
+  planning:
+    provider: github
+    model: gpt-5-mini
+    rationale: TACATDP planning is mostly architecture, UX, and deployment reasoning before implementation.
+  routine_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4-mini
+    rationale: Use routine implementation routing after requirements, skills, and memory are loaded.
+protocols:
+  default: requirements-change
+  categories:
+    assessment: assessment-review
+    frontend: ux-change
+    implementation: python-code-change
+    requirements: requirements-change
+    skill: skill-update
+safety:
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - production_sharepoint_write
+    - permission_change
+    - app_import_or_publish
+    - destructive_list_change
+tests:
+  commands:
+    - karakana skill validate skills/power-platform-canvas-apps
+    - karakana eval run --skill power-platform-canvas-apps
+conventions:
+  notes:
+    - Load TACATDP memory before implementation.
+    - Use one field per row by default on data-entry screens.
+    - Do not make skip-eligible SharePoint columns required.
+    - Keep Microsoft Lists filters delegation-safe for large reference data.
