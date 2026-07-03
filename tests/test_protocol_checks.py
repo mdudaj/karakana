@@ -306,9 +306,12 @@ def test_all_declared_templates_render():
     for artifact_kind in [
         "acceptance_criteria",
         "adr",
+        "artifact_readiness",
         "definition_of_done",
         "migration_plan",
+        "product_requirements_document",
         "requirements_note",
+        "requirements_traceability",
         "rollback_plan",
         "safety_review",
         "schema_contract",

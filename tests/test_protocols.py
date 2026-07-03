@@ -59,9 +59,9 @@ def test_protocol_artifacts_are_tiered_by_task_conditions():
 
     assert {"task_classification", "trace", "change_summary", "verification_summary", "handoff"} <= base
     assert "requirements_note" not in base
-    assert {"requirements_note", "acceptance_criteria", "user_story", "definition_of_done", "test_or_eval_rationale"} <= behavior
-    assert {"requirements_note", "ux_description", "accessibility_checklist", "screenshot_or_render_evidence"} <= ux
-    assert {"adr", "rollback_plan"} <= architecture
+    assert {"requirements_note", "product_requirements_document", "acceptance_criteria", "user_story", "definition_of_done", "requirements_traceability", "artifact_readiness", "test_or_eval_rationale"} <= behavior
+    assert {"requirements_note", "ux_description", "accessibility_checklist", "screenshot_or_render_evidence", "artifact_readiness"} <= ux
+    assert {"product_requirements_document", "adr", "requirements_traceability", "rollback_plan"} <= architecture
     assert {"schema_contract", "migration_plan", "approval_record"} <= data
     assert {"safety_review", "threat_or_abuse_case_note", "approval_record"} <= safety
 
@@ -117,6 +117,9 @@ def test_protocol_classifier_resolves_protocol_and_artifacts():
     assert classification.data_or_migration_change
     assert classification.safety_or_permission_change
     assert "requirements_note" in classification.required_artifacts
+    assert "product_requirements_document" in classification.required_artifacts
+    assert "artifact_readiness" in classification.required_artifacts
+    assert "requirements_traceability" in classification.required_artifacts
     assert "ux_description" in classification.required_artifacts
     assert "migration_plan" in classification.required_artifacts
     assert "safety_review" in classification.required_artifacts
@@ -147,6 +150,9 @@ def test_protocol_artifacts_differ_by_category():
     ux = artifact_kinds("ux-change")
 
     assert "user_story" in requirements
+    assert "product_requirements_document" in requirements
+    assert "requirements_traceability" in requirements
+    assert "artifact_readiness" in requirements
     assert "migration_plan" not in requirements
     assert "migration_plan" in migration
     assert "schema_contract" in migration
@@ -182,6 +188,9 @@ def test_protocol_templates_exist():
 
     for name in [
         "requirements-note.md",
+        "product-requirements-document.md",
+        "requirements-traceability.md",
+        "artifact-readiness.md",
         "ux-description.md",
         "adr.md",
         "safety-review.md",
@@ -195,6 +204,7 @@ def test_protocol_templates_exist():
 
 def test_ux_templates_capture_behavior_look_and_feel_research_and_design_system():
     requirements_template = (Path.cwd() / "templates" / "protocols" / "requirements-note.md").read_text()
+    prd_template = (Path.cwd() / "templates" / "protocols" / "product-requirements-document.md").read_text()
     ux_template = (Path.cwd() / "templates" / "protocols" / "ux-description.md").read_text()
 
     for template in [requirements_template, ux_template]:
@@ -202,3 +212,6 @@ def test_ux_templates_capture_behavior_look_and_feel_research_and_design_system(
         assert "Look And Feel" in template
         assert "Best-Practice Research" in template
         assert "Design-System Fit" in template
+
+    for expected in ["Users / Actors", "UX Requirements", "Architecture and Data Requirements", "Traceability"]:
+        assert expected in prd_template

@@ -31,7 +31,11 @@ steps:
 artifacts:
   - kind: task_classification
   - kind: trace
+  - kind: product_requirements_document
+    description: PRD or problem/context reference for the architectural decision.
   - kind: adr
+  - kind: requirements_traceability
+    description: Links the decision to requirements, affected contracts, implementation surfaces, and verification evidence.
   - kind: rollback_plan
   - kind: verification_summary
   - kind: handoff
@@ -48,4 +52,3 @@ verification:
 blocked_actions:
   - implement_without_decision
   - bypass_review
-

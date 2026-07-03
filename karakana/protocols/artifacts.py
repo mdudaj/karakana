@@ -12,9 +12,12 @@ from karakana.traces.store import TraceStore
 TEMPLATE_FILES = {
     "acceptance_criteria": "acceptance-criteria.md",
     "adr": "adr.md",
+    "artifact_readiness": "artifact-readiness.md",
     "definition_of_done": "definition-of-done.md",
     "migration_plan": "migration-plan.md",
+    "product_requirements_document": "product-requirements-document.md",
     "requirements_note": "requirements-note.md",
+    "requirements_traceability": "requirements-traceability.md",
     "rollback_plan": "rollback-plan.md",
     "safety_review": "safety-review.md",
     "schema_contract": "schema-contract.md",

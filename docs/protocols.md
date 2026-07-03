@@ -45,15 +45,23 @@ Write a template:
 
 ```bash
 karakana protocol template requirements_note --output docs/requirements/example.md
+karakana protocol template product_requirements_document --output docs/requirements/prd.md
+karakana protocol template requirements_traceability --output docs/requirements/traceability.md
+karakana protocol template artifact_readiness --output docs/requirements/readiness.md
 ```
 
 Attach an artifact to a trace:
 
 ```bash
 karakana protocol attach --trace <run-id> --kind requirements_note --path docs/requirements/example.md
+karakana protocol attach --trace <run-id> --kind product_requirements_document --path docs/requirements/prd.md
+karakana protocol attach --trace <run-id> --kind requirements_traceability --path docs/requirements/traceability.md
+karakana protocol attach --trace <run-id> --kind artifact_readiness --path docs/requirements/readiness.md
 ```
 
-For UX-impacting feature work, the `requirements_note` must cover both behavior and look and feel. Use task-specific best-practice research by default, then adapt those findings to the existing design system instead of adding page-local styling.
+For requirements or behavior-changing work, use a PRD when the task spans product behavior, UX, architecture, data, safety, or multiple agents. User stories should have testable acceptance criteria, and traceability should link requirements to stories, UX/ADR/schema artifacts, implementation surfaces, and tests/evals.
+
+For UX-impacting feature work, the `requirements_note` and `ux_description` must cover both behavior and look and feel. Use task-specific best-practice research by default, then adapt those findings to the existing design system instead of adding page-local styling. The `artifact_readiness` template records Definition of Ready and Definition of Done evidence before implementation and final delivery.
 
 Inspect missing artifacts and suggested commands:
 

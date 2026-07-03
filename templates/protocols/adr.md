@@ -6,6 +6,8 @@ Proposed
 
 ## Context
 
+## Requirement / PRD Link
+
 ## Decision
 
 ## Alternatives Considered
@@ -14,3 +16,4 @@ Proposed
 
 ## Rollback
 
+## Traceability and Verification
