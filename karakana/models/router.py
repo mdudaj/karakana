@@ -11,6 +11,96 @@ MODEL_TIERS = {
     "mock-model": {"cost_tier": "none", "capability_tier": "mock"},
 }
 
+
+def infer_task_type(task: str, *, intent: str = "general") -> str:
+    """Infer a routing task type from natural-language task text."""
+    text = task.lower()
+    if intent == "planning":
+        if _contains_any(text, {"model routing", "model route", "provider routing"}):
+            return "model_routing_planning"
+        if _contains_any(text, {"safety policy", "approval policy", "permission policy"}):
+            return "safety_policy_planning"
+        if _contains_any(text, {"cross-project", "multi-project", "workspace architecture"}):
+            return "cross_project_architecture"
+        if _contains_any(text, {"authentication", "authorization", "payment", "billing", "migration", "opensearch", "production", "process state", "workflow state"}):
+            return "high_risk_planning"
+        if _contains_any(text, {"framework", "invenio", "viewflow", "django", "gepg", "custom field", "vocabulary"}):
+            return "framework_design"
+        if _contains_any(text, {"protocol", "workflow", "handoff lifecycle"}):
+            return "protocol_workflow_planning"
+        if _contains_any(text, {"architecture", "adr", "system design"}):
+            return "architecture_review"
+        if _contains_any(text, {"assessment", "assess", "analyse", "analyze", "recommendation", "recommendations"}):
+            return "system_assessment"
+        if _contains_any(text, {"multi-file", "multiple files", "refactor", "implementation plan"}):
+            return "implementation_planning"
+        if _contains_any(text, {"skill design", "prompt design", "skill update"}):
+            return "skill_design"
+        return "planning"
+
+    if _contains_any(text, {"model routing", "model route", "provider routing"}):
+        return "model_routing_planning"
+    if _contains_any(text, {"safety policy", "approval policy", "permission policy"}):
+        return "safety_policy_planning"
+    if _contains_any(text, {"cross-project", "multi-project", "workspace architecture"}):
+        return "cross_project_architecture"
+    if _contains_any(text, {"authentication", "authorization", "oauth", "sso", "permission", "permissions", "secret"}):
+        return "security_or_auth_change"
+    if _contains_any(text, {"payment", "billing", "invoice", "reconciliation", "idempotency"}):
+        return "payment_or_billing_logic"
+    if _contains_any(text, {"migration", "schema change", "database", "opensearch", "index change"}):
+        return "database_or_index_migration"
+    if _contains_any(text, {"viewflow", "process state", "workflow state"}):
+        return "viewflow_process_state_change"
+    if _contains_any(text, {"ci failure", "failing ci", "test failure", "failed workflow", "pipeline failure"}):
+        return "ci_failure_analysis"
+    if _contains_any(text, {"repair ci", "fix ci", "fix failing test", "fix failed workflow"}):
+        return "ci_repair"
+    if _contains_any(text, {"pr review", "pull request review", "review diff", "code review"}):
+        return "pr_review"
+    if _contains_any(text, {"deep review", "regression-risk", "regression risk"}):
+        return "deep_pr_review"
+    if _contains_any(text, {"changelog", "release notes", "release-note"}):
+        return "changelog"
+    if _contains_any(text, {"documentation", "docs", "readme"}):
+        return "documentation"
+    if _contains_any(text, {"triage", "classify issue"}):
+        return "issue_triage"
+    if _contains_any(text, {"summarize", "summary"}):
+        return "simple_summary"
+    if _contains_any(text, {"reflection", "reflect", "trace review"}):
+        return "reflection"
+    if _contains_any(text, {"evidence review", "source-grounded"}):
+        return "evidence_review"
+    if _contains_any(text, {"research", "investigate", "find prior art"}):
+        return "research"
+    if _contains_any(text, {"assessment", "assess", "analyse", "analyze", "recommendation", "recommendations"}):
+        return "assessment_review"
+    if _contains_any(text, {"skill design", "prompt design", "skill update"}):
+        return "skill_design"
+    if _contains_any(text, {"task draft", "draft task", "codex task", "handoff task"}):
+        return "codex_task_drafting"
+    if _contains_any(text, {"test", "tests", "regression coverage"}):
+        return "test_generation"
+    if _contains_any(text, {"refactor", "multi-file", "multiple files"}):
+        return "refactoring"
+    if _contains_any(text, {"framework", "invenio", "django", "gepg", "custom field", "vocabulary"}):
+        return "framework_code_implementation"
+    if _contains_any(text, {"architecture", "adr", "system design"}):
+        return "architecture_review"
+    if _contains_any(text, {"protocol", "workflow", "handoff lifecycle"}):
+        return "protocol_workflow_planning"
+    if _contains_any(text, {"implement", "implementation", "code", "edit", "fix", "add feature", "build"}):
+        return "code_implementation"
+    if _contains_any(text, {"plan", "planning", "requirements"}):
+        return "planning"
+    return "planning"
+
+
+def _contains_any(value: str, terms: set[str]) -> bool:
+    return any(term in value for term in terms)
+
+
 ROLE_POLICIES = {
     "triage_summarizer": {
         "token_budget": "small",

@@ -8,6 +8,8 @@ roles: [requester, planner, reviewer]
 standards:
   - Requirements must preserve standards-vs-spec context.
   - Requirements must be reviewable before implementation.
+  - PRDs must separate problem, outcomes, users, non-goals, UX, architecture, data, safety, acceptance criteria, and verification evidence.
+  - User stories must follow INVEST-style slicing and include testable acceptance criteria.
 required_inputs:
   - source request or evidence
   - project contract and skillpack
@@ -20,7 +22,7 @@ steps:
     instruction: Read source artifacts, project contract, and related requirements.
   - step_id: plan
     action: plan
-    instruction: Draft bounded requirements, user stories, and acceptance criteria.
+    instruction: Draft bounded PRD context, requirements, user stories, traceability links, acceptance criteria, and definition-of-ready evidence.
   - step_id: review
     action: review
     instruction: Check readiness, ambiguity, risks, and implementation independence.
@@ -31,8 +33,11 @@ artifacts:
   - kind: task_classification
   - kind: trace
   - kind: requirements_note
+  - kind: product_requirements_document
   - kind: acceptance_criteria
   - kind: user_story
+  - kind: requirements_traceability
+  - kind: artifact_readiness
   - kind: definition_of_done
   - kind: verification_summary
   - kind: handoff
@@ -45,4 +50,3 @@ verification:
 blocked_actions:
   - publish_without_review
   - silent_scope_expansion
-

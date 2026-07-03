@@ -17,6 +17,22 @@ def test_model_route_cli_output():
     assert "Rationale:" in result.output
 
 
+def test_model_route_cli_infers_task_type_from_task_text():
+    result = CliRunner().invoke(app, ["model", "route", "--task", "Implement authentication permission checks"])
+
+    assert result.exit_code == 0, result.output
+    assert "Inferred task type: security_or_auth_change" in result.output
+    assert "Model: gpt-5.5" in result.output
+    assert "Role: principal_reviewer" in result.output
+
+
+def test_model_route_cli_requires_task_or_task_type():
+    result = CliRunner().invoke(app, ["model", "route"])
+
+    assert result.exit_code == 1
+    assert "Provide --task-type or --task" in result.output
+
+
 def test_model_route_cli_json_output():
     result = CliRunner().invoke(app, ["model", "route", "--task-type", "high_risk_planning", "--json"])
 

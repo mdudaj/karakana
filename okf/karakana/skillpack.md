@@ -15,9 +15,10 @@ relationships:
     - karakana.skill.delivery-artifact-gate
     - karakana.skill.self-improvement
     - karakana.skill.okf-promotion-agent
+    - karakana.skill.power-platform-canvas-apps
     - karakana.protocol.python-code-change
 ---
 
 # Karakana Skillpack
 
-The Karakana skillpack defines required skills, model routes, work protocols, safety requirements, tests, and conventions for harness work.
+The Karakana skillpack defines required and optional skills, model routes, work protocols, safety requirements, tests, and conventions for harness work.

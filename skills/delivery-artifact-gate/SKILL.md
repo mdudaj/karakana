@@ -36,7 +36,7 @@ bucket: productivity
 ## Quick Reference
 
 - Decide the required artifact set before code.
-- Create missing requirements, UX, ADR, story, milestone, schema/example, readiness, or dogfood artifacts first.
+- Create missing PRD, requirements, UX, ADR, story, traceability, milestone, schema/example, readiness, or dogfood artifacts first.
 - Treat missing required artifacts as a delivery blocker unless explicitly marked not applicable with rationale.
 - Implement only artifact-backed scope.
 - Add regression tests for durable rules.
@@ -60,6 +60,8 @@ Do not block tiny mechanical fixes when the artifact cost would exceed the chang
 - The artifact set should be chosen before implementation begins.
 - Artifacts guide scope; tests and handoffs prove what was delivered.
 - Use the smallest artifact set that prevents repeated instructions and preserves implementation rationale.
+- Evidence beats invention: requirements artifacts should cite user input, repo docs, data/schema files, design-system rules, evals, research, or explicit assumptions.
+- PRD, stories, UX, architecture, and test artifacts must be traceable to each other for non-trivial work.
 
 ## Core Rule
 
@@ -71,13 +73,16 @@ No non-trivial delivery is complete until every required artifact exists or the 
 
 Create or update the smallest relevant set:
 
+- **PRD / product requirements document**: product or workflow slice, stakeholder outcome, user-visible behavior, cross-cutting UX/architecture/data/safety impact, or multi-agent handoff.
 - **Requirements grill**: ambiguous user intent, acceptance behavior, scope boundaries, or stakeholder expectations.
-- **UX grill/research note**: navigation, page layout, forms, Material/Viewflow/Kisomo patterns, accessibility, or user workflow clarity.
+- **User stories**: user-visible capability with role, goal, acceptance criteria, and tests. Prefer small, independent, valuable, testable stories.
+- **Acceptance criteria / Definition of Done**: observable pass/fail behavior, edge cases, verification, review gates, and completion evidence.
+- **Traceability matrix**: links PRD requirement IDs to stories, UX/ADR/schema artifacts, implementation surfaces, and tests/evals.
+- **UX grill/research note**: navigation, page layout, forms, Material/Viewflow/Kisomo patterns, accessibility, workflow states, responsive behavior, or user workflow clarity.
 - **ADR**: durable architecture, route organization, ID generation, schema ownership, workflow boundaries, or hard-to-reverse design decisions.
-- **User stories**: user-visible capability with role, goal, acceptance criteria, and tests.
 - **Milestone**: multi-step delivery, dependency sequencing, or a new bounded implementation slice.
 - **Schema/example artifact**: data contracts, evidence manifests, imports/exports, generated IDs, evaluation records, or reproducibility outputs.
-- **Implementation readiness note**: when requirements exist but the code change needs a scoped execution checklist.
+- **Artifact readiness / Definition of Ready**: when requirements exist but the code change needs a scoped execution checklist and proof that required artifacts are present.
 - **Delivery readiness note**: when accepting a slice, list reused artifacts, new or updated artifacts, not-applicable artifacts, verification, residual gaps, and exact next action.
 - **Dogfood/review artifact**: when using the project against itself, validating workflow ergonomics, or capturing self-improvement findings.
 - **Tests/evals**: every behavior, access, schema, safety, and UX rule that can regress.
@@ -90,7 +95,7 @@ Create or update the smallest relevant set:
 3. Classify the change: UI/UX, data/schema, workflow, architecture, research/evaluation, safety, docs-only, or bug fix.
 4. Select the artifact set from the matrix.
 5. Check whether current artifacts already cover the change.
-6. Create or update missing artifacts before code changes.
+6. Create or update missing artifacts before code changes. Use evidence-backed templates rather than freeform notes when PRD, UX, ADR, story, traceability, or readiness artifacts are required.
 7. Implement only the artifact-backed scope.
 8. Add or update tests/evals for the artifact rules.
 9. Run focused verification.
@@ -107,8 +112,10 @@ Create or update the smallest relevant set:
 ## Required checks
 
 - Which durable artifact tells us what to build?
+- Which PRD or requirements note records the problem, users, outcomes, non-goals, and acceptance behavior?
 - Which artifact records why this approach is correct?
 - Which user story or acceptance criterion proves the work is done?
+- Which traceability artifact links requirements to implementation surfaces and tests/evals?
 - Which tests/evals protect the rule from regression?
 - Which handoff entry will let the next agent continue without repeating instructions?
 - Is this implementation going beyond the artifact-backed scope?
@@ -134,7 +141,7 @@ When implementing, include this gate in the working notes or artifact, then proc
 
 ## Examples
 
-- UI revision: create/update UX grill, user stories, acceptance tests, and handoff.
+- UI revision: create/update PRD or requirements note, UX description, user stories, acceptance criteria, render evidence, accessibility checklist, and handoff.
 - Generated ID rule: create/update ADR, requirements note, tests, and schema/example if persisted.
 - Research evidence export: create/update schema, example fixture, PRD/story, validation command, and handoff.
 - Small bug fix: reuse existing requirement, add focused regression test, and refresh handoff.
@@ -147,6 +154,7 @@ When implementing, include this gate in the working notes or artifact, then proc
 - Creating ADRs for trivial details while missing important user-story acceptance criteria.
 - Updating code without updating schemas/examples.
 - Ending with a handoff that lists code but not the artifacts that justified it.
+- Generating a PRD without traceability from requirements to stories, UX/ADR/schema decisions, and tests.
 
 ## Verification
 

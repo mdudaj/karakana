@@ -38,8 +38,12 @@ artifacts:
   - kind: task_classification
   - kind: trace
   - kind: ux_description
+  - kind: product_requirements_document
+    description: PRD or PRD reference covering intended behavior, actors, outcomes, non-goals, constraints, UX, accessibility, and verification.
   - kind: accessibility_checklist
   - kind: screenshot_or_render_evidence
+  - kind: acceptance_criteria
+  - kind: artifact_readiness
   - kind: verification_summary
   - kind: handoff
   - kind: requirements_note

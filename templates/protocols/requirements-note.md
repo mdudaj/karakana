@@ -2,6 +2,10 @@
 
 ## Context
 
+## Source Evidence
+
+## Actors / Users
+
 ## Requirement
 
 ## Behavior Requirement
@@ -13,6 +17,12 @@
 ## Design-System Fit
 
 ## Acceptance Criteria
+
+## Definition of Ready
+
+## Definition of Done
+
+## Traceability Links
 
 ## Non-Goals
 

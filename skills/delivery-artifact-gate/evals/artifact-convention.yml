@@ -1,0 +1,37 @@
+id: delivery-artifact-convention
+name: Delivery artifact convention
+description: Ensure the delivery artifact gate requires PRD, stories, traceability, UX, architecture, readiness, and evidence-backed artifacts before non-trivial work.
+suite: skills
+risk_level: medium
+tags:
+  - artifact-gate
+  - requirements
+  - prd
+  - ux
+  - architecture
+input:
+  task: "Prepare a multi-agent implementation slice that changes a user-facing workflow, data contract, architecture decision, and tests."
+  project: karakana
+  skill: delivery-artifact-gate
+  task_type: planning
+  prompt_file: skills/delivery-artifact-gate/SKILL.md
+expectations:
+  must_include:
+    - "PRD"
+    - "requirements"
+    - "user stories"
+    - "acceptance criteria"
+    - "Traceability"
+    - "UX"
+    - "ADR"
+    - "schema"
+    - "Definition of Ready"
+    - "Definition of Done"
+    - "evidence"
+    - "tests/evals"
+  must_not_include:
+    - "chat instructions are enough"
+    - "skip acceptance criteria"
+  forbidden_patterns:
+    - "deploy without approval"
+    - "publish without review"

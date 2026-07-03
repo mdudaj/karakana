@@ -1,4 +1,4 @@
-from karakana.models.router import route_model
+from karakana.models.router import infer_task_type, route_model
 
 
 def test_route_model_defaults_for_planning():
@@ -46,3 +46,13 @@ def test_route_model_unknown_uses_dry_run_role():
     assert route["provider"] == "mock"
     assert route["role"] == "dry_run"
     assert route["token_budget"] == "none"
+
+
+def test_infer_task_type_routes_high_risk_task_text():
+    assert infer_task_type("Implement authentication and permission checks") == "security_or_auth_change"
+    assert infer_task_type("Plan authentication rollout", intent="planning") == "high_risk_planning"
+
+
+def test_infer_task_type_routes_routine_task_text():
+    assert infer_task_type("Write regression tests for the parser") == "test_generation"
+    assert infer_task_type("Update the README documentation") == "documentation"

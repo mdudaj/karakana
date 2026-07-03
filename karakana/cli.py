@@ -68,7 +68,7 @@ from karakana.models.executor import ModelExecutor
 from karakana.models.registry import default_registry
 from karakana.models.review.report import render_review_markdown, write_review_artifacts
 from karakana.models.review.reviewer import review_response
-from karakana.models.router import available_task_types, route_model
+from karakana.models.router import available_task_types, infer_task_type, route_model
 from karakana.milestones.decision import generate_next_milestone
 from karakana.milestones.store import MilestoneStore
 from karakana.okf.context import render_context, select_concepts
@@ -2183,7 +2183,8 @@ def model_check() -> None:
 
 @model_app.command("route")
 def model_route(
-    task_type: str = typer.Option(..., "--task-type", help="Task type to route."),
+    task_type: str | None = typer.Option(None, "--task-type", help="Explicit task type to route."),
+    task: str | None = typer.Option(None, "--task", "-t", help="Infer task type from natural-language task text."),
     signals: str = typer.Option("", "--signals", help="Comma-separated escalation signals."),
     provider: str | None = typer.Option(None, "--provider", help="Manual provider override."),
     model: str | None = typer.Option(None, "--model", help="Manual model override."),
@@ -2191,25 +2192,32 @@ def model_route(
     risk_level: str | None = typer.Option(None, "--risk-level", help="Optional risk level for safety warnings."),
     json_output: bool = typer.Option(False, "--json", help="Print route JSON."),
 ) -> None:
-    """Show the cost-aware route for a task type."""
+    """Show the cost-aware route for a task type or natural-language task."""
     import json
 
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
     signal_list = [signal.strip() for signal in signals.split(",") if signal.strip()]
     skillpack_context = _resolve_optional_skillpack(repo_root, skillpack) if skillpack else None
-    route = route_model(task_type, provider=provider, model=model, skillpack_routes=skillpack_context.model_routes if skillpack_context else None)
+    inferred_task_type = infer_task_type(task) if task and not task_type else None
+    selected_task_type = task_type or inferred_task_type
+    if not selected_task_type:
+        typer.echo("Provide --task-type or --task so Karakana can route the work.")
+        raise typer.Exit(code=1)
+    route = route_model(selected_task_type, provider=provider, model=model, skillpack_routes=skillpack_context.model_routes if skillpack_context else None)
     escalation = recommend_escalation(route["provider"], route["model"], signal_list)
-    warnings = validate_model_route(task_type, route["provider"], route["model"], risk_level=risk_level)
+    warnings = validate_model_route(selected_task_type, route["provider"], route["model"], risk_level=risk_level)
     trace = trace_store.create_run(
         command="model route",
         task_type="model_routing",
         selected_model=route["model"],
-        inputs={"task_type": task_type, "signals": signal_list, "provider": provider, "model": model, "skillpack": skillpack, "risk_level": risk_level},
+        inputs={"task_type": selected_task_type, "task": task, "inferred_task_type": inferred_task_type, "signals": signal_list, "provider": provider, "model": model, "skillpack": skillpack, "risk_level": risk_level},
     )
     trace.outputs.update(
         {
-            "task_type": task_type,
+            "task_type": selected_task_type,
+            "task": task,
+            "inferred_task_type": inferred_task_type,
             "selected_provider": route["provider"],
             "selected_model": route["model"],
             "routing_rationale": route.get("rationale"),
@@ -2232,7 +2240,9 @@ def model_route(
     trace.warnings.extend(warnings)
     _success_trace(trace_store, trace)
     output = {
-        "task_type": task_type,
+        "task_type": selected_task_type,
+        "task": task,
+        "inferred_task_type": inferred_task_type,
         "provider": route["provider"],
         "model": route["model"],
         "mode": route.get("mode"),
@@ -2252,7 +2262,11 @@ def model_route(
     if json_output:
         typer.echo(json.dumps(output, indent=2, sort_keys=True))
         return
-    typer.echo(f"Task type: {task_type}")
+    if task:
+        typer.echo(f"Task: {task}")
+    if inferred_task_type:
+        typer.echo(f"Inferred task type: {inferred_task_type}")
+    typer.echo(f"Task type: {selected_task_type}")
     typer.echo(f"Provider: {route['provider']}")
     typer.echo(f"Model: {route['model']}")
     typer.echo(f"Mode: {route.get('mode')}")
@@ -3822,32 +3836,7 @@ Approval requirements:
 
 
 def _planning_task_type(task: str) -> str:
-    text = task.lower()
-    if _contains_any(text, {"model routing", "model route", "provider routing"}):
-        return "model_routing_planning"
-    if _contains_any(text, {"safety policy", "approval policy", "permission policy"}):
-        return "safety_policy_planning"
-    if _contains_any(text, {"cross-project", "multi-project", "workspace architecture"}):
-        return "cross_project_architecture"
-    if _contains_any(text, {"authentication", "authorization", "payment", "billing", "migration", "opensearch", "production", "process state", "workflow state"}):
-        return "high_risk_planning"
-    if _contains_any(text, {"framework", "invenio", "viewflow", "django", "gepg", "custom field", "vocabulary"}):
-        return "framework_design"
-    if _contains_any(text, {"protocol", "workflow", "handoff lifecycle"}):
-        return "protocol_workflow_planning"
-    if _contains_any(text, {"architecture", "adr", "system design"}):
-        return "architecture_review"
-    if _contains_any(text, {"assessment", "assess", "analyse", "analyze", "recommendation", "recommendations"}):
-        return "system_assessment"
-    if _contains_any(text, {"multi-file", "multiple files", "refactor", "implementation plan"}):
-        return "implementation_planning"
-    if _contains_any(text, {"skill design", "prompt design", "skill update"}):
-        return "skill_design"
-    return "planning"
-
-
-def _contains_any(value: str, terms: set[str]) -> bool:
-    return any(term in value for term in terms)
+    return infer_task_type(task, intent="planning")
 
 
 def _resolve_optional_skillpack(repo_root: Path, name: str | None):

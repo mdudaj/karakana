@@ -90,6 +90,8 @@ Use cost-effective routing by default:
 
 Manual overrides are allowed, but record the rationale in traces or task notes.
 
+Karakana should infer the model route from the natural-language task whenever possible. Use explicit `karakana model route --task-type ...` only when deterministic routing is needed; otherwise prefer `karakana model route --task "<task>"` or entrypoints such as `karakana plan --task "<task>"` that classify the task automatically.
+
 Use the `assessment` protocol for analysis-only harness reviews, recommendations, and state assessments that should not require ADR or rollback artifacts unless a later implementation changes architecture or behavior.
 
 ## How to Add a Skill

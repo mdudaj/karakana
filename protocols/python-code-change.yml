@@ -27,7 +27,7 @@ steps:
     instruction: Read repository instructions, durable project context, affected code, existing tests, and local patterns before editing.
   - step_id: plan
     action: plan
-    instruction: Define bounded scope, non-goals, expected artifacts, verification commands, and approval needs.
+    instruction: Define bounded scope, non-goals, expected artifacts, PRD/story/acceptance coverage, verification commands, and approval needs.
   - step_id: modify
     action: modify
     instruction: Apply the smallest reviewable patch consistent with the existing codebase.
@@ -55,6 +55,10 @@ artifacts:
     description: Requirement or PRD reference for behavior-changing work.
     condition:
       behavior_change: true
+  - kind: product_requirements_document
+    description: PRD or PRD reference for behavior-changing work, including problem, outcomes, users, non-goals, UX, architecture, data, safety, and verification context.
+    condition:
+      behavior_change: true
   - kind: acceptance_criteria
     description: Concrete observable criteria for behavior-changing work.
     condition:
@@ -69,6 +73,14 @@ artifacts:
       behavior_change: true
   - kind: test_or_eval_rationale
     description: Regression coverage or explicit rationale for no new test/eval.
+    condition:
+      behavior_change: true
+  - kind: requirements_traceability
+    description: Traceability from PRD requirements and stories to implementation surfaces, tests/evals, and acceptance evidence.
+    condition:
+      behavior_change: true
+  - kind: artifact_readiness
+    description: Definition-of-ready check proving required artifacts are present or narrowly marked not applicable before implementation.
     condition:
       behavior_change: true
   - kind: ux_description
@@ -87,12 +99,24 @@ artifacts:
     description: Screenshot, Playwright, or template-render evidence for visible UX changes.
     condition:
       ux_change: true
+  - kind: artifact_readiness
+    description: UX artifact-readiness check covering behavior, look and feel, research, design-system fit, accessibility, and render evidence.
+    condition:
+      ux_change: true
   - kind: adr
     description: Decision record or ADR update for architectural changes.
     condition:
       architecture_change: true
+  - kind: product_requirements_document
+    description: PRD or problem/context reference for architecture-impacting implementation.
+    condition:
+      architecture_change: true
   - kind: rollback_plan
     description: Reversal or mitigation path for architecture, data, migration, or high-risk changes.
+    condition:
+      architecture_change: true
+  - kind: requirements_traceability
+    description: Links architecture requirements and ADR decisions to implementation and verification evidence.
     condition:
       architecture_change: true
   - kind: schema_contract
@@ -105,6 +129,10 @@ artifacts:
       data_or_migration_change: true
   - kind: approval_record
     description: Human approval reference for data, migration, safety, or permission-sensitive work.
+    condition:
+      data_or_migration_change: true
+  - kind: requirements_traceability
+    description: Links data/schema requirements to contracts, examples, migrations, tests, and acceptance evidence.
     condition:
       data_or_migration_change: true
   - kind: safety_review
