@@ -8,8 +8,8 @@ input:
   task: "Check that patch lifecycle status recommends attaching test evidence before commit."
   task_type: "planning"
 expectations:
-  expected_provider: "github"
-  expected_model: "gpt-5-mini"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "Run relevant tests"
     - "human approval"

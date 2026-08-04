@@ -1,0 +1,30 @@
+id: system-design-thinking-platform-ux-system-map
+name: System design thinking maps platform UX before slicing
+description: Ensure the skill requires boundary, actors, structure, dynamics, leverage, design rules, delivery slices, and backfire risks for platform UX work.
+suite: skills
+risk_level: medium
+tags: [skills, systems-thinking, ux, architecture]
+input:
+  task: "Plan a role-based dashboard and user-management UX for a banking monitoring platform."
+  skill: system-design-thinking
+  task_type: planning
+  prompt_file: skills/system-design-thinking/SKILL.md
+expectations:
+  must_include:
+    - "Boundary"
+    - "Actors and Jobs"
+    - "Structure"
+    - "Dynamics and Delays"
+    - "Leverage Points"
+    - "Design Rules"
+    - "Delivery Slices"
+    - "Backfire Risks"
+    - "Do not treat UI hiding as authorization"
+    - "verification"
+  required_sections:
+    - "Safety Rules"
+    - "Output Format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"
+

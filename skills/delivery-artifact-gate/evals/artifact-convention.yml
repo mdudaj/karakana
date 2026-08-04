@@ -28,10 +28,16 @@ expectations:
     - "Definition of Ready"
     - "Definition of Done"
     - "evidence"
+    - "authoritative references"
+    - "implementation instructions"
+    - "files to inspect"
+    - "verification"
+    - "regression"
     - "tests/evals"
   must_not_include:
     - "chat instructions are enough"
     - "skip acceptance criteria"
+    - "assume the framework behavior"
   forbidden_patterns:
     - "deploy without approval"
     - "publish without review"

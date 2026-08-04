@@ -8,6 +8,7 @@ roles: [planner, implementer, tester, reviewer]
 standards:
   - UX changes must describe affected users and workflow states.
   - UX feature requirements must describe both intended behavior and look and feel.
+  - New products, new portals, major UX refreshes, and first implementation slices must establish or reference a project shell layout and design-system foundation before page implementation begins.
   - Default UX planning must research current best practices for the delivered task and adapt them to the existing design system.
   - Browser-visible changes require render evidence when feasible.
 required_inputs:
@@ -15,6 +16,7 @@ required_inputs:
   - affected templates/components
   - behavior and look-and-feel requirement description
   - existing design-system conventions
+  - shell layout and reusable design-system foundation, or a not-applicable rationale for small bounded changes
 steps:
   - step_id: classify
     action: classify
@@ -22,6 +24,9 @@ steps:
   - step_id: inspect
     action: inspect
     instruction: Read existing UI conventions, design-system artifacts, relevant best-practice references for the task, and affected frontend code.
+  - step_id: foundation
+    action: plan
+    instruction: For a new product, portal, major UX refresh, or first implementation slice, define the app shell layout, navigation model, design tokens, reusable component inventory, responsive rules, accessibility rules, and visual evidence before implementing screens.
   - step_id: plan
     action: plan
     instruction: Define behavior requirements, look-and-feel requirements, before/after workflow, states, design-system fit, and verification.
@@ -38,6 +43,7 @@ artifacts:
   - kind: task_classification
   - kind: trace
   - kind: ux_description
+    description: Must include shell layout, route ownership, navigation groups, tokens, reusable components, responsive behavior, accessibility, and visual evidence when the task starts a product, portal, major refresh, or first implementation slice.
   - kind: product_requirements_document
     description: PRD or PRD reference covering intended behavior, actors, outcomes, non-goals, constraints, UX, accessibility, and verification.
   - kind: accessibility_checklist

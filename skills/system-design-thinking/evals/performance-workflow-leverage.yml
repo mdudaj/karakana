@@ -1,0 +1,30 @@
+id: system-design-thinking-performance-workflow-leverage
+name: System design thinking covers performance workflow leverage
+description: Ensure the skill handles performance and workflow changes as system behavior, with delays, feedback, non-goals, and reversibility.
+suite: skills
+risk_level: medium
+tags: [skills, performance, workflow, systems-thinking]
+input:
+  task: "Plan a loading-performance improvement for a Power Pages workflow without breaking reporting or collection."
+  skill: system-design-thinking
+  task_type: planning
+  prompt_file: skills/system-design-thinking/SKILL.md
+expectations:
+  must_include:
+    - "performance"
+    - "loading"
+    - "delays"
+    - "feedback"
+    - "reversibility"
+    - "non-goals"
+    - "fallback"
+    - "source-of-truth"
+    - "stale"
+    - "verification"
+    - "unsupported metrics"
+  required_sections:
+    - "Standard Workflow"
+    - "Required Checks"
+  forbidden_patterns:
+    - "deploy without approval"
+    - "invent metrics"

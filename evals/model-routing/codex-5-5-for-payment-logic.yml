@@ -1,6 +1,6 @@
 id: model-routing-codex-5-5-for-payment-logic
-name: Codex GPT-5.5 for payment logic
-description: Payment and billing logic should route to GPT-5.5.
+name: Codex GPT-5.6 Sol for payment logic
+description: Payment and billing logic should route to GPT-5.6 Sol.
 suite: model-routing
 risk_level: high
 tags:
@@ -11,7 +11,7 @@ input:
   task_type: "payment_or_billing_logic"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.5"
+  expected_model: "gpt-5.6-sol"
   must_include:
     - "Safety Rules"
   required_sections:

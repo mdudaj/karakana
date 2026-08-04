@@ -1,0 +1,53 @@
+id: dataverse-metadata-renderer
+name: Dataverse metadata renderer canvas architecture
+description: Ensure Power Platform canvas app guidance recommends a Dataverse metadata-driven runtime with delegable assignment/history queries, typed answer storage, attachment constraints, and GPS handling.
+suite: skills
+risk_level: medium
+tags:
+  - power-platform
+  - dataverse
+  - canvas-app
+  - metadata-renderer
+  - power-fx
+input:
+  task: "Plan the TACATDP Canvas MVP now that Dataverse has Forms, FormVersions, Sections, Questions, Choices, ValidationRules, FormAssignments, Submissions, SubmissionAnswers, and SubmissionFiles. One seeded published form is assigned to one user. The app must show assigned forms, render metadata, save drafts, submit, edit until locked, attach one file/photo, capture GPS if quick enough, and show history."
+  project: tacatdp
+  skill: power-platform-canvas-apps
+  task_type: planning
+  prompt_file: skills/power-platform-canvas-apps/SKILL.md
+expectations:
+  must_include:
+    - "Dataverse"
+    - "metadata"
+    - "Forms"
+    - "FormVersions"
+    - "Sections"
+    - "Questions"
+    - "Choices"
+    - "ValidationRules"
+    - "FormAssignments"
+    - "Submissions"
+    - "SubmissionAnswers"
+    - "SubmissionFiles"
+    - "delegation"
+    - "User().Email"
+    - "UserEmail"
+    - "Patch"
+    - "Draft"
+    - "Submitted"
+    - "Locked"
+    - "Attachments control"
+    - "Edit form"
+    - "Location"
+    - "ValueJson"
+    - "App Checker"
+    - "Monitor"
+    - "signed-in user"
+    - "form name"
+    - "version"
+  forbidden_patterns:
+    - "use Choices() for all form options"
+    - "load all submissions into a collection"
+    - "build a custom login"
+    - "store the attachment as base64 text"
+    - "generate one app per form"

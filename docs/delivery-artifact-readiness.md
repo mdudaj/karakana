@@ -62,6 +62,16 @@ If the work changes a visible workflow, page, form, dashboard, interaction, copy
 - alignment notes for the existing design system;
 - render or screenshot evidence when feasible.
 
+If the work starts a new product, portal, major UX refresh, or first implementation slice, the UX artifact set must also establish or reference:
+
+- app shell layout and route ownership;
+- navigation groups and page/action placement rules;
+- design tokens for color, type, spacing, radius, elevation, focus, and density;
+- reusable component inventory and component anatomy;
+- responsive behavior for desktop, tablet, and mobile;
+- accessibility rules and interaction states;
+- visual evidence such as mockups, screenshots, or comparable product references.
+
 If none of those UX surfaces change, record that UX is not involved.
 
 ## Delivery Blockers

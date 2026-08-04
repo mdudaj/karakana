@@ -16,14 +16,17 @@ def test_codex_handoff_generation_from_action_bundle(tmp_path):
     text = paths[0].read_text(encoding="utf-8")
     assert "# Karakana Codex Handoff Task" in text
     assert "## Recommended Codex Model" in text
+    assert "## Model Role Guidance" in text
+    assert "Role: `routine_implementer`" in text
+    assert "Token budget: `standard`" in text
     assert "gpt-5.4-mini" in text
 
 
-def test_codex_handoff_high_risk_payment_routes_to_gpt5_5(tmp_path):
+def test_codex_handoff_high_risk_payment_routes_to_gpt5_6(tmp_path):
     response = write_response(tmp_path, "Codex task: Implement payment migration review.\n", {"status": "passed", "blocked": False})
     bundle = ActionExtractor(tmp_path).extract_from_response(response)
     ActionStore(tmp_path).save(bundle)
 
     path = CodexHandoffBuilder(tmp_path).build_from_action_bundle(bundle.action_run_id)[0]
 
-    assert "gpt-5.5" in path.read_text(encoding="utf-8")
+    assert "gpt-5.6-sol" in path.read_text(encoding="utf-8")

@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import os
+import shutil
+
+from karakana.models.router import CODEX_5_6_FAMILY, FRONTIER_CODEX_MODEL
 
 DEFAULT_PROVIDER = "mock"
 DEFAULT_MODEL = "mock-model"
@@ -10,6 +13,10 @@ DEFAULT_MODEL = "mock-model"
 
 def github_token_configured() -> bool:
     return bool(os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"))
+
+
+def codex_cli_configured() -> bool:
+    return bool(os.environ.get("CODEX_BIN") or shutil.which("codex"))
 
 
 def model_config() -> dict:
@@ -31,9 +38,11 @@ def model_config() -> dict:
                 "endpoint": os.environ.get("OPENAI_ENDPOINT", "https://api.openai.com/v1/chat/completions"),
             },
             "openai_codex": {
-                "configured": bool(os.environ.get("OPENAI_API_KEY")),
+                "configured": codex_cli_configured(),
                 "model": os.environ.get("OPENAI_CODEX_MODEL", "gpt-5.4-mini"),
-                "endpoint": os.environ.get("OPENAI_ENDPOINT", "https://api.openai.com/v1/chat/completions"),
+                "executable": os.environ.get("CODEX_BIN") or shutil.which("codex"),
+                "frontier_default": FRONTIER_CODEX_MODEL,
+                "available_frontier_models": sorted(CODEX_5_6_FAMILY),
             },
             "anthropic": {
                 "configured": bool(os.environ.get("ANTHROPIC_API_KEY")),

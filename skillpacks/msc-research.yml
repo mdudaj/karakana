@@ -19,14 +19,14 @@ skills:
     - write-karakana-skill
 model_routes:
   planning:
-    provider: github
-    model: gpt-5-mini
+    provider: openai_codex
+    model: gpt-5.4-mini
   documentation:
-    provider: github
-    model: claude-haiku-4.5
+    provider: openai_codex
+    model: gpt-5.4-mini
   simple_summary:
-    provider: github
-    model: claude-haiku-4.5
+    provider: openai_codex
+    model: gpt-5.4-mini
 safety:
   high_risk_paths:
     - chapters/**

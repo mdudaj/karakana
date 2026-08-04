@@ -4,7 +4,9 @@ Date: 2026-06-25
 
 ## Status
 
-Proposed
+Superseded for current runtime routing
+
+Superseded on 2026-07-03 by the Codex-only cost-control posture after Copilot/GitHub inference tokens were exhausted. Current routes use Codex GPT-5.4-mini for first-pass triage, documentation, planning, research, task drafting, tests, and bounded implementation; GPT-5.4 for consequential planning, refactoring, CI analysis, framework work, and deep review; and GPT-5.5 only for reserved high-risk or stuck work.
 
 ## Context
 

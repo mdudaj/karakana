@@ -339,6 +339,36 @@ def test_protocol_start_cli_writes_start_artifacts(tmp_path, monkeypatch):
     data = json.loads(start_paths[-1].read_text(encoding="utf-8"))
     assert data["classification"]["protocol_id"] == "requirements-change"
     assert "requirements_note" in data["required_artifacts"]
+    assert data["trace_id"]
+    assert f"Trace ID: {data['trace_id']}" in result.output
+    assert f"protocol attach --trace {data['trace_id']}" in result.output
+
+
+def test_protocol_start_id_can_be_used_for_attach_and_check(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    write_minimal_skillpack(tmp_path)
+    artifact = tmp_path / "requirements-note.md"
+    artifact.write_text("# Requirements Note\n", encoding="utf-8")
+
+    start_result = CliRunner().invoke(
+        app,
+        ["protocol", "start", "--task", "Write requirements and user stories.", "--project", "karakana", "--write-plan"],
+    )
+    assert start_result.exit_code == 0
+    start_paths = sorted((tmp_path / ".karakana" / "protocol-starts").glob("*/start.json"))
+    start_id = json.loads(start_paths[-1].read_text(encoding="utf-8"))["start_id"]
+
+    attach_result = CliRunner().invoke(
+        app,
+        ["protocol", "attach", "--trace", start_id, "--kind", "requirements_note", "--path", str(artifact)],
+    )
+    check_result = CliRunner().invoke(app, ["protocol", "check", "--trace", start_id])
+
+    assert attach_result.exit_code == 0
+    assert check_result.exit_code == 0
+    assert "Trace not found" not in attach_result.output
+    assert "Trace not found" not in check_result.output
+    assert "Protocol check: passed" in check_result.output
 
 
 def test_protocol_start_cli_uses_requirements_source(tmp_path, monkeypatch):

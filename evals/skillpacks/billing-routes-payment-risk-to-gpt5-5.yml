@@ -1,5 +1,5 @@
 id: skillpacks-billing-routes-payment-risk-to-gpt5-5
-name: Billing payment risk routes to GPT-5.5
+name: Billing payment risk routes to GPT-5.6 Sol
 description: Ensure payment and billing logic routes to principal-level review.
 suite: skillpacks
 risk_level: high
@@ -9,4 +9,4 @@ input:
   task_type: "payment_or_billing_logic"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.5"
+  expected_model: "gpt-5.6-sol"

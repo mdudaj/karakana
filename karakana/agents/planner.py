@@ -5,10 +5,19 @@ from __future__ import annotations
 from pathlib import Path
 
 from karakana.memory.ubongo import UbongoMemory
+from karakana.models.router import route_model
 from karakana.skills.loader import SkillLoader
 
 
-def compose_planning_prompt(project: str, skill: str, task: str, repo_root: Path, skillpack_context: str | None = None, allow_missing_memory: bool = False) -> str:
+def compose_planning_prompt(
+    project: str,
+    skill: str,
+    task: str,
+    repo_root: Path,
+    skillpack_context: str | None = None,
+    allow_missing_memory: bool = False,
+    model_route: dict | None = None,
+) -> str:
     """Compose a deterministic planning prompt from local repository context."""
     memory = UbongoMemory(repo_root)
     missing_memory = memory.validate_project(project)
@@ -26,12 +35,14 @@ def compose_planning_prompt(project: str, skill: str, task: str, repo_root: Path
     project_contract = _read_optional(repo_root / "KARAKANA.md", "No KARAKANA.md found.")
     template = _read_optional(repo_root / "prompts" / "planner.prompt.md", _default_template())
 
+    route = model_route or route_model("planning")
     values = {
         "task": task,
         "project": project,
         "selected_skill": _render_skill(selected_skill),
         "project_memory": project_memory,
         "project_contract": project_contract,
+        "model_role_guidance": _render_model_role_guidance(route),
         "required_output": _required_output(),
         "safety_rules": _safety_rules(),
     }
@@ -88,6 +99,16 @@ def _safety_rules() -> str:
 - Flag risky changes that require approval."""
 
 
+def _render_model_role_guidance(route: dict) -> str:
+    return f"""- Provider: {route.get("provider")}
+- Model: {route.get("model")}
+- Role: {route.get("role")}
+- Token budget: {route.get("token_budget")}
+- Token policy: {route.get("token_policy")}
+- Escalation policy: {route.get("escalation_policy")}
+- Rationale: {route.get("rationale")}"""
+
+
 def _default_template() -> str:
     return """# Karakana Planning Task
 
@@ -110,6 +131,10 @@ def _default_template() -> str:
 ## Project Contract
 
 {project_contract}
+
+## Model Role Guidance
+
+{model_role_guidance}
 
 ## Required Output
 

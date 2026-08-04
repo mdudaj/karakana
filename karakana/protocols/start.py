@@ -20,6 +20,7 @@ class ProtocolStartArtifact:
     start_id: str
     task: str
     classification: ProtocolClassification
+    trace_id: str | None = None
     required_artifacts: list[str] = field(default_factory=list)
     missing_artifacts: list[str] = field(default_factory=list)
     template_suggestions: list[MissingArtifactSuggestion] = field(default_factory=list)
@@ -72,6 +73,19 @@ def build_protocol_start(repo_root: Path, classification: ProtocolClassification
     )
 
 
+def bind_protocol_start_trace(artifact: ProtocolStartArtifact, trace_id: str) -> ProtocolStartArtifact:
+    artifact.trace_id = trace_id
+    artifact.template_suggestions = [
+        MissingArtifactSuggestion(
+            artifact_kind=suggestion.artifact_kind,
+            template_command=suggestion.template_command,
+            attach_command=suggestion.attach_command.replace("<trace-id>", trace_id),
+        )
+        for suggestion in artifact.template_suggestions
+    ]
+    return artifact
+
+
 def render_protocol_start(artifact: ProtocolStartArtifact) -> str:
     classification = artifact.classification
     return f"""# Karakana Protocol Start
@@ -79,6 +93,7 @@ def render_protocol_start(artifact: ProtocolStartArtifact) -> str:
 ## Summary
 
 - Start ID: {artifact.start_id}
+- Trace ID: {artifact.trace_id or "<not-created>"}
 - Protocol: {classification.protocol_id}
 - Category: {classification.work_category}
 - Risk: {classification.risk_level}

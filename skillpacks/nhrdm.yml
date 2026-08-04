@@ -23,20 +23,20 @@ skills:
     - write-karakana-skill
 model_routes:
   planning:
-    provider: github
-    model: gpt-5-mini
+    provider: openai_codex
+    model: gpt-5.4-mini
   documentation:
-    provider: github
-    model: claude-haiku-4.5
+    provider: openai_codex
+    model: gpt-5.4-mini
   framework_code_implementation:
     provider: openai_codex
     model: gpt-5.4
   database_or_index_migration:
     provider: openai_codex
-    model: gpt-5.5
+    model: gpt-5.6-sol
   high_risk_code_review:
     provider: openai_codex
-    model: gpt-5.5
+    model: gpt-5.6-sol
 safety:
   high_risk_paths:
     - site/nhrdm/oauthclient/**

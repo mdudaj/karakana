@@ -94,7 +94,8 @@ def test_plan_cli_writes_prompt(tmp_path, monkeypatch):
 
     output = tmp_path / ".karakana" / "planning-task.md"
     assert result.exit_code == 0
-    assert "Selected model: gpt-5-mini" in result.output
+    assert "Selected model: gpt-5.4-mini" in result.output
+    assert "Selected provider: openai_codex" in result.output
     assert f"Prompt written to: {output}" in result.output
     assert output.exists()
     assert "Design the next improvement loop" in output.read_text(encoding="utf-8")
@@ -144,7 +145,7 @@ def test_plan_cli_routes_high_risk_planning_from_task_text(tmp_path, monkeypatch
     )
 
     assert result.exit_code == 0, result.output
-    assert "Selected model: gpt-5.5" in result.output
+    assert "Selected model: gpt-5.6-sol" in result.output
     assert "Planning task type: model_routing_planning" in result.output
 
 

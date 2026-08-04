@@ -10,8 +10,8 @@ input:
   task: "Check Codex task action handoff behavior."
   task_type: "simple_summary"
 expectations:
-  expected_provider: "github"
-  expected_model: "claude-haiku-4.5"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "reviewable"
     - "Do not deploy"

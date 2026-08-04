@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
+FRONTIER_CODEX_MODEL = "gpt-5.6-sol"
+CODEX_5_6_FAMILY = {"gpt-5.6": "family_alias", "gpt-5.6-sol": "default_frontier", "gpt-5.6-terra": "frontier_variant", "gpt-5.6-luna": "frontier_variant"}
+
 MODEL_TIERS = {
     "claude-haiku-4.5": {"cost_tier": "low", "capability_tier": "lightweight_language"},
     "gpt-5-mini": {"cost_tier": "low_to_medium", "capability_tier": "planning_reasoning"},
     "gpt-5.4-mini": {"cost_tier": "low_to_medium", "capability_tier": "routine_coding"},
     "gpt-5.4": {"cost_tier": "medium", "capability_tier": "serious_coding"},
     "gpt-5.5": {"cost_tier": "high", "capability_tier": "principal_engineer"},
+    "gpt-5.6": {"cost_tier": "frontier", "capability_tier": "frontier_principal_engineer", "family": "gpt-5.6", "variant": "alias"},
+    "gpt-5.6-sol": {"cost_tier": "frontier", "capability_tier": "frontier_principal_engineer"},
+    "gpt-5.6-terra": {"cost_tier": "frontier", "capability_tier": "frontier_principal_engineer", "family": "gpt-5.6", "variant": "terra"},
+    "gpt-5.6-luna": {"cost_tier": "frontier", "capability_tier": "frontier_principal_engineer", "family": "gpt-5.6", "variant": "luna"},
     "mock-model": {"cost_tier": "none", "capability_tier": "mock"},
 }
 
@@ -44,6 +51,8 @@ def infer_task_type(task: str, *, intent: str = "general") -> str:
         return "safety_policy_planning"
     if _contains_any(text, {"cross-project", "multi-project", "workspace architecture"}):
         return "cross_project_architecture"
+    if _contains_any(text, {"production", "deploy", "deployment", "publish app", "app publish", "publish to production"}):
+        return "high_risk_planning"
     if _contains_any(text, {"authentication", "authorization", "oauth", "sso", "permission", "permissions", "secret"}):
         return "security_or_auth_change"
     if _contains_any(text, {"payment", "billing", "invoice", "reconciliation", "idempotency"}):
@@ -78,6 +87,8 @@ def infer_task_type(task: str, *, intent: str = "general") -> str:
         return "assessment_review"
     if _contains_any(text, {"skill design", "prompt design", "skill update"}):
         return "skill_design"
+    if _contains_any(text, {"implementation plan", "plan ", "planning", "requirements"}):
+        return "planning"
     if _contains_any(text, {"task draft", "draft task", "codex task", "handoff task"}):
         return "codex_task_drafting"
     if _contains_any(text, {"test", "tests", "regression coverage"}):
@@ -104,17 +115,17 @@ def _contains_any(value: str, terms: set[str]) -> bool:
 ROLE_POLICIES = {
     "triage_summarizer": {
         "token_budget": "small",
-        "token_policy": "Use GitHub inference for concise classification, issue triage, and simple summaries; do not perform implementation reasoning.",
+        "token_policy": "Use Codex mini for concise classification, issue triage, and simple summaries; do not perform implementation reasoning.",
         "escalation_policy": "Escalate to planner only when the task needs sequencing, risk analysis, or requirements decisions.",
     },
     "documentation_writer": {
         "token_budget": "small",
-        "token_policy": "Use lightweight GitHub inference for documentation, changelog, release-note, and cleanup prose that does not require deep repository reasoning.",
+        "token_policy": "Use Codex mini for documentation, changelog, release-note, and cleanup prose that does not require deep repository reasoning.",
         "escalation_policy": "Escalate to deep planner when documentation changes encode architecture, safety policy, public contracts, or repeated workflow guidance.",
     },
     "planner": {
         "token_budget": "standard",
-        "token_policy": "Use GitHub inference for routine bounded planning, requirements decomposition, reflection, and review preparation.",
+        "token_policy": "Use Codex mini for routine bounded planning, requirements decomposition, reflection, and review preparation.",
         "escalation_policy": "Escalate to deep planner when planning has multi-file, framework, protocol, workflow, or system impact.",
     },
     "deep_planner": {
@@ -124,7 +135,7 @@ ROLE_POLICIES = {
     },
     "principal_planner": {
         "token_budget": "reserved",
-        "token_policy": "Reserve principal-level reasoning for high-risk planning before implementation starts: auth, billing, migrations, model routing, safety policy, workflow state, production risk, and cross-project architecture.",
+        "token_policy": "Reserve frontier principal-level reasoning for high-risk planning before implementation starts: auth, billing, migrations, model routing, safety policy, workflow state, production risk, and cross-project architecture.",
         "escalation_policy": "Requires explicit high-risk rationale and should produce reviewable implementation boundaries before mutation.",
     },
     "assessment_reviewer": {
@@ -134,12 +145,12 @@ ROLE_POLICIES = {
     },
     "reflection_reviewer": {
         "token_budget": "standard",
-        "token_policy": "Use GitHub inference to review traces, outcomes, and improvement opportunities without proposing silent mutation.",
+        "token_policy": "Use Codex mini to review traces, outcomes, and improvement opportunities without proposing silent mutation.",
         "escalation_policy": "Escalate to deep planner when reflection proposes workflow, skill, prompt, eval, or governance changes.",
     },
     "researcher": {
         "token_budget": "standard",
-        "token_policy": "Use GitHub inference for non-mutating repository/document research, evidence gathering, and source-grounded synthesis.",
+        "token_policy": "Use Codex mini for non-mutating repository/document research, evidence gathering, and source-grounded synthesis.",
         "escalation_policy": "Escalate to deep planner when research changes architecture, workflow, safety, model routing, or implementation direction.",
     },
     "task_author": {
@@ -174,7 +185,7 @@ ROLE_POLICIES = {
     },
     "principal_reviewer": {
         "token_budget": "reserved",
-        "token_policy": "Reserve the highest-cost route for auth, billing, migrations, workflow state, cross-project architecture, and stuck work.",
+        "token_policy": "Reserve the frontier route for auth, billing, migrations, workflow state, cross-project architecture, and stuck work.",
         "escalation_policy": "Requires explicit high-risk rationale; do not use for routine docs, triage, or first-pass implementation.",
     },
     "dry_run": {
@@ -223,25 +234,25 @@ TASK_ROLE_POLICIES = {
 }
 
 DEFAULT_MODEL_ROUTING = {
-    "issue_triage": {"provider": "github", "model": "claude-haiku-4.5", "mode": "chat", "rationale": "Fast, low-cost issue summarization and classification."},
-    "documentation": {"provider": "github", "model": "claude-haiku-4.5", "mode": "chat", "rationale": "Fast documentation and cleanup."},
-    "changelog": {"provider": "github", "model": "claude-haiku-4.5", "mode": "chat", "rationale": "Fast release notes and changelog generation."},
-    "simple_summary": {"provider": "github", "model": "claude-haiku-4.5", "mode": "chat", "rationale": "Fast summary work."},
-    "planning": {"provider": "github", "model": "gpt-5-mini", "mode": "chat", "rationale": "Routine bounded planning and requirements reasoning."},
-    "assessment_review": {"provider": "github", "model": "gpt-5-mini", "mode": "chat", "rationale": "Cost-aware non-mutating assessment and recommendation review."},
+    "issue_triage": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only low-cost issue summarization and classification."},
+    "documentation": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only fast documentation and cleanup."},
+    "changelog": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only fast release notes and changelog generation."},
+    "simple_summary": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only fast summary work."},
+    "planning": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only routine bounded planning and requirements reasoning."},
+    "assessment_review": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only cost-aware non-mutating assessment and recommendation review."},
     "implementation_planning": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Consequential multi-file implementation planning benefits from stronger repository reasoning before mutation."},
     "architecture_review": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Architecture and system-impact reasoning should use stronger planning before code execution."},
     "framework_design": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Framework design requires deeper repository and ecosystem reasoning."},
     "protocol_workflow_planning": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Protocol and workflow changes need stronger planning before implementation."},
     "system_assessment": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "System-impact assessment needs stronger repository-aware reasoning."},
-    "high_risk_planning": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "High-risk planning should use principal-level reasoning before implementation starts."},
-    "model_routing_planning": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Model routing changes affect harness behavior and require principal-level planning."},
-    "safety_policy_planning": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Safety policy planning requires principal-level review before implementation."},
-    "reflection": {"provider": "github", "model": "gpt-5-mini", "mode": "chat", "rationale": "Trace review and improvement reasoning."},
-    "research": {"provider": "github", "model": "gpt-5-mini", "mode": "chat", "rationale": "Non-mutating repository and documentation research."},
-    "evidence_review": {"provider": "github", "model": "gpt-5-mini", "mode": "chat", "rationale": "Evidence review and source-grounded synthesis."},
+    "high_risk_planning": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "High-risk planning should use frontier principal-level reasoning before implementation starts."},
+    "model_routing_planning": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Model routing changes affect harness behavior and require frontier principal-level planning."},
+    "safety_policy_planning": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Safety policy planning requires frontier principal-level review before implementation."},
+    "reflection": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only trace review and improvement reasoning."},
+    "research": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only non-mutating repository and documentation research."},
+    "evidence_review": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only evidence review and source-grounded synthesis."},
     "skill_design": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Skill and prompt design can affect repeated workflows and benefits from stronger planning."},
-    "action_extraction_review": {"provider": "github", "model": "gpt-5-mini", "mode": "chat", "rationale": "Review extracted actions and preserve developer control."},
+    "action_extraction_review": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Codex-only review of extracted actions while preserving developer control."},
     "routine_code_implementation": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Cost-effective first pass for simple code edits."},
     "test_generation": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Cost-effective first pass for routine tests."},
     "codex_task_drafting": {"provider": "openai_codex", "model": "gpt-5.4-mini", "mode": "codex", "rationale": "Draft implementation prompts and simple coding tasks."},
@@ -252,12 +263,12 @@ DEFAULT_MODEL_ROUTING = {
     "pr_review": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Strong PR review without defaulting to principal-level escalation."},
     "ci_failure_analysis": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "CI failures usually require repository-aware reasoning."},
     "framework_code_implementation": {"provider": "openai_codex", "model": "gpt-5.4", "mode": "codex", "rationale": "Invenio, Viewflow, Django, and GePG framework-level work."},
-    "high_risk_code_review": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Principal-level review for high-risk changes."},
-    "security_or_auth_change": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Authentication, authorization, SSO, OAuth, and secrets require highest scrutiny."},
-    "payment_or_billing_logic": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Payment, billing, idempotency, and reconciliation are high-risk."},
-    "database_or_index_migration": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Data migrations, OpenSearch index changes, and schema changes are high-risk."},
-    "viewflow_process_state_change": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Active workflow/process-state changes can break running business processes."},
-    "cross_project_architecture": {"provider": "openai_codex", "model": "gpt-5.5", "mode": "codex", "rationale": "Multi-project architectural planning requires highest reasoning depth before implementation."},
+    "high_risk_code_review": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Frontier principal-level review for high-risk changes."},
+    "security_or_auth_change": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Authentication, authorization, SSO, OAuth, and secrets require frontier scrutiny."},
+    "payment_or_billing_logic": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Payment, billing, idempotency, and reconciliation are high-risk and benefit from frontier scrutiny."},
+    "database_or_index_migration": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Data migrations, OpenSearch index changes, and schema changes are high-risk and benefit from frontier scrutiny."},
+    "viewflow_process_state_change": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Active workflow/process-state changes can break running business processes and benefit from frontier scrutiny."},
+    "cross_project_architecture": {"provider": "openai_codex", "model": "gpt-5.6-sol", "mode": "codex", "rationale": "Multi-project architectural planning requires frontier reasoning depth before implementation."},
 }
 
 

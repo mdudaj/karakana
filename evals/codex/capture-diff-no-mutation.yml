@@ -8,8 +8,8 @@ input:
   task: "Capture git diff without staging, committing, pushing, or modifying files."
   task_type: "simple_summary"
 expectations:
-  expected_provider: "github"
-  expected_model: "claude-haiku-4.5"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "Do not push directly to main"
   required_sections:

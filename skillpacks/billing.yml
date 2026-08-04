@@ -23,14 +23,14 @@ skills:
     - write-karakana-skill
 model_routes:
   planning:
-    provider: github
-    model: gpt-5-mini
+    provider: openai_codex
+    model: gpt-5.4-mini
   payment_or_billing_logic:
     provider: openai_codex
-    model: gpt-5.5
+    model: gpt-5.6-sol
   database_or_index_migration:
     provider: openai_codex
-    model: gpt-5.5
+    model: gpt-5.6-sol
   ci_repair:
     provider: openai_codex
     model: gpt-5.4

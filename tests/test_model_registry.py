@@ -9,6 +9,18 @@ def test_default_registry_lists_providers():
     assert "mock" in registry.configured_providers()
 
 
+def test_openai_codex_registry_uses_codex_cli(monkeypatch):
+    monkeypatch.setenv("CODEX_BIN", "/usr/local/bin/codex")
+
+    registry = default_registry()
+    provider = registry.get("openai_codex")
+
+    assert provider.is_configured() is True
+    assert provider.redact_config()["executable"] == "/usr/local/bin/codex"
+    assert provider.redact_config()["frontier_default"] == "gpt-5.6-sol"
+    assert "gpt-5.6-luna" in provider.redact_config()["available_frontier_models"]
+
+
 def test_unknown_provider_errors():
     registry = default_registry()
 

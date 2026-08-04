@@ -79,10 +79,14 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 - Escalate to: {task.escalation_model or ""}
 - Rationale: {task.rationale or ""}
 
+## Model Role Guidance
+
+{_render_model_role_guidance(task.metadata)}
+
 ## Escalation Conditions
 
 - Escalate routine work from `gpt-5.4-mini` to `gpt-5.4` when tests fail, more than three files change, refactoring is needed, CI fails, or framework understanding is required.
-- Escalate to `gpt-5.5` for authentication, payments, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, high-risk review, or repeated failures.
+- Escalate to `gpt-5.6-sol` for authentication, payments, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, high-risk review, or repeated failures.
 
 ## Context
 
@@ -122,7 +126,7 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 
 def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: str | None, skill: str | None, skillpack_context=None) -> CodexHandoffTask:
     route = _route_for_action(action)
-    escalation = "gpt-5.5" if action.risk_level == "high" else "gpt-5.4"
+    escalation = "gpt-5.6-sol" if action.risk_level == "high" else "gpt-5.4"
     suggested_skills = action.suggested_skills or bundle.suggested_skills
     safety_rules = [
         "Do not commit.",
@@ -158,7 +162,16 @@ def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: st
         safety_rules=safety_rules,
         tests_to_run=tests_to_run,
         approval_requirements=approval_requirements,
-        metadata={"artifacts": [action.metadata.get("artifact_path")] if action.metadata.get("artifact_path") else [], "skillpack": skillpack_context.skillpack.name if skillpack_context else None},
+        metadata={
+            "artifacts": [action.metadata.get("artifact_path")] if action.metadata.get("artifact_path") else [],
+            "skillpack": skillpack_context.skillpack.name if skillpack_context else None,
+            "role": route.get("role"),
+            "budget_class": route.get("token_budget"),
+            "role_policy": route.get("token_policy"),
+            "role_escalation_policy": route.get("escalation_policy"),
+            "cost_tier": route.get("cost_tier"),
+            "capability_tier": route.get("capability_tier"),
+        },
     )
 
 
@@ -207,3 +220,14 @@ def _bullets(values: list[str]) -> str:
     if not cleaned:
         return "- None"
     return "\n".join(f"- {value}" for value in cleaned)
+
+
+def _render_model_role_guidance(metadata: dict) -> str:
+    budget = metadata.get("budget_class") or metadata.get("token_budget")
+    policy = metadata.get("role_policy") or metadata.get("token_policy")
+    return f"""- Role: `{metadata.get("role") or "unknown"}`
+- Token budget: `{budget or "unknown"}`
+- Token policy: {policy or "Not recorded."}
+- Escalation policy: {metadata.get("role_escalation_policy") or "Not recorded."}
+- Cost tier: `{metadata.get("cost_tier") or "unknown"}`
+- Capability tier: `{metadata.get("capability_tier") or "unknown"}`"""

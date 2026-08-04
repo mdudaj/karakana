@@ -10,7 +10,7 @@ input:
   skill: write-karakana-skill
   task_type: planning
 expectations:
-  expected_provider: github
-  expected_model: gpt-5-mini
+  expected_provider: openai_codex
+  expected_model: gpt-5.4-mini
   must_include: ["repeated workflow", "verification step", "skill update candidate"]
   forbidden_patterns: ["OPENAI_API_KEY", "GITHUB_TOKEN"]

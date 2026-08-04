@@ -25,6 +25,7 @@ class CodexExecutor:
 
         selected_skill = SkillLoader(self.repo_root / "skills").load_skill(skill)
         template = _read_optional(self.repo_root / "prompts" / "codex_task.prompt.md", _default_template())
+        model_route = _recommended_codex_route(task, selected_skill.requires_approval_for)
         values = {
             "task": _render_task(task, focus),
             "project": project,
@@ -34,7 +35,8 @@ class CodexExecutor:
             "repository_instructions": _read_optional(self.repo_root / "AGENTS.md", "No AGENTS.md found."),
             "repository_context": collect_repository_context(self.repo_root),
             "files_likely_relevant": _files_likely_relevant(project, skill),
-            "recommended_codex_model": _recommended_codex_model(task, selected_skill.requires_approval_for),
+            "recommended_codex_model": _render_recommended_codex_model(model_route),
+            "model_role_guidance": _render_model_role_guidance(model_route),
             "safety_rules": _safety_rules(),
             "required_output": _required_output(),
             "tests_to_run": _tests_to_run(),
@@ -78,7 +80,7 @@ def _files_likely_relevant(project: str, skill: str) -> str:
 - Files named by the task after repository inspection."""
 
 
-def _recommended_codex_model(task: str, approval_requirements: list[str]) -> str:
+def _recommended_codex_route(task: str, approval_requirements: list[str]) -> dict:
     high_risk_terms = {
         "authentication",
         "permission",
@@ -95,17 +97,32 @@ def _recommended_codex_model(task: str, approval_requirements: list[str]) -> str
     }
     text = " ".join([task, *approval_requirements]).lower()
     if any(term in text for term in high_risk_terms):
-        route = route_model("high_risk_code_review")
-        return f"""- Default: `{route['model']}`
-- Provider: `{route['provider']}`
-- Reason: This task touches high-risk approval or domain areas.
-- Escalation triggers: authentication, payments, migrations, process state, production deployment, or repeated failures."""
-    default_route = route_model("routine_code_implementation")
-    escalation_route = route_model("refactoring")
-    return f"""- Default: `{default_route['model']}`
-- Provider: `{default_route['provider']}`
-- Escalate to: `{escalation_route['model']}`
-- Use `gpt-5.5` only if the task touches authentication, payments, migrations, process state, production deployment, or repeated failures."""
+        return route_model("high_risk_code_review")
+    return route_model("routine_code_implementation")
+
+
+def _render_recommended_codex_model(route: dict) -> str:
+    lines = [
+        f"- Default: `{route['model']}`",
+        f"- Provider: `{route['provider']}`",
+        f"- Reason: {route.get('rationale')}",
+    ]
+    if route.get("role") == "principal_reviewer":
+        lines.append("- Escalation triggers: authentication, payments, migrations, process state, production deployment, or repeated failures.")
+    else:
+        escalation_route = route_model("refactoring")
+        lines.append(f"- Escalate to: `{escalation_route['model']}`")
+        lines.append("- Use `gpt-5.6-sol` only if the task touches authentication, payments, migrations, process state, production deployment, or repeated failures.")
+    return "\n".join(lines)
+
+
+def _render_model_role_guidance(route: dict) -> str:
+    return f"""- Role: `{route.get("role")}`
+- Token budget: `{route.get("token_budget")}`
+- Token policy: {route.get("token_policy")}
+- Escalation policy: {route.get("escalation_policy")}
+- Cost tier: `{route.get("cost_tier")}`
+- Capability tier: `{route.get("capability_tier")}`"""
 
 
 def _safety_rules() -> str:
@@ -197,6 +214,10 @@ def _default_template() -> str:
 ## Recommended Codex Model
 
 {recommended_codex_model}
+
+## Model Role Guidance
+
+{model_role_guidance}
 
 ## Safety Rules
 

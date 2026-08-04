@@ -8,5 +8,5 @@ def test_requirement_issue_contains_recommended_model_route():
     prd = generate_prd(RequirementSource(source_type="note"), "Plan a safe requirements decomposition.")
     issue = generate_issues(prd, generate_stories(prd))[0]
 
-    assert issue.recommended_model_route["provider"] == "github"
-    assert issue.recommended_model_route["model"] == "gpt-5-mini"
+    assert issue.recommended_model_route["provider"] == "openai_codex"
+    assert issue.recommended_model_route["model"] == "gpt-5.4-mini"

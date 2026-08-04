@@ -10,8 +10,8 @@ input:
   task: "Route a simple README cleanup."
   task_type: "documentation"
 expectations:
-  expected_provider: "github"
-  expected_model: "claude-haiku-4.5"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_not_include:
     - "gpt-5.5"
   required_sections:

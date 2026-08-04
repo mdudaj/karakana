@@ -61,7 +61,7 @@ karakana protocol attach --trace <run-id> --kind artifact_readiness --path docs/
 
 For requirements or behavior-changing work, use a PRD when the task spans product behavior, UX, architecture, data, safety, or multiple agents. User stories should have testable acceptance criteria, and traceability should link requirements to stories, UX/ADR/schema artifacts, implementation surfaces, and tests/evals.
 
-For UX-impacting feature work, the `requirements_note` and `ux_description` must cover both behavior and look and feel. Use task-specific best-practice research by default, then adapt those findings to the existing design system instead of adding page-local styling. The `artifact_readiness` template records Definition of Ready and Definition of Done evidence before implementation and final delivery.
+For UX-impacting feature work, the `requirements_note` and `ux_description` must cover both behavior and look and feel. Use task-specific best-practice research by default, then adapt those findings to the existing design system instead of adding page-local styling. For a new product, portal, major UX refresh, or first implementation slice, establish or reference the project shell layout and design-system foundation before implementing pages. That foundation should name route ownership, navigation groups, design tokens, reusable components, responsive rules, accessibility rules, and visual evidence or mockups. The `artifact_readiness` template records Definition of Ready and Definition of Done evidence before implementation and final delivery.
 
 Inspect missing artifacts and suggested commands:
 

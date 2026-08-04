@@ -93,6 +93,9 @@ def test_build_task_prompt_includes_required_context(tmp_path):
     assert "Name: karakana-self-improvement" in prompt
     assert "Project contract content" in prompt
     assert "Repository instructions." in prompt
+    assert "## Model Role Guidance" in prompt
+    assert "Role: `routine_implementer`" in prompt
+    assert "Token budget: `standard`" in prompt
     assert "Do not push directly to main" in prompt
     assert "skill_update" in prompt
 

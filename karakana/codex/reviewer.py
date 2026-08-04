@@ -228,7 +228,7 @@ def _next_actions(blocked: bool, risk: str) -> list[str]:
     if blocked:
         return ["Stop and inspect blocking safety findings.", "Do not publish or apply this patch automatically."]
     if risk in {"high", "critical"}:
-        return ["Request senior human review.", "Consider GPT-5.5 follow-up review."]
+        return ["Request senior human review.", "Consider GPT-5.6 Sol follow-up review."]
     return ["Run relevant tests.", "Proceed only after human review."]
 
 

@@ -40,22 +40,22 @@ Use:
 
 ## Model routing
 
-- Triage summarizer: GitHub inference with Claude Haiku 4.5 for issue triage and simple summaries.
-- Documentation writer: GitHub inference with Claude Haiku 4.5 for documentation, changelog, release-note, and cleanup prose.
-- Routine planner: GitHub inference with GPT-5 mini for bounded planning, requirements reasoning, reflection, action extraction review, and low-risk assessments.
-- Researcher / reflection reviewer: GitHub inference with GPT-5 mini for non-mutating repository research, evidence review, trace review, and improvement opportunity analysis.
+- Triage summarizer: Codex GPT-5.4-mini for issue triage and simple summaries while Copilot/GitHub inference tokens are unavailable.
+- Documentation writer: Codex GPT-5.4-mini for documentation, changelog, release-note, and cleanup prose.
+- Routine planner: Codex GPT-5.4-mini for bounded planning, requirements reasoning, reflection, action extraction review, and low-risk assessments.
+- Researcher / reflection reviewer: Codex GPT-5.4-mini for non-mutating repository research, evidence review, trace review, and improvement opportunity analysis.
 - Deep planner: Codex GPT-5.4 for consequential planning before mutation, including multi-file implementation planning, architecture review, framework design, protocol/workflow changes, skill design, and system-impact assessment.
-- Principal planner: Codex GPT-5.5 for high-risk planning, including model routing, safety policy, authentication, authorization, billing, migrations, workflow state changes, production-risk planning, and cross-project architecture.
+- Principal planner: Codex GPT-5.6 Sol for high-risk planning, including model routing, safety policy, authentication, authorization, billing, migrations, workflow state changes, production-risk planning, and cross-project architecture.
 - Task author: Codex GPT-5.4-mini for bounded task drafting after requirements, skill, and safety context exist.
 - Test designer: Codex GPT-5.4-mini for routine test generation and regression coverage planning.
 - Routine implementer: Codex GPT-5.4-mini for bounded implementation after requirements and design context exist.
 - Serious implementer: Codex GPT-5.4 for refactors, framework work, and non-routine repository edits.
 - Code reviewer / CI analyst: Codex GPT-5.4 for repository-aware PR review, diff reasoning, CI failure analysis, log triage, and repair recommendations.
-- Principal reviewer: Codex GPT-5.5 for high-risk code review or stuck work, including authentication, authorization, billing, migrations, workflow state changes, and production-risk review.
-- Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.5 when risk requires it.
-- Skill improvement review: GitHub inference with GPT-5 mini.
+- Principal reviewer: Codex GPT-5.6 Sol for high-risk code review or stuck work, including authentication, authorization, billing, migrations, workflow state changes, and production-risk review.
+- Skill improvement implementation: Codex GPT-5.4-mini for routine work, escalating to GPT-5.4 or GPT-5.6 Sol when risk requires frontier reasoning.
+- Skill improvement review: Codex GPT-5.4-mini.
 
-Model routes should be inferred from the natural-language task whenever possible; explicit task types remain available for deterministic overrides. Prefer Copilot Max/GitHub inference for non-mutating context, planning, requirements, and review-preparation work. Use Codex routes for repository mutation and deeper code reasoning. Use GPT-5.5 only when the work is high-risk, complex, or stuck, and record the escalation rationale in traces.
+Model routes should be inferred from the natural-language task whenever possible; explicit task types remain available for deterministic overrides. While Copilot/GitHub inference tokens are exhausted, use Codex exclusively and prefer GPT-5.4-mini for first-pass triage, documentation, planning, research, task drafting, tests, and bounded implementation. Escalate to GPT-5.4 for consequential planning, framework work, refactoring, CI analysis, and deep review. Use `gpt-5.6-sol` as the default frontier route only when the work is high-risk, complex, production-impacting, or stuck, and record the escalation rationale in traces. `gpt-5.6-terra` and `gpt-5.6-luna` are accepted manual override variants when a human selects them. Keep GPT-5.5 registered as a prior principal route for manual override or fallback when GPT-5.6 is unavailable.
 
 ## Safety rules
 
@@ -65,6 +65,9 @@ Model routes should be inferred from the natural-language task whenever possible
 - Never commit or print secrets.
 - Never modify production secrets.
 - Never run destructive database commands.
+- Deliver research, brainstorming, implementation, debugging, and documentation from inspected evidence. Do not treat assumptions as facts when authoritative docs, schemas, exported artifacts, runtime errors, repository source, tests, or project memory can be checked.
+- Every non-trivial implementation path must name the evidence to inspect, the skill or project instruction that governs the work, the exact implementation steps, and the verification gates before or during delivery.
+- Repeated failures or learned constraints must be encoded into durable memory, skills, docs, validators, or evals so later agents inherit the rule instead of relying on chat history.
 - Load the latest matching project handoff at session and task entry before planning or editing.
 - Refresh the project handoff at the end of every bounded task so the next session has current continuation context.
 - All authentication and permission changes require human approval.

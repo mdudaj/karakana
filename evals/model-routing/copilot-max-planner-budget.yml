@@ -1,6 +1,6 @@
 id: model-routing-copilot-max-planner-budget
-name: Copilot Max planner budget
-description: Planning and requirements work should stay on GitHub inference with a standard planner budget.
+name: Codex mini planner budget
+description: Planning and requirements work should stay on Codex mini with a standard planner budget while Copilot/GitHub inference is unavailable.
 suite: model-routing
 risk_level: medium
 tags:
@@ -11,8 +11,8 @@ input:
   task: "Plan a feature and identify requirements before implementation."
   task_type: "planning"
 expectations:
-  expected_provider: "github"
-  expected_model: "gpt-5-mini"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "planner"
     - "standard"

@@ -41,6 +41,25 @@ projects:
       validate:
         - "pytest"
 
+  - id: nhrils
+    display_name: NHRILS
+    path: "../nhrils"
+    skillpack: nhrils
+    memory: ubongo/projects/nhrils
+    tags:
+      - invenio
+      - ils
+      - library
+      - opensearch
+      - circulation
+      - cataloguing
+    standard_commands:
+      status:
+        - "git status --short"
+        - "git remote -v"
+      validate:
+        - "pytest"
+
   - id: billing
     display_name: Billing System
     path: "../billing"

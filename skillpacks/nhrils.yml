@@ -1,0 +1,74 @@
+name: nhrils
+description: NHRILS integrated library system profile based on Invenio-App-ILS
+version: 0.1.0
+status: experimental
+project:
+  id: nhrils
+  display_name: NHRILS
+  memory: ubongo/projects/nhrils
+skills:
+  required:
+    - invenio-framework
+    - invenio-ils-customization
+    - delivery-artifact-gate
+    - karakana-handoff
+  optional:
+    - system-design-thinking
+    - design-system-governance
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
+    - github-pr-review
+    - ci-failure-analysis
+    - django-debugging
+    - write-karakana-skill
+model_routes:
+  planning:
+    provider: openai_codex
+    model: gpt-5.4-mini
+    rationale: Use routine planning until library-specific requirements, architecture, and institutional constraints are documented.
+  framework_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4
+    rationale: Invenio framework changes can touch services, permissions, records, assets, and indexing.
+  database_or_index_migration:
+    provider: openai_codex
+    model: gpt-5.6-sol
+    rationale: Migrations, OpenSearch mapping changes, authentication, and permission changes require frontier review.
+protocols:
+  default: requirements-change
+  categories:
+    assessment: assessment-review
+    frontend: ux-change
+    implementation: python-code-change
+    requirements: requirements-change
+    skill: skill-update
+safety:
+  high_risk_paths:
+    - invenio_app_ils/**/models.py
+    - invenio_app_ils/**/migrations/**
+    - invenio_app_ils/**/permissions.py
+    - invenio_app_ils/**/config.py
+    - invenio_app_ils/**/mappings/**
+    - .github/workflows/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - authentication_change
+    - permission_change
+    - database_migration
+    - opensearch_index_change
+    - production_config_change
+    - deployment
+tests:
+  commands:
+    - pytest
+conventions:
+  notes:
+    - Treat this as an Invenio-App-ILS customization baseline until NHRILS-specific requirements are provided.
+    - Use `invenio-ils-customization` before catalogue, circulation, patron, search, facet, backoffice, or ILS UI changes.
+    - Do not customize workflows, schemas, permissions, circulation rules, or UI until official InvenioILS docs and local extension points are reviewed.
+    - Keep `inveniosoftware/invenio-app-ils` as upstream vendor source and `nimr-tz/nhrils` as NIMR project origin.
+    - Check migration, indexing, permission, and data-import impact before implementation.

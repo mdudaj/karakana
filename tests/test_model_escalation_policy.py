@@ -25,12 +25,12 @@ def test_escalates_gpt5_mini_to_5_4_for_deep_planning():
     assert result["to_model"] == "gpt-5.4"
 
 
-def test_escalates_gpt5_mini_to_5_5_for_high_risk_planning():
+def test_escalates_gpt5_mini_to_5_6_for_high_risk_planning():
     result = recommend_escalation("github", "gpt-5-mini", ["model_routing_change"])
 
     assert result["should_escalate"] is True
     assert result["to_provider"] == "openai_codex"
-    assert result["to_model"] == "gpt-5.5"
+    assert result["to_model"] == "gpt-5.6-sol"
 
 
 def test_escalates_codex_mini_to_5_4():
@@ -40,11 +40,11 @@ def test_escalates_codex_mini_to_5_4():
     assert result["to_model"] == "gpt-5.4"
 
 
-def test_escalates_codex_5_4_to_5_5():
+def test_escalates_codex_5_4_to_5_6():
     result = recommend_escalation("openai_codex", "gpt-5.4", ["security_or_authentication_change"])
 
     assert result["should_escalate"] is True
-    assert result["to_model"] == "gpt-5.5"
+    assert result["to_model"] == "gpt-5.6-sol"
 
 
 def test_no_escalation_without_matching_signal():

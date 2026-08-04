@@ -75,10 +75,30 @@ class TraceStore:
         return trace_path
 
     def load(self, run_id: str) -> RunTrace:
+        run_id = self.resolve_run_id(run_id)
         trace_path = self._run_dir(run_id) / "trace.json"
         if not trace_path.exists():
             raise FileNotFoundError(f"Trace not found: {run_id}")
         return RunTrace.from_dict(json.loads(trace_path.read_text(encoding="utf-8")))
+
+    def resolve_run_id(self, run_id: str) -> str:
+        """Resolve trace aliases such as protocol-start ids to a trace run id."""
+        trace_path = self._run_dir(run_id) / "trace.json"
+        if trace_path.exists():
+            return run_id
+        if not self.runs_root.exists():
+            return run_id
+        for path in self.runs_root.iterdir():
+            if not path.is_dir():
+                continue
+            candidate_path = path / "trace.json"
+            if not candidate_path.exists():
+                continue
+            trace = RunTrace.from_dict(json.loads(candidate_path.read_text(encoding="utf-8")))
+            protocol_start_id = trace.outputs.get("protocol_start_id") or trace.inputs.get("start_id")
+            if protocol_start_id == run_id:
+                return trace.run_id
+        return run_id
 
     def list_runs(self, limit: int = 20) -> list[RunTrace]:
         if not self.runs_root.exists():

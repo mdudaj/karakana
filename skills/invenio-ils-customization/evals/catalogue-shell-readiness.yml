@@ -1,0 +1,34 @@
+id: invenio-ils-catalogue-shell-readiness
+name: InvenioILS catalogue shell readiness
+description: Ensure catalogue UX planning starts from InvenioILS entities, entry points, permissions, search, facets, and design-system governance.
+suite: skills
+risk_level: high
+tags:
+  - invenio-ils
+  - nhrils
+  - catalogue
+  - ux
+input:
+  task: "Plan the first NHRILS catalogue shell inspired by the CERN catalogue and a NIMR design system."
+  skill: "invenio-ils-customization"
+  task_type: "planning"
+  prompt_file: skills/invenio-ils-customization/SKILL.md
+expectations:
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
+  must_include:
+    - "literature"
+    - "RECORDS_REST_FACETS"
+    - "permissions"
+    - "design-system"
+    - "templates"
+    - "webpack"
+    - "verification"
+  must_not_include:
+    - "deploy directly to production"
+  required_sections:
+    - "Safety Rules"
+    - "Output Format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

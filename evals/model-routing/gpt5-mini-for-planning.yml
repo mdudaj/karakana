@@ -1,6 +1,6 @@
 id: model-routing-gpt5-mini-for-planning
-name: GPT-5 mini for planning
-description: Planning should use GPT-5 mini.
+name: Codex mini for planning
+description: Planning should use Codex GPT-5.4-mini while Copilot/GitHub inference is unavailable.
 suite: model-routing
 risk_level: low
 tags:
@@ -9,8 +9,8 @@ input:
   task: "Route a planning task."
   task_type: "planning"
 expectations:
-  expected_provider: "github"
-  expected_model: "gpt-5-mini"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "Safety Rules"
   required_sections:

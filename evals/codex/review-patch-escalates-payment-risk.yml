@@ -1,6 +1,6 @@
 id: codex-review-patch-escalates-payment-risk
 name: Review patch escalates payment risk
-description: Ensure payment risk uses GPT-5.5 routing.
+description: Ensure payment risk uses GPT-5.6 Sol routing.
 suite: codex
 risk_level: high
 tags: [codex, billing]
@@ -9,7 +9,7 @@ input:
   task_type: "payment_or_billing_logic"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.5"
+  expected_model: "gpt-5.6-sol"
   must_include:
     - "Safety Rules"
   required_sections:

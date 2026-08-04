@@ -1,0 +1,42 @@
+id: power-pages-odk-runtime
+name: Power Pages hosted ODK Web Forms runtime
+description: Ensure TACATDP Power Pages guidance uses ODK Web Forms/XForms-first storage, Power Pages Web API, table permissions, and explicit offline draft planning.
+suite: skills
+risk_level: high
+tags:
+  - power-pages
+  - odk
+  - dataverse
+  - offline
+  - webforms
+input:
+  task: "Plan the TACATDP field app as a Power Pages hosted Vue SPA using ODK Web Forms and Dataverse. The client requires Microsoft-managed services, Power Pages authentication, table permissions, local drafts, online submit, and one attachment."
+  project: tacatdp
+  skill: power-pages-odk-webforms
+  task_type: planning
+  prompt_file: skills/power-pages-odk-webforms/SKILL.md
+expectations:
+  must_include:
+    - "Power Pages"
+    - "Vue"
+    - "ODK Web Forms"
+    - "@getodk/xforms-engine"
+    - "/_api"
+    - "table permissions"
+    - "web roles"
+    - "CSRF"
+    - "XForm XML"
+    - "instanceId"
+    - "Submissions"
+    - "SubmissionVersions"
+    - "SubmissionAttachments"
+    - "IndexedDB"
+    - "sync queue"
+    - "same environment"
+    - "pac pages list"
+    - "pac env who"
+  forbidden_patterns:
+    - "call raw Dataverse Web API from the browser with a client secret"
+    - "Power Pages PWA automatically supports offline writes"
+    - "store only decomposed answer rows"
+    - "build custom login"

@@ -2,7 +2,7 @@ from karakana.router import select_model
 
 
 def test_select_model_for_planning():
-    assert select_model("planning") == "gpt-5-mini"
+    assert select_model("planning") == "gpt-5.4-mini"
 
 
 def test_select_model_for_deep_planning():

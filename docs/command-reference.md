@@ -264,7 +264,7 @@ Purpose: Generate Codex handoffs, capture diffs, review patches, or start Codex 
 
 Common commands:
 ```bash
-karakana codex start --project karakana --skillpack karakana -- --model gpt-5.5
+karakana codex start --project karakana --skillpack karakana -- --model gpt-5.6-sol
 karakana codex handoff <action-run-id>
 ```
 
@@ -375,9 +375,6 @@ Common commands:
 ```bash
 karakana protocol start --task "Plan a database schema migration" --project karakana
 karakana protocol template requirements_note
-karakana protocol template product_requirements_document --output docs/requirements/prd.md
-karakana protocol template requirements_traceability --output docs/requirements/traceability.md
-karakana protocol template artifact_readiness --output docs/requirements/readiness.md
 karakana protocol missing --trace <run-id>
 karakana protocol attach --trace <run-id> --kind requirements_note --path docs/requirements/example.md
 karakana protocol check --trace <run-id>

@@ -21,21 +21,23 @@ skills:
     - viewflow-material-ui
     - next-milestone-decision
     - brainstorm-verbalized-sampling
+    - system-design-thinking
     - requirements-elicitation
     - grill-with-docs
     - django-debugging
     - power-platform-canvas-apps
+    - power-platform-cli-admin
 model_routes:
   planning:
-    provider: github
-    model: gpt-5-mini
-    rationale: Karakana planning needs reasoning but should remain cost-aware.
+    provider: openai_codex
+    model: gpt-5.4-mini
+    rationale: Karakana planning is Codex-only while Copilot/GitHub inference tokens are unavailable; use mini unless escalation is justified.
   documentation:
-    provider: github
-    model: claude-haiku-4.5
+    provider: openai_codex
+    model: gpt-5.4-mini
   high_risk_code_review:
     provider: openai_codex
-    model: gpt-5.5
+    model: gpt-5.6-sol
 protocols:
   default: python-code-change
   categories:

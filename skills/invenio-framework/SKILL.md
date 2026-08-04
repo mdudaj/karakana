@@ -44,6 +44,8 @@ Guide work across Invenio Framework, InvenioRDM, and NHRDM customization.
 
 Use for Flask extension patterns, SQLAlchemy models, Alembic migrations, services/resources, records and drafts, custom fields, vocabularies, subjects, OAuth/SSO, OpenSearch indexing, dashboard customization, deposit forms, permissions, communities, requests, background jobs, and deployment checks.
 
+For Invenio-App-ILS or NHRILS-specific catalogue, circulation, patron, document, item/e-item, search/facet, backoffice, or ILS UI/theme work, also use `invenio-ils-customization`.
+
 ## When not to use this skill
 
 Do not use for unrelated Django billing, general academic writing, or infrastructure-only changes unless they directly affect an Invenio deployment.

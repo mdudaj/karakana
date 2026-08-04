@@ -1,6 +1,6 @@
 id: model-routing-haiku-for-documentation
-name: Haiku for documentation
-description: Documentation should use fast low-cost language routing.
+name: Codex mini for documentation
+description: Documentation should use fast low-cost Codex mini routing while Copilot/GitHub inference is unavailable.
 suite: model-routing
 risk_level: low
 tags:
@@ -9,8 +9,8 @@ input:
   task: "Route a documentation cleanup task."
   task_type: "documentation"
 expectations:
-  expected_provider: "github"
-  expected_model: "claude-haiku-4.5"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "Safety Rules"
   must_not_include:

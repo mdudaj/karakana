@@ -22,7 +22,7 @@ def test_model_route_cli_infers_task_type_from_task_text():
 
     assert result.exit_code == 0, result.output
     assert "Inferred task type: security_or_auth_change" in result.output
-    assert "Model: gpt-5.5" in result.output
+    assert "Model: gpt-5.6-sol" in result.output
     assert "Role: principal_reviewer" in result.output
 
 
@@ -39,11 +39,11 @@ def test_model_route_cli_json_output():
     assert result.exit_code == 0
     data = json.loads(result.output)
     assert data["provider"] == "openai_codex"
-    assert data["model"] == "gpt-5.5"
-    assert data["cost_tier"] == "high"
+    assert data["model"] == "gpt-5.6-sol"
+    assert data["cost_tier"] == "frontier"
     assert data["role"] == "principal_planner"
     assert data["token_budget"] == "reserved"
-    assert "principal-level reasoning" in data["token_policy"]
+    assert "frontier principal-level reasoning" in data["token_policy"]
 
 
 def test_model_route_cli_escalation_signal():
@@ -60,4 +60,4 @@ def test_model_route_cli_escalation_signal():
     )
 
     assert result.exit_code == 0
-    assert "Recommended escalation: openai_codex/gpt-5.5" in result.output
+    assert "Recommended escalation: openai_codex/gpt-5.6-sol" in result.output

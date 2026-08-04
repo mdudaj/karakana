@@ -5,6 +5,7 @@ from __future__ import annotations
 from karakana.models.base import ModelProvider
 from karakana.models.errors import ModelProviderError
 from karakana.models.providers.anthropic_provider import AnthropicProvider
+from karakana.models.providers.codex_provider import CodexProvider
 from karakana.models.providers.github_models import GitHubModelsProvider
 from karakana.models.providers.mock_provider import MockProvider
 from karakana.models.providers.openai_provider import OpenAIProvider
@@ -34,6 +35,6 @@ def default_registry() -> ModelProviderRegistry:
     registry.register(MockProvider())
     registry.register(GitHubModelsProvider())
     registry.register(OpenAIProvider())
-    registry.register(OpenAIProvider(name="openai_codex"))
+    registry.register(CodexProvider())
     registry.register(AnthropicProvider())
     return registry

@@ -35,6 +35,7 @@ bucket: development
 ## Quick Reference
 
 - One project, one design-system profile: tokens, surfaces, page stack, tabs, forms, cards, buttons, tables, navigation, and cache/version rules.
+- Before a new product, portal, major UX refresh, or first implementation slice, establish or reference the shell layout and design-system foundation before building pages.
 - Build UI from reusable components or partials first; page templates compose them.
 - Preserve project-specific visual identity through tokens, not one-off page colors.
 - Every major page component must be separated by reusable spacing.
@@ -43,6 +44,10 @@ bucket: development
 - Forms must use the project framework's canonical renderer; in Viewflow projects, use Viewflow layouts/rendering.
 - Tabs must use the project framework's Material component structure; active indicators belong below the tab label by default unless a project explicitly defines otherwise.
 - Back actions must use a reusable labeled component that communicates the destination, not only an icon.
+- App shells own route identity. A content page must not repeat the same route title in a second large hero/header; content starts with the current work object, operational status, tabs, table, or form surface.
+- Route-level actions such as Back, Refresh, Add, or Export belong in a shell action lane or shared compact route chrome. Do not recreate them as page-local sticky hero bars unless the embedded runtime has a documented separate navigation boundary.
+- Field/runtime apps should separate host-shell components from embedded runtime engines. The host may own navigation, status, loading, and layout; the embedded engine should own its controls and validation unless a documented adapter boundary says otherwise.
+- Prototype diagnostics must not remain the primary user experience after a vertical slice is proven. Move build markers, event traces, and write diagnostics into a debug panel or development-only view.
 - UI work is not done until visual/design-system checks pass on affected pages.
 
 ## Purpose
@@ -72,6 +77,7 @@ Do not fix repeated UI problems with page-local CSS. First identify or create th
 
 Each UI project should have a durable contract covering:
 
+- **Shell layout**: app frame, route ownership, top bar, side navigation, footer, page action placement, and mobile drawer behavior.
 - **Tokens**: color, typography, spacing, radius, elevation, focus rings, component heights.
 - **Page layout**: content grid, page stack spacing, full-width surfaces, responsive breakpoints.
 - **Surfaces**: cards, form surfaces, tab surfaces, table/list surfaces, panels.
@@ -81,17 +87,21 @@ Each UI project should have a durable contract covering:
 - **Framework mapping**: canonical framework classes and renderers, such as Viewflow/MDC classes.
 - **Project identity**: which tokens carry the project's palette/style and which component rules are shared.
 - **Verification**: render tests, DOM/class assertions, browser screenshots, and CSS cache/version checks.
+- **Diagnostic boundary**: where debug/proof output lives so it does not compete with the user's task flow.
 
 ## Standard workflow
 
 1. Inspect the existing project UI system: tokens, base templates, shared CSS, component partials, and one mature comparable project when available.
 2. Classify the request as token, layout, surface, component, framework-rendering, visual-regression, or governance.
-3. Update the durable artifact or skill before page edits when a new general rule is being introduced.
-4. Patch shared tokens/components/partials first; update page templates only to compose those components.
-5. Add or update tests for DOM contracts that can be asserted cheaply.
-6. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
-7. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
-8. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
+3. For a new product, portal, major UX refresh, or first implementation slice, define the shell layout, route ownership, navigation groups, token set, component inventory, responsive rules, accessibility rules, and visual evidence before page implementation begins.
+4. For branded apps, inspect brand assets and derive project-specific tokens before choosing colors.
+5. Update the durable artifact or skill before page edits when a new general rule is being introduced.
+6. Patch shared tokens/components/partials first; update page templates only to compose those components.
+7. Move prototype diagnostics into a debug boundary before polishing shareable UX.
+8. Add or update tests for DOM contracts that can be asserted cheaply.
+9. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
+10. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
+11. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
 
 ## Safety rules
 
@@ -105,6 +115,7 @@ Each UI project should have a durable contract covering:
 
 - Is the rule project-specific styling or cross-project component behavior?
 - Does the project already have a token/component that should be reused?
+- For a new product, portal, major UX refresh, or first slice, is the shell layout and design-system foundation documented before implementation?
 - Are affected pages composing the same component anatomy?
 - Do style changes use tokens instead of page-local colors?
 - Do forms/tabs use the canonical framework renderer/markup?
@@ -113,6 +124,9 @@ Each UI project should have a durable contract covering:
 - Are actions aligned by component anatomy, not by accidental content length?
 - Do sibling action buttons use the same styling and icon policy?
 - Do back actions include a visible destination label?
+- Are loading, empty, error, success, and debug states reusable instead of page-local?
+- Is any embedded runtime protected from broad host CSS selectors?
+- Have prototype diagnostics been moved out of the default user path?
 - Has the browser/static cache been invalidated for changed CSS?
 - Is there a test or visual check that would fail if the regression returns?
 
@@ -121,6 +135,7 @@ Each UI project should have a durable contract covering:
 Cross-project rules should define behavior and anatomy, not force a single palette. For example:
 
 - Shared: page stack spacing exists; action cards have icon/body/action regions; action buttons follow icon parity; forms use framework renderers; tabs use Material/MDC anatomy with bottom active indicators; back actions are labeled.
+- Shared for embedded runtimes: host shell owns navigation/loading/status; runtime owns field controls/validation; diagnostics are not first-class user content after proof.
 - Project-specific: colors, typography scale, density, radius, elevation, brand imagery, and route-specific copy.
 
 ## Pitfalls
@@ -133,6 +148,8 @@ Cross-project rules should define behavior and anatomy, not force a single palet
 - Using icon-only back buttons where a user needs to know the destination.
 - Changing colors directly in page CSS instead of tokens.
 - Forgetting CSS cache-busting, so the running app still shows stale styles.
+- Styling third-party/runtime controls with generic host selectors and creating fragile visual regressions.
+- Treating a successful technical proof page as the shareable product UX.
 
 ## Verification
 
@@ -147,6 +164,7 @@ Cross-project rules should define behavior and anatomy, not force a single palet
 ## Design System Gate
 
 - Project design profile:
+- Shell/layout foundation:
 - Shared rule affected:
 - Project-specific styling affected:
 - Reusable components/tokens changed:

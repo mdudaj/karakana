@@ -9,7 +9,7 @@ def test_skillpack_routes_override_global():
     context = SkillpackResolver(__import__("pathlib").Path.cwd()).resolve_for_project("nhrdm")
     route = route_model("database_or_index_migration", skillpack_routes=context.model_routes)
 
-    assert route["model"] == "gpt-5.5"
+    assert route["model"] == "gpt-5.6-sol"
     assert route["route_source"] == "skillpack"
 
 

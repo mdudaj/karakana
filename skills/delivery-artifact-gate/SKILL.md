@@ -62,12 +62,16 @@ Do not block tiny mechanical fixes when the artifact cost would exceed the chang
 - Use the smallest artifact set that prevents repeated instructions and preserves implementation rationale.
 - Evidence beats invention: requirements artifacts should cite user input, repo docs, data/schema files, design-system rules, evals, research, or explicit assumptions.
 - PRD, stories, UX, architecture, and test artifacts must be traceable to each other for non-trivial work.
+- Implementation instructions are part of delivery, not an optional afterthought. A later agent should be able to see what evidence to inspect, what references govern the work, what steps to follow, and how to verify the result.
+- Learned constraints must become executable where possible: update a validator, eval, test, schema check, or package scan for repeated failure signatures.
 
 ## Core Rule
 
 No meaningful implementation should start until the implementation-guiding artifact set is known. If a required artifact is missing, create or update it first, then implement against it.
 
 No non-trivial delivery is complete until every required artifact exists or the PR, handoff, or delivery note records why the artifact is not applicable. Passing tests and merged code do not override missing requirements, ADR, milestone, delivery, UX, schema/example, verification, or handoff artifacts.
+
+No non-trivial delivery is complete if it relies on an unstated assumption that could have been checked against project source, official documentation, exported artifacts, runtime errors, tests, or durable memory.
 
 ## Artifact Decision Matrix
 
@@ -95,12 +99,14 @@ Create or update the smallest relevant set:
 3. Classify the change: UI/UX, data/schema, workflow, architecture, research/evaluation, safety, docs-only, or bug fix.
 4. Select the artifact set from the matrix.
 5. Check whether current artifacts already cover the change.
-6. Create or update missing artifacts before code changes. Use evidence-backed templates rather than freeform notes when PRD, UX, ADR, story, traceability, or readiness artifacts are required.
-7. Implement only the artifact-backed scope.
-8. Add or update tests/evals for the artifact rules.
-9. Run focused verification.
-10. Before marking delivery done, check that required artifacts exist or are explicitly not applicable.
-11. Refresh the handoff with changed artifacts, verification, risks, and exact next action.
+6. Inspect authoritative references before implementation: project memory, relevant skills, ADRs, source/schema/package artifacts, official docs for unstable external systems, runtime errors/logs, and existing tests/evals.
+7. Create or update missing artifacts before code changes. Use evidence-backed templates rather than freeform notes when PRD, UX, ADR, story, traceability, or readiness artifacts are required.
+8. Add implementation instructions to the artifact or delivery note: files to inspect, references to check, commands to run, non-goals, verification gates, and rollback/retry guidance where relevant.
+9. Implement only the artifact-backed scope.
+10. Add or update tests/evals/validators for the artifact rules and any repeated failure signatures.
+11. Run focused verification.
+12. Before marking delivery done, check that required artifacts exist or are explicitly not applicable.
+13. Refresh the handoff with changed artifacts, verification, risks, and exact next action.
 
 ## Safety rules
 
@@ -114,6 +120,8 @@ Create or update the smallest relevant set:
 - Which durable artifact tells us what to build?
 - Which PRD or requirements note records the problem, users, outcomes, non-goals, and acceptance behavior?
 - Which artifact records why this approach is correct?
+- Which references or runtime outputs were inspected, and what did they prove?
+- Which implementation instructions will guide the next agent?
 - Which user story or acceptance criterion proves the work is done?
 - Which traceability artifact links requirements to implementation surfaces and tests/evals?
 - Which tests/evals protect the rule from regression?
@@ -155,6 +163,8 @@ When implementing, include this gate in the working notes or artifact, then proc
 - Updating code without updating schemas/examples.
 - Ending with a handoff that lists code but not the artifacts that justified it.
 - Generating a PRD without traceability from requirements to stories, UX/ADR/schema decisions, and tests.
+- Relying on plausible framework behavior when official docs, schemas, generated source, or runtime errors can be checked.
+- Documenting a lesson in prose but not adding an executable guard for a repeated failure.
 
 ## Verification
 

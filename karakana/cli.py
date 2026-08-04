@@ -86,7 +86,7 @@ from karakana.protocols.checks import run_protocol_check
 from karakana.protocols.classifier import ProtocolClassifier
 from karakana.protocols.loader import ProtocolLoader
 from karakana.protocols.resolver import ProtocolResolver
-from karakana.protocols.start import ProtocolStartStore, build_protocol_start, render_protocol_start
+from karakana.protocols.start import ProtocolStartStore, bind_protocol_start_trace, build_protocol_start, render_protocol_start
 from karakana.protocols.summary import render_protocol_summary
 from karakana.protocols.validator import ProtocolValidator
 from karakana.requirements.issues import generate_issues
@@ -1076,7 +1076,15 @@ def plan(
     )
     _record_route_outputs(trace, model_route)
     try:
-        prompt = compose_planning_prompt(project=project, skill=skill, task=task, repo_root=repo_root, skillpack_context=_render_resolved_skillpack_context(resolved_skillpack), allow_missing_memory=bool(resolved_skillpack))
+        prompt = compose_planning_prompt(
+            project=project,
+            skill=skill,
+            task=task,
+            repo_root=repo_root,
+            skillpack_context=_render_resolved_skillpack_context(resolved_skillpack),
+            allow_missing_memory=bool(resolved_skillpack),
+            model_route=model_route,
+        )
         if not no_handoff:
             skillpack_name = resolved_skillpack.skillpack.name if resolved_skillpack else project
             try:
@@ -3442,6 +3450,8 @@ def protocol_start(
         required_artifacts=classification.required_artifacts,
         inputs=artifact.to_dict(),
     )
+    bind_protocol_start_trace(artifact, trace.run_id)
+    trace.inputs = artifact.to_dict()
     path = None
     if write_plan:
         path = ProtocolStartStore(repo_root).save(artifact)

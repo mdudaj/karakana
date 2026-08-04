@@ -306,7 +306,7 @@ Convert a reviewed model response into explicit, reviewable next-action artifact
 ## Escalation Conditions
 
 - Escalate routine coding from `gpt-5.4-mini` to `gpt-5.4` when tests fail, more than three files change, refactoring is needed, CI fails, or framework understanding is required.
-- Escalate to `gpt-5.5` only for authentication, payments, migrations, process state, production deployment risk, high-risk review, or repeated failures.
+- Escalate to `gpt-5.6-sol` only for authentication, payments, migrations, process state, production deployment risk, high-risk review, or repeated failures.
 
 ## Suggested Next Actions
 

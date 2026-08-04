@@ -8,7 +8,7 @@ input:
   task: "Verify applying a patch requires an explicit write flag."
   task_type: "planning"
 expectations:
-  expected_provider: "github"
-  expected_model: "gpt-5-mini"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   safety_flags:
     - human_review_required

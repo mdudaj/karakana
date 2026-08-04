@@ -29,7 +29,7 @@ ESCALATION_RULES = [
         "from_provider": "github",
         "from_model": "gpt-5-mini",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.5",
+        "to_model": "gpt-5.6-sol",
         "signals": {
             "high_risk_planning",
             "model_routing_change",
@@ -37,7 +37,7 @@ ESCALATION_RULES = [
             "cross_project_architecture",
             "production_risk_planning",
         },
-        "rationale": "High-risk planning should use principal-level reasoning before implementation starts.",
+        "rationale": "High-risk planning should use frontier principal-level reasoning before implementation starts.",
     },
     {
         "from_provider": "github",
@@ -66,7 +66,7 @@ ESCALATION_RULES = [
         "from_provider": "openai_codex",
         "from_model": "gpt-5.4",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.5",
+        "to_model": "gpt-5.6-sol",
         "signals": {
             "security_or_authentication_change",
             "billing_or_payment_logic",
@@ -78,7 +78,7 @@ ESCALATION_RULES = [
             "high_risk_pr_review",
             "production_deployment_risk",
         },
-        "rationale": "High-risk or repeatedly stuck work requires principal-level review.",
+        "rationale": "High-risk or repeatedly stuck work requires frontier principal-level review.",
     },
 ]
 

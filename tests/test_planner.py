@@ -89,6 +89,9 @@ def test_compose_planning_prompt_includes_context(tmp_path):
     assert "Name: example-skill" in prompt
     assert "Project planning context" in prompt
     assert "Project contract content" in prompt
+    assert "## Model Role Guidance" in prompt
+    assert "Role: planner" in prompt
+    assert "Token budget: standard" in prompt
     assert "Do not call external model APIs" in prompt
 
 

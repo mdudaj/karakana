@@ -1,6 +1,6 @@
 id: codex-review-patch-escalates-viewflow-state-risk
 name: Review patch escalates Viewflow state risk
-description: Ensure Viewflow process-state risk uses GPT-5.5 routing.
+description: Ensure Viewflow process-state risk uses GPT-5.6 Sol routing.
 suite: codex
 risk_level: high
 tags: [codex, viewflow]
@@ -9,7 +9,7 @@ input:
   task_type: "viewflow_process_state_change"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.5"
+  expected_model: "gpt-5.6-sol"
   must_include:
     - "Safety Rules"
   required_sections:

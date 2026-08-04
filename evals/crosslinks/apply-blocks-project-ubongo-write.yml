@@ -10,7 +10,7 @@ input:
   skill: karakana-self-improvement
   task_type: planning
 expectations:
-  expected_provider: github
-  expected_model: gpt-5-mini
+  expected_provider: openai_codex
+  expected_model: gpt-5.4-mini
   must_include: ["block", "ubongo/projects", "cross-project apply"]
   forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

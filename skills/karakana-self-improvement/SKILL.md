@@ -53,14 +53,17 @@ Do not use for silent self-modification, production deployment, or unrelated app
 - Self-improvement must be visible, reviewable, testable, and reversible.
 - Memory, skill, prompt, and eval changes should be proposed through patches or pull requests.
 - Risky changes require human approval.
+- A repeated miss is not fixed by chat acknowledgement. It must be turned into durable instructions and, when practical, an executable regression guard.
 
 ## Standard workflow
 
 1. Review recent task evidence and current repository state.
 2. Identify missing memory, weak skills, prompt gaps, or eval gaps.
-3. Propose small changes with rationale and risk.
-4. Add tests or eval cases where practical.
-5. Require human review before merge.
+3. Classify the lesson scope: global harness behavior, project-specific memory, skill workflow, documentation, validator/test/eval, or handoff convention.
+4. Propose small changes with rationale and risk.
+5. Add implementation instructions to the affected memory/skill/doc: what to inspect, what references govern the work, what steps to follow, and how to verify.
+6. Add tests, eval cases, or validators where practical, especially for repeated failure signatures.
+7. Require human review before merge.
 
 ## Safety rules
 
@@ -72,6 +75,8 @@ Do not use for silent self-modification, production deployment, or unrelated app
 
 - Check `KARAKANA_AGENT_GUIDE.md`.
 - Check affected memory, skill, prompt, and test files.
+- Check whether the lesson needs both global and project-specific encoding.
+- Check whether the next agent can execute the corrected workflow without relying on chat history.
 - Run relevant tests.
 
 ## Output format
@@ -82,6 +87,7 @@ Return proposed updates, rationale, risk level, tests, and review requirements.
 
 - Propose a new eval after a repeated review miss.
 - Add a skill checklist after a recurring implementation pitfall.
+- Promote a project-specific failure into a global rule when the pattern applies across project types.
 
 ## Quick Reference
 
@@ -94,6 +100,7 @@ Return proposed updates, rationale, risk level, tests, and review requirements.
 - Do not treat reflection as permission to rewrite behavior silently.
 - Do not apply high-risk changes without human review.
 - Do not propose broad rewrites when a small eval or checklist would reduce risk.
+- Do not leave lessons only in `lessons-learned.md` when a skill, project memory, validator, or eval should enforce them.
 
 ## Verification
 

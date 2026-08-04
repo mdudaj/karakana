@@ -52,8 +52,8 @@ input:
   skill: "karakana-self-improvement"
   task_type: "planning"
 expectations:
-  expected_provider: "github"
-  expected_model: "gpt-5-mini"
+  expected_provider: "openai_codex"
+  expected_model: "gpt-5.4-mini"
   must_include:
     - "tests"
     - "approval"

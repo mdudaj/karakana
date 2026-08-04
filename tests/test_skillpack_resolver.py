@@ -14,4 +14,4 @@ def test_skillpack_route_override():
     context = SkillpackResolver(Path.cwd()).resolve_for_project("nhrdm")
     route = route_from_skillpack(context.skillpack, "database_or_index_migration")
 
-    assert route["model"] == "gpt-5.5"
+    assert route["model"] == "gpt-5.6-sol"

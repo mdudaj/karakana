@@ -86,7 +86,7 @@ Use cost-effective routing by default:
 - Codex GPT-5.4 for consequential planning before mutation: multi-file implementation planning, architecture review, framework design, protocol/workflow changes, skill design, and system-impact assessment.
 - Codex GPT-5.4-mini for routine code edits, simple tests, test design, and bounded task drafting.
 - Codex GPT-5.4 for refactoring, CI analysis/repair recommendations, deep PR review, framework-level implementation, and non-routine repository edits.
-- Codex GPT-5.5 only for high-risk planning, high-risk review, or stuck work: model routing, safety policy, authentication, authorization, payment, billing, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, cross-project architecture, or repeated failures.
+- Codex GPT-5.6 Sol only for high-risk planning, high-risk review, or stuck work: model routing, safety policy, authentication, authorization, payment, billing, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, cross-project architecture, or repeated failures. Use `gpt-5.6-sol` as the default frontier route; `gpt-5.6-terra` and `gpt-5.6-luna` are manual override variants. Keep GPT-5.5 as a manual fallback when GPT-5.6 is unavailable.
 
 Manual overrides are allowed, but record the rationale in traces or task notes.
 
@@ -179,6 +179,8 @@ Before planning or editing code:
 6. Do not touch secrets.
 7. Run relevant tests.
 8. Document risks.
+
+All research, brainstorming, implementation, debugging, documentation, and review must be evidence-grounded. Check authoritative project artifacts, relevant skills, repository source, schemas, exported/generated artifacts, official docs for unstable external systems, runtime output, and tests/evals before treating a claim as fact. Non-trivial delivery must include implementation instructions that name what to inspect, what references govern the work, what steps to follow, and how to verify. If a repeated miss reveals a reusable rule, update durable memory, skills, docs, validators, or evals before considering the lesson handled.
 
 Never commit or print secrets, tokens, `.env` contents, API keys, authorization headers, or private key material.
 Do not deploy, auto-merge, push to protected branches, or run destructive commands without explicit approval.

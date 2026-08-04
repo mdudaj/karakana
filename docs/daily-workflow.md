@@ -22,6 +22,8 @@ karakana requirements ready <req-id>
 For ambiguous work, first produce a reviewed `Requirements Elicitation Result` using `requirements-elicitation`. Run `grill-with-docs` against relevant ADRs and project plans, and use `brainstorm-verbalized-sampling` when multiple valid paths remain. Pass the saved artifact to `requirements prd --from-file`; do not generate implementation issues until the material decisions are resolved.
 For features with UX impact, requirements must describe intended behavior and look and feel. Default to task-specific best-practice research and fit the result into the existing project design system, including tokens, reusable components, states, accessibility, and responsive behavior.
 
+Before starting a new product, portal, major UX refresh, or first implementation slice, create or reference a shell and design-system foundation. Record the app shell layout, route ownership, navigation groups, design tokens, reusable components, responsive behavior, accessibility rules, and visual evidence or mockups before generating implementation issues or editing screens.
+
 ## Move Toward Implementation
 
 Decide the next bounded milestone from current evidence:
