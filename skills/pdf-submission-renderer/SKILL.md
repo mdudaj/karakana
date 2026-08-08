@@ -38,6 +38,7 @@ bucket: productivity
 - Keep Markdown headings clean for page content, for example `# 1. Executive Summary`.
 - Set running headers separately from page headings, for example `01 Executive Summary`.
 - Use WeasyPrint `@page` margin boxes for headers, footers, and page numbers.
+- Use a split running-header pattern: one margin box for the header text and a separate margin box for the horizontal rule.
 - Use section-level `string-set` for the active running header.
 - Verify PDFs with text extraction and at least one rendered page image before delivery.
 - Do not add implementation labels, filenames, or pack names to client-facing pages unless the user asks for them.
@@ -107,7 +108,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 
 - Use A4 portrait unless the user asks otherwise.
 - Keep the running header gray and visually separate from content.
-- Put the header underline directly below the header text.
+- Prefer the sample-inspired split header: header text in `@top-left`, horizontal rule in a separate right-side margin box.
 - Use page numbers in the footer.
 - Increase body text only when readability improves; avoid making tables unusable.
 - Use table header repetition, avoid row splitting where possible, and keep table text slightly smaller than body text.
@@ -117,7 +118,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 
 ## Pitfalls
 
-- A margin-box border can look like page content if `padding-bottom` is too large.
+- A border attached to the running-header text can look like page content. Use a separate margin box for the rule.
 - Using `h1 { string-set: ... }` makes running headers match page headings; use section attributes when the two formats differ.
 - Larger body text can make tables overflow or push a client pack into too many pages.
 - `pdftotext` can confirm labels and order, but it cannot verify visual spacing.

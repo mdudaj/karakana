@@ -64,10 +64,19 @@ CSS = """
     content: string(doc-title);
     font-size: 10pt;
     color: #6b7280;
-    border-bottom: 0.35pt solid #c9ced6;
-    padding-bottom: 0.9mm;
-    width: 178mm;
-    vertical-align: bottom;
+    height: 8mm;
+    vertical-align: middle;
+    width: 78mm;
+  }
+  @top-right {
+    background: #c9ced6;
+    content: "";
+    display: block;
+    height: 0.35pt;
+    margin-left: 82mm;
+    opacity: 0.85;
+    vertical-align: middle;
+    width: 96mm;
   }
   @bottom-right {
     content: "Page " counter(page) " of " counter(pages);
