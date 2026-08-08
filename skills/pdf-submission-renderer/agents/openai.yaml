@@ -1,0 +1,4 @@
+interface:
+  display_name: "PDF Submission Renderer"
+  short_description: "Render professional Markdown submission packs with WeasyPrint."
+  default_prompt: "Render a professional client-facing PDF submission pack from Markdown sources."

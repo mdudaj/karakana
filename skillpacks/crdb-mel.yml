@@ -12,6 +12,7 @@ skills:
     - power-pages-odk-webforms
     - design-system-governance
     - delivery-artifact-gate
+    - pdf-submission-renderer
     - karakana-handoff
   optional:
     - next-milestone-decision
