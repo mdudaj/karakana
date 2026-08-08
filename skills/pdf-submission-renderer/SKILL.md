@@ -36,11 +36,10 @@ bucket: productivity
 
 - Use `scripts/render_submission_pdf.py` instead of one-off inline Python.
 - Keep Markdown headings clean for page content, for example `# 1. Executive Summary`.
-- Set running headers separately from page headings, for example `01 Executive Summary`.
-- Use WeasyPrint `@page` margin boxes for headers, footers, and page numbers.
-- Use a text-only running-header pattern unless the user explicitly asks for a rule or divider.
+- Use page headings for document titles, for example `1. Executive Summary`.
+- Use WeasyPrint `@page` margin boxes for footers and page numbers.
+- Do not add running headers unless the user explicitly asks for them.
 - Let `@page` margins define the top content start; do not add section-level top padding to simulate header spacing.
-- Use section-level `string-set` for the active running header.
 - Verify PDFs with text extraction and at least one rendered page image before delivery.
 - Do not add implementation labels, filenames, or pack names to client-facing pages unless the user asks for them.
 
@@ -85,7 +84,6 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
    ```
 
 5. Confirm the first page shows:
-   - zero-padded running header, for example `01 Executive Summary`;
    - page heading, for example `1. Executive Summary`;
    - no filename line;
    - no implementation label such as `Client submission pack`.
@@ -100,7 +98,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 ## Required checks
 
 - Did the source Markdown headings match the requested visible document titles?
-- Did the running header match the requested header convention?
+- If a running header was requested, did it match the requested header convention?
 - Did the first page avoid filename, pack-label, or generator text?
 - Did tables remain readable after typography changes?
 - Did `pdftotext` and a rendered preview both confirm the output?
@@ -108,19 +106,19 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 ## Styling Rules
 
 - Use A4 portrait unless the user asks otherwise.
-- Keep the running header gray and visually separate from content.
-- Prefer a clean text-only running header in `@top-left`; avoid header rules unless specifically requested.
+- Omit running headers by default for clean client packs.
 - Use page numbers in the footer.
 - Increase body text only when readability improves; avoid making tables unusable.
 - Use table header repetition, avoid row splitting where possible, and keep table text slightly smaller than body text.
 - Use `break-before: page` between documents.
-- Keep header-to-content spacing consistent by using page margins, not `.doc-section` padding.
+- Keep top content spacing consistent by using page margins, not `.doc-section` padding.
 - Use `break-after: avoid` for headings and `orphans`/`widows` for paragraphs.
 - Preserve source content. Styling changes should not rewrite technical claims.
 
 ## Pitfalls
 
 - Header rules can render inconsistently across pages and look like content. Prefer text-only running headers for clean client packs.
+- Running headers can introduce inconsistent visual spacing in multi-section Markdown packs. Omit them unless the user explicitly needs them.
 - Section-level top padding creates inconsistent header/content spacing because it only applies at the start of a section, not continuation pages.
 - Using `h1 { string-set: ... }` makes running headers match page headings; use section attributes when the two formats differ.
 - Larger body text can make tables overflow or push a client pack into too many pages.

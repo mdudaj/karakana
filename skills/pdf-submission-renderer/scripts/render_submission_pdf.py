@@ -59,15 +59,7 @@ CLIENT_ORDER = [
 CSS = """
 @page {
   size: A4;
-  margin: 22mm 16mm 20mm 16mm;
-  @top-left {
-    content: string(doc-title);
-    font-size: 10pt;
-    color: #6b7280;
-    height: 8mm;
-    vertical-align: middle;
-    width: 78mm;
-  }
+  margin: 18mm 16mm 20mm 16mm;
   @bottom-right {
     content: "Page " counter(page) " of " counter(pages);
     font-size: 8pt;
@@ -90,7 +82,6 @@ body {
 
 .doc-section {
   break-before: page;
-  string-set: doc-title attr(data-running-title);
 }
 
 .doc-section:first-of-type {
