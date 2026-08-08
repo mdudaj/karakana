@@ -11,7 +11,7 @@ tags:
   - permissions
 input:
   task: "Troubleshoot PAC CLI service-principal setup where device-code login succeeds, assign-user fails with missing prvCreateUser on systemuser, and service-principal auth later fails on Microsoft.BusinessAppPlatform admin environments."
-  project: tacatdp
+  project: crdb-mel
   skill: power-platform-cli-admin
   task_type: troubleshooting
   prompt_file: skills/power-platform-cli-admin/SKILL.md

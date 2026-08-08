@@ -11,7 +11,7 @@ tags:
   - webforms
 input:
   task: "Plan the TACATDP field app as a Power Pages hosted Vue SPA using ODK Web Forms and Dataverse. The client requires Microsoft-managed services, Power Pages authentication, table permissions, local drafts, online submit, and one attachment."
-  project: tacatdp
+  project: crdb-mel
   skill: power-pages-odk-webforms
   task_type: planning
   prompt_file: skills/power-pages-odk-webforms/SKILL.md

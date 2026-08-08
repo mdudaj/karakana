@@ -50,7 +50,7 @@ Implementation surfaces:
 - `skills/system-design-thinking/evals/platform-ux-system-map.yml`
 - `skills/system-design-thinking/evals/performance-workflow-leverage.yml`
 - `skillpacks/karakana.yml`
-- `skillpacks/tacatdp.yml`
+- `skillpacks/crdb-mel.yml`
 - `skills/README.md`
 
 ## Verification Summary

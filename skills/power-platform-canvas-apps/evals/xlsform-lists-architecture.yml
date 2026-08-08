@@ -10,7 +10,7 @@ tags:
   - ux
 input:
   task: "Plan a Power Apps canvas app from an XLSForm with skip logic, required fields, select_multiple questions, and a 60,000-row village choice list backed by Microsoft Lists."
-  project: tacatdp
+  project: crdb-mel
   skill: power-platform-canvas-apps
   task_type: planning
   prompt_file: skills/power-platform-canvas-apps/SKILL.md

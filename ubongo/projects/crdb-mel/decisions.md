@@ -1,4 +1,6 @@
-# TACATDP Decisions
+# Sustainable Finance MEL Platform Decisions
+
+Sustainable Finance MEL Platform is the current product identity. Existing `TACATDP_*` artifact names are retained where they refer to generated schemas, deployed list/table names, source form labels, or historical programme context.
 
 ## Microsoft Lists instead of Dataverse
 

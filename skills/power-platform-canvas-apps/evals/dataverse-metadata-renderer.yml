@@ -11,7 +11,7 @@ tags:
   - power-fx
 input:
   task: "Plan the TACATDP Canvas MVP now that Dataverse has Forms, FormVersions, Sections, Questions, Choices, ValidationRules, FormAssignments, Submissions, SubmissionAnswers, and SubmissionFiles. One seeded published form is assigned to one user. The app must show assigned forms, render metadata, save drafts, submit, edit until locked, attach one file/photo, capture GPS if quick enough, and show history."
-  project: tacatdp
+  project: crdb-mel
   skill: power-platform-canvas-apps
   task_type: planning
   prompt_file: skills/power-platform-canvas-apps/SKILL.md

@@ -1,11 +1,11 @@
-name: tacatdp
-description: TACATDP Power Apps canvas app and Dataverse-first delivery profile
+name: crdb-mel
+description: Sustainable Finance MEL Platform Power Pages and Dataverse delivery profile
 version: 0.1.0
 status: experimental
 project:
-  id: tacatdp
-  display_name: TACATDP
-  memory: ubongo/projects/tacatdp
+  id: crdb-mel
+  display_name: Sustainable Finance MEL Platform
+  memory: ubongo/projects/crdb-mel
 skills:
   required:
     - power-platform-canvas-apps
@@ -25,7 +25,7 @@ model_routes:
   planning:
     provider: openai_codex
     model: gpt-5.4-mini
-    rationale: TACATDP planning is Codex-only while Copilot/GitHub inference tokens are unavailable; use mini for bounded planning and escalate only for framework, workflow, or production risk.
+    rationale: Sustainable Finance MEL Platform planning is Codex-only while Copilot/GitHub inference tokens are unavailable; use mini for bounded planning and escalate only for framework, workflow, or production risk.
   routine_code_implementation:
     provider: openai_codex
     model: gpt-5.4-mini
@@ -55,18 +55,17 @@ tests:
     - karakana eval run --skill power-platform-canvas-apps
 conventions:
   notes:
-    - Load TACATDP memory before implementation.
+    - Load Sustainable Finance MEL Platform memory before implementation.
     - Use one field per row by default on data-entry screens.
-    - Do not make skip-eligible SharePoint columns required.
-    - Use Dataverse as the primary development backend; keep Microsoft Lists as fallback.
-    - Treat Project as the general top-level concept; TACATDP is the first single-project prototype.
+    - Treat Power Pages plus Dataverse as the active proof-of-concept architecture.
+    - Treat Project as the general top-level concept; TACATDP monitoring is the first proof-of-concept use case.
     - Use `docs/tacatdp-prototype-slice-1/` as the bounded implementation scope for the first TACATDP prototype slice.
     - Treat fixed TACATDP screens as transitional but acceptable for prototype delivery; prefer a metadata-driven form runner for the long-term project-platform UX.
-    - For the ODK-style long-term field UX, prefer the Power Pages hosted Vue/ODK Web Forms path over extending Canvas as the primary renderer.
+    - For the ODK-style proof-of-concept field UX, use the Power Pages hosted Vue/ODK Web Forms path.
     - Power Pages SPA work must use the same Dataverse environment as the Power Pages site and should call the Power Pages Web API `/_api` when relying on Power Pages authentication and table permissions.
     - For private developer/non-production Power Pages sites, grant the CRDB/Microsoft Entra user Site visibility access before invitation redemption testing; this is separate from TACATDP Contact, Web Role, Table Permission, Invitation, and assignment records.
     - "User onboarding documentation must show two gates for private sites: first private-site access grant, then Power Pages invitation redemption and TACATDP assignment verification."
-    - Review `schemas/dataverse/form-renderer-contract.json` before implementing or modifying Canvas form screens.
+    - Review `schemas/dataverse/form-renderer-contract.json` before implementing or modifying the hosted form runtime.
     - Do not let the full multi-project platform vision block the TACATDP prototype; document shortcuts and revisit them before generalization.
     - Use governed controlled vocabularies for reusable controlled variables and choice/reference data.
     - Treat TACATDP `schemas/dataverse/` artifacts as review-only schema inputs until explicit Dataverse environment-write approval is given.

@@ -1,12 +1,14 @@
-# TACATDP Overview
+# Sustainable Finance MEL Platform Overview
 
-TACATDP is a Microsoft Power Platform project for converting a long XLSForm/ODK-style data collection workflow into Microsoft-managed services.
+Sustainable Finance MEL Platform is a Microsoft Power Platform project for converting a long XLSForm/ODK-style data collection workflow into Microsoft-managed services for Monitoring, Evaluation, and Learning.
 
-As of the 2026-08-01 CRDB SFU context review, TACATDP should be treated as the first project supported by a future Integrated Digital MEL platform for Sustainable Finance programmes. The current release remains field monitoring and impact tracking for TACATDP, but future-ready design should preserve seams for programmes, beneficiaries, loan/investment/guarantee/insurance records, climate rationale, field evidence, indicator results, ESS/risk, geo insights, and reporting templates.
+The project was previously tracked as TACATDP. Use Sustainable Finance MEL Platform for the current product/system name, documentation pack, project memory, and future product vision. Keep TACATDP where it refers to the original programme, source XLSForm labels, deployed Power Platform artifact names, proof-of-concept use case, or historical implementation evidence.
+
+As of the 2026-08-01 CRDB SFU context review, Sustainable Finance MEL Platform should be treated as a reusable Integrated Digital MEL platform for Sustainable Finance Unit programmes/projects. TACATDP monitoring is the proof-of-concept implementation, but future-ready design should preserve seams for programmes/projects, beneficiaries, facilities, operational processes, resources, financial and institutional records, climate rationale, field evidence, indicator results, ESS/risk, geo insights, operational efficiency, and reporting templates.
 
 The current delivery path is Dataverse-first with Power Pages as the preferred ODK-style field UX host. The Canvas app remains useful as a proof-of-concept and possible internal admin/monitoring surface, but the long-term field runner should be a Power Pages hosted Vue SPA using ODK Web Forms / `@getodk/xforms-engine`, saving to Dataverse through the Power Pages Web API `/_api`.
 
-The long-term app vision is a reusable project platform, not only a monitoring-project app, but full multi-project implementation is a larger research track. The near-term implementation should deliver TACATDP as a single-project prototype while preserving seams for project, form, form version, XForm XML, assignment, submission, submission version, attachment, review state, dataset/entity, normalized answer projection, and controlled vocabulary concepts. Microsoft Lists/SharePoint artifacts remain as fallback and source-decomposition evidence.
+The long-term app vision is a reusable platform, not only a TACATDP monitoring app, but full multi-project implementation is a larger research track. The near-term implementation should deliver the TACATDP proof of concept while preserving seams for project, form, form version, XForm XML, assignment, submission, submission version, attachment, review state, dataset/entity, normalized answer projection, beneficiary identity, configurable monitored entities, KPI visualisation, and controlled vocabulary concepts. Microsoft Lists/SharePoint artifacts remain as fallback and source-decomposition evidence.
 
 ## Current Delivery Intent
 

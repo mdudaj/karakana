@@ -169,6 +169,43 @@ Use this workflow before deploying a Power Pages hosted SPA or configuring table
 
 3. If no site appears but one was created in maker portal, check `pac admin list` for a `PowerPagesDeveloper-*` or trial environment and create a new auth profile against that environment URL.
 
+   If Maker Portal is already open and shows the target environment, treat the Maker URL environment id as stronger evidence than a guessed Dataverse org URL. For example, a Maker URL like `make.powerapps.com/environments/<environment-id>/home` proves the signed-in tenant account can reach that environment in Maker. Use that `<environment-id>` for PAC auth/list commands before concluding the account lacks access:
+
+   ```bash
+   pac auth create --name "<profile-name>" --deviceCode --environment "<environment-id>"
+   pac pages list --environment "<environment-id>"
+   ```
+
+   Do not diagnose "You don't have access to this resource" from a PAC auth attempt against an org URL alone until the Maker environment id and the selected work/school tenant account have been tried.
+
+   Microsoft documents `--managedIdentity` as the PAC auth path that uses Azure Identity / Default Azure Credential, including environments such as Visual Studio Code with the Azure Account extension. Do not treat this as the normal Mshirika/CRDB Power Platform path unless the user says the workflow used Azure Identity. The usual Mshirika/CRDB workflow is PAC user auth to Power Platform:
+
+   ```bash
+   pac auth create --name "<profile-name>" --environment "<environment-id>"
+   ```
+
+   Use `--deviceCode` only when the terminal cannot open a usable browser session, or when the user explicitly wants device-code auth:
+
+   ```bash
+   pac auth create --name "<profile-name>" --deviceCode --environment "<environment-id>"
+   ```
+
+   In CRDB TACATDP deployment work, PAC login has used device-code auth with the `dmuroba@crdb.co.tz` / Denis Muroba user profile:
+
+   ```bash
+   pac auth create --name "<crdb-profile-name>" --deviceCode --environment "<crdb-environment>"
+   ```
+
+   Treat that as the expected human delegated PAC deployment profile for CRDB, not as the project service principal or CI principal. Do not infer service-principal privileges, CI credentials, or principal ownership from a successful `dmuroba@crdb.co.tz` device-code PAC session.
+
+   If the user specifically asks to reuse a VS Code/Azure Account credential, the documented test is:
+
+   ```bash
+   pac auth create --name "<profile-name>" --managedIdentity --environment "<environment-id>"
+   ```
+
+   If PAC returns `Azure.Identity.CredentialUnavailableException`, inspect only non-secret diagnostic lines. Known signals include `VisualStudioCodeCredential requires the Azure.Identity.Broker package`, `Azure CLI not installed`, `AzureDeveloperCliCredential could not be found`, or `Visual Studio Token provider can't be accessed`. In that state, the local PAC tool cannot reuse the VS Code/Azure Identity login from this terminal; fall back to ordinary PAC user auth with the correct tenant work/school account.
+
 4. Download the site source with the website ID:
 
    ```bash
@@ -218,6 +255,9 @@ Use this workflow when a non-admin tester receives "You don't have access" on a 
 - Retrying with stale PAC auth profiles after changing tenant or environment variables.
 - Recreating tenants or environments before checking the separate permission layers.
 - Running `pac pages list` against the default environment after Power Pages created a separate `PowerPagesDeveloper-*` environment.
+- Treating a PAC org-URL auth failure as proof of no access when Maker Portal shows the tenant user inside the target environment. Extract the environment id from the Maker URL and retry PAC with `--environment <environment-id>` first.
+- Assuming PAC can reuse VS Code login just because the user is signed in to VS Code. Current Microsoft docs route that through `--managedIdentity` / Default Azure Credential, but Mshirika/CRDB work has historically used ordinary PAC user auth, not Azure Identity. Try `pac auth create --environment <environment-id>` before introducing Azure CLI or managed-identity setup.
+- Treating a CRDB `dmuroba@crdb.co.tz` device-code PAC deployment profile as the project/service principal. It is the expected human delegated profile used for CRDB PAC deployment access; keep it separate from service-principal, app-user, CI, or production deployment principal assumptions.
 - Assuming `pac pages download-code-site --siteName` works across PAC versions; check `pac pages download-code-site` usage and prefer `--webSiteId` when required.
 - Deploying Dataverse schema to one environment while the Power Pages site is hosted in another environment.
 - Diagnosing private-site "You don't have access" as a TACATDP assignment issue before checking Site visibility grants.

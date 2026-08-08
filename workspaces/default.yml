@@ -25,21 +25,20 @@ projects:
         - "karakana eval run"
         - "pytest"
 
-  - id: tacatdp
-    display_name: TACATDP
-    path: "../tacatdp"
-    skillpack: tacatdp
-    memory: ubongo/projects/tacatdp
+  - id: crdb-mel
+    display_name: Sustainable Finance MEL Platform
+    path: "../crdb-mel"
+    skillpack: crdb-mel
+    memory: ubongo/projects/crdb-mel
     tags:
       - power-platform
-      - canvas-apps
-      - microsoft-lists
-      - sharepoint
+      - power-pages
+      - dataverse
       - xlsform
       - ux
     standard_commands:
       status:
         - "git status --short"
       validate:
-        - "karakana skill validate skills/power-platform-canvas-apps"
-        - "karakana eval run --skill power-platform-canvas-apps"
+        - "karakana skill validate skills/power-pages-odk-webforms"
+        - "karakana eval run --skill power-pages-odk-webforms"

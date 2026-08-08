@@ -19,9 +19,9 @@ Use only the selected project's memory, skillpack, path, and referenced artifact
 | Project | Workspace | Memory | Skillpack | Notes |
 | --- | --- | --- | --- | --- |
 | `karakana` | `default` | `ubongo/projects/karakana` | `skillpacks/karakana.yml` | Harness self-improvement and safety workflows. |
-| `tacatdp` | `default` | `ubongo/projects/tacatdp` | `skillpacks/tacatdp.yml` | Power Apps canvas app and Microsoft Lists delivery. |
+| `crdb-mel` | `default` | `ubongo/projects/crdb-mel` | `skillpacks/crdb-mel.yml` | Sustainable Finance MEL Platform, Power Pages, Dataverse, and TACATDP proof-of-concept delivery. |
 
-For TACATDP-specific instructions, see `docs/workspaces/tacatdp.md`.
+For Sustainable Finance MEL Platform instructions, see `docs/workspaces/crdb-mel.md`.
 
 ## End Every Task
 

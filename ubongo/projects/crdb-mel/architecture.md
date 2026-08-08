@@ -1,4 +1,6 @@
-# TACATDP Architecture
+# Sustainable Finance MEL Platform Architecture
+
+Sustainable Finance MEL Platform is the current project identity. TACATDP remains the historical programme/form context and is still used by several existing schema, list, form, and deployment artifacts.
 
 ## Platform
 

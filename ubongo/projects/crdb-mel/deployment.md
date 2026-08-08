@@ -1,4 +1,6 @@
-# TACATDP Deployment
+# Sustainable Finance MEL Platform Deployment
+
+Sustainable Finance MEL Platform is the current product identity. TACATDP remains valid where it refers to the original programme, deployed Power Pages site labels, existing managed-solution artifacts, table/list names, or source form terminology.
 
 ## Current Deployment Path
 
