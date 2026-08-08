@@ -16,6 +16,9 @@ Sources checked:
 
 - WeasyPrint API Reference 69.0: https://doc.courtbouillon.org/weasyprint/stable/api_reference.html
 - WeasyPrint Common Use Cases 69.0: https://doc.courtbouillon.org/weasyprint/stable/common_use_cases.html
+- WeasyPrint samples page: https://weasyprint.org/#samples
+- Official report sample PDF: https://github.com/CourtBouillon/weasyprint-samples/raw/main/report/report.pdf
+- Official report sample source: https://github.com/CourtBouillon/weasyprint-samples/tree/main/report
 
 ## Professional document rules
 
@@ -27,6 +30,41 @@ Sources checked:
 - Avoid dense walls of text. Use readable line height, controlled paragraph spacing, and consistent heading rhythm.
 - Tables need visible but light borders, shaded header rows, repeated table headers, and break handling.
 - Always inspect the first rendered page visually after changing print CSS.
+
+## Lessons from the official report sample
+
+The official report sample is a useful reference for sophisticated WeasyPrint layout. Adopt its patterns selectively; do not copy the design wholesale into client submission documents.
+
+### Patterns to reuse
+
+- Use CSS variables for core colors when the style grows beyond a few declarations.
+- Use custom fonts with `@font-face` only when the font files are versioned with the document source or already available in the target environment.
+- Use `@page` margin boxes for running headers, rules, and page counters.
+- Use `string-set` for document-aware running titles.
+- Use named pages for special layouts such as a cover, contents page, or divider page.
+- Use `target-text()` and `target-counter()` to build an automatic table of contents when the document requires a ToC.
+- Use `break-before` for major sections so PDF sections start predictably.
+- Use light rules, restrained accent color, and whitespace instead of heavy borders.
+
+### Patterns to avoid unless explicitly requested
+
+- Do not add blank pages through `break-before: right` or `break-after: left` for ordinary client packs. Those rules are suitable for print-book spreads, but they make a digital submission look broken.
+- Do not add a cover page if the user asked the client document to start at the executive summary.
+- Do not add a generated ToC when the user asked the client version to start with `1. Executive Summary`.
+- Do not use decorative page-number badges if the user has asked for the running header text to be the main header element.
+- Do not use multi-column body text for requirements, architecture, testing, or admin guidance. Multi-column text is attractive in a brochure but reduces scannability for technical review.
+- Do not introduce sample colors directly. Use project/client-appropriate colors.
+
+### Current CRDB MEL choice
+
+For the Sustainable Finance MEL Platform client pack:
+
+- Keep the running header as a zero-padded title, for example `01 Executive Summary`.
+- Keep the visible page heading as `1. Executive Summary`.
+- Keep page numbers in the footer.
+- Keep the client PDF starting at the executive summary.
+- Use a simple header underline directly below the running title, not a sample-style separated top-center line.
+- Keep tables full-width and single-column for review clarity.
 
 ## Recommended CSS features
 
