@@ -12,7 +12,7 @@ updated: 2026-06-22
 relationships:
   related_to:
     - karakana.project
-    - tacatdp.project
+    - crdb-mel.project
     - msc-platform.project
 ---
 
