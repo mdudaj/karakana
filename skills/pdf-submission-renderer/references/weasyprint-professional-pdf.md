@@ -25,7 +25,7 @@ Sources checked:
 - Do not expose generator implementation details in client PDFs.
 - Do not print source filenames unless the user explicitly asks.
 - Do not label a document as “client pack” inside the visible page header unless that is part of the intended cover/title.
-- Separate running headers from content with subtle color, whitespace, and a sample-inspired rule in a separate margin box.
+- Separate running headers from content with subtle color and whitespace. Avoid header rules when they look inconsistent across pages.
 - Keep headings numbered for human review, but avoid repeated full system names in every section title.
 - Avoid dense walls of text. Use readable line height, controlled paragraph spacing, and consistent heading rhythm.
 - Tables need visible but light borders, shaded header rows, repeated table headers, and break handling.
@@ -39,7 +39,7 @@ The official report sample is a useful reference for sophisticated WeasyPrint la
 
 - Use CSS variables for core colors when the style grows beyond a few declarations.
 - Use custom fonts with `@font-face` only when the font files are versioned with the document source or already available in the target environment.
-- Use separate `@page` margin boxes for running header text, rules, and page counters.
+- Use separate `@page` margin boxes for running header text and page counters. Add rules only when the design calls for them.
 - Use `string-set` for document-aware running titles.
 - Use named pages for special layouts such as a cover, contents page, or divider page.
 - Use `target-text()` and `target-counter()` to build an automatic table of contents when the document requires a ToC.
@@ -63,14 +63,13 @@ For the Sustainable Finance MEL Platform client pack:
 - Keep the visible page heading as `1. Executive Summary`.
 - Keep page numbers in the footer.
 - Keep the client PDF starting at the executive summary.
-- Use a sample-inspired split header: zero-padded running title in the left margin box and a separate horizontal rule in a right-side margin box.
+- Use a text-only zero-padded running title in the left margin box. Do not add a header rule for the current client pack.
 - Keep tables full-width and single-column for review clarity.
 
 ## Recommended CSS features
 
 - `@page { size: A4; margin: ... }`
 - `@top-left { content: string(doc-title); ... }`
-- `@top-right { content: ""; display: block; height: ...; background: ... }`
 - `@bottom-right { content: "Page " counter(page) " of " counter(pages); }`
 - `.doc-section { break-before: page; string-set: doc-title attr(data-running-title); }`
 - `h1, h2, h3 { break-after: avoid; }`
@@ -85,7 +84,7 @@ For the Sustainable Finance MEL Platform client pack:
 - `pdftoppm -f 1 -l 1 -png -r 120 <pdf> /tmp/preview` produces an image for visual inspection.
 - Review the first page for:
   - correct running header;
-  - separate header rule aligned with the running header, not attached to page content;
+  - text-only running header without an underline or rule;
   - correct page heading;
   - no filename or internal pack label;
   - readable text size and spacing.

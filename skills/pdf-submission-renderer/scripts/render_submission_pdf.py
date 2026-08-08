@@ -68,16 +68,6 @@ CSS = """
     vertical-align: middle;
     width: 78mm;
   }
-  @top-right {
-    background: #c9ced6;
-    content: "";
-    display: block;
-    height: 0.35pt;
-    margin-left: 82mm;
-    opacity: 0.85;
-    vertical-align: middle;
-    width: 96mm;
-  }
   @bottom-right {
     content: "Page " counter(page) " of " counter(pages);
     font-size: 8pt;

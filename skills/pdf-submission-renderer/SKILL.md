@@ -38,7 +38,7 @@ bucket: productivity
 - Keep Markdown headings clean for page content, for example `# 1. Executive Summary`.
 - Set running headers separately from page headings, for example `01 Executive Summary`.
 - Use WeasyPrint `@page` margin boxes for headers, footers, and page numbers.
-- Use a split running-header pattern: one margin box for the header text and a separate margin box for the horizontal rule.
+- Use a text-only running-header pattern unless the user explicitly asks for a rule or divider.
 - Use section-level `string-set` for the active running header.
 - Verify PDFs with text extraction and at least one rendered page image before delivery.
 - Do not add implementation labels, filenames, or pack names to client-facing pages unless the user asks for them.
@@ -108,7 +108,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 
 - Use A4 portrait unless the user asks otherwise.
 - Keep the running header gray and visually separate from content.
-- Prefer the sample-inspired split header: header text in `@top-left`, horizontal rule in a separate right-side margin box.
+- Prefer a clean text-only running header in `@top-left`; avoid header rules unless specifically requested.
 - Use page numbers in the footer.
 - Increase body text only when readability improves; avoid making tables unusable.
 - Use table header repetition, avoid row splitting where possible, and keep table text slightly smaller than body text.
@@ -118,7 +118,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 
 ## Pitfalls
 
-- A border attached to the running-header text can look like page content. Use a separate margin box for the rule.
+- Header rules can render inconsistently across pages and look like content. Prefer text-only running headers for clean client packs.
 - Using `h1 { string-set: ... }` makes running headers match page headings; use section attributes when the two formats differ.
 - Larger body text can make tables overflow or push a client pack into too many pages.
 - `pdftotext` can confirm labels and order, but it cannot verify visual spacing.
