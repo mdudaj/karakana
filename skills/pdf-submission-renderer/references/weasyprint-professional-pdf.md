@@ -36,6 +36,28 @@ Sources checked:
 
 The official report sample is a useful reference for sophisticated WeasyPrint layout. Adopt its patterns selectively; do not copy the design wholesale into client submission documents.
 
+## Page-by-page source review of the official report sample
+
+| PDF page | Source driver | CSS mechanism | Lesson |
+|---|---|---|---|
+| 1 Cover | `article#cover`, `h1`, two `address` blocks | `@page :first` sets a full-page background and zero margins; `#cover` uses flex layout and full A4 height | Special pages get their own page rule and component layout. They are not forced through the ordinary content template. |
+| 2 Blank | Inserted by page-spread rules around the contents page | `#contents { break-before: right; break-after: left; }` plus `@page :blank` clears page chrome | Blank pages are intentional for print spreads. Do not use this in ordinary digital submission packs. |
+| 3 Table of contents | `article#contents` with empty anchor links | `target-text(attr(href))` and `target-counter(attr(href), page)` generate labels and page numbers; `page: no-chapter` suppresses page chrome | ToC is generated from links, not manually duplicated. Use only when a client pack should include a ToC. |
+| 4 Columns article | `article#columns`, `h2`, `h3`, nested `section` | Global `@page` page chrome; `h2 { string-set: heading content(); break-before: always; }`; `#columns section { columns: 2; }` | Ordinary content pages share page chrome. Running header content is derived from headings, not manual per-page text. |
+| 5 Feature list | `article#skills`, repeated feature sections | Global `@page`; icon blocks through section-specific pseudo-elements; `#skills h3` uses a full-width accent band | Component-specific styling is scoped under the article ID, preventing leakage into other pages. |
+| 6 Offers | `article#offers`, three offer `section` cards | Global `@page`; flex layout with sections at `30%`; accent price bars | Multi-card layouts use local component structure, not generic table hacks. |
+| 7 Chapter divider | `article#chapter`, one `h2` | `page: chapter`; `@page chapter` sets zero margins, orange background, and clears page chrome; flex centers content | Divider pages are named page types with page chrome disabled. |
+| 8 Typography showcase | `article#typography`, repeated feature sections | Global `@page`; flex rows inside sections; typography-specific OpenType properties | Dense technical examples get their own local layout without changing global document geometry. |
+
+## Structural abstraction from the sample
+
+- Treat each major document surface as an HTML component with a clear ID/class.
+- Treat page geometry as a named `@page` concern.
+- Treat page chrome as opt-in/opt-out by page type.
+- Derive generated content from source structure instead of duplicating labels.
+- Avoid using wrapper padding to correct page geometry.
+- Keep special layouts local to their component.
+
 ### Patterns to reuse
 
 - Use CSS variables for core colors when the style grows beyond a few declarations.
@@ -71,8 +93,9 @@ For the Sustainable Finance MEL Platform client pack:
 ## Recommended CSS features
 
 - `@page { size: A4; margin: ... }`
+- `@page submission { size: A4; margin: ... }`
 - `@bottom-right { content: "Page " counter(page) " of " counter(pages); }`
-- `.doc-section { break-before: page; }`
+- `.doc-section { break-before: page; page: submission; }`
 - `h1, h2, h3 { break-after: avoid; }`
 - `p { orphans: 3; widows: 3; }`
 - `thead { display: table-header-group; }`

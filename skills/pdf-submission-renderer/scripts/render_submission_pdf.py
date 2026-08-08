@@ -11,22 +11,6 @@ from markdown_it import MarkdownIt
 from weasyprint import HTML
 
 
-RUNNING_TITLES = {
-    "README.md": "Submission pack",
-    "00-documentation-plan.md": "00 Documentation Plan",
-    "01-executive-summary.md": "01 Executive Summary",
-    "02-prototype-scope.md": "02 Prototype Scope",
-    "03-requirements-specification.md": "03 Requirements Specification",
-    "04-current-architecture.md": "04 Current Architecture",
-    "05-user-manual.md": "05 User Manual",
-    "06-testing-validation-report.md": "06 Testing and Validation Report",
-    "07-deployment-admin-guide.md": "07 Deployment and Administration Guide",
-    "08-known-limitations.md": "08 Known Limitations",
-    "09-future-product-vision.md": "09 Future Product Vision",
-    "10-implementation-roadmap.md": "10 Implementation Roadmap",
-    "11-traceability-matrix.md": "11 Traceability Matrix",
-}
-
 FULL_ORDER = [
     "README.md",
     "00-documentation-plan.md",
@@ -57,20 +41,30 @@ CLIENT_ORDER = [
 
 
 CSS = """
-@page {
+:root {
+  --ink: #1f1f1f;
+  --muted: #6b7280;
+  --accent: #0f4761;
+  --rule: #c9ced6;
+  --table-head: #edf5f8;
+  --soft-row: #fafafa;
+  --link: #0f6cbd;
+}
+
+@page submission {
   size: A4;
   margin: 18mm 16mm 20mm 16mm;
   @bottom-right {
     content: "Page " counter(page) " of " counter(pages);
     font-size: 8pt;
-    color: #6b7280;
+    color: var(--muted);
   }
 }
 
 * { box-sizing: border-box; }
 
 html {
-  color: #1f1f1f;
+  color: var(--ink);
   font-family: "Segoe UI", Arial, sans-serif;
   font-size: 11.5pt;
   line-height: 1.48;
@@ -82,6 +76,7 @@ body {
 
 .doc-section {
   break-before: page;
+  page: submission;
 }
 
 .doc-section:first-of-type {
@@ -89,7 +84,7 @@ body {
 }
 
 h1 {
-  color: #0f4761;
+  color: var(--accent);
   font-size: 23pt;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -98,7 +93,7 @@ h1 {
 }
 
 h2 {
-  color: #0f4761;
+  color: var(--accent);
   font-size: 15.5pt;
   font-weight: 700;
   line-height: 1.22;
@@ -106,7 +101,7 @@ h2 {
 }
 
 h3 {
-  color: #0f4761;
+  color: var(--accent);
   font-size: 12.7pt;
   font-weight: 700;
   line-height: 1.22;
@@ -149,19 +144,19 @@ tr {
 }
 
 th, td {
-  border: 0.5pt solid #c9ced6;
+  border: 0.5pt solid var(--rule);
   padding: 2.1mm;
   vertical-align: top;
 }
 
 th {
-  background: #edf5f8;
-  color: #0f4761;
+  background: var(--table-head);
+  color: var(--accent);
   font-weight: 700;
 }
 
 tbody tr:nth-child(even) td {
-  background: #fafafa;
+  background: var(--soft-row);
 }
 
 code {
@@ -174,7 +169,7 @@ code {
 
 pre {
   background: #f4f4f4;
-  border-left: 2.5pt solid #c9ced6;
+  border-left: 2.5pt solid var(--rule);
   font-family: "Cascadia Mono", "Consolas", monospace;
   font-size: 9.6pt;
   line-height: 1.35;
@@ -185,7 +180,7 @@ pre {
 }
 
 a {
-  color: #0f6cbd;
+  color: var(--link);
   text-decoration: none;
 }
 
@@ -198,7 +193,7 @@ blockquote {
 
 hr {
   border: 0;
-  border-top: 0.5pt solid #d9d9d9;
+  border-top: 0.5pt solid var(--rule);
   margin: 8mm 0;
 }
 """
@@ -213,13 +208,8 @@ def render_pack(source_dir: Path, order: list[str], output: Path, title: str) ->
         if not path.exists():
             raise FileNotFoundError(f"Missing submission file: {path}")
 
-        running_title = RUNNING_TITLES.get(name, path.stem)
         body = markdown.render(path.read_text(encoding="utf-8"))
-        sections.append(
-            f'<section class="doc-section" data-running-title="{escape(running_title)}">'
-            f"{body}"
-            "</section>"
-        )
+        sections.append(f'<section class="doc-section">{body}</section>')
 
     html = f"""<!doctype html>
 <html lang="en">

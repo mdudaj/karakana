@@ -38,6 +38,7 @@ bucket: productivity
 - Keep Markdown headings clean for page content, for example `# 1. Executive Summary`.
 - Use page headings for document titles, for example `1. Executive Summary`.
 - Use WeasyPrint `@page` margin boxes for footers and page numbers.
+- Use named page types for intentional page geometry, even when there is only one content page type.
 - Do not add running headers unless the user explicitly asks for them.
 - Let `@page` margins define the top content start; do not add section-level top padding to simulate header spacing.
 - Verify PDFs with text extraction and at least one rendered page image before delivery.
@@ -60,7 +61,8 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 - Markdown content and PDF running headers are separate concerns.
 - Client-facing PDFs must not expose implementation details such as source filenames or pack labels.
 - WeasyPrint page margin boxes are reliable for simple headers, footers, and counters.
-- Named strings and section attributes let each document section control its own running header.
+- Named pages keep page geometry explicit and prevent wrapper-level spacing hacks.
+- Named strings and section attributes are useful only when the design intentionally includes running headers.
 - Visual verification is required because PDF text extraction cannot prove spacing, line placement, or page balance.
 
 ## Standard workflow
@@ -112,6 +114,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 - Use table header repetition, avoid row splitting where possible, and keep table text slightly smaller than body text.
 - Use `break-before: page` between documents.
 - Keep top content spacing consistent by using page margins, not `.doc-section` padding.
+- Keep stale running-header data out of the HTML when running headers are disabled.
 - Use `break-after: avoid` for headings and `orphans`/`widows` for paragraphs.
 - Preserve source content. Styling changes should not rewrite technical claims.
 
@@ -120,6 +123,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 - Header rules can render inconsistently across pages and look like content. Prefer text-only running headers for clean client packs.
 - Running headers can introduce inconsistent visual spacing in multi-section Markdown packs. Omit them unless the user explicitly needs them.
 - Section-level top padding creates inconsistent header/content spacing because it only applies at the start of a section, not continuation pages.
+- Carrying unused running-header attributes after headers are disabled makes future regressions more likely.
 - Using `h1 { string-set: ... }` makes running headers match page headings; use section attributes when the two formats differ.
 - Larger body text can make tables overflow or push a client pack into too many pages.
 - `pdftotext` can confirm labels and order, but it cannot verify visual spacing.
