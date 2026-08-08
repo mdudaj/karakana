@@ -59,7 +59,7 @@ CLIENT_ORDER = [
 CSS = """
 @page {
   size: A4;
-  margin: 22mm 16mm 20mm 16mm;
+  margin: 18mm 16mm 20mm 16mm;
   @top-left {
     content: string(doc-title);
     font-size: 10pt;
