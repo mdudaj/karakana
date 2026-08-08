@@ -28,6 +28,7 @@ Sources checked:
 - Separate running headers from content with subtle color and whitespace. Avoid header rules when they look inconsistent across pages.
 - Keep headings numbered for human review, but avoid repeated full system names in every section title.
 - Avoid dense walls of text. Use readable line height, controlled paragraph spacing, and consistent heading rhythm.
+- Define the content start with `@page` margins. Do not use section wrapper padding to compensate for header spacing.
 - Tables need visible but light borders, shaded header rows, repeated table headers, and break handling.
 - Always inspect the first rendered page visually after changing print CSS.
 
@@ -44,6 +45,7 @@ The official report sample is a useful reference for sophisticated WeasyPrint la
 - Use named pages for special layouts such as a cover, contents page, or divider page.
 - Use `target-text()` and `target-counter()` to build an automatic table of contents when the document requires a ToC.
 - Use `break-before` for major sections so PDF sections start predictably.
+- Keep spacing between the running header and page content consistent by relying on page margins, as the sample report does.
 - Use light rules, restrained accent color, and whitespace instead of heavy borders.
 
 ### Patterns to avoid unless explicitly requested
@@ -64,6 +66,7 @@ For the Sustainable Finance MEL Platform client pack:
 - Keep page numbers in the footer.
 - Keep the client PDF starting at the executive summary.
 - Use a text-only zero-padded running title in the left margin box. Do not add a header rule for the current client pack.
+- Do not add `.doc-section` top padding. Use the top page margin for consistent spacing on both section-start and continuation pages.
 - Keep tables full-width and single-column for review clarity.
 
 ## Recommended CSS features

@@ -59,7 +59,7 @@ CLIENT_ORDER = [
 CSS = """
 @page {
   size: A4;
-  margin: 18mm 16mm 20mm 16mm;
+  margin: 22mm 16mm 20mm 16mm;
   @top-left {
     content: string(doc-title);
     font-size: 10pt;
@@ -90,7 +90,6 @@ body {
 
 .doc-section {
   break-before: page;
-  padding-top: 3.5mm;
   string-set: doc-title attr(data-running-title);
 }
 
