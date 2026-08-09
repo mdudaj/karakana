@@ -15,6 +15,18 @@ The active delivery path is Power Pages plus Dataverse, packaged as a Power Plat
 7. Purge Power Pages cache/restart the site after site settings, table permissions, web role associations, or Web API settings change.
 8. Test the authenticated portal flows: dashboard, project visibility, collect, submit/edit, data tab, exports/Power BI surfaces, user management, and onboarding diagnostics.
 
+## PAC 2.9.3 Power Pages package format
+
+On 2026-08-09, Mshirika upload with PAC `2.9.3+ga17df1d` succeeded only after using a fresh PAC download as the upload base. The repository package had older per-entity YAML files that PAC rejected with `Expected 'SequenceStart', got 'MappingStart'`, and `website.yml` needed PAC-required `adx_websiteid` and `adx_name` keys.
+
+For Power Pages uploads with this PAC version:
+
+1. Confirm the Mshirika profile is active: `john.mduda@mshirikacorp.onmicrosoft.com` against `https://orga3cf4b37.crm4.dynamics.com/`.
+2. Download a fresh package from the target website.
+3. Overlay only the built SPA assets and Home fragments.
+4. Upload the fresh-format package with `pac pages upload --modelVersion Enhanced --forceUploadAll`.
+5. Download again and verify both Home fragments reference the expected cache marker.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
