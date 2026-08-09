@@ -4,27 +4,31 @@ Sustainable Finance MEL Platform is the current project identity. TACATDP remain
 
 ## Platform
 
-- Frontend/application: Microsoft Power Apps canvas app.
-- Data layer: Microsoft Lists/SharePoint connector.
+- Frontend/application: Power Pages hosted Vue SPA for the current prototype.
+- Form runtime: ODK Web Forms / XForms engine for XLSForm-compatible baseline collection.
+- Data layer: Dataverse tables exposed to the portal through Power Pages Web API and table permissions.
 - Source form model: XLSForm-style survey with required rules, relevance/skip logic, constraints, choices, calculations, and repeats.
-- Deployment support: generated artifacts, importable Microsoft Lists templates, and documentation for Power Apps Maker Portal steps.
+- Deployment support: source-controlled Power Pages package, Vite SPA build assets, Dataverse schema/seed scripts, PAC runbooks, and validation scripts.
 
 ## Data Architecture
 
-- Main submission data should be stored in a parent submissions list.
-- Repeated production cost data should be stored in a child list linked to the parent submission.
+- Baseline submissions are stored in Dataverse submission/version/attachment records.
+- Reporting projections provide root submission rows, repeat rows, and answer rows for portal reporting and export.
+- The prototype beneficiary dashboard may derive beneficiary facts from submission report rows until a governed beneficiary master table is approved.
+- Future accepted-product architecture should introduce centrally governed beneficiary master data, programme/project membership, configurable indicators, and stronger data governance.
 - Multi-select and repeat data should use child rows when analytics or reporting need one row per selected/repeated item.
-- Large or cascading choices should use reference lists with indexed simple parent keys rather than hard-coded app collections.
-- Skip-eligible fields should not be required SharePoint columns; Power Fx validation should enforce requiredness only when the field is visible/relevant.
+- Large or cascading choices should use governed reference data with indexed parent keys rather than hard-coded app collections.
+- Skip-eligible fields should not be required backend columns unless the visibility/relevance rule is represented server-side.
 
-## Canvas App Architecture
+## Portal UX Architecture
 
-- Use sectioned, wizard-style screens rather than one giant generated form.
-- Define reusable components before screen build: app shell, section header, progress indicator, form section/card, field row, reference ComboBox, validation summary, and command bar.
-- Use vertical containers and responsive layout rules instead of manually positioning every field.
-- Keep Power Fx formulas centralized enough to avoid copy/paste drift.
+- The managed shell owns route identity, side navigation, sticky top bar, and footer.
+- Dashboard pages should show operational status, assignment health, beneficiary KPIs, and lightweight portal visualisations without requiring Power BI access.
+- Use Apache ECharts through `vue-echarts` for prototype charts and Leaflet through `@vue-leaflet/vue-leaflet` for prototype maps.
+- Lazy-load chart and map libraries after the shell renders.
 
 ## Integration Notes
 
-- Existing imported main variables, choices, and administrative lists should be reused as Power Apps data sources.
-- Power Apps Git integration is useful after an app exists, but it does not replace list creation, SharePoint data source setup, or environment-specific app import/publish steps.
+- Keep TACATDP where deployed forms, source XLSForm labels, Dataverse logical names, package paths, and historical artifacts still use that name.
+- Use Sustainable Finance MEL Platform for product-facing documentation and future vision.
+- Do not deploy Power Pages packages or write Dataverse schema/data without explicit approval.
