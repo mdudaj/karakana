@@ -29,18 +29,20 @@ For Power Pages uploads with this PAC version:
 
 ## Latest Mshirika deployment
 
-On 2026-08-10, the TACATDP ECharts dashboard prototype was deployed to Mshirika:
+On 2026-08-10, the TACATDP ECharts dashboard prototype was deployed to Mshirika and then revised/deployed again after dashboard layout feedback:
 
 - Environment: `PowerPagesDeveloper-070926-125720`
 - Environment URL: `https://orga3cf4b37.crm4.dynamics.com/`
 - Website: `TACATDP Monitoring Tool`
 - Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
 - PAC user: `john.mduda@mshirikacorp.onmicrosoft.com`
-- Source branch/commit: `prototype-next-delivery` / `50d5134`
-- Package marker: `tacatdp-dashboard-20260810-001`
-- Entry assets: `/assets/index-B4OQ5yHn.mjs` and `/assets/index-iJm6_0ke.css`
+- Source branch/commit: `prototype-next-delivery` / `cb11d48`
+- Package marker: `tacatdp-dashboard-20260810-002`
+- Entry assets: `/assets/index-D18L6wsc.mjs` and `/assets/index-BFYDxzL8.css`
 
-Deployment used the fresh PAC download and overlay workaround. Upload succeeded in `247.89 secs`. Post-upload PAC download confirmed both Home fragments reference the dashboard marker, and the downloaded entry bundle passed `node --check`.
+Deployment used the fresh PAC download and overlay workaround. The latest revision upload succeeded in `212.88 secs`. Post-upload PAC download confirmed both Home fragments reference the dashboard marker, and the downloaded entry bundle passed `node --check`.
+
+The latest revision moved dashboard header text to the shell header, restored the CRDB logo in the sidenav brand, compacted/scroll-enabled the sidenav, moved status/copyright text to the shell footer, and rebuilt the final-row dashboard cards with code-native SVG icons/illustration.
 
 ## Important Constraints
 
