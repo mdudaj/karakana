@@ -14,7 +14,7 @@ Sustainable Finance MEL Platform is the current project identity. TACATDP remain
 
 - Baseline submissions are stored in Dataverse submission/version/attachment records.
 - Reporting projections provide root submission rows, repeat rows, and answer rows for portal reporting and export.
-- The prototype beneficiary dashboard may derive beneficiary facts from submission report rows until a governed beneficiary master table is approved.
+- The earlier mixed beneficiary KPI/map panel is superseded by a dedicated TACATDP dashboard route that uses structured demonstration data until governed live KPI projections are approved.
 - Future accepted-product architecture should introduce centrally governed beneficiary master data, programme/project membership, configurable indicators, and stronger data governance.
 - Multi-select and repeat data should use child rows when analytics or reporting need one row per selected/repeated item.
 - Large or cascading choices should use governed reference data with indexed parent keys rather than hard-coded app collections.
@@ -23,9 +23,12 @@ Sustainable Finance MEL Platform is the current project identity. TACATDP remain
 ## Portal UX Architecture
 
 - The managed shell owns route identity, side navigation, sticky top bar, and footer.
-- Dashboard pages should show operational status, assignment health, beneficiary KPIs, and lightweight portal visualisations without requiring Power BI access.
-- Use Apache ECharts through `vue-echarts` for prototype charts and Leaflet through `@vue-leaflet/vue-leaflet` for prototype maps.
-- Lazy-load chart and map libraries after the shell renders.
+- The default Dashboard route is the dedicated TACATDP visualization dashboard for the current proof of concept.
+- Operational workbench content belongs under the Workspace/Data Submission route, not mixed into the visualization dashboard.
+- Use Apache ECharts through `vue-echarts` for prototype KPI charts and the Tanzania ADM1 choropleth map.
+- The Tanzania map uses a local geoBoundaries ADM1 GeoJSON asset to avoid external tile dependencies in Power Pages.
+- Lazy-load chart libraries after the shell renders.
+- Keep the Administration drawer area visible. `Organizations` is a future-ready placeholder for implementation partners, CRDB units/branches, cooperatives, AMCOS/SACCOS, and other responsible institutions; it is not a core TACATDP-only prototype workflow yet.
 
 ## Integration Notes
 

@@ -22,9 +22,17 @@ Phase 3 may continue with explicit prototype shortcuts while environment permiss
 
 ## Portal visualisation libraries
 
-For the prototype portal dashboard, use Apache ECharts through `vue-echarts` for KPI charts and Leaflet through `@vue-leaflet/vue-leaflet` for maps. Lazy-load charts and maps after the dashboard shell renders.
+For the prototype portal dashboard, use Apache ECharts through `vue-echarts` for KPI charts and the Tanzania regional choropleth map. The map should use a local Tanzania ADM1 GeoJSON asset rather than external tile services.
+
+The previous Leaflet marker-map slice is superseded. Do not reintroduce Leaflet for this dashboard unless a later map requirement specifically needs pan/zoom tiles or marker-heavy geospatial exploration.
 
 Use MapLibre GL JS only as a future-product option when the platform needs vector tiles, WebGL rendering, or heavier geospatial layers.
+
+## Dashboard route separation
+
+The default Dashboard route is a high-fidelity TACATDP visualization route for the single-project prototype. Operational workbench components should live under Workspace/Data Submissions so visualization is not mixed with form operations.
+
+The left drawer may keep Administration and `Organizations` visible for product shape. In the current prototype, `Organizations` is a future-ready placeholder for responsible organizations such as implementation partners, CRDB units/branches, cooperatives, AMCOS/SACCOS, and similar institutional actors.
 
 ## One-field-per-row form layout
 
