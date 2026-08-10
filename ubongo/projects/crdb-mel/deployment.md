@@ -23,7 +23,7 @@ For Power Pages uploads with this PAC version:
 
 1. Confirm the Mshirika profile is active: `john.mduda@mshirikacorp.onmicrosoft.com` against `https://orga3cf4b37.crm4.dynamics.com/`.
 2. Download a fresh package from the target website.
-3. Overlay only the built SPA assets and Home fragments.
+3. Overlay only the built SPA assets and the existing fresh-package Home copy files. Do not copy the whole repository `web-pages/home` folder into a fresh package, because repository and fresh-download content-page folder conventions can differ and can introduce duplicate or primary-key-missing webpage records.
 4. Upload the fresh-format package with `pac pages upload --modelVersion Enhanced --forceUploadAll`.
 5. Download again and verify both Home fragments reference the expected cache marker.
 
@@ -43,6 +43,21 @@ On 2026-08-10, the TACATDP ECharts dashboard prototype was deployed to Mshirika 
 Deployment used the fresh PAC download and overlay workaround. The latest revision upload succeeded in `212.88 secs`. Post-upload PAC download confirmed both Home fragments reference the dashboard marker, and the downloaded entry bundle passed `node --check`.
 
 The latest revision moved dashboard header text to the shell header, restored the CRDB logo in the sidenav brand, compacted/scroll-enabled the sidenav, moved status/copyright text to the shell footer, and rebuilt the final-row dashboard cards with code-native SVG icons/illustration.
+
+On 2026-08-11, the Loan Portfolio by Type legend fix was committed and deployed to Mshirika:
+
+- Source branch/commit: `prototype-next-delivery` / `417d613`
+- Package marker: `tacatdp-dashboard-20260811-002`
+- Entry assets: `/assets/index-_YAHDKxX.mjs` and `/assets/index-B7MyrjMt.css`
+- PAC user: `john.mduda@mshirikacorp.onmicrosoft.com`
+
+The first upload attempts failed before deployment: direct upload hit the older YAML `Expected 'SequenceStart', got 'MappingStart'` package-format issue, and a broad Home-folder overlay on a fresh package introduced duplicate/missing-primary-key webpage records. The successful upload used a clean fresh Enhanced-model download, replaced only:
+
+- `web-pages/home/Home.webpage.copy.html`
+- `web-pages/home/content-pages/Home.en-US.webpage.copy.html`
+- the five Home-referenced web files and their `.webfile.yml` files
+
+The corrected upload succeeded in `206.22 secs`. Post-upload PAC download confirmed the deployed Home fragments reference `tacatdp-dashboard-20260811-002`, and the downloaded `index-_YAHDKxX.mjs` bundle passed `node --check`.
 
 ## Important Constraints
 
