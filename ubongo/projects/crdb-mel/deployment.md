@@ -27,6 +27,21 @@ For Power Pages uploads with this PAC version:
 4. Upload the fresh-format package with `pac pages upload --modelVersion Enhanced --forceUploadAll`.
 5. Download again and verify both Home fragments reference the expected cache marker.
 
+## Latest Mshirika deployment
+
+On 2026-08-10, the TACATDP ECharts dashboard prototype was deployed to Mshirika:
+
+- Environment: `PowerPagesDeveloper-070926-125720`
+- Environment URL: `https://orga3cf4b37.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+- PAC user: `john.mduda@mshirikacorp.onmicrosoft.com`
+- Source branch/commit: `prototype-next-delivery` / `50d5134`
+- Package marker: `tacatdp-dashboard-20260810-001`
+- Entry assets: `/assets/index-B4OQ5yHn.mjs` and `/assets/index-iJm6_0ke.css`
+
+Deployment used the fresh PAC download and overlay workaround. Upload succeeded in `247.89 secs`. Post-upload PAC download confirmed both Home fragments reference the dashboard marker, and the downloaded entry bundle passed `node --check`.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
