@@ -85,6 +85,19 @@ The Mshirika-reviewed dashboard legend layout refinement was then deployed to CR
 
 The CRDB upload used the same clean fresh Enhanced-model package overlay pattern and succeeded in `213.90 secs`. Post-upload PAC download confirmed the deployed Home fragments reference `tacatdp-dashboard-20260811-005`, and the downloaded `index-BslHF5sX.mjs` bundle passed `node --check`.
 
+On 2026-08-11, the latest dashboard layout refinement was deployed to Mshirika first for review:
+
+- Environment: `PowerPagesDeveloper-070926-125720`
+- Environment URL: `https://orga3cf4b37.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+- PAC user: `john.mduda@mshirikacorp.onmicrosoft.com`
+- Source branch/commit: `prototype-next-delivery` / `a8d0d16`
+- Package marker: `tacatdp-dashboard-20260811-006`
+- Entry assets: `/assets/index-CpeETUAV.mjs` and `/assets/index-hj0iKXuy.css`
+
+The upload used the clean fresh Enhanced-model package overlay pattern, replacing only the two Home copy fragments and the new Home-referenced entry web files. Upload succeeded in `218.21 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-006`, and the downloaded `index-CpeETUAV.mjs` bundle passed `node --check`.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
