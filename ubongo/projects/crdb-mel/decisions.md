@@ -50,6 +50,8 @@ Use the subtle 4 px left accent rail only on KPI/metric summary cards, not on ev
 
 The rail must stay in shared metric-card primitives or explicit opt-in metric modes, not page-local borders. Pages may choose a semantic tone such as green, blue, amber, purple, red, or neutral for metric cards, but they should not redefine the rail anatomy. Validators should check both sides of the rule: metric cards keep the accent token and pseudo-element, while generic content cards do not shade themselves by default.
 
+Use `scripts/validate-route-card-accent-scope.mjs` as the guard against decorative route-card rails. It should allow metric-card rails, active navigation, semantic warning/error/success status treatments, and ODK focus/error indicators, but reject brand/accent left rails on route headers, user cards, project/form/data cards, drawers, pagination, connection panels, and similar content surfaces.
+
 ## One-field-per-row form layout
 
 Data-entry screens should default to one field per row with visible labels, helper/error text near the input, consistent spacing, and accessible focus order.
