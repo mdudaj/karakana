@@ -195,6 +195,19 @@ The Material beneficiaries route prototype was deployed to Mshirika:
 
 The first upload attempt failed before changing the site because `stage-powerpages-spa-build.py` had deleted the fresh PAC download and replaced it with the repository `.powerpages-site` tree, reintroducing stale/older YAML records and causing PAC `2.9.3` to fail with `Expected 'SequenceStart', got 'MappingStart'` plus null-primary-key errors such as `adx_weblinksetid`. The script was corrected to require a fresh upload package and overlay only the two Home copy fragments plus current SPA web files and metadata. The corrected upload succeeded in `231.72 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-013`, `index-fYl4hH1T.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live Mshirika web files.
 
+The reusable Material card accent rail abstraction was deployed to Mshirika for visual review:
+
+- Source branch/commits: `prototype-next-delivery` / source slice `6669008`, deployment artifact `1a287c0`
+- Package marker: `tacatdp-dashboard-20260811-014`
+- Entry assets: `/assets/index-ov02QyPH.mjs` and `/assets/index-DNgW64y7.css`
+- PAC profile/user: `mshirika` / `john.mduda@mshirikacorp.onmicrosoft.com`
+- Target environment: `PowerPagesDeveloper-070926-125720`
+- Target URL: `https://orga3cf4b37.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+
+The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the current SPA web files plus the two Home copy fragments. Upload succeeded in `216.03 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-014`, `index-ov02QyPH.mjs` passes `node --check`, and all 32 Vite `dist/assets` files exist in the downloaded Power Pages `web-files` package. `npm run test:material` and `npm run build:mshirika-runtime` passed before upload. The build still reports the known upstream `@getodk/web-forms` direct-`eval` and large-chunk warnings.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
