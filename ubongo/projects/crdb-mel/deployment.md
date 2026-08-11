@@ -140,6 +140,16 @@ The Program Impact Goal farmer-image background refinement was then deployed to 
 
 The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the new SPA entry JS/CSS, the farmer PNG, and the two Home copy fragments. Upload succeeded in `211.34 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-009`, `index-CYleeA6X.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live Mshirika web files.
 
+After Mshirika preview approval, the same Program Impact Goal farmer-image background refinement was deployed to CRDB:
+
+- Source branch/commit: `prototype-next-delivery` / `3efe80a`
+- Package marker: `tacatdp-dashboard-20260811-009`
+- Entry assets: `/assets/index-CYleeA6X.mjs` and `/assets/index-PQZUFUpJ.css`
+- Background asset: `/assets/program-impact-farmer-U4dPWmM1.png`
+- PAC profile/user: `tacatdp-crdb` / `dmuroba@CRDBBANK.CO.TZ`
+
+The CRDB upload used a fresh CRDB Enhanced-model download as the base and overlaid only the new SPA entry JS/CSS, the farmer PNG, and the two Home copy fragments. Upload succeeded in `246.26 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-009`, `index-CYleeA6X.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live CRDB web files. This verification explicitly checked the assets that previously caused the CRDB blank page.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
