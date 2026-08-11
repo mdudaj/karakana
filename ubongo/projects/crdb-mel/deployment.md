@@ -208,6 +208,19 @@ The reusable Material card accent rail abstraction was deployed to Mshirika for 
 
 The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the current SPA web files plus the two Home copy fragments. Upload succeeded in `216.03 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-014`, `index-ov02QyPH.mjs` passes `node --check`, and all 32 Vite `dist/assets` files exist in the downloaded Power Pages `web-files` package. `npm run test:material` and `npm run build:mshirika-runtime` passed before upload. The build still reports the known upstream `@getodk/web-forms` direct-`eval` and large-chunk warnings.
 
+The metric-only accent rail correction was deployed to Mshirika:
+
+- Source branch/commits: `prototype-next-delivery` / source slice `1feba3d`, deployment artifact `da74573`
+- Package marker: `tacatdp-dashboard-20260811-015`
+- Entry assets: `/assets/index-tYULaFNG.mjs` and `/assets/index-DAC01KWF.css`
+- PAC profile/user: `mshirika` / `john.mduda@mshirikacorp.onmicrosoft.com`
+- Target environment: `PowerPagesDeveloper-070926-125720`
+- Target URL: `https://orga3cf4b37.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+
+The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the current SPA web files plus the two Home copy fragments. Upload succeeded in `210.97 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-015`, `index-tYULaFNG.mjs` passes `node --check`, and all 32 Vite `dist/assets` files exist in the downloaded Power Pages `web-files` package. `npm run test:material` and `npm run build:mshirika-runtime` passed before upload. The build still reports the known upstream `@getodk/web-forms` direct-`eval` and large-chunk warnings.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
