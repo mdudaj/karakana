@@ -251,6 +251,21 @@ The source slice restored the left shade for `.project-card` project-list cards 
 
 The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the current SPA web files plus the two Home copy fragments. Upload succeeded in `229.83 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-017`, `index-DDzmzwy7.mjs` passes `node --check`, and all 32 Vite `dist/assets` files exist in the downloaded Power Pages `web-files` package. `npm run test:material` and `npm run build:mshirika-runtime` passed before upload. The build still reports the known upstream `@getodk/web-forms` direct-`eval` and large-chunk warnings.
 
+The all-metric-card rail correction was deployed to Mshirika:
+
+- Source branch/commits: `prototype-next-delivery` / source slice `6caee89`, deployment artifact `13cd405`
+- Package marker: `tacatdp-dashboard-20260811-018`
+- Entry assets: `/assets/index-CQZYRfsF.mjs` and `/assets/index-CS6nPAt1.css`
+- PAC profile/user: `mshirika` / `john.mduda@mshirikacorp.onmicrosoft.com`
+- Target environment: `PowerPagesDeveloper-070926-125720`
+- Target URL: `https://orga3cf4b37.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+
+The source slice corrected the previous interpretation error where only the first metric card in Users and Project Detail received the rail. The rail now belongs to the shared `.metric-card` primitive, so every metric card in Users, Project Detail, Reporting, System Activity, and Activation metric strips receives the metric rail. Non-metric content cards remain plain, and the temporary project-list card shade remains allowed.
+
+The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the current SPA web files plus the two Home copy fragments. Upload succeeded in `235.68 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-018`, `index-CQZYRfsF.mjs` passes `node --check`, and all 32 Vite `dist/assets` files exist in the downloaded Power Pages `web-files` package. `npm run test:material` and `npm run build:mshirika-runtime` passed before upload. The build still reports the known upstream `@getodk/web-forms` direct-`eval` and large-chunk warnings.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.

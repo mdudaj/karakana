@@ -52,6 +52,8 @@ The rail must stay in shared metric-card primitives or explicit opt-in metric mo
 
 Use `scripts/validate-route-card-accent-scope.mjs` as the guard against decorative route-card rails. It should allow metric-card rails, active navigation, semantic warning/error/success status treatments, ODK focus/error indicators, and the project-list card shade while that temporary exception is desired. It should reject brand/accent left rails on route headers, user cards, form/data cards, drawers, pagination, connection panels, and similar content surfaces.
 
+Important clarification: "Metric-card rail" means every card that uses the shared `.metric-card` primitive gets the metric rail. Do not interpret the rule as "only the first metric card in a strip." Users route, Project Detail summary, Reporting summary, System Activity summary, and Activation summary metric rows should show the rail on each metric card while non-metric content cards remain plain.
+
 ## One-field-per-row form layout
 
 Data-entry screens should default to one field per row with visible labels, helper/error text near the input, consistent spacing, and accessible focus order.
