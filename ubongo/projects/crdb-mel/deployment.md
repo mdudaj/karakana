@@ -107,6 +107,15 @@ The Program Impact Goal background image refinement was then deployed to Mshirik
 
 The upload used the same clean fresh Enhanced-model package overlay pattern, replacing the two Home copy fragments, the new entry JS/CSS web files, and the farmer PNG web file. Upload succeeded in `249.72 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-007`, the farmer PNG exists in deployed web files, and the downloaded `index-D1aDNeLa.mjs` bundle passed `node --check`.
 
+The follow-up image-fit refinement was deployed to Mshirika after changing the Program Impact Goal artwork from a cropped background to a contained image:
+
+- Source branch/commit: `prototype-next-delivery` / `74e1ed6`
+- Package marker: `tacatdp-dashboard-20260811-008`
+- Entry assets: `/assets/index-D77AjqZ4.mjs` and `/assets/index-CaiBw9Lr.css`
+- Background asset: `/assets/program-impact-farmer-U4dPWmM1.png`
+
+The upload used the same clean fresh Enhanced-model package overlay pattern, replacing the two Home copy fragments, the new entry JS/CSS web files, and the farmer PNG web file. Upload succeeded in `246.99 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-008`, the farmer PNG exists in deployed web files, and the downloaded `index-D77AjqZ4.mjs` bundle passed `node --check`.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
