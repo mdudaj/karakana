@@ -34,6 +34,10 @@ The default Dashboard route is a high-fidelity TACATDP visualization route for t
 
 The left drawer may keep Administration and `Organizations` visible for product shape. In the current prototype, `Organizations` is a future-ready placeholder for responsible organizations such as implementation partners, CRDB units/branches, cooperatives, AMCOS/SACCOS, and similar institutional actors.
 
+## Dashboard card background imagery
+
+Cards that need full-surface illustration or photographic artwork should use a reusable card background layer or background slot behind the card header/content. Do not place the image as ordinary card content with `object-fit: contain`, because it leaves unused space and makes the artwork look detached. Use an absolutely positioned background layer with `inset: 0`, `overflow: hidden`, `object-fit: cover`, and an explicit `object-position` chosen for the asset. Keep text content in a higher z-index layer and use a readable contrast treatment when the background sits behind copy.
+
 ## One-field-per-row form layout
 
 Data-entry screens should default to one field per row with visible labels, helper/error text near the input, consistent spacing, and accessible focus order.
