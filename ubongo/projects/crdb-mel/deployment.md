@@ -98,6 +98,15 @@ On 2026-08-11, the latest dashboard layout refinement was deployed to Mshirika f
 
 The upload used the clean fresh Enhanced-model package overlay pattern, replacing only the two Home copy fragments and the new Home-referenced entry web files. Upload succeeded in `218.21 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-006`, and the downloaded `index-CpeETUAV.mjs` bundle passed `node --check`.
 
+The Program Impact Goal background image refinement was then deployed to Mshirika:
+
+- Source branch/commit: `prototype-next-delivery` / `ae28a31`
+- Package marker: `tacatdp-dashboard-20260811-007`
+- Entry assets: `/assets/index-D1aDNeLa.mjs` and `/assets/index-BnSf0Bae.css`
+- Background asset: `/assets/program-impact-farmer-U4dPWmM1.png`
+
+The upload used the same clean fresh Enhanced-model package overlay pattern, replacing the two Home copy fragments, the new entry JS/CSS web files, and the farmer PNG web file. Upload succeeded in `249.72 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-007`, the farmer PNG exists in deployed web files, and the downloaded `index-D1aDNeLa.mjs` bundle passed `node --check`.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
