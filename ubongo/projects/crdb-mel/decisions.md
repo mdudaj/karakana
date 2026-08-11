@@ -30,6 +30,8 @@ Use MapLibre GL JS only as a future-product option when the platform needs vecto
 
 Dashboard chart refinements must be based on the relevant official ECharts examples/docs before implementation. For line charts, preserve explicit grid gutters, `grid.containLabel`, axis-label margins, point-label `position`/`distance`, and overlap protection where labels are visible. Add or update a repeatable visual-spacing guard when a chart layout issue is fixed so the same overlap does not return silently.
 
+Use compact numeric axis labels as the default dashboard convention. Do not repeat units such as `B`, `%`, `TZS`, or `tCO₂e` on every axis tick when the unit can be shown once in the chart title, subtitle, axis name, legend, or nearby caption. This keeps dense cards readable and avoids label collisions. Visual guards should enforce this convention for compact dashboard charts.
+
 ## Dashboard route separation
 
 The default Dashboard route is a high-fidelity TACATDP visualization route for the single-project prototype. Operational workbench components should live under Workspace/Data Submissions so visualization is not mixed with form operations.
