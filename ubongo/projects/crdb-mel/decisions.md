@@ -28,6 +28,8 @@ The previous Leaflet marker-map slice is superseded. Do not reintroduce Leaflet 
 
 Use MapLibre GL JS only as a future-product option when the platform needs vector tiles, WebGL rendering, or heavier geospatial layers.
 
+Dashboard chart refinements must be based on the relevant official ECharts examples/docs before implementation. For line charts, preserve explicit grid gutters, `grid.containLabel`, axis-label margins, point-label `position`/`distance`, and overlap protection where labels are visible. Add or update a repeatable visual-spacing guard when a chart layout issue is fixed so the same overlap does not return silently.
+
 ## Dashboard route separation
 
 The default Dashboard route is a high-fidelity TACATDP visualization route for the single-project prototype. Operational workbench components should live under Workspace/Data Submissions so visualization is not mixed with form operations.
