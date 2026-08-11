@@ -32,6 +32,8 @@ Dashboard chart refinements must be based on the relevant official ECharts examp
 
 Use compact numeric axis labels as the default dashboard convention. Do not repeat units such as `B`, `%`, `TZS`, or `tCO₂e` on every axis tick when the unit can be shown once in the chart title, subtitle, axis name, legend, or nearby caption. This keeps dense cards readable and avoids label collisions. Visual guards should enforce this convention for compact dashboard charts.
 
+For compact category line charts with visible point labels, keep `xAxis.boundaryGap` enabled by default. Disabling it places the first/last point directly on the chart edge or y-axis gutter, which can make the first point label collide with y-axis tick labels even when `grid.containLabel` is enabled.
+
 ## Dashboard route separation
 
 The default Dashboard route is a high-fidelity TACATDP visualization route for the single-project prototype. Operational workbench components should live under Workspace/Data Submissions so visualization is not mixed with form operations.
