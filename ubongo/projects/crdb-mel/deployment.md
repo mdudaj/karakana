@@ -186,6 +186,15 @@ After Mshirika preview, the Disbursement Trend edge-label clearance fix was depl
 
 The upload used a fresh CRDB Enhanced-model download as the base and overlaid only the new SPA entry JS/CSS, the farmer PNG, and the two Home copy fragments. Upload succeeded in `246.88 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-012`, `index-DO1bCuTP.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live CRDB web files. This verification explicitly checked the chunk set that previously caused the CRDB blank page.
 
+The Material beneficiaries route prototype was deployed to Mshirika:
+
+- Source branch/commit: `prototype-next-delivery` / `353238f` plus staging-script fix commit
+- Package marker: `tacatdp-dashboard-20260811-013`
+- Entry assets: `/assets/index-fYl4hH1T.mjs` and `/assets/index-B4t5D1m2.css`
+- PAC profile/user: `mshirika` / `john.mduda@mshirikacorp.onmicrosoft.com`
+
+The first upload attempt failed before changing the site because `stage-powerpages-spa-build.py` had deleted the fresh PAC download and replaced it with the repository `.powerpages-site` tree, reintroducing stale/older YAML records and causing PAC `2.9.3` to fail with `Expected 'SequenceStart', got 'MappingStart'` plus null-primary-key errors such as `adx_weblinksetid`. The script was corrected to require a fresh upload package and overlay only the two Home copy fragments plus current SPA web files and metadata. The corrected upload succeeded in `231.72 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-013`, `index-fYl4hH1T.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live Mshirika web files.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
