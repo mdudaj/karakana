@@ -177,6 +177,15 @@ The Disbursement Trend edge-label clearance fix was then deployed to Mshirika:
 
 The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the new SPA entry JS/CSS, the farmer PNG, and the two Home copy fragments. Upload succeeded in `209.91 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-012`, `index-DO1bCuTP.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live Mshirika web files.
 
+After Mshirika preview, the Disbursement Trend edge-label clearance fix was deployed to CRDB:
+
+- Source branch/commit: `prototype-next-delivery` / `d4271ce`
+- Package marker: `tacatdp-dashboard-20260811-012`
+- Entry assets: `/assets/index-DO1bCuTP.mjs` and `/assets/index-C9y6VjKL.css`
+- PAC profile/user: `tacatdp-crdb` / `dmuroba@CRDBBANK.CO.TZ`
+
+The upload used a fresh CRDB Enhanced-model download as the base and overlaid only the new SPA entry JS/CSS, the farmer PNG, and the two Home copy fragments. Upload succeeded in `246.88 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-012`, `index-DO1bCuTP.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live CRDB web files. This verification explicitly checked the chunk set that previously caused the CRDB blank page.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
