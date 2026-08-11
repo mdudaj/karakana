@@ -266,6 +266,19 @@ The source slice corrected the previous interpretation error where only the firs
 
 The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the current SPA web files plus the two Home copy fragments. Upload succeeded in `235.68 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-018`, `index-CQZYRfsF.mjs` passes `node --check`, and all 32 Vite `dist/assets` files exist in the downloaded Power Pages `web-files` package. `npm run test:material` and `npm run build:mshirika-runtime` passed before upload. The build still reports the known upstream `@getodk/web-forms` direct-`eval` and large-chunk warnings.
 
+The accepted all-metric-card rail correction was deployed to CRDB:
+
+- Source branch/commits: `prototype-next-delivery` / source slice `6caee89`
+- Package marker: `tacatdp-dashboard-20260811-018`
+- Entry assets: `/assets/index-CQZYRfsF.mjs` and `/assets/index-CS6nPAt1.css`
+- PAC profile/user: `tacatdp-crdb` / `dmuroba@CRDBBANK.CO.TZ`
+- Target environment: `TACATDP-CRDB-Dev`
+- Target URL: `https://org5eb0379b.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+
+The upload used a fresh CRDB Enhanced-model download as the base and overlaid the accepted marker `018` SPA build plus the two Home copy fragments. Upload succeeded in `275.29 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-018`, and the downloaded `index-CQZYRfsF.mjs` bundle passed `node --check`. A stricter deployed-asset check verified all 32 Vite assets by Power Pages `adx_partialurl` and content hash rather than exported local filename, because PAC exports duplicate CRDB web-file records with local suffixes when multiple records share the same partial URL. The check found duplicate partial URLs for the three ODK locale chunks (`strings_es-C8xkQaZj-KYNBMnTd.mjs`, `strings_fr-C0vLmCzP-Bi34LuTN.mjs`, and `strings_id-BE0G3I_d-B0dO9nQF.mjs`), but at least one deployed web-file record for each expected browser URL has the exact current binary. PAC reported managed `powerpagecomponent` delete warnings during upload; the CLI stated those stale-record delete failures did not stop the upload.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
