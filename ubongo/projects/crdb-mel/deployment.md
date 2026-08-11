@@ -59,6 +59,24 @@ The first upload attempts failed before deployment: direct upload hit the older 
 
 The corrected upload succeeded in `206.22 secs`. Post-upload PAC download confirmed the deployed Home fragments reference `tacatdp-dashboard-20260811-002`, and the downloaded `index-_YAHDKxX.mjs` bundle passed `node --check`.
 
+On 2026-08-11, CRDB device-code authentication was recreated successfully with the delegated Denis Muroba profile:
+
+- PAC profile: `tacatdp-crdb`
+- PAC user: `dmuroba@CRDBBANK.CO.TZ`
+- Environment: `TACATDP-CRDB-Dev`
+- Environment URL: `https://org5eb0379b.crm4.dynamics.com/`
+- Environment ID: `42a3b1e6-8eea-e74a-ae11-3edc41e62d57`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+
+The dashboard chart spacing revision was then deployed directly to CRDB:
+
+- Source branch/commit: `prototype-next-delivery` / `d3d4f21`
+- Package marker: `tacatdp-dashboard-20260811-004`
+- Entry assets: `/assets/index-BKbav0i7.mjs` and `/assets/index-onZrj1qI.css`
+
+The CRDB upload used the same clean fresh Enhanced-model package overlay pattern and succeeded in `236.56 secs`. Post-upload PAC download confirmed the deployed Home fragments reference `tacatdp-dashboard-20260811-004`, and the downloaded `index-BKbav0i7.mjs` bundle passed `node --check`.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
