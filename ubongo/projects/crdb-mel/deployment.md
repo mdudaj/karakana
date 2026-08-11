@@ -116,6 +116,20 @@ The follow-up image-fit refinement was deployed to Mshirika after changing the P
 
 The upload used the same clean fresh Enhanced-model package overlay pattern, replacing the two Home copy fragments, the new entry JS/CSS web files, and the farmer PNG web file. Upload succeeded in `246.99 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-008`, the farmer PNG exists in deployed web files, and the downloaded `index-D77AjqZ4.mjs` bundle passed `node --check`.
 
+The CRDB blank-page issue was then repaired by redeploying the same `008` package to CRDB using a fresh CRDB Enhanced-model download as the upload base:
+
+- Environment: `TACATDP-CRDB-Dev`
+- Environment URL: `https://org5eb0379b.crm4.dynamics.com/`
+- Website: `TACATDP Monitoring Tool`
+- Website ID: `fccc0cc6-7f5e-4885-aeb8-2272e68130a3`
+- PAC profile/user: `tacatdp-crdb` / `dmuroba@CRDBBANK.CO.TZ`
+- Source branch/commit: `prototype-next-delivery` / `74e1ed6`
+- Package marker: `tacatdp-dashboard-20260811-008`
+- Entry assets: `/assets/index-D77AjqZ4.mjs` and `/assets/index-CaiBw9Lr.css`
+- Background asset: `/assets/program-impact-farmer-U4dPWmM1.png`
+
+Direct upload of the older local upload folder failed with the known PAC `Expected 'SequenceStart', got 'MappingStart'` package-format issue. Uploading a fresh CRDB export succeeded, confirming the fresh-download package was compatible. A new overlay package was then created from the fresh export, with only the current SPA web files and Home copy fragments overlaid. The CRDB fix upload succeeded in `249.23 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-008`, `index-D77AjqZ4.mjs` passes `node --check`, and all imported chunks exist in live CRDB web files, including `charts-BPLJPjyX.mjs`, `components-L5WOVj4e.mjs`, `core-BTH3Gimn.mjs`, `main-D33weQsb.mjs`, `vendor-datepicker-JwSW3Esp.mjs`, and `vue-datepicker-Ber1572m.mjs`. PAC reported managed `powerpagecomponent` delete warnings during upload; the CLI stated those stale-record delete failures did not stop the upload.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
