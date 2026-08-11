@@ -1,0 +1,25 @@
+id: material-record-list
+name: Material record list requires semantic table and responsive cards
+description: Ensure Material 3 record-list guidance preserves table semantics, status text, filters, responsive fallback, and verification.
+suite: skills
+risk_level: low
+tags:
+  - skills
+  - material-3
+  - frontend
+input:
+  task: "Add a beneficiary management list page to a Material-style web app."
+  skill: material-3-ui
+  task_type: planning
+  prompt_file: skills/material-3-ui/SKILL.md
+expectations:
+  must_include:
+    - "semantic"
+    - "<table>"
+    - "status"
+    - "filters"
+    - "responsive"
+    - "validator"
+  forbidden_patterns:
+    - "color alone"
+    - "official statistics"
