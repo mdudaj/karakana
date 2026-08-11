@@ -130,6 +130,16 @@ The CRDB blank-page issue was then repaired by redeploying the same `008` packag
 
 Direct upload of the older local upload folder failed with the known PAC `Expected 'SequenceStart', got 'MappingStart'` package-format issue. Uploading a fresh CRDB export succeeded, confirming the fresh-download package was compatible. A new overlay package was then created from the fresh export, with only the current SPA web files and Home copy fragments overlaid. The CRDB fix upload succeeded in `249.23 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-008`, `index-D77AjqZ4.mjs` passes `node --check`, and all imported chunks exist in live CRDB web files, including `charts-BPLJPjyX.mjs`, `components-L5WOVj4e.mjs`, `core-BTH3Gimn.mjs`, `main-D33weQsb.mjs`, `vendor-datepicker-JwSW3Esp.mjs`, and `vue-datepicker-Ber1572m.mjs`. PAC reported managed `powerpagecomponent` delete warnings during upload; the CLI stated those stale-record delete failures did not stop the upload.
 
+The Program Impact Goal farmer-image background refinement was then deployed to Mshirika for preview:
+
+- Source branch/commit: `prototype-next-delivery` / `3efe80a`
+- Package marker: `tacatdp-dashboard-20260811-009`
+- Entry assets: `/assets/index-CYleeA6X.mjs` and `/assets/index-PQZUFUpJ.css`
+- Background asset: `/assets/program-impact-farmer-U4dPWmM1.png`
+- PAC profile/user: `mshirika` / `john.mduda@mshirikacorp.onmicrosoft.com`
+
+The upload used a fresh Mshirika Enhanced-model download as the base and overlaid only the new SPA entry JS/CSS, the farmer PNG, and the two Home copy fragments. Upload succeeded in `211.34 secs`. Post-upload PAC download confirmed both deployed Home fragments reference `tacatdp-dashboard-20260811-009`, `index-CYleeA6X.mjs` passes `node --check`, the farmer PNG exists, and all imported chunks exist in live Mshirika web files.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
