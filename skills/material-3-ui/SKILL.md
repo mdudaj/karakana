@@ -37,6 +37,7 @@ bucket: development
 - Start from project tokens, then map them to Material roles: primary, surface, surface-container, outline, on-surface, on-surface-variant, positive, warning, and error.
 - Use 4 px increments and 8 px rhythm for spacing. Prefer 16 px and 24 px gaps between related groups; avoid one-off page-local nudges.
 - Use cards for grouped summaries/actions, lists for homogeneous row items, and tables for dense desktop comparison.
+- For institutional card consistency, prefer a reusable subtle left accent rail on elevated cards. The rail should be token-driven, about 4 px wide, and semantic by tone rather than decorative.
 - For desktop enterprise records, prefer a semantic `<table>` with visible headers, row hover/focus state, status text, and pagination or an explicit prototype limit.
 - For mobile, transform tables into stacked record cards instead of shrinking columns until labels become unreadable.
 - Keep list rows scannable: leading identity, supporting text, trailing status/metadata/action. Do not mix unrelated content types in one list.
@@ -55,6 +56,7 @@ Prevent repeated UI corrections by applying Material 3 structure before coding. 
 - Dense enterprise data still needs semantic HTML; visual polish does not replace table/list semantics.
 - The same record collection can be a table on desktop and a card list on mobile, but both must preserve the same information hierarchy.
 - Verification should protect the pattern, not only the current pixels.
+- Card emphasis should be reusable component anatomy. Do not add one-off borders or shadows to individual cards when the project has a card primitive.
 
 ## When to use this skill
 
@@ -109,6 +111,7 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - Did the implementation inspect the existing shell, tokens, and reusable components first?
 - Is the component pattern appropriate: card, list, table, filter drawer, or dashboard grid?
 - Are colors, spacing, radius, elevation, and focus states token-based or otherwise consistent with the project design profile?
+- Do card surfaces use the shared card primitive or an explicitly documented equivalent, including the project’s accent rail when that is part of the design profile?
 - Does the page include loading, empty, no-data, partial-data, and error states where data is dynamic?
 - Are search and filters visibly labelled and keyboard operable?
 - Are status chips text-labelled and not color-only?
@@ -120,6 +123,7 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 
 - Beneficiary registry: desktop semantic table with scoped column headers, search/filter controls above, status chips in the verification column, and mobile record cards.
 - KPI dashboard: 12-column grid, reusable elevated cards, shared footer/action slot, and chart options separated from page markup.
+- Accent card rail: `DashboardCard`, `KpiCard`, or `SurfaceCard` owns the left rail and accepts a tone prop; pages choose tone, not rail CSS.
 - Data submissions list: two-line list rows with region/reporting period as primary/supporting text and submission status/time as trailing content.
 
 ## Pitfalls
@@ -128,6 +132,7 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - Shrinking too many columns into mobile instead of switching to cards.
 - Creating one-off colors for every chip instead of using status tones.
 - Moving actions based on content length instead of using a shared card footer/action slot.
+- Adding page-local left borders instead of updating the shared card primitive.
 - Leaving demo data unlabeled so prototype values look official.
 - Adding `@material/web` before checking whether the existing Vue component system can express the same M3 rule.
 

@@ -44,6 +44,10 @@ The left drawer may keep Administration and `Organizations` visible for product 
 
 Cards that need full-surface illustration or photographic artwork should use a reusable card background layer or background slot behind the card header/content. Do not place the image as ordinary card content with `object-fit: contain`, because it leaves unused space and makes the artwork look detached. Use an absolutely positioned background layer with `inset: 0`, `overflow: hidden`, `object-fit: cover`, and an explicit `object-position` chosen for the asset. Keep text content in a higher z-index layer and use a readable contrast treatment when the background sits behind copy.
 
+## Card accent rail
+
+Reusable dashboard and route cards should use a subtle 4 px left accent rail as the standard card emphasis treatment. The rail belongs in shared card primitives such as `DashboardCard`, `KpiCard`, and `SurfaceCard`, not page-local borders. Pages may choose a semantic tone such as green, blue, amber, purple, red, or neutral, but they should not redefine the rail anatomy. Validators should check that the accent token and rail pseudo-element remain present.
+
 ## One-field-per-row form layout
 
 Data-entry screens should default to one field per row with visible labels, helper/error text near the input, consistent spacing, and accessible focus order.
