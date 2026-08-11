@@ -77,6 +77,14 @@ The dashboard chart spacing revision was then deployed directly to CRDB:
 
 The CRDB upload used the same clean fresh Enhanced-model package overlay pattern and succeeded in `236.56 secs`. Post-upload PAC download confirmed the deployed Home fragments reference `tacatdp-dashboard-20260811-004`, and the downloaded `index-BKbav0i7.mjs` bundle passed `node --check`.
 
+The Mshirika-reviewed dashboard legend layout refinement was then deployed to CRDB:
+
+- Source branch/commit: `prototype-next-delivery` / `576805f`
+- Package marker: `tacatdp-dashboard-20260811-005`
+- Entry assets: `/assets/index-BslHF5sX.mjs` and `/assets/index-Ch-JYMmt.css`
+
+The CRDB upload used the same clean fresh Enhanced-model package overlay pattern and succeeded in `213.90 secs`. Post-upload PAC download confirmed the deployed Home fragments reference `tacatdp-dashboard-20260811-005`, and the downloaded `index-BslHF5sX.mjs` bundle passed `node --check`.
+
 ## Important Constraints
 
 - There is no simple Git-only path that creates the complete Canvas App and all Microsoft Lists from repository artifacts.
