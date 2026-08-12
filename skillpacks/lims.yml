@@ -51,10 +51,14 @@ safety:
     - production_config_change
 tests:
   commands:
-    - pytest
+    - ./scripts/local_preview.sh check
+    - ./scripts/local_preview.sh test apps.users apps.shell apps.operations apps.runtime apps.specimens apps.storage apps.reference
+    - ./scripts/local_preview.sh browser-test
   recommended_before_commit:
     - karakana eval run --skill viewflow-framework
 conventions:
   notes:
     - Review Viewflow process state, assignment, permissions, and frontend behavior together.
     - Active workflow compatibility must be checked before changing flow state names.
+    - Use Docker-backed local preview commands for verification; direct SQLite fallback is not the full test path.
+    - Create or switch to a task branch before editing either the Karakana harness repo or the LIMS repo.
