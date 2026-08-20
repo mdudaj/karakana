@@ -35,6 +35,7 @@ bucket: development
 ## Quick Reference
 
 - One project, one design-system profile: tokens, surfaces, page stack, tabs, forms, cards, buttons, tables, navigation, and cache/version rules.
+- Human-centred design is part of the design-system contract: reusable UI rules must protect task fit, plain language, data confidence, and non-misleading status/trend treatment.
 - Before a new product, portal, major UX refresh, or first implementation slice, establish or reference the shell layout and design-system foundation before building pages.
 - Build UI from reusable components or partials first; page templates compose them.
 - Preserve project-specific visual identity through tokens, not one-off page colors.
@@ -48,6 +49,7 @@ bucket: development
 - Route-level actions such as Back, Refresh, Add, or Export belong in a shell action lane or shared compact route chrome. Do not recreate them as page-local sticky hero bars unless the embedded runtime has a documented separate navigation boundary.
 - Field/runtime apps should separate host-shell components from embedded runtime engines. The host may own navigation, status, loading, and layout; the embedded engine should own its controls and validation unless a documented adapter boundary says otherwise.
 - Prototype diagnostics must not remain the primary user experience after a vertical slice is proven. Move build markers, event traces, and write diagnostics into a debug panel or development-only view.
+- Prototype disclaimers and live projection status must remain visible but visually secondary; they should not displace the primary work surface unless they block action or materially change interpretation.
 - UI work is not done until visual/design-system checks pass on affected pages.
 
 ## Purpose

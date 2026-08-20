@@ -1,6 +1,6 @@
 ---
 name: material-3-ui
-description: Use this skill before implementing or revising Material Design 3 web UI, especially lists, data tables, cards, filters, spacing, typography, tokens, responsive layouts, or accessibility states in Vue, Power Pages, or other web frontends.
+description: Use this skill before implementing or revising human-centred Material Design 3 web UI, especially dashboards, KPI cards, lists, data tables, cards, filters, spacing, typography, tokens, responsive layouts, or accessibility states in Vue, Power Pages, or other web frontends.
 version: 0.1.0
 risk_level: medium
 allowed_tools:
@@ -18,6 +18,10 @@ activation:
     - Material 3
     - M3
     - Material Design
+    - human-centred design
+    - HCD
+    - dashboard
+    - KPI
     - material-web
     - list
     - data table
@@ -34,7 +38,8 @@ bucket: development
 
 ## Quick Reference
 
-- Start from project tokens, then map them to Material roles: primary, surface, surface-container, outline, on-surface, on-surface-variant, positive, warning, and error.
+- Start from the user task and decision context, then map project tokens to Material roles: primary, surface, surface-container, outline, on-surface, on-surface-variant, positive, warning, and error.
+- A dashboard card should answer one clear user question, expose confidence/status plainly, and avoid decorative or misleading signals.
 - Use 4 px increments and 8 px rhythm for spacing. Prefer 16 px and 24 px gaps between related groups; avoid one-off page-local nudges.
 - Use cards for grouped summaries/actions, lists for homogeneous row items, and tables for dense desktop comparison.
 - For institutional metric-card consistency, use a reusable subtle left accent rail only on KPI/metric summary cards. The rail should be token-driven, about 4 px wide, and semantic by tone rather than decorative; do not apply it to every elevated content card.
@@ -45,14 +50,17 @@ bucket: development
 - Use visible labels for search and filters. Place active filters as removable chips above the affected list/table when filters are active.
 - Preserve route ownership: shell header owns route title and global actions; page content starts with the work surface.
 - Use official Material guidance or `@material/web` when adding new component patterns. Do not invent component anatomy without a reason.
+- Do not show trend arrows for neutral metadata, missing data, verification status, or system state. Use plain text such as “Needs verification,” “Not imported,” or “Updated Aug 15.”
+- Keep prototype disclaimers and live-read status visible but visually secondary. They should not compete with the primary KPI row unless the status blocks user action.
 
 ## Purpose
 
-Prevent repeated UI corrections by applying Material 3 structure before coding. This skill is tactical: it governs concrete web components, spacing, responsive behavior, and accessible states.
+Prevent repeated UI corrections by applying human-centred Material 3 structure before coding. This skill is tactical: it governs concrete web components, spacing, responsive behavior, accessible states, and decision clarity.
 
 ## Core concepts
 
 - Material UI consistency comes from tokens, component anatomy, interaction states, and responsive behavior working together.
+- Human-centred UX consistency comes from matching the user's task, language, data confidence, and workflow state before optimizing visual polish.
 - Dense enterprise data still needs semantic HTML; visual polish does not replace table/list semantics.
 - The same record collection can be a table on desktop and a card list on mobile, but both must preserve the same information hierarchy.
 - Verification should protect the pattern, not only the current pixels.
@@ -69,16 +77,17 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 ## Standard workflow
 
 1. Inspect the existing tokens, shell, reusable components, and the closest implemented page.
-2. Refresh official Material guidance when the component pattern is unstable, unfamiliar, or has caused repeated misses.
+2. Refresh official Material guidance and HCD/usability references when the component pattern is unstable, unfamiliar, or has caused repeated misses.
 3. Choose the correct pattern:
    - card: summary, goal, action, or grouped metrics;
    - list: homogeneous items with primary/supporting/trailing content;
    - table: dense comparison across stable columns;
    - filter drawer/chips: global or table-scoped filtering.
 4. Define behavior and visual requirements before editing: data scope, columns, actions, filters, empty/loading/error/partial states, responsive behavior, and accessibility.
-5. Implement via reusable classes/components and project tokens. Avoid page-local hard-coded colors unless adding a token.
-6. Add a focused validator or component test for the durable contract that failed or could regress.
-7. Build/typecheck and capture render evidence when the page is visible.
+5. For KPI/status cards, define the data type first: official metric, live projection, demonstration figure, missing data, or verification state. Pick copy and visual treatment from that classification.
+6. Implement via reusable classes/components and project tokens. Avoid page-local hard-coded colors unless adding a token.
+7. Add a focused validator or component test for the durable contract that failed or could regress.
+8. Build/typecheck and capture render evidence when the page is visible.
 
 ## Material list and table rules
 
@@ -105,6 +114,7 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - Do not shrink dense tables into unreadable mobile layouts.
 - Do not add third-party UI dependencies without approval and a migration/compatibility reason.
 - Do not let prototype/demo data appear official; label it as demonstration data.
+- Do not show unavailable, pending, or unverified data as a positive trend.
 
 ## Required checks
 
@@ -118,6 +128,8 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - Is desktop density readable without truncating critical labels?
 - Does mobile use a deliberate stacked layout instead of an unreadable compressed table?
 - Is there a validator, test, screenshot, or render check for the reusable rule?
+- Does every trend arrow represent an actual directional change, not a neutral status?
+- Are disclaimers/status messages concise, visible, and secondary to the user's main task?
 
 ## Examples
 
@@ -125,6 +137,7 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - KPI dashboard: 12-column grid, reusable elevated cards, shared footer/action slot, and chart options separated from page markup.
 - Metric accent rail: `KpiCard` owns the dashboard KPI rail; generic route cards such as `SurfaceCard` expose the rail only as an opt-in metric-card mode. Pages choose tone, not rail CSS, and content cards remain plain elevated surfaces.
 - Data submissions list: two-line list rows with region/reporting period as primary/supporting text and submission status/time as trailing content.
+- KPI dashboard live projection: official/demo warning as one compact secondary status line; live projection as a compact status line; KPI helper copy is short, neutral when not a trend, and never visibly clips partial words.
 
 ## Pitfalls
 
@@ -135,6 +148,8 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - Adding page-local left borders instead of updating the shared metric-card primitive.
 - Applying metric accent rails to all elevated content cards and making pages visually noisy.
 - Leaving demo data unlabeled so prototype values look official.
+- Using positive trend styling for unavailable, pending, or unverified data.
+- Letting long helper text clip inside KPI cards instead of shortening the label and exposing full context elsewhere.
 - Adding `@material/web` before checking whether the existing Vue component system can express the same M3 rule.
 
 ## Verification
@@ -142,6 +157,7 @@ Do not use for backend-only changes. Do not add `@material/web` automatically wh
 - Required source checks: existing shell/tokens, affected page, and current reusable components.
 - Required implementation checks: typecheck/build plus a focused DOM/CSS validator when the rule is reusable.
 - Required accessibility checks: semantic headings, table headers, labels, focus-visible styles, non-color status labels, and responsive fallback.
+- Required HCD checks: task fit, plain-language labels, data-confidence labels, non-misleading trend/status treatment, and visual hierarchy that prioritizes the user's decision.
 - Required handoff: record the exact rule added and how to verify it.
 
 ## Output format
