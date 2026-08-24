@@ -2,6 +2,9 @@
 
 - Product identity has been revised from TACATDP to Sustainable Finance MEL Platform. Do not blindly rename existing `TACATDP_*` Power Platform artifacts because deployed schemas, lists, controls, and source-form terminology may still depend on those names. Use Sustainable Finance MEL Platform for documentation/product identity and TACATDP for historical/programme/deployed artifact context.
 
+- On 2026-08-24, CRDB XML upload through the browser baseline-import page failed with `403` / `90040103` / `EntityPermissionCreateIsMissing` for `mp_formversion`. This is a Power Pages table-permission blocker, not proof that PAC auth or the XML file is invalid. The effective portal administrator role needs `Create` on `mp_formversion`; relationship binds may then require `Append` on `mp_formversion` and `Append To` on `mp_form`. Pause further CRDB retries until CRDB personnel can update/check table permissions.
+- On 2026-08-24, new CRDB information indicated a possible Docker-capable environment. Record this as a stoppage/pivot point: Power Pages may still need demonstration maintenance, but the scalable SFU MEL product may move to a new Django/PostgreSQL/Redis/Celery/Viewflow repository after research and planning.
+
 - Dataverse privileges are not available, so Dataverse-first solution deployment is blocked for now.
 - Power Apps Git integration does not create Microsoft Lists or fully deploy a new app from scratch.
 - Large reference lists can produce incorrect results if Power Fx formulas are nondelegable.

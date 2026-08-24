@@ -8,6 +8,14 @@ Microsoft Lists/SharePoint was used during early brainstorming and fallback plan
 
 The active prototype direction is Power Pages with a Vue SPA, ODK Web Forms runtime, and Dataverse-backed assignments, submissions, reporting projections, and access-management tables.
 
+## 2026-08-24 CRDB Docker-capable environment option
+
+CRDB may provide a new environment that allows Docker. Pause assumptions that the long-term SFU MEL platform must run primarily inside Power Pages/Dataverse.
+
+The current Power Pages prototype remains useful for demonstration and for preserving baseline-import lessons, but the next architecture planning slice should evaluate a new repository for a configurable SFU MEL platform using Django, PostgreSQL, Redis, Celery, Viewflow, and related Python/Django ecosystem libraries. The target product should support multiple projects, programmes, and operational MEL workflows for the SFU department.
+
+This is not approval to abandon the existing Power Pages demonstration. Continue to treat CRDB Power Pages updates as a demonstration-maintenance path until the Docker-capable environment and new architecture are formally confirmed.
+
 ## Importable list templates
 
 Generated Excel/CSV templates are preferred for creating Microsoft Lists where possible. This reduces manual list and column creation.

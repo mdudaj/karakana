@@ -10,6 +10,14 @@ Sustainable Finance MEL Platform is the current project identity. TACATDP remain
 - Source form model: XLSForm-style survey with required rules, relevance/skip logic, constraints, choices, calculations, and repeats.
 - Deployment support: source-controlled Power Pages package, Vite SPA build assets, Dataverse schema/seed scripts, PAC runbooks, and validation scripts.
 
+## 2026-08-24 Architecture Pivot Under Review
+
+- Current CRDB Power Pages delivery is paused at a known permission blocker: browser XML upload fails because the effective portal administrator role lacks `Create` permission on `mp_formversion`.
+- New CRDB information indicates the bank may provide a new Docker-capable environment. Treat this as a potential architecture pivot, not yet a completed decision.
+- If approved, the next product architecture should move from Power Pages as the main application runtime to a configurable SFU MEL platform built around Django, PostgreSQL, Redis, Celery, Viewflow, and related Python/Django ecosystem libraries.
+- The future platform should remain Microsoft-integrated where CRDB policy requires it, but the core application model should support multi-project, multi-programme, and operational MEL use cases through configuration rather than TACATDP-specific hard-coding.
+- Before creating the new repository, run a research and planning slice covering architecture, Microsoft tenant integration, authentication/SSO, deployment topology, data model, workflow engine, background jobs, reporting, and migration path from the current Power Pages prototype.
+
 ## Data Architecture
 
 - Baseline submissions are stored in Dataverse submission/version/attachment records.
