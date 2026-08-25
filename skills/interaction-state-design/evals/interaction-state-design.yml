@@ -1,0 +1,39 @@
+id: interaction-state-design
+name: Interaction state design planning
+description: Ensure UI state plans distinguish empty, filtered-empty, no-results, loading, errors, permissions, stale data, recovery, accessibility, and reusable components.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - ux
+  - states
+  - material
+  - accessibility
+input:
+  task: "Plan states for a LIMS task queue with search, filter chips, async refresh, permission-limited actions, and Viewflow task submission."
+  skill: interaction-state-design
+  task_type: planning
+  prompt_file: skills/interaction-state-design/SKILL.md
+expectations:
+  must_include:
+    - "Surface/job"
+    - "State sources"
+    - "State matrix"
+    - "filtered-empty"
+    - "no-results"
+    - "loading"
+    - "permission"
+    - "stale"
+    - "Recovery"
+    - "Accessibility"
+    - "reusable"
+    - "Verification"
+  must_not_include:
+    - "happy path only"
+    - "retry always"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

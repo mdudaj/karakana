@@ -1,0 +1,37 @@
+id: visual-design-review
+name: Visual design review planning
+description: Ensure visual reviews identify hierarchy, grouping, density, component, typography, color, accessibility, routing, acceptance criteria, and verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - ux
+  - visual-design
+  - material
+  - review
+input:
+  task: "Review a LIMS dashboard screenshot where KPI cards are cramped, icons feel weak, filters compete with results, surfaces are over-nested, and disabled actions dominate ready work."
+  skill: visual-design-review
+  task_type: review
+  prompt_file: skills/visual-design-review/SKILL.md
+expectations:
+  must_include:
+    - "Screen/job"
+    - "Evidence reviewed"
+    - "What works"
+    - "Main issue"
+    - "Findings by severity"
+    - "Recommended changes"
+    - "Skill routing"
+    - "Acceptance criteria"
+    - "Verification"
+    - "accessibility"
+  must_not_include:
+    - "just make it nicer"
+    - "personal preference only"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

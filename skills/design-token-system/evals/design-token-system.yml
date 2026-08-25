@@ -1,0 +1,37 @@
+id: design-token-system
+name: Design token system planning
+description: Ensure token plans include layered tokens, semantic roles, component tokens, accessibility gates, migration, framework output, and verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - design-system
+  - tokens
+  - accessibility
+  - material
+input:
+  task: "Plan token updates for LIMS KPI cards, filter chips, and Viewflow form fields so colors, spacing, icon sizes, focus states, and density are reusable and contrast-safe."
+  skill: design-token-system
+  task_type: planning
+  prompt_file: skills/design-token-system/SKILL.md
+expectations:
+  must_include:
+    - "Token task"
+    - "primitive"
+    - "semantic"
+    - "component"
+    - "contrast"
+    - "density"
+    - "focus"
+    - "migration"
+    - "Viewflow"
+    - "Verification"
+  must_not_include:
+    - "use raw hex values in components"
+    - "dark mode is just inverted"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

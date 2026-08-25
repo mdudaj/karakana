@@ -38,7 +38,7 @@ bucket: development
 - Every page stacks major components with explicit vertical spacing between sibling components.
 - Use Material tabs to switch between related content panels when stacked summary/list components would clutter the page; if Viewflow does not provide a ready tab component, create a reusable MDC tab abstraction.
 - Active tab styling belongs below the tab label by default; only move it elsewhere when a project rule explicitly says so.
-- Forms must use Viewflow form definitions/rendering inside `vf-form` and `vf-card__form`; do not hand-render Django fields unless extending Viewflow rendering for a missing widget.
+- Forms must use Viewflow form definitions/rendering inside `vf-form` and `vf-card__form`; use `viewflow-form-controls` for normal widgets, AJAX selects, date/time pickers, dynamic workflow forms, and complex validation behavior.
 - Action cards must be visually consistent across siblings: same icon policy, same content structure, same action region, same button placement level, and same action-button styling.
 - Back actions should use a reusable icon+label component that states the destination.
 
@@ -52,17 +52,20 @@ Use for any route/page/form/card/tab/navigation implementation or revision in a 
 
 ## When not to use this skill
 
-Do not use for backend-only tasks with no rendered UI. Do not replace a mature project design system unless the user explicitly requests a redesign.
+Do not use for backend-only tasks with no rendered UI. Do not replace a mature project design system unless the user explicitly requests a redesign. For screenshot/visual critique, combine with `visual-design-review`; for reusable component contracts, combine with `material-component-spec`; for token work, combine with `design-token-system`; for detailed form-control decisions, combine with `viewflow-form-controls`; for UI state behavior, combine with `interaction-state-design`; for accessibility review, combine with `accessibility-wcag-audit`; for rendered browser evidence, screenshot checks, responsive checks, and end-to-end UI verification, combine with `design-qa-playwright`.
 
 ## Core concepts
 
 - Viewflow already supplies Material Design CSS, templates, and form rendering; project components should extend that foundation.
+- Use `ux-skill-router` before broad Viewflow UI work when the change may also
+  require visual critique, component contracts, tokens, accessibility,
+  interaction states, writing, or Playwright evidence.
 - Page layout is a grid plus stacked sections, not loose adjacent blocks. Spacing belongs to the page stack or reusable surface abstraction, not incidental margins on one child.
 - Page headers own compact navigation/actions such as back icon buttons and secondary links.
 - Cards are for grouped actions and summaries; lists/tables are for dense comparison.
 - Tabs reduce clutter only when content panels are siblings under the same page concept, and tab markup should follow MDC tab structure.
 - Tab panels need structured content such as metric lists, rows, panels, or empty states; avoid punctuation-delimited prose for status data.
-- Form pages should have one primary task and one form component.
+- Form pages should have one primary task and one form component. Complex controls such as autocomplete selects, date/time pickers, dependent fields, formsets, and generated workflow fields should be planned with `viewflow-form-controls`.
 
 ## Standard workflow
 
@@ -74,7 +77,7 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 6. Put related content panels behind Material/MDC tabs when stacked cards/lists would clutter the page.
 7. Style active tab indicators at the bottom unless the project explicitly defines another placement.
 8. Style tab panel contents as structured summaries, not loose text separated by punctuation.
-9. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required.
+9. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required; apply `viewflow-form-controls` for widget/control selection.
 10. Put labeled back actions and secondary action links in the page header action area.
 11. Add tests/assertions for durable UX rules that can regress.
 
@@ -85,18 +88,24 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 - Do not use placeholders instead of visible labels.
 - Do not create page-specific component variants when a reusable abstraction is appropriate.
 - Do not mix custom tab markup with Material tabs when MDC tab classes are available.
-- Do not hand-render ordinary Django form fields in Viewflow projects; define a Viewflow layout and render it.
+- Do not hand-render ordinary Django form fields in Viewflow projects; define a Viewflow layout and render it. For missing widget behavior, create a reusable Viewflow form-control adapter rather than page-local markup.
 
 ## Required checks
 
 - Does the page have visible vertical spacing between every major sibling component?
 - Does the page use the right page type: hub, list, form, detail, or tabbed content?
+- Has visual critique been translated through `visual-design-review` before making broad Viewflow template/CSS changes?
 - Are tabs built with `mdc-tab-bar`, `mdc-tab`, `mdc-tab__content`, `mdc-tab-indicator`, and URL/ARIA-backed panels?
 - Is the active tab indicator below the tab label by default?
 - Is tab panel content structured with reusable styling rather than punctuation-delimited prose?
 - Are sibling cards consistent in icon use, content layout, action-region structure, and button placement?
+- Do repeated Viewflow/MDC patterns have a `material-component-spec` contract instead of page-local markup?
+- Are shared visual values routed through `design-token-system` instead of Viewflow page-local CSS literals?
 - Are sibling action buttons consistent in Material styling and icon policy?
 - Are forms built with Viewflow/Material wrappers, Viewflow layouts, and visible labels?
+- Are complex form controls planned with `viewflow-form-controls` and verified for widget state, accessibility, permissions, and server validation?
+- Are loading, empty, error, stale-data, permission, disabled, and success states routed through `interaction-state-design`?
+- Are accessibility risks routed through `accessibility-wcag-audit` instead of being treated as visual polish?
 - Are child routes equipped with labeled header back actions?
 - Are tabs keyboard/link accessible and backed by URLs or anchors?
 

@@ -1,0 +1,37 @@
+id: ux-writing
+name: UX writing planning
+description: Ensure UI copy reviews cover user task, terminology, labels, errors, empty states, confirmations, accessibility, safety, reusable patterns, and verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - ux-writing
+  - microcopy
+  - accessibility
+  - material
+input:
+  task: "Review LIMS UI copy for a task page with Start, Submit, No data, Invalid input, filtered search, email fallback, and a destructive dispose confirmation."
+  skill: ux-writing
+  task_type: review
+  prompt_file: skills/ux-writing/SKILL.md
+expectations:
+  must_include:
+    - "Copy surface"
+    - "User/task/context"
+    - "Terminology"
+    - "Recommended copy"
+    - "Accessibility"
+    - "safety"
+    - "empty"
+    - "error"
+    - "confirmation"
+    - "Verification"
+  must_not_include:
+    - "placeholder as label"
+    - "user made a mistake"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

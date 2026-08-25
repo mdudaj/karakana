@@ -1,0 +1,37 @@
+id: material-component-spec
+name: Material component specification planning
+description: Ensure component specs include job, anatomy, variants, states, tokens, accessibility, framework mapping, acceptance criteria, and verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - material
+  - components
+  - design-system
+  - accessibility
+input:
+  task: "Specify a reusable LIMS KPI card component with semantic accents, larger intentional icons, value/label/supporting text hierarchy, loading and error states, and Viewflow template mapping."
+  skill: material-component-spec
+  task_type: planning
+  prompt_file: skills/material-component-spec/SKILL.md
+expectations:
+  must_include:
+    - "Component"
+    - "Job/use cases"
+    - "Anatomy"
+    - "Variants"
+    - "States"
+    - "Token mapping"
+    - "Accessibility"
+    - "Viewflow"
+    - "Acceptance criteria"
+    - "Verification"
+  must_not_include:
+    - "use page-local CSS instead of tokens"
+    - "default screenshot only"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

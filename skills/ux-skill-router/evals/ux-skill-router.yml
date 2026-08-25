@@ -1,0 +1,35 @@
+id: ux-skill-router
+name: UX skill routing
+description: Ensure the UX skill router selects primary/supporting skills, avoids loading every skill, and requires verification evidence.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - ux
+  - design-system
+  - routing
+input:
+  task: "Route work for a LIMS task page screenshot critique where filter chips, empty states, Viewflow controls, accessibility, and Playwright browser evidence may be involved."
+  skill: ux-skill-router
+  task_type: planning
+  prompt_file: skills/ux-skill-router/SKILL.md
+expectations:
+  must_include:
+    - "UX Skill Router"
+    - "Quick Reference"
+    - "Primary skill"
+    - "Supporting skill"
+    - "Default sequences"
+    - "design-qa-playwright"
+    - "visual-design-review"
+  must_not_include:
+    - "load all UX skills for every request"
+    - "ignore authorization for visual polish"
+  required_sections:
+    - "Quick Reference"
+    - "Default sequences"
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

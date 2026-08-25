@@ -1,0 +1,36 @@
+id: material-hcd-interface-composition
+name: Material HCD interface composition
+description: Ensure UI review plans prioritize user jobs, Material component semantics, design-system reuse, accessibility, permissions, and verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - material
+  - hcd
+  - ux
+input:
+  task: "Review a LIMS task queue screenshot where KPI cards feel decorative, tabs and filters touch, and active filters are unclear."
+  skill: material-hcd-interface
+  task_type: planning
+  prompt_file: skills/material-hcd-interface/SKILL.md
+expectations:
+  must_include:
+    - "Screen/job"
+    - "Primary users"
+    - "Recommended hierarchy"
+    - "Material components"
+    - "Design-system changes"
+    - "Accessibility"
+    - "Verification"
+    - "filters"
+    - "chips"
+    - "tabs"
+    - "project tokens"
+  must_not_include:
+    - "page-local CSS only"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

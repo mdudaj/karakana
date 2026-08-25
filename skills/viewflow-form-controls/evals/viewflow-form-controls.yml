@@ -1,0 +1,37 @@
+id: viewflow-form-controls
+name: Viewflow form controls planning
+description: Ensure Viewflow form-control plans use Viewflow rendering, correct widget decisions, accessibility, server validation, and browser verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - viewflow
+  - forms
+  - material
+  - accessibility
+input:
+  task: "Plan a Viewflow task form for a LIMS workflow where users must select a storage position from thousands of records, enter an extraction timestamp, and submit measurements."
+  skill: viewflow-form-controls
+  task_type: planning
+  prompt_file: skills/viewflow-form-controls/SKILL.md
+expectations:
+  must_include:
+    - "Form/job"
+    - "Data/control inventory"
+    - "Field grouping"
+    - "Widget decisions"
+    - "AjaxModelSelect"
+    - "date/time"
+    - "visible label"
+    - "server validation"
+    - "permissions"
+    - "browser"
+  must_not_include:
+    - "hand-render every field"
+    - "client-only validation"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

@@ -1,0 +1,37 @@
+id: design-qa-playwright
+name: Design QA Playwright planning
+description: Ensure browser UI QA plans cover routes, states, viewports, locators, assertions, screenshots, accessibility, baseline policy, commands, artifacts, and risk.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - playwright
+  - ui-qa
+  - visual-regression
+  - accessibility
+input:
+  task: "Plan Playwright QA for a LIMS task page redesign with filter chips, KPI cards, Viewflow form controls, empty/error states, and responsive layout."
+  skill: design-qa-playwright
+  task_type: planning
+  prompt_file: skills/design-qa-playwright/SKILL.md
+expectations:
+  must_include:
+    - "UI change under test"
+    - "Routes/states/viewports"
+    - "Data/role context"
+    - "Assertions"
+    - "Screenshots"
+    - "Accessibility"
+    - "Commands"
+    - "Baseline policy"
+    - "Verification"
+    - "Remaining risk"
+  must_not_include:
+    - "use fixed sleeps for synchronization"
+    - "rely on screenshot-only tests"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

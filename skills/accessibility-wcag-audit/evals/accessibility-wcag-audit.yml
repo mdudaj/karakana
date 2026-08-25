@@ -1,0 +1,38 @@
+id: accessibility-wcag-audit
+name: Accessibility WCAG audit planning
+description: Ensure accessibility plans combine WCAG target, automated scans, manual keyboard checks, form semantics, ARIA, severity, and verification.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - accessibility
+  - wcag
+  - forms
+  - playwright
+input:
+  task: "Audit a Viewflow LIMS task form with an AJAX autocomplete storage-position field, date picker, error summary, and submit button."
+  skill: accessibility-wcag-audit
+  task_type: review
+  prompt_file: skills/accessibility-wcag-audit/SKILL.md
+expectations:
+  must_include:
+    - "WCAG target"
+    - "automated"
+    - "manual keyboard"
+    - "accessible name"
+    - "focus"
+    - "labels"
+    - "errors"
+    - "ARIA"
+    - "combobox"
+    - "severity"
+    - "Verification"
+  must_not_include:
+    - "axe proves WCAG conformance"
+    - "placeholder-only labels are acceptable"
+  required_sections:
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"

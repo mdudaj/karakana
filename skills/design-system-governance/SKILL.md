@@ -38,10 +38,19 @@ bucket: development
 - Before a new product, portal, major UX refresh, or first implementation slice, establish or reference the shell layout and design-system foundation before building pages.
 - Build UI from reusable components or partials first; page templates compose them.
 - Preserve project-specific visual identity through tokens, not one-off page colors.
+- Use `ux-skill-router` first when a UI request spans multiple concerns and the
+  correct specialist skill sequence is not obvious.
 - Every major page component must be separated by reusable spacing.
 - Sibling cards must share anatomy: icon region, content region, action region, and aligned actions.
 - Sibling action buttons must share styling and icon policy; if one action button in the sibling group has an icon, all should.
-- Forms must use the project framework's canonical renderer; in Viewflow projects, use Viewflow layouts/rendering.
+- Forms must use the project framework's canonical renderer; in Viewflow projects, use Viewflow layouts/rendering and `viewflow-form-controls` for widget selection, AJAX selects, date/time fields, dependent fields, formsets, or dynamic workflow forms.
+- Use `accessibility-wcag-audit` when shared components, tokens, forms, controls, navigation, focus styles, status messages, or contrast rules may affect accessibility.
+- Use `interaction-state-design` when shared components need loading, empty, filtered-empty, error, permission, stale, disabled, readonly, async, or success-state rules.
+- Use `material-component-spec` when a repeated UI pattern needs formal anatomy, variants, states, token mapping, framework mapping, and acceptance criteria.
+- Use `design-token-system` when UI work changes or audits color, type, spacing, size, radius, elevation, motion, density, theme, focus, or component tokens.
+- Use `visual-design-review` when UI feedback needs structured critique before deciding which reusable rule, token, component, or state pattern should change.
+- Use `ux-writing` when reusable components need label, action, empty-state, error, warning, confirmation, help, notification, or navigation copy rules.
+- Use `design-qa-playwright` when shared UI rules need rendered browser evidence, screenshot review, responsive checks, DOM assertions, or visual regression coverage.
 - Tabs must use the project framework's Material component structure; active indicators belong below the tab label by default unless a project explicitly defines otherwise.
 - Back actions must use a reusable labeled component that communicates the destination, not only an icon.
 - App shells own route identity. A content page must not repeat the same route title in a second large hero/header; content starts with the current work object, operational status, tabs, table, or form surface.
@@ -107,6 +116,7 @@ Each UI project should have a durable contract covering:
 
 - Do not replace a project's established visual identity unless explicitly requested.
 - Do not weaken accessibility semantics while abstracting components.
+- Do not treat accessibility as optional visual polish; shared design-system changes need an accessibility gate.
 - Do not hide route authorization behind navigation or component state.
 - Do not introduce broad CSS resets that can affect unrelated pages without review.
 - Do not copy project-specific colors or brand styling across projects as a global rule.
@@ -117,7 +127,10 @@ Each UI project should have a durable contract covering:
 - Does the project already have a token/component that should be reused?
 - For a new product, portal, major UX refresh, or first slice, is the shell layout and design-system foundation documented before implementation?
 - Are affected pages composing the same component anatomy?
+- Are new/revised component contracts specified with `material-component-spec`?
+- Has visual critique been translated into reusable design-system findings through `visual-design-review`?
 - Do style changes use tokens instead of page-local colors?
+- Are token changes planned through `design-token-system` with primitive, semantic, and component layers?
 - Do forms/tabs use the canonical framework renderer/markup?
 - Is active tab styling positioned according to the project default, usually the bottom indicator?
 - Is there visible spacing between major sibling components?
@@ -125,10 +138,15 @@ Each UI project should have a durable contract covering:
 - Do sibling action buttons use the same styling and icon policy?
 - Do back actions include a visible destination label?
 - Are loading, empty, error, success, and debug states reusable instead of page-local?
+- Are reusable copy patterns routed through `ux-writing` rather than duplicated per page?
+- Are state patterns routed through `interaction-state-design` instead of ad hoc page copy and markup?
 - Is any embedded runtime protected from broad host CSS selectors?
 - Have prototype diagnostics been moved out of the default user path?
 - Has the browser/static cache been invalidated for changed CSS?
 - Is there a test or visual check that would fail if the regression returns?
+- Have rendered UI regressions been covered or evidenced through
+  `design-qa-playwright` when the change affects shared layout, tokens,
+  components, or high-value user paths?
 
 ## Cross-Project Rule
 
@@ -179,4 +197,12 @@ Cross-project rules should define behavior and anatomy, not force a single palet
 - Button alignment issue: define action-card anatomy with an action slot; update all sibling cards to use it.
 - Tab status content issue: replace punctuation-delimited prose with a reusable metric/list/panel component.
 - Form inconsistency: add a Viewflow layout and render through `{% render form form.layout %}` rather than hand-rendering fields.
+- Complex Viewflow control: define the widget/control contract through `viewflow-form-controls`, then implement using reusable form/layout/widget adapters.
+- Accessibility gate: use `accessibility-wcag-audit` before changing focus styles, labels, contrast-bearing tokens, custom controls, status messages, or navigation components.
+- Interaction states: use `interaction-state-design` to define reusable loading, empty, filtered-empty, error, stale, permission, disabled, and success behavior.
+- Component contract: use `material-component-spec` before implementing reusable cards, rows, filters, field groups, tabs, or status components.
+- Token contract: use `design-token-system` before changing shared colors, spacing, typography, density, focus, theme, or component token mappings.
+- Visual review: use `visual-design-review` to prioritize hierarchy, grouping, density, typography, and polish findings before implementation.
+- UX writing: use `ux-writing` before standardizing labels, action text, errors, empty states, confirmations, notifications, and help text.
+- Browser design QA: use `design-qa-playwright` to verify the rendered outcome with stable locators, assertions, screenshots, responsive checks, and accessibility scan hooks where available.
 - Color drift: move values into project tokens and replace page-local colors.
