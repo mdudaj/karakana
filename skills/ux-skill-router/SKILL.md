@@ -91,6 +91,9 @@ than one route may apply.
   `accessibility-wcag-audit`.
 - Playwright browser evidence, DOM assertions, screenshots, responsive checks,
   visual regression, axe execution: `design-qa-playwright`.
+- Missing project/skill guidance for a UI pattern, work environment, or feature:
+  perform research-backed HCD first, then route the finding to the relevant
+  specialist skill.
 
 ## Core concepts
 
@@ -113,15 +116,19 @@ than one route may apply.
    visual critique, component anatomy, token mapping, Viewflow implementation,
    form controls, interaction state, writing, accessibility, browser QA, or
    governance.
-3. **Choose one primary skill.** Pick the skill that owns the highest-risk or
+3. **Check available guidance.** Use existing project UX specs, design-system
+   contracts, component rules, and loaded skills first. If the feature or
+   interaction pattern is not covered, perform research-backed HCD before
+   planning implementation.
+4. **Choose one primary skill.** Pick the skill that owns the highest-risk or
    most central concern.
-4. **Add only necessary support skills.** Add supporting skills for concrete
+5. **Add only necessary support skills.** Add supporting skills for concrete
    secondary risks, not because they are available.
-5. **Define the implementation boundary.** State what is in scope, what remains
+6. **Define the implementation boundary.** State what is in scope, what remains
    unchanged, and whether the fix should be page-local or reusable.
-6. **Define evidence before delivery.** Name required tests, screenshots,
+7. **Define evidence before delivery.** Name required tests, screenshots,
    accessibility checks, or review artifacts.
-7. **Report unused skills.** For broad requests, explicitly list tempting skills
+8. **Report unused skills.** For broad requests, explicitly list tempting skills
    that were intentionally not used and why.
 
 ## Default sequences
@@ -179,6 +186,8 @@ Use the shortest sequence that covers the risk.
 - Which secondary skills are necessary, and why?
 - Which tempting skills are not needed for this slice?
 - Does the task need requirements/look-and-feel notes before implementation?
+- If existing project/skill guidance does not cover the feature, has
+  research-backed HCD evidence been gathered and recorded before delivery?
 - Does the task affect a shared pattern that should be documented rather than
   patched page-locally?
 - What verification evidence is required before delivery?
@@ -197,6 +206,8 @@ Use the shortest sequence that covers the risk.
 
 - Loading every UX skill for routine work.
 - Starting with implementation before identifying the primary user-facing job.
+- Delivering UI/UX from taste or habit when no project guidance exists instead
+  of doing targeted HCD/design research first.
 - Treating screenshot critique as only CSS polish when it exposes component,
   token, state, or writing gaps.
 - Hiding unavailable actions without checking route/service permissions.
@@ -214,6 +225,7 @@ Use the shortest sequence that covers the risk.
 - Supporting skills:
 - Skills intentionally not used:
 - Required requirements/spec notes:
+- Research/HCD evidence:
 - Implementation boundary:
 - Verification evidence:
 - Remaining risk:

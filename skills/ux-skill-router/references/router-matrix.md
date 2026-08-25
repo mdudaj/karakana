@@ -52,9 +52,10 @@ or release hardening pass.
 For implemented UX work, the final summary should report:
 
 - requirement/look-and-feel evidence used;
+- existing project/skill guidance used, or research-backed HCD evidence gathered
+  when guidance was missing;
 - specialist skills applied;
 - affected pages/components;
 - rendered verification performed;
 - remaining UX risks;
 - next recommended UX task.
-

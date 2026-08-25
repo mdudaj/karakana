@@ -82,6 +82,9 @@ product-specific design system skill.
 - Start from the user's job, not the database model or available features.
 - Use `ux-skill-router` first when the request could require several UX
   specializations and the right sequence is unclear.
+- Before delivering UI/UX, use existing project/spec/skill guidance first. If
+  the feature, work environment, or interaction pattern is not covered, perform
+  targeted research-backed HCD and record the evidence before implementation.
 - Use `visual-design-review` when the user asks for screenshot critique,
   visual polish, hierarchy/density review, or why a UI “does not look right.”
 - Order content by urgency and actionability: attention, ready work, context,
@@ -153,30 +156,37 @@ For implementation composition, read
    task, and non-goals.
 2. **Map the job.** Write the top user question the screen must answer, then
    list primary, secondary, and advanced tasks.
-3. **Classify the screen.** Choose one dominant type: dashboard, worklist, form,
+3. **Check guidance and evidence.** Inspect existing project UX specs,
+   design-system rules, component contracts, and relevant skills. If they do not
+   cover the feature or interaction pattern, research authoritative HCD,
+   Material, accessibility, domain, or comparable-product guidance before
+   implementation.
+4. **Classify the screen.** Choose one dominant type: dashboard, worklist, form,
    detail, configuration, help/index, or review/approval surface.
-4. **Select the layout.** Use the project shell/grid and a Material-compatible
+5. **Select the layout.** Use the project shell/grid and a Material-compatible
    page stack. For adaptive products, define compact, medium, and expanded
    behavior instead of scaling one desktop layout down.
-5. **Choose components by semantics.** Pick Material components for their
+6. **Choose components by semantics.** Pick Material components for their
    intended job, not for appearance.
-6. **Set hierarchy.** Ensure the highest-priority content is visually dominant,
+7. **Set hierarchy.** Ensure the highest-priority content is visually dominant,
    visible above secondary controls, and scannable in a few seconds.
-7. **Place actions by scope.** Page-level actions go in the page/header action
+8. **Place actions by scope.** Page-level actions go in the page/header action
    lane; section actions stay with the section; row actions stay on the row.
-8. **Control disclosure.** Put rare, advanced, or dependent controls in clearly
+9. **Control disclosure.** Put rare, advanced, or dependent controls in clearly
    labeled reveal paths such as “More filters” or a side sheet. Do not hide the
    main task path.
-9. **Apply the design system.** Reuse tokens, components, partials, and CSS
+10. **Apply the design system.** Reuse tokens, components, partials, and CSS
    recipes. If a reusable rule is missing, add or propose that rule first.
-10. **Check states.** Cover loading, empty, populated, filtered-empty, error,
+11. **Check states.** Cover loading, empty, populated, filtered-empty, error,
     disabled, permission-denied, success, and stale-data states.
-11. **Verify.** Add DOM/component assertions and, where available, browser or
+12. **Verify.** Add DOM/component assertions and, where available, browser or
     screenshot checks for the affected screen.
 
 ## Required checks
 
 - Does the screen answer “What should I know or do next?”
+- Has the agent used existing project/spec/skill guidance, or gathered
+  research-backed HCD evidence when guidance was missing?
 - Has screenshot/visual critique been routed through `visual-design-review`
   when the issue is visual hierarchy, grouping, density, typography, color,
   component consistency, or polish?
@@ -232,6 +242,7 @@ For implementation composition, read
 
 - Screen/job:
 - Primary users:
+- Existing guidance or research evidence:
 - Current issue:
 - Recommended hierarchy:
 - Material components:

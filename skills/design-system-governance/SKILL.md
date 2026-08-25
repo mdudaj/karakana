@@ -36,6 +36,9 @@ bucket: development
 
 - One project, one design-system profile: tokens, surfaces, page stack, tabs, forms, cards, buttons, tables, navigation, and cache/version rules.
 - Before a new product, portal, major UX refresh, or first implementation slice, establish or reference the shell layout and design-system foundation before building pages.
+- Before delivering UI/UX, use existing project guidance first; if the feature
+  or pattern is not covered, perform research-backed HCD and record the evidence
+  before implementation/delivery.
 - Build UI from reusable components or partials first; page templates compose them.
 - Preserve project-specific visual identity through tokens, not one-off page colors.
 - Use `ux-skill-router` first when a UI request spans multiple concerns and the
@@ -102,15 +105,18 @@ Each UI project should have a durable contract covering:
 
 1. Inspect the existing project UI system: tokens, base templates, shared CSS, component partials, and one mature comparable project when available.
 2. Classify the request as token, layout, surface, component, framework-rendering, visual-regression, or governance.
-3. For a new product, portal, major UX refresh, or first implementation slice, define the shell layout, route ownership, navigation groups, token set, component inventory, responsive rules, accessibility rules, and visual evidence before page implementation begins.
-4. For branded apps, inspect brand assets and derive project-specific tokens before choosing colors.
-5. Update the durable artifact or skill before page edits when a new general rule is being introduced.
-6. Patch shared tokens/components/partials first; update page templates only to compose those components.
-7. Move prototype diagnostics into a debug boundary before polishing shareable UX.
-8. Add or update tests for DOM contracts that can be asserted cheaply.
-9. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
-10. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
-11. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
+3. Check whether existing project guidance, UX specs, component contracts, or
+   specialist skills already cover the UI pattern. If not, perform targeted
+   research-backed HCD before planning implementation.
+4. For a new product, portal, major UX refresh, or first implementation slice, define the shell layout, route ownership, navigation groups, token set, component inventory, responsive rules, accessibility rules, and visual evidence before page implementation begins.
+5. For branded apps, inspect brand assets and derive project-specific tokens before choosing colors.
+6. Update the durable artifact or skill before page edits when a new general rule is being introduced.
+7. Patch shared tokens/components/partials first; update page templates only to compose those components.
+8. Move prototype diagnostics into a debug boundary before polishing shareable UX.
+9. Add or update tests for DOM contracts that can be asserted cheaply.
+10. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
+11. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
+12. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
 
 ## Safety rules
 
@@ -125,6 +131,9 @@ Each UI project should have a durable contract covering:
 
 - Is the rule project-specific styling or cross-project component behavior?
 - Does the project already have a token/component that should be reused?
+- If project guidance does not cover this feature or interaction pattern, is the
+  UI/UX change backed by current HCD/design-system/domain research before
+  delivery?
 - For a new product, portal, major UX refresh, or first slice, is the shell layout and design-system foundation documented before implementation?
 - Are affected pages composing the same component anatomy?
 - Are new/revised component contracts specified with `material-component-spec`?
@@ -182,6 +191,7 @@ Cross-project rules should define behavior and anatomy, not force a single palet
 ## Design System Gate
 
 - Project design profile:
+- Existing guidance or research evidence:
 - Shell/layout foundation:
 - Shared rule affected:
 - Project-specific styling affected:

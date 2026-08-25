@@ -46,3 +46,29 @@ For high-risk systems such as banking, healthcare, billing, permissions, or prod
 Karakana-managed product interfaces should not expose implementation-process language such as "readiness", "artifact gate", "protocol", "harness", or similar delivery vocabulary in the primary user experience unless the project explicitly defines an administrator diagnostic surface for it.
 
 For operational users, express the same meaning with user-facing terms such as status, checks, configuration, health, setup, access, or next action. Keep delivery readiness, scope readiness, and implementation gates in documentation, handoff notes, validators, or admin diagnostics rather than dashboards, primary navigation, quick-action panels, or normal route headers.
+
+## Research-Backed UI/UX Delivery
+
+Before delivering user-facing UI/UX work, Karakana-managed projects must ground
+the interface decision in human-centered design evidence.
+
+Default order:
+
+1. Use existing project design-system guidance, product UX specifications,
+   component contracts, and relevant Karakana UX skills.
+2. If the feature, component, work environment, or interaction pattern is not
+   already covered, research current authoritative guidance before planning or
+   implementation.
+3. Record the relevant HCD/design evidence in the requirements, specification,
+   delivery notes, or trace.
+4. Translate the finding into reusable components, tokens, copy rules, state
+   patterns, accessibility checks, or browser verification when the issue is
+   likely to repeat.
+
+Suitable evidence includes official framework/design-system documentation,
+accessibility standards, product-specific research, domain workflow evidence,
+observed screenshots, user feedback, and comparable project design contracts.
+
+Do not treat ad hoc visual preference as enough for delivery. If evidence is
+missing, state the assumption and keep the change reversible and narrowly
+scoped.

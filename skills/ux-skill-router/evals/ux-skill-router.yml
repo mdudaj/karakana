@@ -22,6 +22,7 @@ expectations:
     - "Default sequences"
     - "design-qa-playwright"
     - "visual-design-review"
+    - "research-backed HCD"
   must_not_include:
     - "load all UX skills for every request"
     - "ignore authorization for visual polish"
