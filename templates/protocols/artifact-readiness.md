@@ -31,4 +31,5 @@
 - Done / not done:
 - Verification evidence:
 - Residual risks:
-
+- Remaining tasks:
+- Recommended next task:

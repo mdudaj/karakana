@@ -17,3 +17,5 @@ def test_karakana_handoff_output_format_contains_required_sections():
     assert "## Exact Next Action" in text
     assert "## Return Handoff Expectations" in text
     assert "A handoff is not a normal summary" in text
+    assert "remaining tasks" in text
+    assert "recommended next task" in text

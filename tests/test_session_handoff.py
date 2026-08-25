@@ -258,6 +258,7 @@ def test_task_protocols_are_documented():
 
     assert "## Start Every Task" in agents
     assert "## End Every Task" in agents
+    assert "recommended next task" in agents
     assert ".venv/bin/karakana handoff load" in agents
     assert "handoff load" in skills
     assert ".venv/bin/karakana handoff load" in skills

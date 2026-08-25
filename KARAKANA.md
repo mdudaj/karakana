@@ -24,7 +24,7 @@ Use:
 - `ubongo/projects/karakana/known-issues.md`
 - `ubongo/projects/karakana/open-issues.md`
 
-Every fresh session must load the latest matching project handoff before planning or editing. Every bounded task must finish by refreshing an append-only handoff summary that records verification, unresolved findings, changed references, and the exact next action.
+Every fresh session must load the latest matching project handoff before planning or editing. Every bounded task must finish by refreshing an append-only handoff summary that records verification, unresolved findings, changed references, remaining tasks, the recommended next task, and the exact next action.
 
 ## Required skills
 
@@ -70,6 +70,8 @@ Model routes should be inferred from the natural-language task whenever possible
 - Repeated failures or learned constraints must be encoded into durable memory, skills, docs, validators, or evals so later agents inherit the rule instead of relying on chat history.
 - Load the latest matching project handoff at session and task entry before planning or editing.
 - Refresh the project handoff at the end of every bounded task so the next session has current continuation context.
+- After each completed slice, the task completion summary must list remaining
+  tasks or known follow-ups and state the recommended next task.
 - All authentication and permission changes require human approval.
 - All behavior changes require tests.
 - Features with UX impact require behavior requirements, look-and-feel requirements, best-practice research for the task, and alignment with the existing design system before implementation.

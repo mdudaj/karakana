@@ -90,6 +90,11 @@ karakana patch gate --patch-run <patch-run-id> --require-protocol-pass
 
 This warn-first rollout avoids breaking existing workflows while making reproducibility gaps visible.
 
+Every completed slice must end with a concise completion summary that includes
+completed work, verification, remaining tasks or known follow-ups, and the
+recommended next task. The same information should be reflected in the refreshed
+handoff so the next agent can continue without relying on chat history.
+
 ## Core Protocols
 
 Karakana maps work categories to protocol IDs through `skillpacks/karakana.yml`:

@@ -58,6 +58,8 @@ Do not use a handoff to replace current code inspection, tests, review, release 
 - files to inspect first and files not to reread;
 - durable artifacts to reference rather than duplicate;
 - suggested skills for the next task;
+- remaining tasks or known follow-ups;
+- the recommended next task;
 - one exact next action;
 - safety constraints and return-handoff expectations;
 - staleness, recovery, and missing-reference warnings.
@@ -116,13 +118,15 @@ karakana handoff doctor --project <project>
 - Confirm the latest selected handoff matches project and skillpack.
 - Confirm all reference artifacts and suggested skills exist.
 - Confirm secret detection passes after rendering.
-- Confirm one exact next action and return-handoff expectation are present.
+- Confirm remaining tasks, the recommended next task, one exact next action,
+  and return-handoff expectation are present.
 - Confirm recovered handoffs explicitly require verification.
 
 ## Required checks
 
 - Project and skillpack match.
 - Required fields and one exact next action are present.
+- Remaining tasks or known follow-ups and the recommended next task are present.
 - Referenced artifacts and suggested skills exist.
 - Staleness and recovery status are visible.
 - Rendered content contains no unredacted secret-like values.

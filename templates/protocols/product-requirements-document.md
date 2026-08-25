@@ -58,6 +58,8 @@
 - Tests/evals complete:
 - Documentation updated:
 - Handoff refreshed:
+- Remaining tasks listed:
+- Recommended next task stated:
 
 ## Traceability
 
@@ -65,4 +67,3 @@
 | --- | --- | --- | --- | --- | --- |
 
 ## Open Questions
-

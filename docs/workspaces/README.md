@@ -29,4 +29,8 @@ For Sustainable Finance MEL Platform instructions, see `docs/workspaces/crdb-mel
 karakana handoff refresh --workspace <workspace> --project <project> --skillpack <skillpack> --purpose "End of task handoff"
 ```
 
+End-of-task summaries and handoffs must include completed work, verification,
+remaining tasks or known follow-ups, the recommended next task, and the exact
+next action.
+
 Workspace status handoffs and project session handoffs remain separate artifacts.

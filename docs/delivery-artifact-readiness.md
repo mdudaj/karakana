@@ -50,7 +50,9 @@ For every non-trivial slice, answer these questions before editing and again bef
 - What ADR or decision record justifies durable architecture, workflow, schema, data, identity, safety, or provider choices?
 - What schemas, examples, fixtures, or manifests define produced data artifacts?
 - What tests or evals prove the required behavior and prevent regression?
-- What handoff records the changed artifacts, verification, residual risks, and exact next action?
+- What handoff records the changed artifacts, verification, residual risks,
+  remaining tasks or known follow-ups, the recommended next task, and exact
+  next action?
 
 ## UX Check
 

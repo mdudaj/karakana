@@ -60,7 +60,16 @@ karakana handoff refresh \
   --purpose "End of task handoff"
 ```
 
-Record verification, unresolved findings, changed references, and the exact next action. Handoffs are append-only runtime artifacts under `.karakana/handoffs/` and must not be committed.
+Record verification, unresolved findings, changed references, remaining tasks,
+the recommended next task, and the exact next action. Handoffs are append-only
+runtime artifacts under `.karakana/handoffs/` and must not be committed.
+
+Every completed slice summary must include:
+
+- what was completed;
+- verification performed;
+- remaining tasks or known follow-ups;
+- the recommended next task.
 
 If the active trace has protocol-required artifacts, run `karakana protocol check --trace <run-id>` before or during handoff refresh. Use `karakana protocol missing`, `karakana protocol template`, and `karakana protocol attach` to close artifact gaps.
 

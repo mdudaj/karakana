@@ -130,7 +130,12 @@ Changed:
 def _return_expectation(handoff: HandoffArtifact) -> str:
     if not handoff.return_handoff_expected:
         return "No return handoff was requested."
-    return "Before ending, create a new handoff that records completed work, verification, remaining findings, changed references, and the exact next action. Preserve this handoff as history."
+    return (
+        "Before ending, create a new handoff that records completed work, "
+        "verification, remaining findings, changed references, remaining "
+        "tasks, the recommended next task, and the exact next action. "
+        "Preserve this handoff as history."
+    )
 
 
 def _bullets(values: list[str]) -> str:
