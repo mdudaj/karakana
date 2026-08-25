@@ -30,6 +30,15 @@ expectations:
 def test_eval_discovery_and_filters(tmp_path):
     write_case(tmp_path, "evals/safety/demo.yml", case_id="safety-demo", suite="safety", skill="safety-skill")
     write_case(tmp_path, "skills/demo-skill/evals/demo.yml", case_id="skill-demo", suite="skills")
+    agent_manifest = tmp_path / "skills" / "demo-skill" / "agents" / "openai.yaml"
+    agent_manifest.parent.mkdir(parents=True, exist_ok=True)
+    agent_manifest.write_text(
+        """interface:
+  display_name: Demo Agent
+  short_description: Not an eval case.
+""",
+        encoding="utf-8",
+    )
 
     loader = EvalLoader(tmp_path)
 

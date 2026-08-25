@@ -60,7 +60,7 @@ karakana handoff refresh \
   --purpose "End of task handoff"
 ```
 
-Record verification, unresolved findings, changed references, and the exact next action. Handoffs are append-only runtime artifacts under `.karakana/handoffs/` and must not be committed.
+Record verification, unresolved findings, changed references, and the exact next action. New handoffs are append-only runtime artifacts under `.karakana/handoffs/<project>/` and must not be committed. Legacy flat handoffs under `.karakana/handoffs/<handoff-id>/` may be read for backward compatibility only.
 
 If the active trace has protocol-required artifacts, run `karakana protocol check --trace <run-id>` before or during handoff refresh. Use `karakana protocol missing`, `karakana protocol template`, and `karakana protocol attach` to close artifact gaps.
 

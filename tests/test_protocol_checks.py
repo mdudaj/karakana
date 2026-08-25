@@ -159,7 +159,7 @@ def test_handoff_refresh_warns_about_missing_protocol_artifacts(tmp_path, monkey
     result = CliRunner().invoke(app, ["handoff", "refresh", "--project", "karakana", "--skillpack", "karakana"])
 
     assert result.exit_code == 0
-    handoff_paths = sorted((tmp_path / ".karakana" / "handoffs").glob("*/handoff.md"))
+    handoff_paths = sorted((tmp_path / ".karakana" / "handoffs").glob("*/*/handoff.md"))
     assert handoff_paths
     handoff_text = handoff_paths[-1].read_text(encoding="utf-8")
     assert "Protocol check" in handoff_text

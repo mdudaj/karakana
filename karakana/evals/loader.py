@@ -15,13 +15,18 @@ class EvalLoader:
         self.repo_root = repo_root
 
     def discover(self) -> list[Path]:
-        roots = [self.repo_root / "evals", self.repo_root / "skills"]
+        roots = [self.repo_root / "evals"]
         paths: list[Path] = []
         for root in roots:
             if not root.exists():
                 continue
             paths.extend(root.glob("**/*.yml"))
             paths.extend(root.glob("**/*.yaml"))
+        skills_root = self.repo_root / "skills"
+        if skills_root.exists():
+            for evals_root in skills_root.glob("*/evals"):
+                paths.extend(evals_root.glob("**/*.yml"))
+                paths.extend(evals_root.glob("**/*.yaml"))
         return sorted(path for path in paths if path.is_file())
 
     def load_case(self, path: Path) -> EvalCase:

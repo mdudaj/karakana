@@ -16,6 +16,8 @@ skills:
     - viewflow-framework
     - django-debugging
     - system-design-thinking
+    - brainstorm-verbalized-sampling
+    - grill-with-docs
     - requirements-elicitation
     - research-writing
 model_routes:
