@@ -98,6 +98,7 @@ def test_handoff_create_writes_structured_compact_artifacts(tmp_path, monkeypatc
     handoff = HandoffStore(tmp_path).latest("demo", "demo")
     assert handoff is not None
     run_dir = HandoffStore(tmp_path).run_dir(handoff.handoff_id)
+    assert run_dir == tmp_path / ".karakana" / "handoffs" / "demo" / handoff.handoff_id
     markdown = (run_dir / "handoff.md").read_text(encoding="utf-8")
     data = json.loads((run_dir / "handoff.json").read_text(encoding="utf-8"))
     assert handoff.current_milestone == "Slice 1.1: Curriculum Intake Management UX"
@@ -171,6 +172,7 @@ def test_handoff_refresh_preserves_history(tmp_path, monkeypatch):
     assert len(handoffs) == 2
     assert handoffs[0].previous_handoff_id == first.handoff_id
     assert HandoffStore(tmp_path).run_dir(first.handoff_id).exists()
+    assert HandoffStore(tmp_path).run_dir(first.handoff_id).parent.name == "demo"
 
 
 def test_handoff_records_okf_concept_ids(tmp_path, monkeypatch):
@@ -204,6 +206,23 @@ def test_handoff_selection_is_project_aware(tmp_path):
 
     assert store.latest("alpha").purpose == "Alpha"
     assert store.latest("beta").purpose == "Beta"
+    assert (tmp_path / ".karakana" / "handoffs" / "alpha").is_dir()
+    assert (tmp_path / ".karakana" / "handoffs" / "beta").is_dir()
+
+
+def test_handoff_store_reads_legacy_flat_handoffs(tmp_path):
+    write_project_context(tmp_path)
+    handoff = create_handoff(tmp_path, "demo", "demo", purpose="Legacy")
+    legacy_dir = tmp_path / ".karakana" / "handoffs" / handoff.handoff_id
+    legacy_dir.mkdir(parents=True)
+    (legacy_dir / "handoff.json").write_text(json.dumps(handoff.to_dict()), encoding="utf-8")
+    (legacy_dir / "handoff.md").write_text("# Legacy handoff\n", encoding="utf-8")
+
+    store = HandoffStore(tmp_path)
+
+    assert store.latest("demo", "demo").purpose == "Legacy"
+    assert store.run_dir(handoff.handoff_id) == legacy_dir
+    assert store.load(handoff.handoff_id).purpose == "Legacy"
 
 
 def test_handoff_redacts_required_secret_classes(tmp_path):

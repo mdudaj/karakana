@@ -79,7 +79,7 @@ class TraceStore:
         trace_path = self._run_dir(run_id) / "trace.json"
         if not trace_path.exists():
             raise FileNotFoundError(f"Trace not found: {run_id}")
-        return RunTrace.from_dict(json.loads(trace_path.read_text(encoding="utf-8")))
+        return _load_trace_file(trace_path)
 
     def resolve_run_id(self, run_id: str) -> str:
         """Resolve trace aliases such as protocol-start ids to a trace run id."""
@@ -94,7 +94,10 @@ class TraceStore:
             candidate_path = path / "trace.json"
             if not candidate_path.exists():
                 continue
-            trace = RunTrace.from_dict(json.loads(candidate_path.read_text(encoding="utf-8")))
+            try:
+                trace = _load_trace_file(candidate_path)
+            except (OSError, json.JSONDecodeError, TypeError, KeyError, ValueError):
+                continue
             protocol_start_id = trace.outputs.get("protocol_start_id") or trace.inputs.get("start_id")
             if protocol_start_id == run_id:
                 return trace.run_id
@@ -109,7 +112,10 @@ class TraceStore:
                 continue
             trace_path = path / "trace.json"
             if trace_path.exists():
-                traces.append(RunTrace.from_dict(json.loads(trace_path.read_text(encoding="utf-8"))))
+                try:
+                    traces.append(_load_trace_file(trace_path))
+                except (OSError, json.JSONDecodeError, TypeError, KeyError, ValueError):
+                    continue
         return sorted(traces, key=lambda trace: trace.started_at, reverse=True)[:limit]
 
     def latest(self) -> RunTrace | None:
@@ -119,7 +125,7 @@ class TraceStore:
             if run_id:
                 try:
                     return self.load(run_id)
-                except FileNotFoundError:
+                except (FileNotFoundError, OSError, json.JSONDecodeError, TypeError, KeyError, ValueError):
                     pass
         runs = self.list_runs(limit=1)
         return runs[0] if runs else None
@@ -141,3 +147,15 @@ class TraceStore:
 def generate_run_id() -> str:
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     return f"{timestamp}-{secrets.token_hex(3)}"
+
+
+def _load_trace_file(trace_path: Path) -> RunTrace:
+    """Load one strict trace JSON file.
+
+    Runtime trace scanning must tolerate stale or partially corrupted trace files,
+    but direct trace loading should still surface malformed JSON to the caller.
+    Keeping parsing in one helper avoids drift between load, list, and alias
+    resolution paths.
+    """
+
+    return RunTrace.from_dict(json.loads(trace_path.read_text(encoding="utf-8")))

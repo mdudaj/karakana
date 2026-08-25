@@ -81,7 +81,7 @@ Do not use a handoff to replace current code inspection, tests, review, release 
 4. Reference authoritative files by path. Summarize only the continuation facts not already durable elsewhere.
 5. Suggest only installed, relevant skills.
 6. Redact all user notes and generated fields before persistence and rendering.
-7. Write `handoff.md` and `handoff.json` under a new `.karakana/handoffs/<handoff-id>/` directory.
+7. Write `handoff.md` and `handoff.json` under a new `.karakana/handoffs/<project>/<handoff-id>/` directory. Legacy flat handoffs under `.karakana/handoffs/<handoff-id>/` may be read for backward compatibility only.
 8. Run `karakana handoff doctor --project <project>`.
 9. Before the next task ends, append a refreshed return handoff.
 
@@ -111,10 +111,12 @@ karakana handoff doctor --project <project>
 - Loading a handoff by recency without checking project and skillpack.
 - Hiding stale or missing references.
 - Creating hidden lifecycle behavior that users cannot opt out of.
+- Mixing multiple projects in one flat handoff directory instead of using project-scoped handoff storage.
 
 ## Verification
 
 - Confirm `handoff.md` and `handoff.json` exist.
+- Confirm new handoffs are organized under `.karakana/handoffs/<project>/<handoff-id>/`.
 - Confirm the latest selected handoff matches project and skillpack.
 - Confirm all reference artifacts and suggested skills exist.
 - Confirm secret detection passes after rendering.

@@ -31,6 +31,8 @@ The long-term app vision is a reusable platform, not only a TACATDP monitoring a
 ## Active Dataverse Artifacts
 
 - `docs/powerpages-odk-webforms/`
+- `ubongo/projects/crdb-mel/django-viewflow-pivot-research.md`
+- `ubongo/projects/crdb-mel/ent-meal-bootstrap-plan.md`
 - `schemas/dataverse/odk-central-inspired-mvp-schema.json`
 - `schemas/dataverse/odk-central-inspired-mvp-schema.md`
 - `schemas/dataverse/platform-tables.json`

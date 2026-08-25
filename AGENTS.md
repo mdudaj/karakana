@@ -61,8 +61,10 @@ karakana handoff refresh \
 ```
 
 Record verification, unresolved findings, changed references, remaining tasks,
-the recommended next task, and the exact next action. Handoffs are append-only
-runtime artifacts under `.karakana/handoffs/` and must not be committed.
+the recommended next task, and the exact next action. New handoffs are
+append-only runtime artifacts under `.karakana/handoffs/<project>/` and must
+not be committed. Legacy flat handoffs under `.karakana/handoffs/<handoff-id>/`
+may be read for backward compatibility only.
 
 Every completed slice summary must include:
 

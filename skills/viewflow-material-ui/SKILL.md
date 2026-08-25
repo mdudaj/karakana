@@ -39,6 +39,7 @@ bucket: development
 - Use Material tabs to switch between related content panels when stacked summary/list components would clutter the page; if Viewflow does not provide a ready tab component, create a reusable MDC tab abstraction.
 - Active tab styling belongs below the tab label by default; only move it elsewhere when a project rule explicitly says so.
 - Forms must use Viewflow form definitions/rendering inside `vf-form` and `vf-card__form`; use `viewflow-form-controls` for normal widgets, AJAX selects, date/time pickers, dynamic workflow forms, and complex validation behavior.
+- Login, invitation, and activation pages must still follow Viewflow/Material product UX. Use `viewflow/base.html` or `viewflow/base_page.html`, MDC buttons/cards/tabs where applicable, icon field wrappers where the project has established them, and role/organization-scope copy when access is invite-first.
 - Action cards must be visually consistent across siblings: same icon policy, same content structure, same action region, same button placement level, and same action-button styling.
 - Back actions should use a reusable icon+label component that states the destination.
 
@@ -66,6 +67,7 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 - Tabs reduce clutter only when content panels are siblings under the same page concept, and tab markup should follow MDC tab structure.
 - Tab panels need structured content such as metric lists, rows, panels, or empty states; avoid punctuation-delimited prose for status data.
 - Form pages should have one primary task and one form component. Complex controls such as autocomplete selects, date/time pickers, dependent fields, formsets, and generated workflow fields should be planned with `viewflow-form-controls`.
+- Access pages are part of the workflow surface. In enterprise SSO systems, preserve the visible flow: invite → activation → SSO login → application role and organization scope. Bootstrap/local login should be visually secondary when enterprise SSO is the intended path.
 
 ## Standard workflow
 
@@ -78,8 +80,9 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 7. Style active tab indicators at the bottom unless the project explicitly defines another placement.
 8. Style tab panel contents as structured summaries, not loose text separated by punctuation.
 9. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required; apply `viewflow-form-controls` for widget/control selection.
-10. Put labeled back actions and secondary action links in the page header action area.
-11. Add tests/assertions for durable UX rules that can regress.
+10. For login/invite/activation pages, compare against the closest mature Viewflow project before editing and enforce the access model in route behavior, not only in navigation.
+11. Put labeled back actions and secondary action links in the page header action area.
+12. Add tests/assertions for durable UX rules that can regress.
 
 ## Safety rules
 
@@ -89,6 +92,7 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 - Do not create page-specific component variants when a reusable abstraction is appropriate.
 - Do not mix custom tab markup with Material tabs when MDC tab classes are available.
 - Do not hand-render ordinary Django form fields in Viewflow projects; define a Viewflow layout and render it. For missing widget behavior, create a reusable Viewflow form-control adapter rather than page-local markup.
+- Do not let SSO auto-signup bypass invite activation, role assignment, or organization/branch scoping when those are required by the product.
 
 ## Required checks
 
@@ -106,6 +110,7 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 - Are complex form controls planned with `viewflow-form-controls` and verified for widget state, accessibility, permissions, and server validation?
 - Are loading, empty, error, stale-data, permission, disabled, and success states routed through `interaction-state-design`?
 - Are accessibility risks routed through `accessibility-wcag-audit` instead of being treated as visual polish?
+- Do login/invite/activation pages use Viewflow base templates, MDC controls, reusable field wrappers, and tested invite-first access copy?
 - Are child routes equipped with labeled header back actions?
 - Are tabs keyboard/link accessible and backed by URLs or anchors?
 
@@ -128,6 +133,7 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 - Curriculum hub: top action-card grid, then a separate Material tab surface for source/snapshot status panels.
 - Add source route: header back action plus one full-width Viewflow/Material form card rendered through a Viewflow layout.
 - Snapshot capture route: header back action and optional review link, then one full-width form component.
+- Enterprise SSO login: primary Microsoft/Entra CTA, secondary bootstrap disclosure, invite activation view, and user-management tabs built with MDC/Viewflow structure.
 
 ## Pitfalls
 
@@ -139,6 +145,7 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 - Putting secondary forms or review lists inside a single-purpose form page.
 - Adding raw Django form markup instead of a reusable Material/Viewflow wrapper.
 - Creating custom tabs when MDC tabs are the expected Material pattern.
+- Treating authentication/invitation pages as throwaway templates outside the design system.
 
 ## Verification
 

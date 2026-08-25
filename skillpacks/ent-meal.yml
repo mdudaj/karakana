@@ -1,0 +1,62 @@
+name: ent-meal
+description: Enterprise MEAL Django/Viewflow platform delivery profile
+version: 0.1.0
+status: experimental
+project:
+  id: ent-meal
+  display_name: Enterprise MEAL
+  memory: ubongo/projects/ent-meal
+skills:
+  required:
+    - design-system-governance
+    - material-3-ui
+    - delivery-artifact-gate
+    - karakana-handoff
+  optional:
+    - viewflow-framework
+    - django-debugging
+    - system-design-thinking
+    - brainstorm-verbalized-sampling
+    - grill-with-docs
+    - requirements-elicitation
+    - research-writing
+model_routes:
+  planning:
+    provider: openai_codex
+    model: gpt-5.4-mini
+    rationale: Use bounded planning by default; escalate for authentication, authorization, workflow process state, deployment, or cross-project architecture risk.
+  routine_code_implementation:
+    provider: openai_codex
+    model: gpt-5.4-mini
+    rationale: Use routine implementation routing after requirements, skills, and memory are loaded.
+protocols:
+  default: requirements-change
+  categories:
+    assessment: assessment-review
+    frontend: ux-change
+    implementation: python-code-change
+    requirements: requirements-change
+    skill: skill-update
+safety:
+  blocked_paths:
+    - .env
+    - .env.*
+    - secrets/**
+  requires_approval_for:
+    - authentication_change
+    - permission_change
+    - database_migration
+    - deployment
+    - destructive_command
+tests:
+  commands:
+    - .venv/bin/python manage.py check
+    - .venv/bin/pytest -q
+conventions:
+  notes:
+    - Work from `/home/jmduda/KodeX/ent-meal` for source changes.
+    - Read `/home/jmduda/KodeX/ent-meal/KARAKANA.md` before editing.
+    - Use Viewflow shell conventions learned from LIMS, but adapt IA and labels to Enterprise MEAL.
+    - Use Google Material 3 principles through reusable tokens/components, not page-local styling.
+    - Keep TACATDP as the first programme configuration, not the platform architecture.
+    - Treat XLSForm/XForm support as a subsystem boundary; pyxform integration requires tests around conversion and supported question types.

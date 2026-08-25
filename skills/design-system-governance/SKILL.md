@@ -35,6 +35,7 @@ bucket: development
 ## Quick Reference
 
 - One project, one design-system profile: tokens, surfaces, page stack, tabs, forms, cards, buttons, tables, navigation, and cache/version rules.
+- Human-centred design is part of the design-system contract: reusable UI rules must protect task fit, plain language, data confidence, and non-misleading status/trend treatment.
 - Before a new product, portal, major UX refresh, or first implementation slice, establish or reference the shell layout and design-system foundation before building pages.
 - Before delivering UI/UX, use existing project guidance first; if the feature
   or pattern is not covered, perform research-backed HCD and record the evidence
@@ -54,12 +55,14 @@ bucket: development
 - Use `visual-design-review` when UI feedback needs structured critique before deciding which reusable rule, token, component, or state pattern should change.
 - Use `ux-writing` when reusable components need label, action, empty-state, error, warning, confirmation, help, notification, or navigation copy rules.
 - Use `design-qa-playwright` when shared UI rules need rendered browser evidence, screenshot review, responsive checks, DOM assertions, or visual regression coverage.
+- Authentication, invitation, and activation pages are product UX, not temporary boilerplate. In Viewflow projects, render them from the Viewflow base templates, use the same Material/MDC field/button/card anatomy as mature reference apps, and keep bootstrap/local sign-in visually secondary to the approved enterprise SSO path.
 - Tabs must use the project framework's Material component structure; active indicators belong below the tab label by default unless a project explicitly defines otherwise.
 - Back actions must use a reusable labeled component that communicates the destination, not only an icon.
 - App shells own route identity. A content page must not repeat the same route title in a second large hero/header; content starts with the current work object, operational status, tabs, table, or form surface.
 - Route-level actions such as Back, Refresh, Add, or Export belong in a shell action lane or shared compact route chrome. Do not recreate them as page-local sticky hero bars unless the embedded runtime has a documented separate navigation boundary.
 - Field/runtime apps should separate host-shell components from embedded runtime engines. The host may own navigation, status, loading, and layout; the embedded engine should own its controls and validation unless a documented adapter boundary says otherwise.
 - Prototype diagnostics must not remain the primary user experience after a vertical slice is proven. Move build markers, event traces, and write diagnostics into a debug panel or development-only view.
+- Prototype disclaimers and live projection status must remain visible but visually secondary; they should not displace the primary work surface unless they block action or materially change interpretation.
 - UI work is not done until visual/design-system checks pass on affected pages.
 
 ## Purpose
@@ -94,6 +97,7 @@ Each UI project should have a durable contract covering:
 - **Page layout**: content grid, page stack spacing, full-width surfaces, responsive breakpoints.
 - **Surfaces**: cards, form surfaces, tab surfaces, table/list surfaces, panels.
 - **Components**: buttons, icon buttons, tabs, action cards, form cards, status chips, tables.
+- **Access UX**: login, invitation creation, invitation acceptance, role/organization assignment, access-denied, and disabled-account states.
 - **Anatomy**: required slots/regions for each component, such as action-card icon/body/action.
 - **Navigation actions**: reusable back action with icon, label, destination, and accessible text.
 - **Framework mapping**: canonical framework classes and renderers, such as Viewflow/MDC classes.
@@ -112,11 +116,12 @@ Each UI project should have a durable contract covering:
 5. For branded apps, inspect brand assets and derive project-specific tokens before choosing colors.
 6. Update the durable artifact or skill before page edits when a new general rule is being introduced.
 7. Patch shared tokens/components/partials first; update page templates only to compose those components.
-8. Move prototype diagnostics into a debug boundary before polishing shareable UX.
-9. Add or update tests for DOM contracts that can be asserted cheaply.
-10. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
-11. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
-12. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
+8. For auth/access UX, compare against the closest mature project before editing. Preserve the required access flow in copy and code, for example invite → activate → SSO → role/organization scope.
+9. Move prototype diagnostics into a debug boundary before polishing shareable UX.
+10. Add or update tests for DOM contracts that can be asserted cheaply.
+11. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
+12. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
+13. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
 
 ## Safety rules
 
@@ -141,6 +146,8 @@ Each UI project should have a durable contract covering:
 - Do style changes use tokens instead of page-local colors?
 - Are token changes planned through `design-token-system` with primitive, semantic, and component layers?
 - Do forms/tabs use the canonical framework renderer/markup?
+- For login/invite/activation UX, does the page use the project shell/base template, Material/MDC fields/buttons/cards, icon field anatomy where established, and tested access-flow copy?
+- For enterprise SSO projects, is identity-provider login restricted by the product access model instead of becoming open self-signup?
 - Is active tab styling positioned according to the project default, usually the bottom indicator?
 - Is there visible spacing between major sibling components?
 - Are actions aligned by component anatomy, not by accidental content length?
@@ -215,4 +222,5 @@ Cross-project rules should define behavior and anatomy, not force a single palet
 - Visual review: use `visual-design-review` to prioritize hierarchy, grouping, density, typography, and polish findings before implementation.
 - UX writing: use `ux-writing` before standardizing labels, action text, errors, empty states, confirmations, notifications, and help text.
 - Browser design QA: use `design-qa-playwright` to verify the rendered outcome with stable locators, assertions, screenshots, responsive checks, and accessibility scan hooks where available.
+- Invite-first SSO: model invitation and activation as durable access UX, use Viewflow/MDC form surfaces for invite pages, keep bootstrap credentials behind a secondary disclosure, and test that uninvited SSO users cannot self-provision.
 - Color drift: move values into project tokens and replace page-local colors.

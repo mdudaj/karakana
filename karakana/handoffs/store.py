@@ -16,7 +16,7 @@ class HandoffStore:
         self.root = repo_root / ".karakana" / "handoffs"
 
     def save(self, handoff: HandoffArtifact) -> tuple[Path, Path]:
-        run_dir = self.run_dir(handoff.handoff_id)
+        run_dir = self.run_dir(handoff.handoff_id, project=handoff.project)
         run_dir.mkdir(parents=True, exist_ok=False)
         json_path = run_dir / "handoff.json"
         markdown_path = run_dir / "handoff.md"
@@ -34,7 +34,7 @@ class HandoffStore:
         if not self.root.exists():
             return []
         handoffs: list[HandoffArtifact] = []
-        for path in self.root.glob("*/handoff.json"):
+        for path in self._handoff_json_paths():
             try:
                 handoff = HandoffArtifact.from_dict(json.loads(path.read_text(encoding="utf-8")))
             except (OSError, json.JSONDecodeError, TypeError):
@@ -53,10 +53,24 @@ class HandoffStore:
             None,
         )
 
-    def run_dir(self, handoff_id: str) -> Path:
+    def run_dir(self, handoff_id: str, project: str | None = None) -> Path:
         if not handoff_id or Path(handoff_id).name != handoff_id:
             raise ValueError(f"Invalid handoff ID: {handoff_id}")
+        if project:
+            if Path(project).name != project:
+                raise ValueError(f"Invalid project ID: {project}")
+            return self.root / project / handoff_id
+
+        project_scoped_matches = sorted(self.root.glob(f"*/{handoff_id}/handoff.json"))
+        if project_scoped_matches:
+            return project_scoped_matches[-1].parent
+
         return self.root / handoff_id
+
+    def _handoff_json_paths(self) -> list[Path]:
+        legacy = list(self.root.glob("*/handoff.json"))
+        project_scoped = list(self.root.glob("*/*/handoff.json"))
+        return sorted({*legacy, *project_scoped})
 
 
 def generate_handoff_id() -> str:

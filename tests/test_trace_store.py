@@ -54,6 +54,24 @@ def test_list_and_latest_runs(tmp_path):
     assert latest.command == "second"
 
 
+def test_list_and_latest_skip_malformed_trace_files(tmp_path):
+    store = TraceStore(tmp_path)
+    valid = store.create_run(command="valid")
+    valid.finish("success")
+    store.save(valid)
+    bad_dir = tmp_path / ".karakana" / "runs" / "20260618-010000-bad"
+    bad_dir.mkdir(parents=True)
+    (bad_dir / "trace.json").write_text('{"run_id": "bad"}\n{"extra": true}\n', encoding="utf-8")
+    (tmp_path / ".karakana" / "runs" / "latest").write_text("20260618-010000-bad\n", encoding="utf-8")
+
+    runs = store.list_runs()
+    latest = store.latest()
+
+    assert [run.run_id for run in runs] == [valid.run_id]
+    assert latest is not None
+    assert latest.run_id == valid.run_id
+
+
 def test_trace_store_attaches_protocol_for_task_when_available():
     store = TraceStore(Path.cwd())
 

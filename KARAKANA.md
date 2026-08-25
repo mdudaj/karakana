@@ -24,7 +24,7 @@ Use:
 - `ubongo/projects/karakana/known-issues.md`
 - `ubongo/projects/karakana/open-issues.md`
 
-Every fresh session must load the latest matching project handoff before planning or editing. Every bounded task must finish by refreshing an append-only handoff summary that records verification, unresolved findings, changed references, remaining tasks, the recommended next task, and the exact next action.
+Every fresh session must load the latest matching project handoff before planning or editing. Every bounded task must finish by refreshing an append-only handoff summary that records verification, unresolved findings, changed references, remaining tasks, the recommended next task, and the exact next action. New handoff artifacts are organized by project under `.karakana/handoffs/<project>/<handoff-id>/`; legacy flat handoffs remain readable only for backward compatibility.
 
 ## Required skills
 

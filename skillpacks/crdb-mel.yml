@@ -11,6 +11,7 @@ skills:
     - power-platform-canvas-apps
     - power-pages-odk-webforms
     - design-system-governance
+    - material-3-ui
     - delivery-artifact-gate
     - pdf-submission-renderer
     - karakana-handoff
@@ -64,6 +65,7 @@ conventions:
     - Treat fixed TACATDP screens as transitional but acceptable for prototype delivery; prefer a metadata-driven form runner for the long-term project-platform UX.
     - For the ODK-style proof-of-concept field UX, use the Power Pages hosted Vue/ODK Web Forms path.
     - Power Pages SPA work must use the same Dataverse environment as the Power Pages site and should call the Power Pages Web API `/_api` when relying on Power Pages authentication and table permissions.
+    - For Power Pages Web API browser imports, do not recycle table-permission changes after verified `Append`/`Append To` and cache refresh still produce `90040106` on a lookup bind; use a documented no-bind MVP path or approved server-side Dataverse import path.
     - For private developer/non-production Power Pages sites, grant the CRDB/Microsoft Entra user Site visibility access before invitation redemption testing; this is separate from TACATDP Contact, Web Role, Table Permission, Invitation, and assignment records.
     - "User onboarding documentation must show two gates for private sites: first private-site access grant, then Power Pages invitation redemption and TACATDP assignment verification."
     - Review `schemas/dataverse/form-renderer-contract.json` before implementing or modifying the hosted form runtime.
