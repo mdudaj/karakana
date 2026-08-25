@@ -60,6 +60,7 @@ Do not use for general Django bugs without workflow impact; use `django-debuggin
 - Separate workflow/process state from domain/business data.
 - Review permissions and assignment for every approval, ownership, or role-based workflow.
 - Treat frontend form, viewset, and dashboard changes as workflow correctness changes.
+- Treat authentication, invitation, activation, role assignment, and organization/branch scope as access workflow changes. Do not implement them as plain Django boilerplate when the product uses Viewflow frontend conventions.
 - Require tests for valid transitions, invalid transitions, permissions, assignment, validation, completion, and cancellation where applicable.
 
 ## Core concepts
@@ -74,6 +75,8 @@ Permission and assignment review is mandatory for approvals, ownership, role-bas
 
 Frontend changes can affect workflow correctness. Forms, views, viewsets, templates, dashboard actions, and user-facing task controls can change how users move through a process.
 
+Access workflow code is workflow code. For invite-first enterprise systems, explicitly model the path from invitation to activation to SSO sign-in to role/organization scope. Keep identity-provider authentication separate from application authorization.
+
 Tests are mandatory for behavior changes and should cover valid transitions, invalid transitions, permissions, assignment, form validation, completed states, and cancelled states where applicable.
 
 ## Standard workflow
@@ -82,8 +85,9 @@ Tests are mandatory for behavior changes and should cover valid transitions, inv
 2. Separate flow data from business data and document where each is stored.
 3. Map actors, permissions, assignments, transitions, approvals, rejection/rework paths, and final states.
 4. Review frontend behavior for validation, available actions, task visibility, and dashboard navigation.
-5. Check migration and active-process compatibility when changing existing workflows.
-6. Add or request tests for valid paths, invalid paths, permissions, assignment, form validation, completed states, and cancelled states.
+5. For auth/access flows, verify templates use the Viewflow base and established Material/MDC form anatomy, and verify uninvited or inactive users cannot bypass activation through SSO.
+6. Check migration and active-process compatibility when changing existing workflows.
+7. Add or request tests for valid paths, invalid paths, permissions, assignment, form validation, completed states, and cancelled states.
 
 ## Pitfalls
 
@@ -92,6 +96,7 @@ Tests are mandatory for behavior changes and should cover valid transitions, inv
 - Do not change task names, process states, URLs, templates, or permissions without considering active processes.
 - Do not assume frontend changes are presentation-only.
 - Do not bypass permission or assignment checks to unblock stuck workflows.
+- Do not let SSO auto-signup bypass invitation, activation, role assignment, or organization scope when those are product requirements.
 
 ## Verification
 
@@ -114,6 +119,7 @@ Tests are mandatory for behavior changes and should cover valid transitions, inv
 - Check flow data versus business data separation.
 - Check permission and assignment rules.
 - Check frontend forms, views, viewsets, templates, and dashboard behavior.
+- Check invite-first access behavior when authentication or user management is in scope.
 - Check migration and active-process compatibility.
 - Run or request workflow behavior tests.
 

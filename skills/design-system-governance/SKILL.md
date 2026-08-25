@@ -43,6 +43,7 @@ bucket: development
 - Sibling cards must share anatomy: icon region, content region, action region, and aligned actions.
 - Sibling action buttons must share styling and icon policy; if one action button in the sibling group has an icon, all should.
 - Forms must use the project framework's canonical renderer; in Viewflow projects, use Viewflow layouts/rendering.
+- Authentication, invitation, and activation pages are product UX, not temporary boilerplate. In Viewflow projects, render them from the Viewflow base templates, use the same Material/MDC field/button/card anatomy as mature reference apps, and keep bootstrap/local sign-in visually secondary to the approved enterprise SSO path.
 - Tabs must use the project framework's Material component structure; active indicators belong below the tab label by default unless a project explicitly defines otherwise.
 - Back actions must use a reusable labeled component that communicates the destination, not only an icon.
 - App shells own route identity. A content page must not repeat the same route title in a second large hero/header; content starts with the current work object, operational status, tabs, table, or form surface.
@@ -84,6 +85,7 @@ Each UI project should have a durable contract covering:
 - **Page layout**: content grid, page stack spacing, full-width surfaces, responsive breakpoints.
 - **Surfaces**: cards, form surfaces, tab surfaces, table/list surfaces, panels.
 - **Components**: buttons, icon buttons, tabs, action cards, form cards, status chips, tables.
+- **Access UX**: login, invitation creation, invitation acceptance, role/organization assignment, access-denied, and disabled-account states.
 - **Anatomy**: required slots/regions for each component, such as action-card icon/body/action.
 - **Navigation actions**: reusable back action with icon, label, destination, and accessible text.
 - **Framework mapping**: canonical framework classes and renderers, such as Viewflow/MDC classes.
@@ -99,11 +101,12 @@ Each UI project should have a durable contract covering:
 4. For branded apps, inspect brand assets and derive project-specific tokens before choosing colors.
 5. Update the durable artifact or skill before page edits when a new general rule is being introduced.
 6. Patch shared tokens/components/partials first; update page templates only to compose those components.
-7. Move prototype diagnostics into a debug boundary before polishing shareable UX.
-8. Add or update tests for DOM contracts that can be asserted cheaply.
-9. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
-10. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
-11. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
+7. For auth/access UX, compare against the closest mature project before editing. Preserve the required access flow in copy and code, for example invite → activate → SSO → role/organization scope.
+8. Move prototype diagnostics into a debug boundary before polishing shareable UX.
+9. Add or update tests for DOM contracts that can be asserted cheaply.
+10. When the issue is visual spacing/alignment/color, run a browser visual check or screenshot comparison when tooling is available.
+11. Version static assets or otherwise invalidate caches when CSS changes must be visible in a running app.
+12. Refresh the handoff with changed rules, affected pages, verification, and remaining visual risks.
 
 ## Safety rules
 
@@ -121,6 +124,8 @@ Each UI project should have a durable contract covering:
 - Are affected pages composing the same component anatomy?
 - Do style changes use tokens instead of page-local colors?
 - Do forms/tabs use the canonical framework renderer/markup?
+- For login/invite/activation UX, does the page use the project shell/base template, Material/MDC fields/buttons/cards, icon field anatomy where established, and tested access-flow copy?
+- For enterprise SSO projects, is identity-provider login restricted by the product access model instead of becoming open self-signup?
 - Is active tab styling positioned according to the project default, usually the bottom indicator?
 - Is there visible spacing between major sibling components?
 - Are actions aligned by component anatomy, not by accidental content length?
@@ -181,4 +186,5 @@ Cross-project rules should define behavior and anatomy, not force a single palet
 - Button alignment issue: define action-card anatomy with an action slot; update all sibling cards to use it.
 - Tab status content issue: replace punctuation-delimited prose with a reusable metric/list/panel component.
 - Form inconsistency: add a Viewflow layout and render through `{% render form form.layout %}` rather than hand-rendering fields.
+- Invite-first SSO: model invitation and activation as durable access UX, use Viewflow/MDC form surfaces for invite pages, keep bootstrap credentials behind a secondary disclosure, and test that uninvited SSO users cannot self-provision.
 - Color drift: move values into project tokens and replace page-local colors.
