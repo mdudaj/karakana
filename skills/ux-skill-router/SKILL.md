@@ -94,6 +94,9 @@ than one route may apply.
 - Missing project/skill guidance for a UI pattern, work environment, or feature:
   perform research-backed HCD first, then route the finding to the relevant
   specialist skill.
+- Broad UI/UX delivery where the user expects research, specification,
+  implementation, critique, and refinement until a quality gate passes:
+  `hcd-ui-ux-delivery-loop`.
 
 ## Core concepts
 
@@ -137,7 +140,8 @@ Use the shortest sequence that covers the risk.
 
 ### Screenshot critique to implementation
 
-1. `visual-design-review`
+1. `hcd-ui-ux-delivery-loop` when the user expects critique plus delivery and
+   a pass/fail threshold; otherwise start with `visual-design-review`
 2. `material-hcd-interface` if page hierarchy changes
 3. `material-component-spec` or `design-token-system` if the fix is reusable
 4. `accessibility-wcag-audit` if labels, focus, contrast, forms, or custom
@@ -163,10 +167,11 @@ Use the shortest sequence that covers the risk.
 
 ### Cross-page/global styling issue
 
-1. `design-system-governance`
-2. `visual-design-review` to classify impact
-3. `material-component-spec` or `design-token-system` depending on cause
-4. `design-qa-playwright` for affected-page evidence
+1. `hcd-ui-ux-delivery-loop` when the issue includes delivery/refinement gates
+2. `design-system-governance`
+3. `visual-design-review` to classify impact
+4. `material-component-spec` or `design-token-system` depending on cause
+5. `design-qa-playwright` for affected-page evidence
 
 ### UX copy/content issue
 
@@ -183,6 +188,8 @@ Use the shortest sequence that covers the risk.
 - Is the request visual critique, screen structure, reusable component, token,
   form/control, state, accessibility, writing, browser QA, or governance?
 - Which specialist skill is primary?
+- Does this task require a post-delivery critique threshold through
+  `hcd-ui-ux-delivery-loop`?
 - Which secondary skills are necessary, and why?
 - Which tempting skills are not needed for this slice?
 - Does the task need requirements/look-and-feel notes before implementation?
@@ -236,6 +243,9 @@ Use the shortest sequence that covers the risk.
 - “The task filter UI is ugly”: start with `visual-design-review`, then route
   to `material-component-spec` for chips/toolbar if reusable, and
   `design-qa-playwright` for rendered evidence.
+- “Research HCD, implement the UI revision, critique the delivered result, and
+  refine until it passes”: start with `hcd-ui-ux-delivery-loop`, then load only
+  the specialist skills it routes to.
 - “Add a calendar control to workflow forms”: start with
   `viewflow-form-controls`, add `accessibility-wcag-audit`, `ux-writing`, and
   `design-qa-playwright`.

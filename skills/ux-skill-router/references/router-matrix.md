@@ -6,6 +6,7 @@ Use this matrix to select the smallest useful skill sequence for interface work.
 
 | User/task signal | Primary skill | Common supporting skills | Verification |
 |---|---|---|---|
+| Research-backed UI delivery, critique after implementation, refine-until-pass quality gate | `hcd-ui-ux-delivery-loop` | `material-hcd-interface`, `visual-design-review`, `accessibility-wcag-audit`, feature-specific skill | `design-qa-playwright` plus threshold score |
 | Screenshot critique, “doesn’t look right”, layout polish | `visual-design-review` | `material-hcd-interface`, `material-component-spec`, `design-token-system` | `design-qa-playwright` |
 | Page hierarchy, workflow cockpit, dashboard, landing, help index | `material-hcd-interface` | `visual-design-review`, `ux-writing`, `interaction-state-design` | `design-qa-playwright` |
 | Repeated cards, tabs, filters, chips, empty states, action rows | `material-component-spec` | `design-token-system`, `interaction-state-design`, `accessibility-wcag-audit` | `design-qa-playwright` |
@@ -31,10 +32,17 @@ Use the primary specialist skill, any necessary supporting skill, then
 `design-qa-playwright` for rendered verification if the page/component is
 important or the user requested end-to-end review.
 
+Use `hcd-ui-ux-delivery-loop` as the primary skill when the task explicitly
+requires research-backed UX, post-delivery critique, and refinement until a
+defined pass threshold.
+
 ### Review after screenshot
 
 Use `visual-design-review` first. It should classify issues by severity and
 route systemic fixes to the right specialist skill.
+
+Use `hcd-ui-ux-delivery-loop` first if the screenshot review is expected to
+continue through implementation and a pass/fail quality gate.
 
 ### Harden existing UI
 
@@ -57,5 +65,6 @@ For implemented UX work, the final summary should report:
 - specialist skills applied;
 - affected pages/components;
 - rendered verification performed;
+- score/pass-fail outcome when `hcd-ui-ux-delivery-loop` applies;
 - remaining UX risks;
 - next recommended UX task.
