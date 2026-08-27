@@ -99,6 +99,12 @@ stable shell. For page hierarchy inside the workspace, combine with
   drawer/header controls remain visible. If the product has one topbar
   hamburger for drawer width, hide or override drawer-internal Viewflow toggle
   affordances so the brand area does not appear to enforce another behavior.
+- Do not place an organization-context eyebrow immediately after a hamburger.
+  The hamburger controls navigation, so the text next to it should be route
+  identity or an explicit context control. Organization context belongs in the
+  brand area or clearly separated context chips.
+- For visible shell CSS/JS changes, use the project's cache-busting convention
+  so browser cache does not preserve stale navigation appearance or behavior.
 - The selected navigation item must be visible, text-labelled, and accessible;
   do not rely on color alone.
 - Preserve content width intentionally. Do not let wide desktop pages become
@@ -219,6 +225,9 @@ record the product-specific reason and keep the deviation explicit.
   project-specific markup?
 - Have unwanted Viewflow default shell affordances been hidden or mapped to the
   agreed product behavior?
+- Does the hamburger have adequate contrast, hit area, hover/focus state, and
+  spacing from the route title?
+- Were shell CSS/JS asset versions updated when visible shell behavior changed?
 - Are loading, no-access, permission, stale-data, and sync states visible and
   user-facing?
 - Is implementation/backend vocabulary kept out of normal navigation and route
