@@ -91,6 +91,14 @@ stable shell. For page hierarchy inside the workspace, combine with
   each page’s first content card.
 - Use navigation for destinations, not actions. Put actions in app/page/section
   action lanes according to scope.
+- Do not turn Administration into a dumping ground for configurable objects.
+  If a setup operation belongs to a domain area, expose it as a role-controlled
+  page action inside that domain route instead of adding another global
+  Administration destination.
+- When adapting Viewflow `base_page.html`, explicitly decide which default
+  drawer/header controls remain visible. If the product has one topbar
+  hamburger for drawer width, hide or override drawer-internal Viewflow toggle
+  affordances so the brand area does not appear to enforce another behavior.
 - The selected navigation item must be visible, text-labelled, and accessible;
   do not rely on color alone.
 - Preserve content width intentionally. Do not let wide desktop pages become
@@ -195,6 +203,8 @@ record the product-specific reason and keep the deviation explicit.
 ## Required checks
 
 - Are navigation items destinations rather than actions?
+- Are domain-specific operations exposed as page actions instead of global
+  Administration destinations?
 - Is route identity owned by the shell/header, not duplicated in page content?
 - Are global, page, section, and row actions visually scoped to the objects they
   affect?
@@ -207,6 +217,8 @@ record the product-specific reason and keep the deviation explicit.
   frame locally?
 - Does Viewflow work use Viewflow/Material templates and wrappers before
   project-specific markup?
+- Have unwanted Viewflow default shell affordances been hidden or mapped to the
+  agreed product behavior?
 - Are loading, no-access, permission, stale-data, and sync states visible and
   user-facing?
 - Is implementation/backend vocabulary kept out of normal navigation and route
