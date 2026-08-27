@@ -94,7 +94,10 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 10. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required; apply `viewflow-form-controls` for widget/control selection.
 11. For login/invite/activation pages, compare against the closest mature Viewflow project before editing and enforce the access model in route behavior, not only in navigation.
 12. Put labeled back actions and secondary action links in the page header action area.
-13. Add tests/assertions for durable UX rules that can regress.
+13. Use shared search-control partials for list/worklist filtering. Do not copy
+    MDC text-field search markup route by route; the component should own the
+    leading icon, label, value binding, density, and focus treatment.
+14. Add tests/assertions for durable UX rules that can regress.
 
 ## Safety rules
 
