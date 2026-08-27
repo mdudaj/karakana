@@ -8,6 +8,11 @@ Use this reference when writing or reviewing product UI copy.
 - Use consistent terms for the same concept.
 - Use numerals when they improve scanning.
 - Say what the user can do, not what the system implementation is doing.
+- Use user-facing operational language. Avoid implementation or delivery-process
+  terms in normal product UI, including `protocol`, `harness`, `artifact`,
+  `readiness`, `migration`, `fixture`, `seed`, `projection`, `purge`, and
+  backend-only state names, unless the screen is explicitly a technical
+  diagnostic/admin surface.
 - Avoid unnecessary explanation in the default UI; use help/progressive
   disclosure for details.
 - Keep copy close to the control/state it explains.
@@ -179,6 +184,23 @@ Example:
 ```text
 You do not have permission to approve this task. Ask a lab manager to review it.
 ```
+
+### Policy and system-status copy
+
+State the current user-visible status and consequence. Keep implementation
+details in documentation or diagnostics.
+
+Good:
+
+- `Default retention settings are active. Records are not automatically deleted.`
+- `Email was not sent. Copy the invitation link and send it manually.`
+- `Storage setup is incomplete. Add locations before recording putaway.`
+
+Avoid:
+
+- `Default until a laboratory retention policy is recorded. No automated purge is implemented.`
+- `SMTP backend failed. Render fallback command.`
+- `Artifact readiness is missing.`
 
 ## LIMS/operator-specific rules
 

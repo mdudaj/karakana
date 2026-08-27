@@ -95,6 +95,11 @@ Combine with:
   domain uses them unambiguously.
 - Keep labels consistent across navigation, buttons, headings, filters, and
   help text.
+- Use plain operational language in production UI. If copy explains project
+  setup, policy, status, or readiness, write what the user can understand or do;
+  do not expose protocol, harness, artifact, migration, implementation, or
+  backend-process terms unless the screen is an explicit diagnostic/admin
+  surface.
 - Empty/error copy should say what happened, why it matters, and what the user
   can do next.
 - Do not offer actions the system cannot support.
@@ -154,9 +159,12 @@ Key source directions:
    associated; status updates are perceivable; icon-only actions have names.
 7. **Check operational safety.** Copy must not obscure permission, audit,
    quality, irreversible, or workflow-state implications.
-8. **Standardize patterns.** If the copy pattern recurs, add it to reusable
+8. **Remove implementation phrasing.** Replace process/internal wording with
+   user-facing terms, and move rationale into specs, protocol artifacts, help,
+   or admin diagnostics when users do not need it to act safely.
+9. **Standardize patterns.** If the copy pattern recurs, add it to reusable
    components/docs rather than rewriting per page.
-9. **Verify.** Add assertions for critical labels/messages and browser checks
+10. **Verify.** Add assertions for critical labels/messages and browser checks
    for state copy where available.
 
 ## Required checks
@@ -165,6 +173,10 @@ Key source directions:
 - Is terminology consistent with the project/domain vocabulary?
 - Is the copy specific enough to prevent wrong-object or wrong-action errors?
 - Does the copy avoid backend-only verbs and implementation details?
+- Does the copy avoid project-delivery language such as protocol, harness,
+  artifact gate, readiness check, migration, seed, fixture, projection, or
+  implementation unless the product explicitly exposes a diagnostic/admin
+  surface for that concept?
 - Are field labels visible and descriptive?
 - Are placeholders treated as examples/hints, not labels?
 - Are errors textual, actionable, and near the problem?
@@ -181,6 +193,9 @@ Key source directions:
 - Do not soften warnings or irreversible actions in a way that hides risk.
 - Do not expose restricted data in error, empty, permission, or notification
   copy.
+- Do not expose delivery-process or implementation-process vocabulary in the
+  normal user path. Put it in specifications, handoffs, logs, admin diagnostics,
+  or help content intended for technical users.
 - Do not replace labels with placeholders.
 - Do not offer retry, undo, reset, support, or escalation unless the product
   supports it.
@@ -214,6 +229,9 @@ Key source directions:
   the box to review its contents.`
 - Queued success: `Manifest upload queued. We’ll notify you when validation is
   complete.`
+- Policy/status: use `Default retention settings are active. Records are not
+  automatically deleted.`, not `Default until a laboratory retention policy is
+  recorded. No automated purge is implemented.`
 - Confirmation: `Dispose material DNA-2026-0142-A? This cannot be undone after
   approval is recorded.`
 
