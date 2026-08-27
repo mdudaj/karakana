@@ -114,6 +114,9 @@ stable shell. For page hierarchy inside the workspace, combine with
   destinations should not carry arbitrary page back buttons; child/detail/form
   routes should expose a labeled Up action to their parent route through the
   project’s shared header/back component.
+- Do not put parent-return navigation inside a right-side page action toolbar
+  unless the project has explicitly documented that deviation. Treat Back/Up as
+  navigation; treat trailing toolbar items as operations.
 - Choose content surfaces by task. Use navigational lists for homogeneous setup
   destinations, not action-card grids that create unbalanced whitespace when
   the items are not dashboard summaries.

@@ -45,6 +45,9 @@ bucket: development
 - Child/detail/form routes should expose the parent return action near the page
   identity. Bottom Cancel actions are not enough on their own because users
   need the hierarchy cue before interacting with the form or evidence page.
+- Keep parent-return navigation structurally separate from page action
+  toolbars. In Viewflow/MDC headers, use a dedicated leading/header slot for
+  Back/Up and reserve the trailing action group for operations.
 - Route-level pages should use a shared page identity/header pattern for icon,
   title, subtitle, optional metadata, and page actions. Do not implement
   page-local icon/title/subtitle styling when a reusable header class or
