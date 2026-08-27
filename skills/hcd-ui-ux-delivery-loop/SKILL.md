@@ -48,8 +48,9 @@ review the rendered result and refine it until it reaches a stated quality
 threshold.
 
 This skill coordinates specialist skills. It does not replace
-`material-hcd-interface`, `visual-design-review`, `material-component-spec`,
-`viewflow-material-ui`, `viewflow-form-controls`, `ux-writing`,
+`m3-application-shell`, `material-hcd-interface`, `visual-design-review`,
+`material-component-spec`, `viewflow-material-ui`, `viewflow-form-controls`,
+`ux-writing`,
 `accessibility-wcag-audit`, `interaction-state-design`, or
 `design-qa-playwright`.
 
@@ -146,6 +147,9 @@ read `references/style-organization.md`.
    feature, gather focused HCD, Material, accessibility, and domain references.
 6. **Route specialist skills.** Choose one primary skill and only required
    support skills:
+   - `m3-application-shell` for navigation drawer/rail, top app bar, route
+     identity, page action lane, content workspace, footer/status, and adaptive
+     application-shell behavior;
    - `material-hcd-interface` for screen hierarchy and Material composition;
    - `visual-design-review` for screenshot critique and visual hierarchy;
    - `material-component-spec` for reusable component anatomy;
@@ -276,6 +280,9 @@ For audit trails:
   check or create the project page identity rule. The page icon, title,
   subtitle, and action lane should come from a shared pattern rather than
   page-local header markup.
+- Application shell redesign or audit: use this skill with
+  `m3-application-shell`, then add `viewflow-material-ui` when the target
+  implementation is Django/Viewflow.
 - Viewflow workflow form with date/time fields: use this skill only if the work
   includes the full research/specification/refinement loop; otherwise route
   directly to `viewflow-form-controls`, `accessibility-wcag-audit`, and

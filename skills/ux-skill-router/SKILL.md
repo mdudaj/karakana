@@ -79,6 +79,9 @@ than one route may apply.
   `design-token-system`.
 - Shared design-system policy or cross-page consistency:
   `design-system-governance`.
+- Application shell, side navigation, top app bar, route identity, action lane,
+  content workspace, footer/status, or adaptive shell behavior:
+  `m3-application-shell`.
 - Viewflow templates, page layout, cards, tabs, shell, route chrome:
   `viewflow-material-ui`.
 - Viewflow/Django form controls, AJAX selects, date/time pickers, formsets,
@@ -156,6 +159,16 @@ Use the shortest sequence that covers the risk.
    states
 4. `accessibility-wcag-audit` for keyboard/focus/label checks
 5. `design-qa-playwright` for browser interaction verification
+
+### Application shell / navigation frame
+
+1. `m3-application-shell`
+2. `material-hcd-interface` if page hierarchy or route task flow changes
+3. `viewflow-material-ui` when implementing in a Django/Viewflow application
+4. `design-token-system` if shell geometry, color, spacing, or elevation tokens
+   change
+5. `accessibility-wcag-audit` and `design-qa-playwright` for keyboard,
+   landmark, responsive, and rendered shell evidence
 
 ### New reusable component
 

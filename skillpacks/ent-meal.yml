@@ -9,11 +9,14 @@ project:
 skills:
   required:
     - design-system-governance
+    - hcd-ui-ux-delivery-loop
+    - m3-application-shell
     - material-3-ui
     - delivery-artifact-gate
     - karakana-handoff
   optional:
     - viewflow-framework
+    - viewflow-material-ui
     - django-debugging
     - system-design-thinking
     - brainstorm-verbalized-sampling
@@ -54,6 +57,7 @@ tests:
     - .venv/bin/pytest -q
 conventions:
   notes:
+    - Before resuming non-trivial Enterprise MEAL UI/UX work, fetch Karakana upstream and confirm the active UX skills are current.
     - Work from `/home/jmduda/KodeX/ent-meal` for source changes.
     - Read `/home/jmduda/KodeX/ent-meal/KARAKANA.md` before editing.
     - Use Viewflow shell conventions learned from LIMS, but adapt IA and labels to Enterprise MEAL.

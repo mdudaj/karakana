@@ -49,6 +49,9 @@ bucket: development
 - Use status chips with text and tone. Do not rely on color alone.
 - Use visible labels for search and filters. Place active filters as removable chips above the affected list/table when filters are active.
 - Preserve route ownership: shell header owns route title and global actions; page content starts with the work surface.
+- For navigation drawer/rail, top app bar, route identity, page action lane,
+  workspace, footer/status, and adaptive shell behavior, use
+  `m3-application-shell` as the primary skill.
 - Use official Material guidance or `@material/web` when adding new component patterns. Do not invent component anatomy without a reason.
 - Do not show trend arrows for neutral metadata, missing data, verification status, or system state. Use plain text such as “Needs verification,” “Not imported,” or “Updated Aug 15.”
 - Keep prototype disclaimers and live-read status visible but visually secondary. They should not compete with the primary KPI row unless the status blocks user action.
@@ -73,6 +76,9 @@ Use for Material-style dashboards, management tables, record lists, filters, sta
 ## When not to use this skill
 
 Do not use for backend-only changes. Do not add `@material/web` automatically when the existing project already has a compatible component system and tokens; dependency addition still needs a concrete reason and approval.
+Do not use this skill alone for application-shell redesigns; route shell work
+through `m3-application-shell` and use this skill for supporting Material
+component, spacing, token, and state decisions.
 
 ## Standard workflow
 
