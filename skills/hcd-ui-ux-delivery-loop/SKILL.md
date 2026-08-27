@@ -65,6 +65,9 @@ Use for:
 - repeated misses in layout, spacing, filter styling, KPI cards, action
   placement, empty states, audit lists, dashboards, worklists, help pages, or
   Viewflow forms;
+- repeated disagreement about the same shell, navigation, route-header,
+  content-grid, or action-placement behavior, where a route-level critique and
+  revision plan is required before more implementation;
 - work where the user expects the agent to refine the delivered UI until a
   measurable threshold is met;
 - creation or revision of project UX standards that should guide future agents.
@@ -83,6 +86,10 @@ set needed for the slice.
   exists for page identity, layout stack, action lanes, filters, rows/cards,
   empty states, and responsive behavior. If it does not exist, create or update
   that guidance first.
+- When a mature comparable project exists, inspect its rendered pattern,
+  tokens, shell CSS, shared component partials, and representative templates
+  before planning the revision. Treat the reference as evidence for structure
+  and behavior, not as permission to copy its brand.
 - If existing project guidance does not cover the feature, gather targeted HCD,
   Material, accessibility, and domain evidence before implementation.
 - Use project tokens, components, templates, and Viewflow conventions. Avoid
@@ -143,9 +150,12 @@ read `references/style-organization.md`.
    components for page identity, layout spacing, action lanes, filters,
    rows/cards, empty states, and responsive behavior. If missing, create or
    update the style organization rule before editing the page.
-5. **Research only the missing guidance.** If local guidance is absent for the
+5. **Inspect reference implementations.** If the workspace has a mature
+   comparable project, inspect its tokens, shell CSS, shared partials, and
+   representative templates for the same pattern before planning or editing.
+6. **Research only the missing guidance.** If local guidance is absent for the
    feature, gather focused HCD, Material, accessibility, and domain references.
-6. **Route specialist skills.** Choose one primary skill and only required
+7. **Route specialist skills.** Choose one primary skill and only required
    support skills:
    - `m3-application-shell` for navigation drawer/rail, top app bar, route
      identity, page action lane, content workspace, footer/status, and adaptive
@@ -164,18 +174,18 @@ read `references/style-organization.md`.
    - `accessibility-wcag-audit` for keyboard, focus, labels, contrast, ARIA,
      targets, and status messages;
    - `design-qa-playwright` for rendered browser verification.
-7. **Write requirements.** Define behavior requirements and visual
+8. **Write requirements.** Define behavior requirements and visual
    requirements before editing. Include state coverage and acceptance criteria.
-8. **Implement through reusable surfaces.** Prefer shared components, tokens,
+9. **Implement through reusable surfaces.** Prefer shared components, tokens,
    templates, and documented patterns over page-local CSS.
-9. **Verify mechanically.** Run relevant tests, validators, Playwright/browser
+10. **Verify mechanically.** Run relevant tests, validators, Playwright/browser
    flows, accessibility checks, and screenshot capture where available.
-10. **Critique the rendered result.** Use the scorecard in
+11. **Critique the rendered result.** Use the scorecard in
    `references/review-threshold.md` and classify findings as P0/P1/P2/P3.
-11. **Refine until threshold.** Fix P0/P1 issues and any failed score gates
+12. **Refine until threshold.** Fix P0/P1 issues and any failed score gates
     before claiming delivery. If blocked, report the exact blocker and the next
     verification step.
-12. **Document the rule.** If the issue is reusable, update the relevant skill,
+13. **Document the rule.** If the issue is reusable, update the relevant skill,
     component spec, design-system doc, or durable memory so it does not recur.
 
 ## Audit UI review guidance

@@ -123,6 +123,11 @@ stable shell. For page hierarchy inside the workspace, combine with
 - Use Viewflow/Material primitives where the project uses Viewflow:
   `viewflow/base.html`, `viewflow/base_page.html`, `vf-*`, `mdc-*`, and
   reusable project shell blocks/classes before creating page-local markup.
+- When a mature Viewflow/Material reference project exists, inspect its shell
+  template, token file, shell override CSS, content-grid CSS, route-header
+  partials, back action partials, and representative templates before changing
+  shell or route-layout behavior. Extract a rule and document it; do not rely
+  on chat memory or one page screenshot alone.
 - Shell copy must use user-facing product language. Avoid implementation
   vocabulary such as harness, protocol, fixture, migration, seed, projection,
   or artifact gate in normal navigation and route headers.
@@ -185,17 +190,20 @@ record the product-specific reason and keep the deviation explicit.
 5. **Map to Viewflow/frontend primitives.** Reuse existing Viewflow templates,
    Material classes, blocks, and project components. Add abstractions only when
    a repeated shell pattern is missing.
-6. **Define page contracts.** Pages supply route title, subtitle/status,
+6. **Inspect reference shell patterns.** If a comparable mature project exists,
+   inspect its token, shell, content-grid, header, back-action, and responsive
+   patterns before editing.
+7. **Define page contracts.** Pages supply route title, subtitle/status,
    actions, breadcrumbs/back action when needed, and content. Pages do not
    rebuild shell chrome.
-7. **Apply tokens.** Shell width, gutters, spacing, typography, surfaces,
+8. **Apply tokens.** Shell width, gutters, spacing, typography, surfaces,
    navigation state, elevation, radius, focus, and density use design tokens or
    documented project variables.
-8. **Cover states.** Loading, permission-denied, no access, stale data, offline,
+9. **Cover states.** Loading, permission-denied, no access, stale data, offline,
    sync/error, collapsed navigation, active route, and responsive state.
-9. **Check accessibility.** Landmarks, skip link, visible labels, keyboard
+10. **Check accessibility.** Landmarks, skip link, visible labels, keyboard
    navigation, focus order, target size, status text, and contrast.
-10. **Verify.** Run tests/validators and inspect rendered evidence for at least
+11. **Verify.** Run tests/validators and inspect rendered evidence for at least
     one hub page, one list page, one form page, and one detail page when those
     exist.
 
