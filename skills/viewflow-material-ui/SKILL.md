@@ -42,6 +42,10 @@ bucket: development
 - Login, invitation, and activation pages must still follow Viewflow/Material product UX. Use `viewflow/base.html` or `viewflow/base_page.html`, MDC buttons/cards/tabs where applicable, icon field wrappers where the project has established them, and role/organization-scope copy when access is invite-first.
 - Action cards must be visually consistent across siblings: same icon policy, same content structure, same action region, same button placement level, and same action-button styling.
 - Back actions should use a reusable icon+label component that states the destination.
+- Route-level pages should use a shared page identity/header pattern for icon,
+  title, subtitle, optional metadata, and page actions. Do not implement
+  page-local icon/title/subtitle styling when a reusable header class or
+  component exists.
 
 ## Purpose
 
@@ -74,15 +78,17 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 1. Inspect existing project templates and Viewflow templates before adding markup.
 2. Identify whether the page is a hub, list, form, detail, or mixed dashboard.
 3. Choose reusable abstractions before writing page-specific CSS.
-4. Use explicit vertical stack spacing between every major page component; verify sibling sections cannot touch.
-5. Put sibling action cards in a consistent action-card grid with equal-height cards and an aligned action region.
-6. Put related content panels behind Material/MDC tabs when stacked cards/lists would clutter the page.
-7. Style active tab indicators at the bottom unless the project explicitly defines another placement.
-8. Style tab panel contents as structured summaries, not loose text separated by punctuation.
-9. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required; apply `viewflow-form-controls` for widget/control selection.
-10. For login/invite/activation pages, compare against the closest mature Viewflow project before editing and enforce the access model in route behavior, not only in navigation.
-11. Put labeled back actions and secondary action links in the page header action area.
-12. Add tests/assertions for durable UX rules that can regress.
+4. Use the shared page identity/header pattern for route-level icon, title,
+   subtitle, and action lane before styling page content.
+5. Use explicit vertical stack spacing between every major page component; verify sibling sections cannot touch.
+6. Put sibling action cards in a consistent action-card grid with equal-height cards and an aligned action region.
+7. Put related content panels behind Material/MDC tabs when stacked cards/lists would clutter the page.
+8. Style active tab indicators at the bottom unless the project explicitly defines another placement.
+9. Style tab panel contents as structured summaries, not loose text separated by punctuation.
+10. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required; apply `viewflow-form-controls` for widget/control selection.
+11. For login/invite/activation pages, compare against the closest mature Viewflow project before editing and enforce the access model in route behavior, not only in navigation.
+12. Put labeled back actions and secondary action links in the page header action area.
+13. Add tests/assertions for durable UX rules that can regress.
 
 ## Safety rules
 
@@ -98,6 +104,8 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 
 - Does the page have visible vertical spacing between every major sibling component?
 - Does the page use the right page type: hub, list, form, detail, or tabbed content?
+- Does the route-level page identity use the shared icon/title/subtitle/action
+  lane pattern?
 - Has visual critique been translated through `visual-design-review` before making broad Viewflow template/CSS changes?
 - Are tabs built with `mdc-tab-bar`, `mdc-tab`, `mdc-tab__content`, `mdc-tab-indicator`, and URL/ARIA-backed panels?
 - Is the active tab indicator below the tab label by default?

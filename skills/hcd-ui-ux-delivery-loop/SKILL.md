@@ -78,6 +78,10 @@ set needed for the slice.
 ## Quick Reference
 
 - Before implementing UI, produce behavior and look-and-feel requirements.
+- Before implementing UI, verify that a project style-organization contract
+  exists for page identity, layout stack, action lanes, filters, rows/cards,
+  empty states, and responsive behavior. If it does not exist, create or update
+  that guidance first.
 - If existing project guidance does not cover the feature, gather targeted HCD,
   Material, accessibility, and domain evidence before implementation.
 - Use project tokens, components, templates, and Viewflow conventions. Avoid
@@ -123,6 +127,9 @@ decision in authoritative sources:
 
 For scoring and pass/fail rules, read `references/review-threshold.md`.
 
+For cross-project style organization, page identity, and consistency gates,
+read `references/style-organization.md`.
+
 ## Standard workflow
 
 1. **Classify the work.** State whether the task is critique-only, plan-only,
@@ -131,9 +138,13 @@ For scoring and pass/fail rules, read `references/review-threshold.md`.
    context, domain risk, and the primary question the screen must answer.
 3. **Inspect local evidence.** Read existing project UX specs, templates,
    components, tokens, screenshots, tests, and relevant skills.
-4. **Research only the missing guidance.** If local guidance is absent for the
+4. **Check style organization.** Confirm the project has reusable guidance or
+   components for page identity, layout spacing, action lanes, filters,
+   rows/cards, empty states, and responsive behavior. If missing, create or
+   update the style organization rule before editing the page.
+5. **Research only the missing guidance.** If local guidance is absent for the
    feature, gather focused HCD, Material, accessibility, and domain references.
-5. **Route specialist skills.** Choose one primary skill and only required
+6. **Route specialist skills.** Choose one primary skill and only required
    support skills:
    - `material-hcd-interface` for screen hierarchy and Material composition;
    - `visual-design-review` for screenshot critique and visual hierarchy;
@@ -149,18 +160,18 @@ For scoring and pass/fail rules, read `references/review-threshold.md`.
    - `accessibility-wcag-audit` for keyboard, focus, labels, contrast, ARIA,
      targets, and status messages;
    - `design-qa-playwright` for rendered browser verification.
-6. **Write requirements.** Define behavior requirements and visual
+7. **Write requirements.** Define behavior requirements and visual
    requirements before editing. Include state coverage and acceptance criteria.
-7. **Implement through reusable surfaces.** Prefer shared components, tokens,
+8. **Implement through reusable surfaces.** Prefer shared components, tokens,
    templates, and documented patterns over page-local CSS.
-8. **Verify mechanically.** Run relevant tests, validators, Playwright/browser
+9. **Verify mechanically.** Run relevant tests, validators, Playwright/browser
    flows, accessibility checks, and screenshot capture where available.
-9. **Critique the rendered result.** Use the scorecard in
+10. **Critique the rendered result.** Use the scorecard in
    `references/review-threshold.md` and classify findings as P0/P1/P2/P3.
-10. **Refine until threshold.** Fix P0/P1 issues and any failed score gates
+11. **Refine until threshold.** Fix P0/P1 issues and any failed score gates
     before claiming delivery. If blocked, report the exact blocker and the next
     verification step.
-11. **Document the rule.** If the issue is reusable, update the relevant skill,
+12. **Document the rule.** If the issue is reusable, update the relevant skill,
     component spec, design-system doc, or durable memory so it does not recur.
 
 ## Audit UI review guidance
@@ -196,6 +207,8 @@ For audit trails:
 - Have behavior requirements and look-and-feel requirements been written before
   editing?
 - Has existing project guidance been checked first?
+- Does a style-organization contract exist for page identity, layout stack,
+  action lanes, filters, rows/cards, empty states, and responsive behavior?
 - If guidance was missing, is the HCD/design research source-backed?
 - Are Material components used by semantic role, not just visual appearance?
 - Are repeated visual issues addressed through reusable tokens/components?
@@ -249,6 +262,8 @@ For audit trails:
 - Fixing one page when the issue is a reusable component or token gap.
 - Accepting “looks better” without a threshold, screenshot evidence, and
   accessibility checks.
+- Starting UI implementation when the project has no reusable rule for page
+  identity, action organization, filter styling, and list/card anatomy.
 
 ## Examples
 
@@ -257,6 +272,10 @@ For audit trails:
   `material-hcd-interface` for the evidence-review page structure, require
   filter chips and semantic row states, verify with browser evidence, then
   score against `references/review-threshold.md`.
+- Page header inconsistency: before moving icons or changing title spacing,
+  check or create the project page identity rule. The page icon, title,
+  subtitle, and action lane should come from a shared pattern rather than
+  page-local header markup.
 - Viewflow workflow form with date/time fields: use this skill only if the work
   includes the full research/specification/refinement loop; otherwise route
   directly to `viewflow-form-controls`, `accessibility-wcag-audit`, and

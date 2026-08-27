@@ -25,6 +25,7 @@ expectations:
     - "Pass/fail"
     - "Recommended next task"
     - "references/review-threshold.md"
+    - "references/style-organization.md"
     - "accessibility"
     - "Material"
     - "design-system"
