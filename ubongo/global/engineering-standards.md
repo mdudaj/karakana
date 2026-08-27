@@ -43,9 +43,11 @@ For high-risk systems such as banking, healthcare, billing, permissions, or prod
 
 ## Product UI Wording
 
-Karakana-managed product interfaces should not expose implementation-process language such as "readiness", "artifact gate", "protocol", "harness", or similar delivery vocabulary in the primary user experience unless the project explicitly defines an administrator diagnostic surface for it.
+Karakana-managed product interfaces should not expose implementation-process language such as "readiness", "artifact gate", "protocol", "harness", "fixture", "seed", "projection", "migration", "purge", or similar delivery/backend vocabulary in the primary user experience unless the project explicitly defines an administrator diagnostic surface for it.
 
 For operational users, express the same meaning with user-facing terms such as status, checks, configuration, health, setup, access, or next action. Keep delivery readiness, scope readiness, and implementation gates in documentation, handoff notes, validators, or admin diagnostics rather than dashboards, primary navigation, quick-action panels, or normal route headers.
+
+Before user-facing UI copy is delivered, route labels, status text, warnings, help text, empty states, and instructions through the `ux-writing` skill or an equivalent project copy contract. Copy that explains policy or system status must state the current user-visible state and consequence in plain language.
 
 ## Research-Backed UI/UX Delivery
 

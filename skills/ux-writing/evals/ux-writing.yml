@@ -10,7 +10,7 @@ tags:
   - accessibility
   - material
 input:
-  task: "Review LIMS UI copy for a task page with Start, Submit, No data, Invalid input, filtered search, email fallback, and a destructive dispose confirmation."
+  task: "Review LIMS UI copy for a task page with Start, Submit, No data, Invalid input, filtered search, email fallback, destructive dispose confirmation, and a retention status that currently says 'Default until a laboratory retention policy is recorded. No automated purge is implemented.'"
   skill: ux-writing
   task_type: review
   prompt_file: skills/ux-writing/SKILL.md
@@ -25,6 +25,8 @@ expectations:
     - "empty"
     - "error"
     - "confirmation"
+    - "implementation"
+    - "Default retention settings are active"
     - "Verification"
   must_not_include:
     - "placeholder as label"

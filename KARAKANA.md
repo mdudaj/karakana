@@ -74,7 +74,7 @@ Model routes should be inferred from the natural-language task whenever possible
   tasks or known follow-ups and state the recommended next task.
 - All authentication and permission changes require human approval.
 - All behavior changes require tests.
-- Features with UX impact require behavior requirements, look-and-feel requirements, best-practice research for the task, and alignment with the existing design system before implementation.
+- Features with UX impact require behavior requirements, look-and-feel requirements, best-practice research for the task, alignment with the existing design system, and `ux-writing` review for user-facing labels, help text, status messages, empty states, warnings, and instructions before implementation.
 - Non-trivial delivery requires an artifact-readiness check before implementation and before marking work done. Required requirements, ADR, milestone, delivery, UX, schema/example, test/eval, and handoff artifacts must exist, or the PR must explicitly record why a normally required artifact is not applicable.
 - Self-improvement must produce reviewable proposals.
 - Non-trivial work should start with `karakana protocol start` and end with a protocol check when required artifacts are present.

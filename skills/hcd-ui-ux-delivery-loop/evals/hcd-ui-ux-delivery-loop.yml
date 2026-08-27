@@ -1,0 +1,43 @@
+id: hcd-ui-ux-delivery-loop
+name: HCD UI/UX delivery and critique loop
+description: Ensure broad UI/UX tasks require research-backed requirements, specialist skill routing, rendered verification, score threshold, and refinement before delivery.
+suite: skills
+risk_level: medium
+tags:
+  - skills
+  - ux
+  - hcd
+  - material
+  - review
+input:
+  task: "Critique a LIMS audit trail UI from screenshots, research HCD and Material guidance, implement the agreed revision, then refine the delivered UI until it passes a quality threshold."
+  skill: hcd-ui-ux-delivery-loop
+  task_type: skill
+  prompt_file: skills/hcd-ui-ux-delivery-loop/SKILL.md
+expectations:
+  must_include:
+    - "User-facing job"
+    - "Evidence used"
+    - "Specialist skills"
+    - "Requirements"
+    - "Rendered verification"
+    - "Score"
+    - "Pass/fail"
+    - "Recommended next task"
+    - "references/review-threshold.md"
+    - "references/style-organization.md"
+    - "accessibility"
+    - "Material"
+    - "design-system"
+  must_not_include:
+    - "just make it nicer"
+    - "page-local styling only"
+    - "personal preference"
+  required_sections:
+    - "Standard workflow"
+    - "Required checks"
+    - "Safety rules"
+    - "Output format"
+  forbidden_patterns:
+    - "GITHUB_TOKEN"
+    - "OPENAI_API_KEY"
