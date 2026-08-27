@@ -110,6 +110,13 @@ stable shell. For page hierarchy inside the workspace, combine with
 - Preserve content width intentionally. Do not let wide desktop pages become
   unbounded lines of text; use max-widths for reading pages and full-width
   grids for dashboards/tables.
+- Distinguish lateral destinations from child routes. Top-level drawer
+  destinations should not carry arbitrary page back buttons; child/detail/form
+  routes should expose a labeled Up action to their parent route through the
+  project’s shared header/back component.
+- Choose content surfaces by task. Use navigational lists for homogeneous setup
+  destinations, not action-card grids that create unbalanced whitespace when
+  the items are not dashboard summaries.
 - Use Viewflow/Material primitives where the project uses Viewflow:
   `viewflow/base.html`, `viewflow/base_page.html`, `vf-*`, `mdc-*`, and
   reusable project shell blocks/classes before creating page-local markup.

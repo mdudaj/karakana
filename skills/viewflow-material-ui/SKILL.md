@@ -42,6 +42,9 @@ bucket: development
 - Login, invitation, and activation pages must still follow Viewflow/Material product UX. Use `viewflow/base.html` or `viewflow/base_page.html`, MDC buttons/cards/tabs where applicable, icon field wrappers where the project has established them, and role/organization-scope copy when access is invite-first.
 - Action cards must be visually consistent across siblings: same icon policy, same content structure, same action region, same button placement level, and same action-button styling.
 - Back actions should use a reusable icon+label component that states the destination.
+- Child/detail/form routes should expose the parent return action near the page
+  identity. Bottom Cancel actions are not enough on their own because users
+  need the hierarchy cue before interacting with the form or evidence page.
 - Route-level pages should use a shared page identity/header pattern for icon,
   title, subtitle, optional metadata, and page actions. Do not implement
   page-local icon/title/subtitle styling when a reusable header class or
