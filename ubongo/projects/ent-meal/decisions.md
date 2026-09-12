@@ -23,3 +23,9 @@ Rationale: the platform needs transactional persistence, spatial and analytical 
 Decision: treat form collection as a first-class subsystem with an XLSForm/XForm adapter seam.
 
 Rationale: the TACATDP baseline came from KoboToolbox-style collection, and CRDB needs a long-term path for governed, versioned, field-capable forms without locking Enterprise MEAL to one external collection product.
+
+## 2026-09-03 — Browser form runtime target
+
+Decision: the Enterprise MEAL form runtime must preserve the working Power Pages form-runner behavior already proven in the TACATDP prototype, then improve it using XLSForm/XForm-informed long-form rendering patterns.
+
+Rationale: runtime collection is not a simplified custom form renderer. It must render the active published form version, support long forms through sections/pages, save every browser submission into the same canonical `FormSubmission` store used by imports, preserve raw and normalized payloads, and route submitted evidence into verification before indicator projection. TACATDP is the first enabled configuration, but the runtime must remain configurable for future programmes, schemes, departments, and operational activities.
