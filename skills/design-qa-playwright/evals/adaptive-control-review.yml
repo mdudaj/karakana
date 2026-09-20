@@ -1,0 +1,21 @@
+id: adaptive-control-review
+name: Adaptive control review safeguards
+description: Keep control-level reflow and disclosure focus checks discoverable in the QA reference.
+suite: skills
+risk_level: medium
+tags: [skills, responsive, accessibility]
+input:
+  task: "Page scrollWidth passes, but search is clipped and Escape leaves focus hidden. Plan a bounded browser regression review."
+  skill: design-qa-playwright
+  task_type: planning
+  prompt_file: skills/design-qa-playwright/references/playwright-ui-qa.md
+expectations:
+  must_include:
+    - "overflow-clipping ancestors"
+    - "320 CSS"
+    - "trial click"
+    - "focus restoration"
+    - "Closed `details`"
+    - "isolated test data"
+  must_not_include:
+    - "page width alone proves reflow"

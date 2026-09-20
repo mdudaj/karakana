@@ -1,7 +1,7 @@
 ---
 name: design-system-governance
 description: Use this skill before frontend work that affects visual consistency, spacing, colors, layout, reusable components, page surfaces, forms, tabs, cards, or cross-project UI rules, especially when repeated UI corrections indicate the project lacks a single design-system source of truth.
-version: 0.1.0
+version: 0.1.1
 risk_level: medium
 allowed_tools:
   - read_file
@@ -67,6 +67,10 @@ bucket: development
 - Prototype diagnostics must not remain the primary user experience after a vertical slice is proven. Move build markers, event traces, and write diagnostics into a debug panel or development-only view.
 - Prototype disclaimers and live projection status must remain visible but visually secondary; they should not displace the primary work surface unless they block action or materially change interpretation.
 - UI work is not done until visual/design-system checks pass on affected pages.
+- Responsive layout must consider available component width after shell and
+  panel space, not only device/viewport labels. Preserve safety-relevant working
+  context in compact layouts. Read `references/adaptive-component-contract.md`
+  for clipping, density, icon-cascade, and navigation-disclosure corrections.
 
 ## Purpose
 
