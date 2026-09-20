@@ -212,6 +212,10 @@ Key source directions:
   tokenized icon size and spacing.
 - Filter toolbar: search region, more-filters action, active filter chips,
   filtered-empty behavior, clear action, responsive wrapping rules.
+- Search control: outlined or filled text-field root, leading decorative search
+  icon when the field label already describes the task, query input slot,
+  optional hidden state fields, tokenized focus/shape/spacing, and separate
+  submit/clear actions owned by the toolbar.
 - Viewflow form field group: legend/title, field rows, help/error slots,
   disabled/readonly rules, validation summary behavior.
 - Task row: priority marker, task title, object context, status chip, due time,

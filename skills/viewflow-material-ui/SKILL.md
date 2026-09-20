@@ -42,6 +42,12 @@ bucket: development
 - Login, invitation, and activation pages must still follow Viewflow/Material product UX. Use `viewflow/base.html` or `viewflow/base_page.html`, MDC buttons/cards/tabs where applicable, icon field wrappers where the project has established them, and role/organization-scope copy when access is invite-first.
 - Action cards must be visually consistent across siblings: same icon policy, same content structure, same action region, same button placement level, and same action-button styling.
 - Back actions should use a reusable icon+label component that states the destination.
+- Child/detail/form routes should expose the parent return action near the page
+  identity. Bottom Cancel actions are not enough on their own because users
+  need the hierarchy cue before interacting with the form or evidence page.
+- Keep parent-return navigation structurally separate from page action
+  toolbars. In Viewflow/MDC headers, use a dedicated leading/header slot for
+  Back/Up and reserve the trailing action group for operations.
 - Route-level pages should use a shared page identity/header pattern for icon,
   title, subtitle, optional metadata, and page actions. Do not implement
   page-local icon/title/subtitle styling when a reusable header class or
@@ -88,7 +94,10 @@ Do not use for backend-only tasks with no rendered UI. Do not replace a mature p
 10. Put form content in a full-width Viewflow/Material form card and render fields through Viewflow layouts unless a narrow form is explicitly required; apply `viewflow-form-controls` for widget/control selection.
 11. For login/invite/activation pages, compare against the closest mature Viewflow project before editing and enforce the access model in route behavior, not only in navigation.
 12. Put labeled back actions and secondary action links in the page header action area.
-13. Add tests/assertions for durable UX rules that can regress.
+13. Use shared search-control partials for list/worklist filtering. Do not copy
+    MDC text-field search markup route by route; the component should own the
+    leading icon, label, value binding, density, and focus treatment.
+14. Add tests/assertions for durable UX rules that can regress.
 
 ## Safety rules
 
