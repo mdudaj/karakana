@@ -30,3 +30,5 @@ Slice 1 establishes:
 ## Operating rule
 
 Do not copy Power Pages prototype constraints into Enterprise MEAL unless they are explicitly part of the transitional import path. Use the Power Pages work as domain evidence and a migration source, not as the future architecture.
+
+Before resuming non-trivial Enterprise MEAL UI/UX work, update the Karakana harness context first: fetch/pull the Karakana repository, check whether UX skills or skillpacks changed, then load the latest `ent-meal` handoff and apply the active `ent-meal` skillpack. This prevents stale UI guidance when Material, Viewflow, HCD, or UX-writing skills have been updated upstream.

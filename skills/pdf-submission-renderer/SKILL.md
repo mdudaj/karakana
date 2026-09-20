@@ -39,6 +39,7 @@ bucket: productivity
 - Use page headings for document titles, for example `1. Executive Summary`.
 - Use WeasyPrint `@page` margin boxes for footers and page numbers.
 - Use named page types for intentional page geometry, even when there is only one content page type.
+- Use `base_url` when rendering HTML strings that reference local CSS, images, fonts, or other relative assets.
 - Do not add running headers unless the user explicitly asks for them.
 - Let `@page` margins define the top content start; do not add section-level top padding to simulate header spacing.
 - Verify PDFs with text extraction and at least one rendered page image before delivery.
@@ -94,6 +95,7 @@ Do not use this skill for DOCX editing, slide decks, scanned PDFs, raster image 
 
 - Do not rewrite stakeholder-facing claims while making style-only changes.
 - Do not expose secrets, environment URLs with credentials, or internal-only comments in generated PDFs.
+- Do not enable WeasyPrint presentational hints for untrusted HTML unless the security implications have been reviewed.
 - Do not commit generated PDFs until the source Markdown and rendered first page have been checked.
 - Ask before changing the document scope, adding a cover, adding logos, or introducing client branding not already approved.
 
