@@ -40,6 +40,9 @@ bucket: development
 - Before delivering UI/UX, use existing project guidance first; if the feature
   or pattern is not covered, perform research-backed HCD and record the evidence
   before implementation/delivery.
+- When a mature comparable project exists, inspect its tokens, shell CSS,
+  shared component partials, and representative templates before editing. Use
+  the reference to extract implementation rules, not to copy visual identity.
 - Build UI from reusable components or partials first; page templates compose them.
 - Preserve project-specific visual identity through tokens, not one-off page colors.
 - Use `ux-skill-router` first when a UI request spans multiple concerns and the
@@ -136,6 +139,8 @@ Each UI project should have a durable contract covering:
 
 - Is the rule project-specific styling or cross-project component behavior?
 - Does the project already have a token/component that should be reused?
+- If a mature reference project exists, were its tokens, shell CSS, component
+  partials, and representative templates inspected before editing?
 - If project guidance does not cover this feature or interaction pattern, is the
   UI/UX change backed by current HCD/design-system/domain research before
   delivery?

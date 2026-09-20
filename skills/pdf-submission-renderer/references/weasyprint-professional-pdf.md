@@ -5,17 +5,22 @@ Use these notes when styling submission or client-facing PDFs with WeasyPrint.
 ## Primary WeasyPrint capabilities
 
 - `HTML.write_pdf()` writes rendered HTML to a PDF target. Use `base_url` when rendering from strings so relative assets resolve correctly.
+- If CSS uses custom fonts, create and pass a `FontConfiguration` consistently to the `CSS` object and `HTML.write_pdf()`.
+- External resources are loaded through WeasyPrint's URL fetcher. Use a custom URL fetcher when rendering app-managed static/media assets or when missing CSS/images should fail the render instead of only warning.
 - `@page` defines page size, margins, footers, and page counters.
 - Page margin boxes such as `@bottom-right` are the stable way to add page numbers. Use running-header boxes only when requested.
 - CSS generated content supports named strings. Use this for active document titles only when running headers are required.
 - WeasyPrint automatically generates PDF bookmarks from headings unless CSS changes bookmark behavior.
 - HTML metadata such as `<title>`, `<meta name="author">`, `<meta name="description">`, and `<html lang="en">` is used for PDF metadata.
 - PDF/UA and PDF/A variants exist, but validity is not guaranteed just by enabling the option. Use correct semantic HTML and validate externally if compliance is required.
+- Avoid `presentational_hints` for untrusted HTML unless reviewed. WeasyPrint 69.0 includes a security fix related to CSS injection when presentational hints are enabled.
 
 Sources checked:
 
 - WeasyPrint API Reference 69.0: https://doc.courtbouillon.org/weasyprint/stable/api_reference.html
 - WeasyPrint Common Use Cases 69.0: https://doc.courtbouillon.org/weasyprint/stable/common_use_cases.html
+- WeasyPrint First Steps / URL fetchers 69.0: https://doc.courtbouillon.org/weasyprint/stable/first_steps.html
+- WeasyPrint 69.0 changelog: https://doc.courtbouillon.org/weasyprint/stable/changelog.html
 - WeasyPrint samples page: https://weasyprint.org/#samples
 - Official report sample PDF: https://github.com/CourtBouillon/weasyprint-samples/raw/main/report/report.pdf
 - Official report sample source: https://github.com/CourtBouillon/weasyprint-samples/tree/main/report
