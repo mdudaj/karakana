@@ -24,19 +24,19 @@ skills:
 model_routes:
   planning:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-sol
   documentation:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-luna
   framework_code_implementation:
     provider: openai_codex
-    model: gpt-5.4
+    model: gpt-6-sol
   database_or_index_migration:
     provider: openai_codex
-    model: gpt-5.6-sol
+    model: gpt-6-sol
   high_risk_code_review:
     provider: openai_codex
-    model: gpt-5.6-sol
+    model: gpt-6-sol
 safety:
   high_risk_paths:
     - site/nhrdm/oauthclient/**

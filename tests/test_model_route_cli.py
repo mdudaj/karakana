@@ -11,7 +11,7 @@ def test_model_route_cli_output():
     assert result.exit_code == 0
     assert "Task type: implementation_planning" in result.output
     assert "Provider: openai_codex" in result.output
-    assert "Model: gpt-5.4" in result.output
+    assert "Model: gpt-6-sol" in result.output
     assert "Role: deep_planner" in result.output
     assert "Token budget: large" in result.output
     assert "Rationale:" in result.output
@@ -22,7 +22,7 @@ def test_model_route_cli_infers_task_type_from_task_text():
 
     assert result.exit_code == 0, result.output
     assert "Inferred task type: security_or_auth_change" in result.output
-    assert "Model: gpt-5.6-sol" in result.output
+    assert "Model: gpt-6-sol" in result.output
     assert "Role: principal_reviewer" in result.output
 
 
@@ -39,8 +39,8 @@ def test_model_route_cli_json_output():
     assert result.exit_code == 0
     data = json.loads(result.output)
     assert data["provider"] == "openai_codex"
-    assert data["model"] == "gpt-5.6-sol"
-    assert data["cost_tier"] == "frontier"
+    assert data["model"] == "gpt-6-sol"
+    assert data["cost_tier"] == "medium"
     assert data["role"] == "principal_planner"
     assert data["token_budget"] == "reserved"
     assert "frontier principal-level reasoning" in data["token_policy"]
@@ -55,9 +55,9 @@ def test_model_route_cli_escalation_signal():
             "--task-type",
             "refactoring",
             "--signals",
-            "security_or_authentication_change",
+            "repeated_failure_after_two_attempts",
         ],
     )
 
     assert result.exit_code == 0
-    assert "Recommended escalation: openai_codex/gpt-5.6-sol" in result.output
+    assert "Recommended escalation: openai_codex/gpt-6-astra" in result.output

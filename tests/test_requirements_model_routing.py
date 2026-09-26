@@ -9,4 +9,4 @@ def test_requirement_issue_contains_recommended_model_route():
     issue = generate_issues(prd, generate_stories(prd))[0]
 
     assert issue.recommended_model_route["provider"] == "openai_codex"
-    assert issue.recommended_model_route["model"] == "gpt-5.4-mini"
+    assert issue.recommended_model_route["model"] == "gpt-6-sol"

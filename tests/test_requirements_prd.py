@@ -15,7 +15,7 @@ def test_prd_generation_has_required_sections_and_harness_mapping():
     markdown = render_prd(prd)
 
     assert prd.model_route["provider"] == "openai_codex"
-    assert prd.model_route["model"] == "gpt-5.4-mini"
+    assert prd.model_route["model"] == "gpt-6-sol"
     assert prd.harness_impact.instructions
     assert "## Harness Subsystem Impact" in markdown
     assert "## Standards" in markdown

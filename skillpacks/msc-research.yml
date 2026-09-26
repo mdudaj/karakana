@@ -20,13 +20,13 @@ skills:
 model_routes:
   planning:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-sol
   documentation:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-luna
   simple_summary:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-luna
 safety:
   high_risk_paths:
     - chapters/**

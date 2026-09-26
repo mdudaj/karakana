@@ -57,11 +57,13 @@ karakana crosslink scan --workspace nimr
 
 Karakana uses the cheapest capable model first:
 
-- Claude Haiku 4.5: fast low-cost issue triage, documentation, changelog, and summaries.
-- GPT-5 mini: planning, architecture reasoning, reflection, skill design, and action extraction review.
-- Codex GPT-5.4-mini: routine code implementation, simple tests, and Codex task drafting.
-- Codex GPT-5.4: serious day-to-day coding, refactoring, CI repair, framework implementation, and deep PR review.
-- Codex GPT-5.5: principal-level escalation for authentication, payments, migrations, process-state changes, production risk, high-risk review, or repeated failures.
+- GPT-6 Luna: focused research, summaries, routine code, tests and task drafting.
+- GPT-6 Sol: control-plane judgment, planning, architecture, implementation and review; medium reasoning normally, high for consequential risk.
+- GPT-6 Astra: explicit exceptional-task selection, not an automatic default.
+- GPT-5.6 Luna/Sol: explicit availability fallbacks; legacy manual overrides remain supported.
+
+See [routing policy](docs/gpt-6-routing.md) and [reuse-aware handoffs](docs/cost-aware-continuation.md).
+Recommendations do not switch an active session or prove account availability.
 
 Inspect routing decisions with:
 

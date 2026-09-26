@@ -9,7 +9,7 @@ input:
   task_type: "planning"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.4-mini"
+  expected_model: "gpt-6-sol"
   must_include:
     - "Safety Rules"
     - "Approval"

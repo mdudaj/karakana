@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from karakana.handoffs.schemas import HandoffArtifact
+from karakana.handoffs.continuation import render_continuation
 
 
 def render_handoff(handoff: HandoffArtifact) -> str:
@@ -70,6 +71,10 @@ def render_handoff(handoff: HandoffArtifact) -> str:
 
 {_bullets(handoff.safety_constraints)}
 
+## Continuation Guidance
+
+{render_continuation(handoff.continuation)}
+
 ## Return Handoff Expectations
 
 {_return_expectation(handoff)}
@@ -124,6 +129,10 @@ Changed:
 ## Safety
 
 {_bullets(handoff.safety_constraints)}
+
+## Continuation Guidance
+
+{render_continuation(handoff.continuation)}
 """
 
 

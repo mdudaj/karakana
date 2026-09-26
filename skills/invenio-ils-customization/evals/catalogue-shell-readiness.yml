@@ -15,7 +15,7 @@ input:
   prompt_file: skills/invenio-ils-customization/SKILL.md
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.4-mini"
+  expected_model: "gpt-6-sol"
   must_include:
     - "literature"
     - "RECORDS_REST_FACETS"

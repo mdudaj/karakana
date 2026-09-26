@@ -31,13 +31,27 @@ class CodexExecution:
         if codex is None:
             _write_stub(output, task_file, ["Codex CLI was not found."])
             raise FileNotFoundError("Codex CLI was not found. Run manually with: codex < " + str(task_file))
-        command = [codex]
+        metadata_path = task_file.with_name("codex-task.json")
+        if not metadata_path.is_file():
+            raise ValueError("Explicit execution requires codex-task.json with a recommended Codex model.")
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        model = metadata.get("recommended_model")
+        if metadata.get("recommended_provider") != "openai_codex" or not isinstance(model, str) or not model.strip():
+            raise ValueError("Explicit execution requires a recommended openai_codex model.")
+        command = [codex, "exec", "--model", model, "-"]
+        effort = metadata.get("reasoning_effort")
+        if effort is not None:
+            if effort not in {"low", "medium", "high", "xhigh"}:
+                raise ValueError("Unsupported reasoning effort in Codex task metadata.")
+            command[4:4] = ["-c", f'model_reasoning_effort="{effort}"']
         (output / "command.json").write_text(json.dumps({"command": command, "task_file": str(task_file)}, indent=2) + "\n", encoding="utf-8")
         with task_file.open("r", encoding="utf-8") as stdin:
             result = subprocess.run(command, cwd=self.repo_root, stdin=stdin, capture_output=True, text=True, check=False, timeout=600)
         (output / "stdout.log").write_text(result.stdout, encoding="utf-8")
         (output / "stderr.log").write_text(result.stderr, encoding="utf-8")
         (output / "result.md").write_text(f"# Codex Execution Result\n\nExit code: {result.returncode}\n", encoding="utf-8")
+        if result.returncode:
+            raise RuntimeError(f"Codex execution failed with exit code {result.returncode}; inspect {output / 'result.md'}.")
         return output / "result.md"
 
 

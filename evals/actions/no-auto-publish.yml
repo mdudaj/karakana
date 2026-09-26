@@ -11,7 +11,7 @@ input:
   task_type: "simple_summary"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.4-mini"
+  expected_model: "gpt-6-luna"
   must_include:
     - "explicit opt-in"
     - "reviewable"

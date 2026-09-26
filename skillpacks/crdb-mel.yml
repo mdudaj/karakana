@@ -26,11 +26,11 @@ skills:
 model_routes:
   planning:
     provider: openai_codex
-    model: gpt-5.4-mini
-    rationale: Sustainable Finance MEL Platform planning is Codex-only while Copilot/GitHub inference tokens are unavailable; use mini for bounded planning and escalate only for framework, workflow, or production risk.
+    model: gpt-6-sol
+    rationale: Sustainable Finance MEL Platform planning is Codex-only while Copilot/GitHub inference tokens are unavailable; use Sol for bounded planning and escalate only for framework, workflow, or production risk.
   routine_code_implementation:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-luna
     rationale: Use routine implementation routing after requirements, skills, and memory are loaded.
 protocols:
   default: requirements-change

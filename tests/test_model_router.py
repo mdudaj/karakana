@@ -5,19 +5,19 @@ def test_route_model_defaults_for_planning():
     route = route_model("planning")
 
     assert route["provider"] == "openai_codex"
-    assert route["model"] == "gpt-5.4-mini"
-    assert route["cost_tier"] == "low_to_medium"
-    assert route["capability_tier"] == "routine_coding"
+    assert route["model"] == "gpt-6-sol"
+    assert route["cost_tier"] == "medium"
+    assert route["capability_tier"] == "principal_engineer"
     assert route["role"] == "planner"
     assert route["token_budget"] == "standard"
-    assert "Codex mini" in route["token_policy"]
+    assert "control-plane" in route["token_policy"]
 
 
 def test_route_model_deep_planning_uses_stronger_model():
     route = route_model("implementation_planning")
 
     assert route["provider"] == "openai_codex"
-    assert route["model"] == "gpt-5.4"
+    assert route["model"] == "gpt-6-sol"
     assert route["role"] == "deep_planner"
     assert route["token_budget"] == "large"
 
@@ -26,7 +26,7 @@ def test_route_model_high_risk_planning_uses_principal_model():
     route = route_model("model_routing_planning")
 
     assert route["provider"] == "openai_codex"
-    assert route["model"] == "gpt-5.6-sol"
+    assert route["model"] == "gpt-6-sol"
     assert route["role"] == "principal_planner"
     assert route["token_budget"] == "reserved"
 

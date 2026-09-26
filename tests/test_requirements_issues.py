@@ -12,7 +12,7 @@ def test_issue_drafts_include_model_route_and_vertical_scope():
 
     assert issues
     assert issues[0].recommended_model_route["provider"] == "openai_codex"
-    assert issues[0].recommended_model_route["model"] == "gpt-5.4-mini"
+    assert issues[0].recommended_model_route["model"] == "gpt-6-sol"
     assert issues[0].scope
     assert "requirements" in issues[0].labels
 

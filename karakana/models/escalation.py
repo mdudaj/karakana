@@ -4,6 +4,30 @@ from __future__ import annotations
 
 ESCALATION_RULES = [
     {
+        "from_provider": "openai_codex",
+        "from_model": "gpt-6-luna",
+        "to_provider": "openai_codex",
+        "to_model": "gpt-6-sol",
+        "signals": {
+            "architecture_reasoning_needed", "multi_file_implementation_planning",
+            "task_involves_refactor", "task_involves_ci_failure",
+            "task_requires_framework_understanding", "model_routing_change",
+            "safety_policy_change", "security_or_authentication_change",
+            "billing_or_payment_logic", "database_migration", "opensearch_index_change",
+            "viewflow_process_state_change", "production_deployment_risk",
+            "high_risk_pr_review", "repeated_failure_after_two_attempts",
+        },
+        "rationale": "Escalate bounded execution to Sol for complexity, risk or two failed diagnostic attempts.",
+    },
+    {
+        "from_provider": "openai_codex",
+        "from_model": "gpt-6-sol",
+        "to_provider": "openai_codex",
+        "to_model": "gpt-6-astra",
+        "signals": {"repeated_failure_after_two_attempts", "exceptional_review_requested"},
+        "rationale": "Stop speculative patches; replan or explicitly select Astra after confirming availability and cost. No automatic launch.",
+    },
+    {
         "from_provider": "github",
         "from_model": "claude-haiku-4.5",
         "to_provider": "github",
@@ -15,7 +39,7 @@ ESCALATION_RULES = [
         "from_provider": "github",
         "from_model": "gpt-5-mini",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.4",
+        "to_model": "gpt-6-sol",
         "signals": {
             "multi_file_implementation_planning",
             "framework_design_needed",
@@ -29,7 +53,7 @@ ESCALATION_RULES = [
         "from_provider": "github",
         "from_model": "gpt-5-mini",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.6-sol",
+        "to_model": "gpt-6-sol",
         "signals": {
             "high_risk_planning",
             "model_routing_change",
@@ -43,7 +67,7 @@ ESCALATION_RULES = [
         "from_provider": "github",
         "from_model": "gpt-5-mini",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.4-mini",
+        "to_model": "gpt-6-luna",
         "signals": {"code_files_need_editing", "tests_need_writing", "local_repo_inspection_needed", "patch_generation_needed"},
         "rationale": "Repository edits and tests should move from planning to a cost-effective Codex coding model.",
     },
@@ -51,7 +75,7 @@ ESCALATION_RULES = [
         "from_provider": "openai_codex",
         "from_model": "gpt-5.4-mini",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.4",
+        "to_model": "gpt-6-sol",
         "signals": {
             "more_than_3_files_changed",
             "tests_fail_after_first_patch",
@@ -60,13 +84,13 @@ ESCALATION_RULES = [
             "task_requires_framework_understanding",
             "generated_patch_is_structurally_incomplete",
         },
-        "rationale": "Routine Codex work should escalate to gpt-5.4 when complexity, framework depth, or first-pass failures appear.",
+        "rationale": "Legacy routine Codex work escalates to GPT-6 Sol for complexity or framework depth.",
     },
     {
         "from_provider": "openai_codex",
         "from_model": "gpt-5.4",
         "to_provider": "openai_codex",
-        "to_model": "gpt-5.6-sol",
+        "to_model": "gpt-6-sol",
         "signals": {
             "security_or_authentication_change",
             "billing_or_payment_logic",
@@ -98,6 +122,7 @@ def recommend_escalation(current_provider: str, current_model: str, signals: lis
                 "to_model": rule["to_model"],
                 "matched_signals": matched,
                 "rationale": rule["rationale"],
+                "requires_explicit_selection": rule["to_model"] == "gpt-6-astra",
             }
     return {
         "should_escalate": False,

@@ -8,6 +8,7 @@ from pathlib import Path
 
 from karakana.dogfood.summary import DogfoodStore
 from karakana.handoffs.redaction import redact_handoff_text
+from karakana.handoffs.continuation import build_continuation
 from karakana.handoffs.schemas import HandoffArtifact
 from karakana.handoffs.store import HandoffStore, generate_handoff_id
 from karakana.ingestion.store import IngestionStore
@@ -45,6 +46,11 @@ def create_handoff(
     previous_handoff_id: str | None = None,
     okf_concepts_loaded: list[str] | None = None,
     okf_concepts_changed: list[str] | None = None,
+    next_task: str | None = None,
+    reuse_stages: list[str] | None = None,
+    reuse_reviewed: bool = False,
+    slice_complete: bool = False,
+    failed_attempts: int = 0,
 ) -> HandoffArtifact:
     skillpack_name = skillpack or project
     loaded_skillpack = SkillpackLoader(repo_root).load(skillpack_name)
@@ -70,7 +76,12 @@ def create_handoff(
         staleness.append("This handoff was recovered from artifacts because no explicit handoff existed. Verify before acting.")
     if not state.source_artifacts:
         staleness.append("No recent project artifacts were found; verify milestone and next action with the user.")
-    exact_next_action = redact_handoff_text(state.exact_next_action or _next_action(milestone, inspect_first))
+    exact_next_action = redact_handoff_text(next_task or state.exact_next_action or _next_action(milestone, inspect_first))
+    continuation = build_continuation(
+        repo_root, redact_handoff_text(next_task) if next_task else None,
+        loaded_skillpack.to_dict()["model_routes"], reuse_stages, reuse_reviewed,
+        slice_complete, failed_attempts,
+    )
     return HandoffArtifact(
         handoff_id=generate_handoff_id(),
         created_at=now,
@@ -86,7 +97,7 @@ def create_handoff(
         open_findings=_unique(state.open_findings),
         inspect_first=inspect_first,
         do_not_reread=_do_not_reread(repo_root, project),
-        reference_artifacts=_unique(state.source_artifacts),
+        reference_artifacts=_unique(state.source_artifacts + [item["path"] for item in continuation["evidence"].values()]),
         okf_concepts_loaded=_unique(okf_concepts_loaded or []),
         okf_concepts_changed=_unique(okf_concepts_changed or []),
         suggested_skills=_suggested_skills(loaded_skillpack.skills.required, loaded_skillpack.skills.optional, milestone, state.suggested_skills),
@@ -102,6 +113,7 @@ def create_handoff(
         recovered=recovered,
         previous_handoff_id=previous,
         warnings=_unique(state.warnings),
+        continuation=continuation,
     )
 
 

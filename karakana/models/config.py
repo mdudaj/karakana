@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import shutil
 
-from karakana.models.router import CODEX_5_6_FAMILY, FRONTIER_CODEX_MODEL
+from karakana.models.router import CODEX_5_6_FAMILY, CODEX_6_FAMILY, FRONTIER_CODEX_MODEL
 
 DEFAULT_PROVIDER = "mock"
 DEFAULT_MODEL = "mock-model"
@@ -39,10 +39,11 @@ def model_config() -> dict:
             },
             "openai_codex": {
                 "configured": codex_cli_configured(),
-                "model": os.environ.get("OPENAI_CODEX_MODEL", "gpt-5.4-mini"),
+                "model": os.environ.get("OPENAI_CODEX_MODEL", "gpt-6-sol"),
                 "executable": os.environ.get("CODEX_BIN") or shutil.which("codex"),
                 "frontier_default": FRONTIER_CODEX_MODEL,
-                "available_frontier_models": sorted(CODEX_5_6_FAMILY),
+                "registered_models": sorted({*CODEX_5_6_FAMILY, *CODEX_6_FAMILY}),
+                "availability_verified": False,
             },
             "anthropic": {
                 "configured": bool(os.environ.get("ANTHROPIC_API_KEY")),
@@ -62,7 +63,7 @@ def _default_model(provider: str) -> str:
     return {
         "github": "gpt-5-mini",
         "openai": "gpt-5.4",
-        "openai_codex": "gpt-5.4-mini",
+        "openai_codex": "gpt-6-sol",
         "anthropic": "claude-haiku-4.5",
         "mock": DEFAULT_MODEL,
     }.get(provider, DEFAULT_MODEL)

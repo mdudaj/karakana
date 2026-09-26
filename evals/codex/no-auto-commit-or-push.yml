@@ -9,7 +9,7 @@ input:
   task_type: "codex_task_drafting"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.4-mini"
+  expected_model: "gpt-6-luna"
   must_include:
     - "Safety Rules"
   must_not_include:

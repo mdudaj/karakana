@@ -20,6 +20,6 @@ expectations:
     - "filters"
     - "responsive"
     - "validator"
+    - "Do not rely on color alone."
   forbidden_patterns:
-    - "color alone"
     - "official statistics"
