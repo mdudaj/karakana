@@ -1,13 +1,14 @@
 # Engineering artifact content and sharing contract
 
-Version: 0.1. Status: P01–P04 local implementation delivered for review.
+Version: 0.1. Status: P01–P05 local implementation delivered for review.
 This defines generic content and compatibility rules. The opt-in local
 [tool and usage guide](skills/engineering-artifact-catalogue/P02.md) implements
 validation, source adapters, audience exports and feedback reports.
 [P03 focused skills](skills/engineering-artifact-catalogue/P03.md) add experimental
 authoring/export guidance. [P04 discovery](skills/engineering-artifact-catalogue/P04.md)
-adds catalogue pointers and optional project choices. Project pilots and integration
-remain future slices; existing approval rules apply.
+adds catalogue pointers and optional project choices. [P05 controlled pilots](skills/engineering-artifact-catalogue/P05.md)
+exercise authoring, audience sharing and feedback. Independent review, realistic
+project application and integration remain pending; existing approval rules apply.
 Start with the [blank Markdown template](skills/engineering-artifact-catalogue/TEMPLATE.md)
 and [Excel companion](skills/engineering-artifact-catalogue/engineering-artifacts-template.xlsx).
 

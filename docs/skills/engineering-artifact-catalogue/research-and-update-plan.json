@@ -1,14 +1,14 @@
 {
-  "package_version": "0.5",
+  "package_version": "0.6",
   "status": "Draft for review",
   "export_audience": "research-review",
   "source_path": "PLAN.md",
-  "source_sha256": "36022a1be0d6119545de08357f3d1ebd34fc8c2d45eae59a081ec2fd0320b35e",
-  "generated_at_utc": "2026-09-26T14:47:14.721007+00:00",
+  "source_sha256": "5c52473d18280f2edb0c274a86e0509e5ffe6be45dcd4935f74f8e0528827242",
+  "generated_at_utc": "2026-09-26T15:07:50.922548+00:00",
   "sheets": [
     {
       "name": "00 Read Me",
-      "purpose": "Research and update plan; P01 contracts, P02 local tooling, P03 experimental skills and P04 discovery delivered; pilots/integration pending.",
+      "purpose": "Research and update plan; P01 contracts, P02 local tooling, P03 experimental skills, P04 discovery and P05 controlled pilots delivered; reviewed integration pending.",
       "headers": [
         "Item",
         "Value",
@@ -22,7 +22,7 @@
         ],
         [
           "Version",
-          "0.5 / Local delivery for review",
+          "0.6 / Local delivery for review",
           "Research conclusions and implementation proposal; no approval implied."
         ],
         [
@@ -32,8 +32,8 @@
         ],
         [
           "Authority",
-          "User authorized research, planning and subsequent P01–P04 delivery",
-          "Local tooling, experimental skills and discovery implemented; personal installation, remote publishing and deployment remain separate stages."
+          "User authorized research, planning and subsequent P01–P05 delivery",
+          "Local tooling, experimental skills, discovery and controlled pilots implemented; personal installation, remote publishing and deployment remain separate stages."
         ],
         [
           "Format",
@@ -87,8 +87,8 @@
         ],
         [
           "Next action",
-          "P05 controlled authoring/export/review pilots",
-          "Reuse delivered P01–P04 contracts, tools, skills and discovery; select neutral scenarios and evidence/audience verification, then reviewed integration."
+          "P06 independent review and authorized integration",
+          "Reuse delivered P01–P05 contracts, tools, skills, discovery and pilot QA; inspect full diff, address findings and prepare concrete PR; existing remote-action authority applies."
         ],
         [
           "Known limitations",
@@ -1728,11 +1728,11 @@
         ],
         [
           "P05",
-          "Prove useful output with controlled pilots",
+          "Controlled authoring/export/review pilots delivered locally",
           "P04",
-          "Synthetic fixtures; skills/*/evals/; workbook QA report; docs/engineering-artifacts.md",
-          "Author complete synthetic requirements/stories, ADR/design and roadmap/release records in Markdown. Export by audience; validate/render Excel; test source freshness and reviewed feedback reconciliation. A LIMS release pack remains a later requested application.",
-          "Source-to-export parity, useful audience views, preserved blockers/limitations, actual office/feedback results and accessibility limits recorded; agree profile baseline.",
+          "pilots/ brief, four original Markdown documents, machine fixtures, retained requirement amendment, six XLSX/JSON pairs, QA.md/observations/preview; tests/test_engineering_artifact_pilots.py; P05.md",
+          "Authored complete neutral scenario from resolved seed; five profiles retain blockers/source authority. Explicit reviewed wording amendment preserves IDs/history. Six actual feedback exercises and six office roundtrips; existing profile 0.1 retained as author-assessed review baseline. Real LIMS release pack remains separate.",
+          "14 functional checks; 676 full tests; 171 deterministic evals pass. Seven-source hash/parity and six LibreOffice returns unchanged semantically; readiness PDF visually inspected. Self-review only; native Excel/assistive, audience sign-off, independent review and real application pending.",
           "REQ09; REQ10; REQ12; REQ16; REQ19"
         ],
         [

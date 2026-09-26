@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "id": "ITEM-01",
+      "title": "Inspect the supplied input",
+      "category": "review"
+    },
+    {
+      "id": "ITEM-02",
+      "title": "Record unresolved decisions",
+      "category": "planning"
+    }
+  ]
+}

@@ -1,0 +1,1007 @@
+{
+  "payload": {
+    "audience": "executive",
+    "baseline_revision": "pilot-0.1-unaccepted",
+    "contract_version": "0.1",
+    "export_id": "EXPORT-f39d54f4e8fe43d6bad8fecf06ac3fcf",
+    "namespace": "pilot-checklist",
+    "omissions": [
+      "ADR Source Sections",
+      "ADRs",
+      "Acceptance",
+      "Design Views",
+      "Guidance and Handover",
+      "Implementation Tasks",
+      "Requirements",
+      "Source Manifest",
+      "Stories",
+      "Test Cases",
+      "Test Runs",
+      "UX and Contracts",
+      "Full narrative: use complete Markdown source links"
+    ],
+    "profile_version": "0.1",
+    "source_documents": [
+      "requirements.md",
+      "design.md",
+      "plan.md",
+      "release.md"
+    ],
+    "sources": [
+      {
+        "authority": "Authored Markdown",
+        "path": "requirements.md",
+        "revision": "0.1",
+        "sha256": "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97"
+      },
+      {
+        "authority": "Authored Markdown",
+        "path": "design.md",
+        "revision": "0.1",
+        "sha256": "984f43be167a81a571a0f895d4a2ef257b0a4604482ec1353c39ed65a2c3402b"
+      },
+      {
+        "authority": "Authored Markdown",
+        "path": "plan.md",
+        "revision": "0.1",
+        "sha256": "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a"
+      },
+      {
+        "authority": "Authored Markdown",
+        "path": "release.md",
+        "revision": "0.1",
+        "sha256": "5512c49a81d5fd494a80b862c278616b5b3f2d3f16345bbb2179e9211f4f08c4"
+      },
+      {
+        "authority": "Machine source",
+        "path": "catalogue.schema.json",
+        "revision": "candidate-0.1",
+        "sha256": "8e06fa19a78185e365fd5bc3fbc6566a6954d0813c19bc583adfe812e102bf46"
+      },
+      {
+        "authority": "Machine source",
+        "path": "catalogue.json",
+        "revision": "fixture-0.1",
+        "sha256": "6d275a938bf00ed83c20b2926dff58fc9248d39168e320c0ca68facd9bdc8479"
+      },
+      {
+        "authority": "Authored Markdown",
+        "path": "brief.md",
+        "revision": "pilot-0.1",
+        "sha256": "e7764b6a4c70bd76b27dcab48902fdafe8cb9e40f14ded01678588cb1fa5ade9"
+      }
+    ],
+    "tables": {
+      "Artifact Register": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Artifact ID",
+          "Type",
+          "Title",
+          "Status",
+          "Owner",
+          "Markdown Path",
+          "Source Section",
+          "Source Revision",
+          "Source SHA-256",
+          "Source Authority",
+          "Supersedes ID",
+          "Machine Source Link",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "document",
+            "DOC-REQ",
+            "DOC-REQ",
+            "document",
+            "Reader need and criteria",
+            "draft",
+            "unconfirmed",
+            "requirements.md",
+            "context",
+            "0.1",
+            "",
+            "Authored Markdown",
+            "",
+            "",
+            "requirements.md",
+            "register",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "document",
+            "DOC-DESIGN",
+            "DOC-DESIGN",
+            "document",
+            "Proposed input boundary",
+            "draft",
+            "unconfirmed",
+            "design.md",
+            "context",
+            "0.1",
+            "",
+            "Authored Markdown",
+            "",
+            "",
+            "requirements.md",
+            "register",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "document",
+            "DOC-PLAN",
+            "DOC-PLAN",
+            "document",
+            "Outcome and learning plan",
+            "draft",
+            "unconfirmed",
+            "plan.md",
+            "context",
+            "0.1",
+            "",
+            "Authored Markdown",
+            "",
+            "",
+            "requirements.md",
+            "register",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "document",
+            "DOC-RELEASE",
+            "DOC-RELEASE",
+            "document",
+            "Release gaps and adoption",
+            "draft",
+            "unconfirmed",
+            "release.md",
+            "context",
+            "0.1",
+            "",
+            "Authored Markdown",
+            "",
+            "",
+            "requirements.md",
+            "register",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "contract",
+            "CONTRACT-CATALOGUE",
+            "CONTRACT-CATALOGUE",
+            "contract",
+            "Candidate catalogue schema",
+            "draft",
+            "unconfirmed",
+            "design.md",
+            "contracts",
+            "candidate-0.1",
+            "8e06fa19a78185e365fd5bc3fbc6566a6954d0813c19bc583adfe812e102bf46",
+            "Machine source",
+            "",
+            "catalogue.schema.json",
+            "requirements.md",
+            "register",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ]
+        ]
+      },
+      "Control": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Value",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "control",
+            "export_id",
+            "EXPORT-f39d54f4e8fe43d6bad8fecf06ac3fcf",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "contract_version",
+            "0.1",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "profile_version",
+            "0.1",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "audience",
+            "executive",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "baseline_revision",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "generated_utc",
+            "2026-09-26T14:59:15.818794+00:00",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "omitted_detail",
+            "ADR Source Sections; ADRs; Acceptance; Design Views; Guidance and Handover; Implementation Tasks; Requirements; Source Manifest; Stories; Test Cases; Test Runs; UX and Contracts; Full narrative: use complete Markdown source links",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "source_validation",
+            "structural integrity only; no review, execution or approval granted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "document:DOC-REQ",
+            "requirements.md | draft | review controlled synthetic pilot",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "document:DOC-DESIGN",
+            "design.md | draft | review controlled synthetic pilot",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "document:DOC-PLAN",
+            "plan.md | draft | review controlled synthetic pilot",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "control",
+            "document:DOC-RELEASE",
+            "release.md | draft | review controlled synthetic pilot",
+            ""
+          ]
+        ]
+      },
+      "Links": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Link ID",
+          "From Namespace",
+          "From Type",
+          "From ID",
+          "Relation",
+          "To Namespace",
+          "To Type",
+          "To ID",
+          "Rationale",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-NEED-1",
+            "LINK-NEED-1",
+            "pilot-checklist",
+            "requirement",
+            "REQ-01",
+            "derived_from",
+            "pilot-checklist",
+            "source",
+            "SRC-BRIEF",
+            "Scenario intent",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-CASE-1",
+            "LINK-CASE-1",
+            "pilot-checklist",
+            "test_case",
+            "TC-01",
+            "verifies",
+            "pilot-checklist",
+            "criterion",
+            "AC-01",
+            "Defined case; not an observed result",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-NEED-2",
+            "LINK-NEED-2",
+            "pilot-checklist",
+            "requirement",
+            "REQ-02",
+            "derived_from",
+            "pilot-checklist",
+            "source",
+            "SRC-BRIEF",
+            "Scenario intent",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-CASE-2",
+            "LINK-CASE-2",
+            "pilot-checklist",
+            "test_case",
+            "TC-02",
+            "verifies",
+            "pilot-checklist",
+            "criterion",
+            "AC-02",
+            "Defined case; not an observed result",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-NEED-3",
+            "LINK-NEED-3",
+            "pilot-checklist",
+            "requirement",
+            "REQ-03",
+            "derived_from",
+            "pilot-checklist",
+            "source",
+            "SRC-BRIEF",
+            "Scenario intent",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-CASE-3",
+            "LINK-CASE-3",
+            "pilot-checklist",
+            "test_case",
+            "TC-03",
+            "verifies",
+            "pilot-checklist",
+            "criterion",
+            "AC-03",
+            "Defined case; not an observed result",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-STORY",
+            "LINK-STORY",
+            "pilot-checklist",
+            "story",
+            "STORY-01",
+            "satisfies",
+            "pilot-checklist",
+            "requirement",
+            "REQ-01",
+            "Reader outcome",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-ADR",
+            "LINK-ADR",
+            "pilot-checklist",
+            "adr",
+            "ADR-01",
+            "refers_to",
+            "pilot-checklist",
+            "requirement",
+            "REQ-03",
+            "Design considers read-only boundary",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-MILE",
+            "LINK-MILE",
+            "pilot-checklist",
+            "milestone",
+            "MILE-01",
+            "refers_to",
+            "pilot-checklist",
+            "outcome",
+            "OUT-01",
+            "Learning output",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "link",
+            "LINK-RELEASE",
+            "LINK-RELEASE",
+            "pilot-checklist",
+            "release",
+            "REL-01",
+            "depends_on",
+            "pilot-checklist",
+            "milestone",
+            "MILE-01",
+            "Evidence before release",
+            "requirements.md",
+            "links",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ]
+        ]
+      },
+      "Milestones": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Milestone ID",
+          "Goal",
+          "Output",
+          "Owner",
+          "Checkpoint",
+          "Acceptance",
+          "Estimate / Basis",
+          "Forecast / Agreement Evidence",
+          "Status",
+          "Source Artifact ID",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "milestone",
+            "MILE-01",
+            "MILE-01",
+            "Settle and demonstrate the smallest read-only scenario",
+            "Reviewed criteria and prototype observations for TC-01 through TC-03",
+            "unconfirmed",
+            "After contract/criteria/environment review",
+            "All product cases observed; user walkthrough and unresolved decisions visible",
+            "unconfirmed; no estimate",
+            "No agreement evidence; forecast only",
+            "proposed",
+            "OUT-01",
+            "plan.md",
+            "milestones",
+            "0.1",
+            "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a",
+            ""
+          ]
+        ]
+      },
+      "Read Me": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Guidance",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "guidance",
+            "authority",
+            "Markdown and declared engine sources are canonical. This is a derived audience view.",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "guidance",
+            "feedback",
+            "Edit/comment for review; compare the returned workbook against the original XLSX and JSON baseline. Feedback never applies source changes or approvals.",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "guidance",
+            "freshness",
+            "Check every source-manifest hash before relying on currentness. Preserve annotated workbooks and generate a new export.",
+            ""
+          ]
+        ]
+      },
+      "Readiness and Blockers": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Known State / Limit",
+          "Source Document",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "limit",
+            "DOC-REQ",
+            "Document status: draft; source/export validation is not approval.",
+            "requirements.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "limit",
+            "DOC-DESIGN",
+            "Document status: draft; source/export validation is not approval.",
+            "design.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "limit",
+            "DOC-PLAN",
+            "Document status: draft; source/export validation is not approval.",
+            "plan.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "limit",
+            "DOC-RELEASE",
+            "Document status: draft; source/export validation is not approval.",
+            "release.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "test_run",
+            "Test Runs:RUN-01",
+            "Run ID: RUN-01 | Test ID: TC-01 | Result: Not run | Actual Observation: No reader prototype | Revision: unconfirmed | Environment: unconfirmed",
+            "requirements.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "test_run",
+            "Test Runs:RUN-02",
+            "Run ID: RUN-02 | Test ID: TC-02 | Result: Blocked | Actual Observation: No prototype or assistive test environment | Revision: unconfirmed | Environment: unconfirmed",
+            "requirements.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "test_run",
+            "Test Runs:RUN-03",
+            "Run ID: RUN-03 | Test ID: TC-03 | Result: Not run | Actual Observation: No reader prototype | Revision: unconfirmed | Environment: unconfirmed",
+            "requirements.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "risk",
+            "Risks and Decisions:RISK-01",
+            "Item ID: RISK-01 | Type: blocker | Uncertainty / Decision Needed: No implemented reader, observed product tests, support owner or recovery evidence | Impact: Cannot claim ready, published, deployed or accepted release | Mitigation / Options: Obtain actual candidate, product evidence and scoped authority separately | Trigger / Horizon: Before release review | Owner: unconfirmed | Status: open",
+            "plan.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "risk",
+            "Risks and Decisions:RISK-02",
+            "Item ID: RISK-02 | Type: decision | Uncertainty / Decision Needed: Catalogue workload and performance threshold unknown | Impact: Full-file design may need revision | Mitigation / Options: Measure representative workload and agree threshold; retain decision history | Trigger / Horizon: Before extending scenario | Owner: unconfirmed | Status: open",
+            "plan.md",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "release",
+            "Release Plan:REL-01",
+            "Release ID: REL-01 | Scope Baseline: Proposed REQ-01 through REQ-03; MILE-01, not accepted | Version Scheme: Numbered pilot iteration; not SemVer | Candidate Revision: unconfirmed | Target / Environment: Local fictional scenario; actual recipient environment unconfirmed | Readiness Gates: TC-01/03 Not run; TC-02 Blocked; ADR Proposed; support/recovery unconfirmed | Rollout: Plan only: bounded recipient trial after real review; no execution | Recovery: Proposed: retain source/previous candidate; stop on input modification or misleading error; restore procedure untested | Support / Owner: unconfirmed | Status: planned",
+            "release.md",
+            ""
+          ]
+        ]
+      },
+      "Release Plan": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Release ID",
+          "Scope Baseline",
+          "Version Scheme",
+          "Candidate Revision",
+          "Target / Environment",
+          "Readiness Gates",
+          "Rollout",
+          "Recovery",
+          "Support / Owner",
+          "Status",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "release",
+            "REL-01",
+            "REL-01",
+            "Proposed REQ-01 through REQ-03; MILE-01, not accepted",
+            "Numbered pilot iteration; not SemVer",
+            "unconfirmed",
+            "Local fictional scenario; actual recipient environment unconfirmed",
+            "TC-01/03 Not run; TC-02 Blocked; ADR Proposed; support/recovery unconfirmed",
+            "Plan only: bounded recipient trial after real review; no execution",
+            "Proposed: retain source/previous candidate; stop on input modification or misleading error; restore procedure untested",
+            "unconfirmed",
+            "planned",
+            "release.md",
+            "release-plan",
+            "0.1",
+            "5512c49a81d5fd494a80b862c278616b5b3f2d3f16345bbb2179e9211f4f08c4",
+            ""
+          ]
+        ]
+      },
+      "Risks and Decisions": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Item ID",
+          "Type",
+          "Uncertainty / Decision Needed",
+          "Impact",
+          "Mitigation / Options",
+          "Trigger / Horizon",
+          "Owner",
+          "Status",
+          "Evidence ID",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "risk",
+            "RISK-01",
+            "RISK-01",
+            "blocker",
+            "No implemented reader, observed product tests, support owner or recovery evidence",
+            "Cannot claim ready, published, deployed or accepted release",
+            "Obtain actual candidate, product evidence and scoped authority separately",
+            "Before release review",
+            "unconfirmed",
+            "open",
+            "",
+            "plan.md",
+            "risks",
+            "0.1",
+            "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "risk",
+            "RISK-02",
+            "RISK-02",
+            "decision",
+            "Catalogue workload and performance threshold unknown",
+            "Full-file design may need revision",
+            "Measure representative workload and agree threshold; retain decision history",
+            "Before extending scenario",
+            "unconfirmed",
+            "open",
+            "",
+            "plan.md",
+            "risks",
+            "0.1",
+            "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a",
+            ""
+          ]
+        ]
+      },
+      "Roadmap": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Outcome ID",
+          "Audience",
+          "Outcome",
+          "Success Measure",
+          "Horizon",
+          "Confidence",
+          "Proposal / Commitment",
+          "Dependencies",
+          "Review Trigger",
+          "Source Artifact ID",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "outcome",
+            "OUT-01",
+            "OUT-01",
+            "reader",
+            "Find applicable items without changing a checklist",
+            "Proposed: correct exact-match task and unchanged input in an agreed walkthrough; baseline absent",
+            "Now; forecast only",
+            "unconfirmed",
+            "Proposed; no commitment",
+            "Prototype, environment, agreed workload and reviewer",
+            "Revisit after first actual behavior/user observations",
+            "REQ-01",
+            "plan.md",
+            "roadmap",
+            "0.1",
+            "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "outcome",
+            "OUT-02",
+            "OUT-02",
+            "maintainer",
+            "Understand failure and workload limits before broader use",
+            "Proposed: distinct invalid/empty states and measured representative load",
+            "Next; forecast only",
+            "unconfirmed",
+            "Proposed; no commitment",
+            "OUT-01; actual workload and support decision",
+            "Revisit when representative catalogue sizes are supplied",
+            "REQ-02",
+            "plan.md",
+            "roadmap",
+            "0.1",
+            "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a",
+            ""
+          ]
+        ]
+      },
+      "Source Manifest": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Source Document",
+          "Authority",
+          "SHA-256",
+          "Declared Source Revision",
+          "Baseline Revision",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "source_file",
+            "brief.md",
+            "brief.md",
+            "Authored Markdown",
+            "e7764b6a4c70bd76b27dcab48902fdafe8cb9e40f14ded01678588cb1fa5ade9",
+            "pilot-0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source_file",
+            "catalogue.json",
+            "catalogue.json",
+            "Machine source",
+            "6d275a938bf00ed83c20b2926dff58fc9248d39168e320c0ca68facd9bdc8479",
+            "fixture-0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source_file",
+            "catalogue.schema.json",
+            "catalogue.schema.json",
+            "Machine source",
+            "8e06fa19a78185e365fd5bc3fbc6566a6954d0813c19bc583adfe812e102bf46",
+            "candidate-0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source_file",
+            "design.md",
+            "design.md",
+            "Authored Markdown",
+            "984f43be167a81a571a0f895d4a2ef257b0a4604482ec1353c39ed65a2c3402b",
+            "0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source_file",
+            "plan.md",
+            "plan.md",
+            "Authored Markdown",
+            "96a467cf536e0efa5be4c46966fe3541956a860de7b538edd59912a1f257680a",
+            "0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source_file",
+            "release.md",
+            "release.md",
+            "Authored Markdown",
+            "5512c49a81d5fd494a80b862c278616b5b3f2d3f16345bbb2179e9211f4f08c4",
+            "0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source_file",
+            "requirements.md",
+            "requirements.md",
+            "Authored Markdown",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            "0.1",
+            "pilot-0.1-unaccepted",
+            ""
+          ]
+        ]
+      },
+      "Sources": {
+        "headers": [
+          "Namespace",
+          "Record Type",
+          "Record ID",
+          "Source ID",
+          "Publisher / Owner",
+          "URI / Path",
+          "Edition / Revision",
+          "Inspected Date",
+          "Supported Claim",
+          "Limitations",
+          "Source Document",
+          "Source Section",
+          "Source Revision",
+          "Source Hash",
+          "Feedback"
+        ],
+        "rows": [
+          [
+            "pilot-checklist",
+            "source",
+            "SRC-BRIEF",
+            "SRC-BRIEF",
+            "synthetic scenario author",
+            "brief.md",
+            "pilot-0.1",
+            "2026-09-26; authored seed",
+            "Read-only exact category lookup and explicit errors",
+            "Fictional intent; no stakeholder agreement",
+            "requirements.md",
+            "sources",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ],
+          [
+            "pilot-checklist",
+            "source",
+            "SRC-CONTRACT",
+            "SRC-CONTRACT",
+            "synthetic contract author",
+            "catalogue.schema.json",
+            "candidate-0.1",
+            "2026-09-26; local file",
+            "Proposed object fields",
+            "No accepted interface or implementation",
+            "requirements.md",
+            "sources",
+            "0.1",
+            "c95d03feeb17abd558286b94fca6033c61421bf67d43a1f50e2304b123b9fe97",
+            ""
+          ]
+        ]
+      }
+    }
+  },
+  "payload_sha256": "18aa57e2b05e173d9b56a8e47228a8aefee55c03f725da039e9835f09cc3bff4",
+  "workbook_sha256": "6f58fdfb31ce6dd8222518095e3cd27f1786fdb403190fba111b1105e808327c"
+}

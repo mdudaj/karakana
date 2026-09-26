@@ -1,8 +1,8 @@
 # Engineering artifact catalogue: research and proposed update
 
 Status: **Local delivery for review**. Research completed 2026-09-26.
-P01–P04 are implemented locally; pilots, integration and stable promotion remain
-pending.
+P01–P05 are implemented locally; independent review, real project application,
+integration and stable promotion remain pending.
 
 The user requested comprehensive research before an update plan, covering
 engineering documentation artifacts. Following the format correction, Markdown
@@ -51,6 +51,14 @@ generated index, concise global/lifecycle pointers and optional choices in
 Karakana, LIMS and ent-meal. Select explicitly with `--skill`; optional listing
 does not load all bodies or change the default required skill. Inquiry does not
 authorize drafting, and these skills remain experimental.
+
+[P05](P05.md) delivers a newly authored [neutral pilot pack](pilots/README.md):
+requirements/stories, ADR/design and roadmap/release drafts from a resolved synthetic
+brief, five audience workbooks and one reviewed amendment. Actual scoped export,
+LibreOffice roundtrip/render and proposed-feedback outcomes are recorded in
+[pilot QA](pilots/QA.md). This is guided author self-review and tool evidence,
+not independent audience approval or a live-model behavior benchmark. Native
+Excel/assistive and real project usability checks remain unperformed.
 
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
@@ -425,10 +433,11 @@ SHA-256, research-review audience and UTC generation time. This is provenance
 for the detailed export, not proof of freshness or approval; compare the hash
 with the current source before relying on the workbook.
 
-Remaining work: controlled authoring/export/review pilots and reviewed
-integration. Recommended next task: **P05**, following P01–P04 contracts, source
-mapping, tool/skill usage, fixtures and verification instructions. Select bounded
-neutral scenarios and an explicit verification plan before authoring. Native source
+Remaining work: independent review, authorized integration and later real project
+application. Recommended next task: **P06**, following P01–P05 contracts, source
+mapping, tool/skill usage, pilot QA and verification instructions. Inspect the full
+diff and prepare a concrete PR; remote publishing/merge retain their existing authority.
+Native source
 IDs remain unchanged; exporting must not regenerate engine stories/issues or
 rewrite source/approval state. Reuse the inspected evidence and research only
 unresolved implementation/application compatibility questions.
