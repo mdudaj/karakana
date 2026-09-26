@@ -737,6 +737,8 @@ def handoff_refresh(
     okf_concept: list[str] | None = typer.Option(None, "--okf-concept", help="OKF concept ID loaded for this handoff."),
     changed_okf_concept: list[str] | None = typer.Option(None, "--changed-okf-concept", help="OKF concept ID changed by this work."),
     require_protocol_pass: bool = typer.Option(False, "--require-protocol-pass", help="Fail if latest protocol artifact check does not pass."),
+    protocol_trace: str | None = typer.Option(None, "--protocol-trace", help="Bind checks to this project task trace instead of selecting by recency."),
+    recover_artifacts: bool = typer.Option(True, "--recover-artifacts/--no-recover-artifacts", help="Recover prior project artifacts; disable for explicit current-state notes."),
 ) -> None:
     """Append a refreshed handoff while preserving prior handoff history."""
     repo_root = Path.cwd()
@@ -744,7 +746,9 @@ def handoff_refresh(
     skillpack_name = skillpack or project
     previous = store.latest(project, skillpack_name)
     try:
-        protocol_result, protocol_path = _check_latest_project_protocol_trace(repo_root, project)
+        protocol_result, protocol_path = _check_latest_project_protocol_trace(repo_root, project, protocol_trace)
+        if require_protocol_pass and protocol_result is None:
+            raise ValueError("No eligible protocol trace found; supply --protocol-trace for this task.")
         if protocol_result and not protocol_result.ok and require_protocol_pass:
             typer.echo(f"Protocol check failed for trace {protocol_result.trace_id}: {', '.join(protocol_result.missing_artifacts)}")
             raise typer.Exit(code=1)
@@ -761,6 +765,7 @@ def handoff_refresh(
             okf_concepts_changed=changed_okf_concept,
             next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
             slice_complete=slice_complete, failed_attempts=failed_attempts,
+            recover_artifacts=recover_artifacts,
         )
         if protocol_result and protocol_path:
             handoff.source_artifacts.append(str(protocol_path.parent / "check.md"))
@@ -4006,23 +4011,33 @@ def _print_protocol_validation(result) -> None:
         typer.echo("OK")
 
 
-def _check_latest_project_protocol_trace(repo_root: Path, project: str):
-    trace = _latest_project_protocol_trace(repo_root, project)
+def _check_latest_project_protocol_trace(repo_root: Path, project: str, trace_id: str | None = None):
+    if trace_id:
+        if Path(trace_id).name != trace_id or trace_id in {".", ".."}:
+            raise ValueError("Invalid protocol trace ID.")
+        trace = TraceStore(repo_root).load(trace_id)
+        if trace.project != project:
+            raise ValueError(f"Protocol trace project mismatch: expected {project}, found {trace.project}.")
+        if not _eligible_handoff_trace(trace):
+            raise ValueError("Selected trace is not an eligible protocol task trace.")
+    else:
+        trace = _latest_project_protocol_trace(repo_root, project)
     if not trace:
         return None, None
     return run_protocol_check(repo_root, trace.run_id)
 
 
 def _latest_project_protocol_trace(repo_root: Path, project: str):
-    for trace in TraceStore(repo_root).list_runs(limit=50):
-        if trace.project != project:
-            continue
-        if not trace.required_artifacts:
-            continue
-        if trace.command in {"handoff refresh", "protocol check"} or trace.command.startswith("handoff "):
-            continue
-        return trace
+    for trace in TraceStore(repo_root).list_runs(limit=None, project=project):
+        if _eligible_handoff_trace(trace):
+            return trace
     return None
+
+
+def _eligible_handoff_trace(trace) -> bool:
+    return bool(trace.protocol_id and trace.required_artifacts
+                and trace.command not in {"protocol classify", "protocol check"}
+                and not trace.command.startswith("handoff "))
 
 
 def _check_patch_protocol_trace(repo_root: Path, patch_run: str):

@@ -51,6 +51,7 @@ def create_handoff(
     reuse_reviewed: bool = False,
     slice_complete: bool = False,
     failed_attempts: int = 0,
+    recover_artifacts: bool = True,
 ) -> HandoffArtifact:
     skillpack_name = skillpack or project
     loaded_skillpack = SkillpackLoader(repo_root).load(skillpack_name)
@@ -62,7 +63,7 @@ def create_handoff(
         from_dogfood=from_dogfood,
         from_requirements=from_requirements,
         from_milestone=from_milestone,
-    )
+    ) if recover_artifacts else RecoveredState()
     now = now_utc()
     milestone = redact_handoff_text(current_milestone or state.current_milestone or "Verify recovered project state")
     handoff_purpose = redact_handoff_text(purpose or f"Continue {milestone} in a fresh session")
@@ -72,9 +73,11 @@ def create_handoff(
     inspect_first = _inspect_first(repo_root, project, loaded_skillpack.path, loaded_skillpack.project.memory, milestone, state.source_artifacts, workspace)
     previous = previous_handoff_id or _latest_handoff_id(repo_root, project, skillpack_name)
     staleness = []
+    if not recover_artifacts:
+        staleness.append("Automatic artifact recovery disabled; current state comes from explicit task notes.")
     if recovered:
         staleness.append("This handoff was recovered from artifacts because no explicit handoff existed. Verify before acting.")
-    if not state.source_artifacts:
+    if recover_artifacts and not state.source_artifacts:
         staleness.append("No recent project artifacts were found; verify milestone and next action with the user.")
     exact_next_action = redact_handoff_text(next_task or state.exact_next_action or _next_action(milestone, inspect_first))
     continuation = build_continuation(
@@ -154,7 +157,7 @@ def _recover_milestone(repo_root: Path, project: str, selected: str | None, stat
 def _recover_dogfood(repo_root: Path, project: str, selected: str | None, state: RecoveredState) -> None:
     store = DogfoodStore(repo_root)
     try:
-        run = store.load(selected) if selected else next((item for item in store.list() if item.project == project), None)
+        run = store.load(selected) if selected else next(iter(store.list(project=project, limit=1)), None)
     except FileNotFoundError:
         state.warnings.append(f"Dogfood artifact was not found: {selected}")
         return
@@ -194,7 +197,7 @@ def _recover_requirements(repo_root: Path, project: str, selected: str | None, s
 
 def _recover_ingestion(repo_root: Path, project: str, state: RecoveredState) -> None:
     store = IngestionStore(repo_root)
-    bundle = next((item for item in store.list() if item.project == project), None)
+    bundle = next(iter(store.list(project=project, limit=1)), None)
     if not bundle:
         return
     path = store.bundle_dir(bundle.ingest_id) / "candidates.md"

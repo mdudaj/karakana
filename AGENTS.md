@@ -92,6 +92,12 @@ Every completed slice summary must include:
 
 If the active trace has protocol-required artifacts, run `karakana protocol check --trace <run-id>` before or during handoff refresh. Use `karakana protocol missing`, `karakana protocol template`, and `karakana protocol attach` to close artifact gaps.
 
+Bind refresh to the task's `--protocol-trace <run-id>` instead of relying on
+recency when multiple tasks run concurrently. If recovered artifacts are stale,
+verify current state and use `--no-recover-artifacts` with explicit continuation
+notes; preserve prior history. Tests that write harness runtime state must use
+temporary repositories, never the working checkout's `.karakana` directory.
+
 Use project skillpacks when available:
 
 ```bash

@@ -3,7 +3,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_plan_uses_skillpack_context(tmp_path, monkeypatch):
+def test_plan_uses_skillpack_context(tmp_path, monkeypatch, isolated_repo):
     monkeypatch.chdir(__import__("pathlib").Path.cwd())
     result = CliRunner().invoke(app, ["plan", "--project", "nhrdm", "--use-skillpack", "--task", "Review custom field changes"])
 
@@ -12,7 +12,7 @@ def test_plan_uses_skillpack_context(tmp_path, monkeypatch):
     assert "invenio-framework" in result.output
 
 
-def test_plan_manual_route_override_wins():
+def test_plan_manual_route_override_wins(isolated_repo):
     result = CliRunner().invoke(app, ["plan", "--project", "nhrdm", "--use-skillpack", "--task", "Review", "--provider", "mock", "--model", "mock-model"])
 
     assert result.exit_code == 0

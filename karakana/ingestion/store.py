@@ -43,14 +43,16 @@ class IngestionStore:
             raise FileNotFoundError(f"Ingestion bundle not found: {ingest_id}")
         return IngestionBundle.from_dict(json.loads(path.read_text(encoding="utf-8")))
 
-    def list(self, limit: int = 20) -> list[IngestionBundle]:
+    def list(self, limit: int = 20, *, project: str | None = None) -> list[IngestionBundle]:
         if not self.root.exists():
             return []
         bundles = []
         for path in self.root.iterdir():
             candidate_json = path / "candidates.json"
             if candidate_json.exists():
-                bundles.append(IngestionBundle.from_dict(json.loads(candidate_json.read_text(encoding="utf-8"))))
+                bundle = IngestionBundle.from_dict(json.loads(candidate_json.read_text(encoding="utf-8")))
+                if project is None or bundle.project == project:
+                    bundles.append(bundle)
         return sorted(bundles, key=lambda bundle: bundle.created_at, reverse=True)[:limit]
 
     def bundle_dir(self, ingest_id: str) -> Path:

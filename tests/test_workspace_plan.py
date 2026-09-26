@@ -4,7 +4,7 @@ from karakana.workspaces.loader import WorkspaceLoader
 from karakana.workspaces.planner import build_workspace_plan
 
 
-def test_workspace_plan_generates_prompt(tmp_path):
+def test_workspace_plan_generates_prompt(tmp_path, isolated_repo):
     workspace = WorkspaceLoader(Path.cwd()).load("default")
 
     path = build_workspace_plan(Path.cwd(), workspace, "karakana", "Review workspace status", output=tmp_path / "plan.md")

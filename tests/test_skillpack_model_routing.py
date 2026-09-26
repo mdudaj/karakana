@@ -21,7 +21,7 @@ def test_manual_route_override_wins():
     assert route["route_source"] == "manual_override"
 
 
-def test_model_route_cli_accepts_skillpack():
+def test_model_route_cli_accepts_skillpack(isolated_repo):
     result = CliRunner().invoke(app, ["model", "route", "--task-type", "database_or_index_migration", "--skillpack", "nhrdm"])
 
     assert result.exit_code == 0

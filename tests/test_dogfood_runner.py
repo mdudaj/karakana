@@ -58,7 +58,7 @@ def test_dogfood_runner_redacts_secret_names(tmp_path: Path):
     assert "OPENAI_API_KEY" not in run.command_results[0].stdout_excerpt
 
 
-def test_dogfood_runner_prepares_workflow_fixtures_in_repo():
+def test_dogfood_runner_prepares_workflow_fixtures_in_repo(isolated_repo):
     run, _ = run_dogfood(Path.cwd(), "karakana", "karakana", command_id="version", dry_run=True)
     fixture = next(result for result in run.command_results if result.command_id == "workflow_fixtures")
 

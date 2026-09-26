@@ -48,8 +48,8 @@ def test_missing_recommended_sections_warn_but_do_not_fail(tmp_path):
     assert result.is_valid
 
 
-def test_existing_skills_validate_all(tmp_path, monkeypatch):
-    monkeypatch.chdir(Path(__file__).resolve().parents[1])
+def test_existing_skills_validate_all(tmp_path, monkeypatch, isolated_repo):
+    monkeypatch.chdir(isolated_repo)
 
     result = CliRunner().invoke(app, ["skill", "validate-all"])
 

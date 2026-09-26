@@ -42,7 +42,10 @@ def select_concepts(
             continue
         for related_ids in concept.relationships.values():
             for related_id in related_ids:
-                if related_id not in selected_ids and related_id in concepts_by_id:
+                related = concepts_by_id.get(related_id)
+                if (related_id not in selected_ids and related is not None
+                        and _matches(related, project=project, statuses=statuses,
+                                     concept_types=None, tags=None)):
                     selected_ids.add(related_id)
                     queue.append((related_id, depth + 1))
 

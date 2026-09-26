@@ -9,6 +9,8 @@ The CLI includes protocols, artifact checks, handoffs, evals and opt-in executio
 Instructions and presence checks support disciplined work; they do not guarantee
 agent compliance or grant approval for external actions.
 
-Known follow-up: isolate test runtime artifacts and project provenance in handoff
-recovery. Verify recovered references before use. The agent guide's initial
+Handoff project boundaries and test-runtime isolation are implemented; see
+`docs/handoff-provenance.md`. Legacy recovered artifacts remain intact and must
+be verified before use. Bind refresh to the task trace and omit stale automatic
+recovery when supplying verified current state. The agent guide's initial
 milestones must not be treated as an up-to-date implementation inventory.

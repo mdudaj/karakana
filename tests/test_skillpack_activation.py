@@ -3,7 +3,7 @@ from pathlib import Path
 from karakana.skillpacks.activation import SkillpackActivation
 
 
-def test_skillpack_activation_writes_current():
+def test_skillpack_activation_writes_current(isolated_repo):
     root = Path.cwd()
     state = SkillpackActivation(root).activate("karakana")
     current = SkillpackActivation(root).current()

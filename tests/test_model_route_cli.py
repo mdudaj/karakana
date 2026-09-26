@@ -5,7 +5,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_model_route_cli_output():
+def test_model_route_cli_output(isolated_repo):
     result = CliRunner().invoke(app, ["model", "route", "--task-type", "implementation_planning"])
 
     assert result.exit_code == 0
@@ -17,7 +17,7 @@ def test_model_route_cli_output():
     assert "Rationale:" in result.output
 
 
-def test_model_route_cli_infers_task_type_from_task_text():
+def test_model_route_cli_infers_task_type_from_task_text(isolated_repo):
     result = CliRunner().invoke(app, ["model", "route", "--task", "Implement authentication permission checks"])
 
     assert result.exit_code == 0, result.output
@@ -33,7 +33,7 @@ def test_model_route_cli_requires_task_or_task_type():
     assert "Provide --task-type or --task" in result.output
 
 
-def test_model_route_cli_json_output():
+def test_model_route_cli_json_output(isolated_repo):
     result = CliRunner().invoke(app, ["model", "route", "--task-type", "high_risk_planning", "--json"])
 
     assert result.exit_code == 0
@@ -46,7 +46,7 @@ def test_model_route_cli_json_output():
     assert "frontier principal-level reasoning" in data["token_policy"]
 
 
-def test_model_route_cli_escalation_signal():
+def test_model_route_cli_escalation_signal(isolated_repo):
     result = CliRunner().invoke(
         app,
         [

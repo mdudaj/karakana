@@ -6,7 +6,7 @@ from karakana.cli import app
 from karakana.traces.store import TraceStore
 
 
-def test_release_command_creates_trace():
+def test_release_command_creates_trace(isolated_repo):
     result = CliRunner().invoke(app, ["release", "check"])
 
     assert result.exit_code == 0
@@ -14,4 +14,3 @@ def test_release_command_creates_trace():
     assert trace is not None
     assert trace.command == "release check"
     assert "release_check_id" in trace.outputs
-

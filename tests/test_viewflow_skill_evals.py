@@ -16,7 +16,7 @@ def test_viewflow_eval_files_exist_and_load():
     }
 
 
-def test_viewflow_skill_eval_run_passes():
+def test_viewflow_skill_eval_run_passes(isolated_repo):
     result = CliRunner().invoke(app, ["eval", "run", "--skill", "viewflow-framework"])
 
     assert result.exit_code == 0

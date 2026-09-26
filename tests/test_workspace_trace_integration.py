@@ -6,7 +6,7 @@ from karakana.cli import app
 from karakana.traces.store import TraceStore
 
 
-def test_workspace_status_creates_trace():
+def test_workspace_status_creates_trace(isolated_repo):
     result = CliRunner().invoke(app, ["workspace", "status", "--workspace", "default"])
 
     assert result.exit_code == 0
