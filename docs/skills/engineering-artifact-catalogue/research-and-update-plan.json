@@ -1,7 +1,11 @@
 {
-  "package_version": "0.1",
+  "package_version": "0.2",
   "status": "Draft for review",
   "research_date": "2026-09-26",
+  "export_audience": "research-review",
+  "source_path": "PLAN.md",
+  "source_sha256": "f00f5f38d33168f1cb0874dde1b79eefa64a05555aa8b9fdf32f0b853dd3a839",
+  "generated_at_utc": "2026-09-26T12:49:18.254399+00:00",
   "sheets": [
     {
       "name": "00 Read Me",
@@ -19,7 +23,7 @@
         ],
         [
           "Version",
-          "0.1 / Draft for review",
+          "0.2 / Draft for review",
           "Research conclusions and implementation proposal; no approval implied."
         ],
         [
@@ -34,8 +38,8 @@
         ],
         [
           "Format",
-          "Excel is the current human review format",
-          "JSON is a lossless review snapshot for this package; not a second editable authority."
+          "Markdown is the primary authoring and version-controlled format",
+          "RESEARCH.md and PLAN.md are canonical for this package. XLSX and JSON are derived sharing/rendering outputs."
         ],
         [
           "Scope",
@@ -74,8 +78,8 @@
         ],
         [
           "Preserve edits",
-          "Do not regenerate over an annotated workbook",
-          "First reconcile review edits into the JSON snapshot; renderer refuses overwrite."
+          "Workbook review is proposed feedback, not another master",
+          "Archive the annotated workbook, compare by stable ID, review proposed changes into Markdown and regenerate a new export. Never silently import agreement or overwrite comments."
         ],
         [
           "Current formulas",
@@ -91,6 +95,21 @@
           "Known limitations",
           "Paid normative standards not read; Excel desktop accessibility test remains pending",
           "LibreOffice rendering and structural checks are evidence, not Excel certification."
+        ],
+        [
+          "Audience",
+          "Research-review: complete evidence and proposed catalogue update",
+          "Other audience profiles are defined in 14 Audience Profiles for later implementation; this helper renders this review package only."
+        ],
+        [
+          "Canonical sources",
+          "RESEARCH.md (rationale) and PLAN.md (all detailed records)",
+          "Edit Markdown first. The renderer derives the JSON snapshot and workbook directly from PLAN.md."
+        ],
+        [
+          "Export provenance",
+          "Source path/hash, audience and generated UTC time are in workbook document properties and JSON metadata",
+          "Compare the source SHA-256 with the current PLAN.md bytes to detect staleness. Do not treat an export as current without checking its source."
         ]
       ],
       "widths": [
@@ -260,7 +279,7 @@
           "2011",
           "2026-09-26",
           "Small records preserve decision context, status and consequences; retain superseded decisions.",
-          "Adapt content to Excel; the original proposes repository text files.",
+          "Author ADRs as repository Markdown; workbook summaries link the complete record.",
           "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
         ],
         [
@@ -619,7 +638,7 @@
           "F08",
           "Use focused skills with conditional references",
           "S28; S31; S32; L02",
-          "Four authoring skills and a format-specific Excel skill.",
+          "Four Markdown authoring skills and an audience-specific Excel export/review skill.",
           "Descriptions must distinguish catalogue inquiry, research, planning, drafting and execution."
         ],
         [
@@ -631,10 +650,10 @@
         ],
         [
           "F10",
-          "Evidence should survive human editing",
+          "Markdown authority and review evidence must survive audience sharing",
           "S36; L04",
-          "Workbook remains review authority; reconciled text snapshot enables version-control review.",
-          "Never overwrite reviewer cells; compare stable IDs and record change provenance."
+          "Versioned Markdown records are canonical; workbook comments produce reviewed change proposals against source IDs and revisions.",
+          "Preserve annotated exports; flag stale source versions and conflicting feedback. No automatic Markdown writes or approval import."
         ],
         [
           "F11",
@@ -744,7 +763,7 @@
           "EM08",
           "Generation/editing lifecycle",
           "Deterministic generation and version snapshots",
-          "Reconcile human comments/decisions by stable IDs; protect against stale overwrites.",
+          "Archive annotated exports; compare feedback by source ID/revision; review changes into Markdown before regeneration.",
           "L04; S36"
         ],
         [
@@ -845,7 +864,7 @@
           "Persisted or exchanged data boundary",
           "Versioned source schema; semantics; examples; validation; compatibility; migration; owner",
           "Contract owner",
-          "Use authoritative machine-readable schema; workbook describes and links it.",
+          "Use authoritative machine-readable schema; Markdown describes and links it, with optional workbook summaries.",
           "L01; S17"
         ],
         [
@@ -965,7 +984,7 @@
         [
           "SK01",
           "engineering-requirements",
-          "Evidence-backed requirements, stories, acceptance and traceability authoring/revision",
+          "Evidence-backed requirements, stories, acceptance and traceability authoring/revision in Markdown, with stable source IDs and revision history",
           "requirements-elicitation; karakana/requirements; grill-with-docs",
           "references/requirements.md; stories-and-acceptance.md; traceability.md; evals",
           "Not reviewed",
@@ -974,7 +993,7 @@
         [
           "SK02",
           "engineering-design-records",
-          "ADR and architecture/design description authoring/review",
+          "ADR and architecture/design description authoring/review in Markdown, with stable source IDs and revision history",
           "system-design-thinking; domain/UX skills; architecture-decision protocol",
           "references/adr.md; design-views.md; contracts-and-quality.md; evals",
           "Not reviewed",
@@ -983,7 +1002,7 @@
         [
           "SK03",
           "engineering-delivery-planning",
-          "Roadmap, milestone and bounded implementation plan",
+          "Roadmap, milestone and bounded implementation plan in Markdown, with stable source IDs and revision history",
           "next-milestone-decision; existing requirements/issues drafts; engineering process",
           "references/roadmap.md; milestones.md; implementation-plan.md; evals",
           "Not reviewed",
@@ -992,7 +1011,7 @@
         [
           "SK04",
           "engineering-release-documentation",
-          "Release plan/assurance, notes and adoption/handover pack",
+          "Release plan/assurance, notes and adoption/handover pack in Markdown, with stable source IDs and revision history",
           "release-change protocol; release checks; karakana-handoff; project runbooks",
           "references/release-plan.md; release-notes.md; adoption-and-handover.md; evals",
           "Not reviewed",
@@ -1001,11 +1020,11 @@
         [
           "SK05",
           "engineering-workbooks",
-          "Excel creation/editing, validation, review snapshots and artifact locators",
+          "Derived audience Excel exports, integrity/freshness checks and feedback comparison against Markdown",
           "Existing requirements schema; new narrow deterministic tools; openpyxl",
-          "references/workbook-contract.md; assets/profile templates; tool adapter; evals",
+          "references/workbook-contract.md; audience-profiles.md; assets/export templates; tool adapter; evals",
           "Not reviewed",
-          "Formatting/transport only; domain semantics come from the selected authoring skill."
+          "Sharing/review only. Source content stays in Markdown; existing machine schemas and diagrams retain their explicitly linked authority."
         ]
       ],
       "widths": [
@@ -1020,7 +1039,7 @@
     },
     {
       "name": "06 Workbook Contract",
-      "purpose": "Proposed project-workbook schema, not a demand to create all tabs for each task.",
+      "purpose": "Derived export table contracts selected per audience; canonical narrative and records remain in Markdown. Not every table belongs in every export.",
       "headers": [
         "Schema ID",
         "Sheet or table",
@@ -1034,17 +1053,17 @@
           "WB01",
           "Control",
           "Workbook_ID",
-          "Project_ID; schema/doc version; baseline; source revision; author; reviewer; dates; purpose; risk; requested action",
+          "Project_ID; export ID; audience/profile version; generation time; source Markdown paths/IDs/revisions/hashes; schema/doc version; baseline; purpose; omitted content and full-source links",
           "All profiles",
-          "Do not conflate template version, artifact version and product release version."
+          "Manifest identifies a derived sharing view. Source changes mark the export stale; never infer approval from generation."
         ],
         [
           "WB02",
           "Artifact Register",
           "Artifact_ID",
-          "Type; status; owner; source location; current baseline; supersedes; applicability rationale",
+          "Type; status; owner; canonical Markdown path/section; current baseline/revision; supersedes; applicability rationale",
           "All profiles",
-          "Exactly one current authoritative location per artifact version."
+          "Resolve each artifact to its canonical Markdown record; link authoritative machine schema/diagram sources separately."
         ],
         [
           "WB03",
@@ -1088,11 +1107,11 @@
         ],
         [
           "WB08",
-          "ADR Sections",
+          "ADR Summaries and Source Links",
           "ADR_ID + section + sequence",
-          "Narrative text; supporting source ID; optional option ID",
-          "Design profile when narrative exceeds summary",
-          "Use multiple readable rows instead of truncation or a huge unreadable cell."
+          "Decision summary; rationale/consequence summary; canonical ADR path/section/revision; optional narrative extract",
+          "Design/engineering audience when useful",
+          "Complete ADR reasoning and history stay in Markdown; mark excerpts and link the full record."
         ],
         [
           "WB09",
@@ -1194,17 +1213,17 @@
           "WB21",
           "Reviews and Approvals",
           "Review_ID",
-          "Artifact version; role; person/identity; review type; decision; timestamp; evidence; applicability",
+          "Source artifact version; reviewer role/identity; feedback kind; proposed decision; timestamp; evidence; reconciliation status",
           "Review or acceptance stage",
-          "Typed names and agent-created agreement cells are not signatures or authorization."
+          "Feedback is proposed input. Canonical review/approval evidence changes only after explicit review in the existing process; stale exports cannot update current approvals."
         ],
         [
           "WB22",
           "Change History",
           "Change_ID",
-          "Artifact ID; old/new version; reason; impact; status; author; reviewer; evidence",
+          "Source change ID; artifact ID; old/new revision; reason; impact; reviewer; evidence; feedback/export reference",
           "Revisions to baselined material",
-          "Append history, preserve superseded versions and do not carry approval onto changed content."
+          "Derive history from versioned source; archive exports. Do not carry approval onto changed content."
         ],
         [
           "WB23",
@@ -1319,19 +1338,19 @@
         ],
         [
           "REQ09",
-          "Excel is the current review format",
-          "Deliver a useful XLSX with appropriate selected artifact tabs and reviewer fields.",
-          "User instruction; F13",
-          "EV14",
+          "Markdown primary; Excel accompanies each relevant audience",
+          "Author/version engineering artifacts in Markdown. Export selected audience tables with source paths/IDs/revisions/hashes, audience/profile, generated date, omissions and full-source links. JSON is a derived rendering snapshot.",
+          "User correction; F10; F13",
+          "EV14; EV28; EV29",
           "Not reviewed",
           ""
         ],
         [
           "REQ10",
-          "Preserve workbook edits and provenance",
-          "Round trips preserve IDs, comments/decisions and formulas; stale regeneration is refused.",
+          "Preserve feedback without competing editable masters",
+          "Archive annotated exports; compare feedback by stable source ID/version, flag stale/conflicting input, and review changes into Markdown before regenerating. No automatic source or approval updates.",
           "F10",
-          "EV15; EV16",
+          "EV15; EV16; EV29",
           "Not reviewed",
           ""
         ],
@@ -1358,7 +1377,7 @@
           "Proportional profiles",
           "Tiny fixes and research use compact existing records; meaningful features/releases select applicable artifacts.",
           "F01",
-          "EV19",
+          "EV19; EV28",
           "Not reviewed",
           ""
         ],
@@ -1540,23 +1559,23 @@
         ],
         [
           "EV14",
-          "Workbook profile",
-          "Author one meaningful feature or release record.",
-          "Excel includes relevant tabs, stable IDs, reviewer fields and navigable tables.",
+          "Markdown source and audience workbook",
+          "Author one meaningful feature/release record in Markdown, then request an audience export.",
+          "Markdown contains the complete canonical record; Excel carries relevant navigable tables, stable source IDs/links, profile/version and freshness metadata.",
           "REQ09; REQ16"
         ],
         [
           "EV15",
-          "Human edits",
-          "Reviewer changes comment, priority proposal and decision cells.",
-          "Reconcile by ID; preserve changes; stale snapshot cannot overwrite them.",
+          "Workbook feedback reconciliation",
+          "Reviewer comments and proposes a changed priority/decision in an audience workbook.",
+          "Report proposals by source ID/version; preserve original feedback; apply only reviewed changes to Markdown. Workbook agreement never imports source approval.",
           "REQ10"
         ],
         [
           "EV16",
           "Workbook round trip",
           "Edit/reopen XLSX through target office application.",
-          "Headers, IDs, links, formulas and review cells preserved or differences reported.",
+          "Source locators, headers, IDs, links, formulas and review cells preserved or differences reported; original annotated workbook remains archived.",
           "REQ10"
         ],
         [
@@ -1583,8 +1602,8 @@
         [
           "EV20",
           "Existing engine adapter",
-          "Export existing PRD/story IDs to Excel then review.",
-          "Reuse original IDs/source metadata and validate without generating a competing PRD.",
+          "Reference existing PRD/story identities through Markdown and export them to Excel.",
+          "Preserve engine identities/source metadata through the adapter, identify authoritative machine fields and avoid a competing PRD or workbook master.",
           "REQ14"
         ],
         [
@@ -1635,6 +1654,20 @@
           "Supply IEEE 1016 as active and SSDF 1.2 as final.",
           "Correct statuses and record public-summary limits; no compliance certification.",
           "REQ20"
+        ],
+        [
+          "EV28",
+          "Audience projection",
+          "Export the same baseline for product, engineering, QA/UAT, operations and executive audiences.",
+          "Each profile selects useful fields/views and declares omissions/full-source links; relevant blockers, limitations, uncertainty and trace IDs survive every applicable projection.",
+          "REQ09; REQ13"
+        ],
+        [
+          "EV29",
+          "Stale source or conflicting feedback",
+          "Change Markdown after export; return two conflicting annotated exports.",
+          "Compare source revisions/hashes, report staleness/conflicts, preserve both inputs and require review against current source before changes. No silent import or overwrite.",
+          "REQ09; REQ10"
         ]
       ],
       "widths": [
@@ -1660,20 +1693,20 @@
       "rows": [
         [
           "P01",
-          "Agree content/schema and existing-engine adapter",
+          "Agree Markdown content contract, source authority and export adapter",
           "Research/plan review",
           "karakana/requirements/schemas.py; store.py; readiness.py; protocols/checks.py; docs/engineering-process.md; proposed docs/engineering-artifacts.md",
-          "Map existing PRD/story statuses and IDs to Excel rows; define common metadata, typed relations, profiles and narrative sections. Record any consequential adapter decision before code.",
-          "Reviewed contract, source-to-field mapping and tiny/feature/design/release examples.",
-          "REQ02; REQ03; REQ04; REQ13; REQ14; REQ20"
+          "Map existing PRD/story identities and machine-field authority to canonical Markdown records; define stable criterion IDs, source sections, typed relations and review history. Specify audience selection, export manifest/freshness and feedback reconciliation. Keep machine schemas/diagrams authoritative for their own content. Record consequential adapter decisions before code.",
+          "Reviewed Markdown contract and complete tiny/feature/design/release examples; five audience mappings, source-to-field mapping and conflict/freshness rules.",
+          "REQ02; REQ03; REQ04; REQ09; REQ10; REQ13; REQ14; REQ20"
         ],
         [
           "P02",
-          "Deterministic Excel workflow with preservation checks",
+          "Markdown-to-Excel export and feedback reporting",
           "P01",
           "Proposed karakana/tools/engineering_artifacts.py; tests/test_engineering_artifacts_workbooks.py; chosen optional dependency group in pyproject.toml",
-          "Implement narrow read/write/validate/snapshot helpers; verify schema/version before edit; block stale overwrite; preserve unknown sheets and reviewer cells; no automatic remote actions. Explicitly scope unsupported workbook features.",
-          "Functional tests with temp workbooks: duplicate IDs, broken references, missing evidence, leading literal text, reviewer edits, stale source and round trips.",
+          "Implement narrow Markdown read/validate, audience export and feedback-diff helpers. Validate source version/hash and stable IDs; flag stale/conflicting feedback; preserve annotated outputs and unsupported workbook content. Source changes require explicit review; no automatic approval import, remote actions or two-way master synchronization. Scope supported features and optional dependency.",
+          "Functional fixtures prove source/export parity, audience omissions and blocker visibility, traceability, literal text, freshness, conflicting feedback, no-overwrite and office round trips.",
           "REQ03; REQ09; REQ10; REQ11; REQ12; REQ16; REQ17; REQ18"
         ],
         [
@@ -1681,7 +1714,7 @@
           "Focused authoring skills and original references",
           "P01; P02",
           "Proposed skills/engineering-requirements/; engineering-design-records/; engineering-delivery-planning/; engineering-release-documentation/; engineering-workbooks/",
-          "Write valid Karakana metadata and conditional content guides; link shared schema/tool; add synthetic complete examples and evals for inquiry/research/plan/draft boundaries. Start experimental.",
+          "Write valid Karakana metadata and conditional content guides for Markdown-first authoring, with optional audience workbooks; link shared contract/tool. Add original complete synthetic examples and evals for inquiry/research/plan/draft boundaries. Start experimental.",
           "Validate all skills; focused evals; source/license register; no proprietary skill text bundled.",
           "REQ01; REQ04; REQ05; REQ06; REQ07; REQ08; REQ15"
         ],
@@ -1699,8 +1732,8 @@
           "Prove useful output with controlled pilots",
           "P04",
           "Synthetic fixtures; skills/*/evals/; workbook QA report; docs/engineering-artifacts.md",
-          "Run original synthetic requirement/story, design/ADR and roadmap/release packs. Validate and render Excel; test human comment reconciliation. A LIMS first-release pack is a later expressly requested application, not the synthetic pilot.",
-          "Record actual results, review gaps, compatibility and accessibility limitations; agree baseline/profile.",
+          "Author complete synthetic requirements/stories, ADR/design and roadmap/release records in Markdown. Export by audience; validate/render Excel; test source freshness and reviewed feedback reconciliation. A LIMS release pack remains a later requested application.",
+          "Source-to-export parity, useful audience views, preserved blockers/limitations, actual office/feedback results and accessibility limits recorded; agree profile baseline.",
           "REQ09; REQ10; REQ12; REQ16; REQ19"
         ],
         [
@@ -1746,18 +1779,18 @@
         [
           "D02",
           "How many skills?",
-          "Four focused authoring workflows plus one Excel-format workflow",
+          "Four focused Markdown authoring workflows plus one audience Excel export/review workflow",
           "One giant skill is hard to route; one skill per artifact repeats shared semantics.",
           "Not reviewed",
           "Evaluate boundaries in P03; extend an existing skill where genuinely equivalent."
         ],
         [
           "D03",
-          "What is the current review authority?",
-          "Excel workbook per scoped baseline with source IDs, review metadata and archived snapshots",
-          "JSON/text snapshot enables diffs; not independently editable. Existing machine schemas/ADRs may remain authoritative linked sources.",
+          "What is canonical, and what is shared?",
+          "Markdown is primary and version-controlled. Audience Excel workbooks are derived sharing/review views; JSON snapshots are generated intermediates.",
+          "Preserve authoritative machine schemas/diagrams with explicit source links. Workbook-first or two freely editable masters would undermine source review/history.",
           "Not reviewed",
-          "Never create two freely editable masters; reconcile imported review changes explicitly."
+          "Archive feedback, reconcile reviewed proposals into Markdown, regenerate a new source-versioned export; no automatic approval transfer."
         ],
         [
           "D04",
@@ -1786,8 +1819,8 @@
         [
           "D07",
           "What first implementation slice?",
-          "P01 schema/adapters with complete synthetic examples, followed by P02 workbook integrity tooling",
-          "Skills-only guidance is faster but cannot reliably preserve/validate human Excel edits.",
+          "P01 Markdown content/source/export contract and examples, then P02 export integrity/feedback helpers",
+          "Authoring guidance alone cannot prove source freshness, audience projection or preservation of review feedback.",
           "Not reviewed",
           "No real LIMS release drafting or operational changes in this research slice."
         ],
@@ -1824,7 +1857,7 @@
           "RK01",
           "Workbook edits overwritten by regeneration",
           "Loss of stakeholder review or decisions",
-          "Conflict checks, stable-ID reconciliation, immutable review snapshots and refuse overwrite by default.",
+          "Archive exports; stable-ID/version feedback reports; reviewed source changes; refuse overwrite and flag conflicts.",
           "Tool maintainer"
         ],
         [
@@ -1852,7 +1885,7 @@
           "RK05",
           "Binary workbook hard to review",
           "Undetected broad content changes",
-          "Lossless text snapshot, cell/ID change report and readable rendered samples.",
+          "Review canonical Markdown diffs; generate derived JSON/cell change reports and readable audience samples.",
           "Tool maintainer/reviewer"
         ],
         [
@@ -1903,6 +1936,13 @@
           "Unusable workbook for assistive users",
           "Structural practices plus rendered/human review; record unperformed Excel Accessibility Checker.",
           "Document reviewer"
+        ],
+        [
+          "RK13",
+          "Stale or misleading audience workbook",
+          "Divergent facts or omitted release blocker used in decisions",
+          "Source revision/hash manifest; flag staleness; explicit omissions/full-source links; retain relevant blockers and limitations in every applicable view.",
+          "Document owner/export maintainer"
         ]
       ],
       "widths": [
@@ -1927,29 +1967,29 @@
         [
           "PL01",
           "Small feature with a measurable user outcome",
-          "Control; Sources; Requirements; Stories; Acceptance; Links; Evidence; Review",
+          "Canonical Markdown feature records plus product/engineering/QA sharing views",
           "Stable ID chain from source through story/criterion to a real test result or explicit Not run.",
           "Synthetic; no publishing or real account/data effects."
         ],
         [
           "PL02",
           "Consequential design choice",
-          "Design/ADR profile with relevant quality/runtime views",
-          "Plausible alternatives, narrative rationale, history and schema/diagram links.",
+          "Canonical Markdown ADR/design with relevant views plus engineering decision summaries",
+          "Complete alternatives/rationale/history in Markdown; summaries resolve to the same source revision and schema/diagram links.",
           "Proposed record; no assumption of architectural approval."
         ],
         [
           "PL03",
           "First-release and roadmap planning",
-          "Planning/release profile plus requirements/test links",
-          "Forecasts, agreed scope, release notes and operations gates clearly separated.",
+          "Canonical Markdown roadmap/release pack plus executive/product/operations exports",
+          "Forecasts, commitments, actual release facts and operations blockers remain distinct and visible in applicable views.",
           "Synthetic example only; LIMS use follows a later user request."
         ],
         [
           "PL04",
           "Human workbook review",
-          "Reviewer decision/comments and change snapshot",
-          "Preserve edits and report changes by stable IDs after office round trip.",
+          "Archived annotated export, feedback report and reviewed Markdown diff",
+          "Preserve edits by stable source ID/version; report stale/conflicting feedback after office round trip; regenerate from the reviewed source.",
           "No automatic overwrite or imported agreement becoming authorization."
         ],
         [
@@ -1970,7 +2010,7 @@
     },
     {
       "name": "13 Gate Mapping",
-      "purpose": "Existing process remains authoritative; workbook content complements current file-presence checks.",
+      "purpose": "Existing process reviews canonical Markdown and scoped source evidence; audience workbooks accompany it. File presence alone remains insufficient.",
       "headers": [
         "Gate ID",
         "Lifecycle stage",
@@ -1982,7 +2022,7 @@
         [
           "G01",
           "Orient / classify",
-          "Control, project/revision, requested action, source authority",
+          "Canonical Markdown identity/revision, requested action and linked machine-source authority; export profile/freshness when shared",
           "Handoff load; protocol classification; skillpack",
           "Research/planning/drafting/execution preserved."
         ],
@@ -2010,7 +2050,7 @@
         [
           "G05",
           "Verify / review",
-          "Test runs, real evidence, diff, reviews and limitations",
+          "Canonical Markdown diff, actual test/review evidence and limitations; source-to-export parity/freshness and feedback report when shared",
           "Focused/full required tests; evals; completion check",
           "Structure or an agent self-review is not independent approval."
         ],
@@ -2035,6 +2075,61 @@
         87,
         73,
         79
+      ]
+    },
+    {
+      "name": "14 Audience Profiles",
+      "purpose": "Proposed sharing profiles for engineering artifacts; this package itself is the full research-review audience export. Implementation will validate audience selection.",
+      "headers": [
+        "Audience ID",
+        "Audience",
+        "Selected content",
+        "Always retain when relevant",
+        "Source and review boundary"
+      ],
+      "rows": [
+        [
+          "AU01",
+          "Business / product",
+          "Needs; scope; stories; observable acceptance; outcome roadmap; user-facing release changes",
+          "Dependencies; unconfirmed priorities/forecasts; acceptance gaps; delivered versus planned scope",
+          "Link full source records and revisions; workbook feedback remains proposed input."
+        ],
+        [
+          "AU02",
+          "Engineering",
+          "Requirements/acceptance; ADR summaries; design/contract links; implementation tasks; technical release changes",
+          "Decision status; unresolved constraints; security/quality risks; test and compatibility gaps",
+          "Complete ADR/design narrative and machine schemas stay at their authoritative source paths."
+        ],
+        [
+          "AU03",
+          "QA / UAT",
+          "Acceptance; test cases/runs; candidate revision/environment; evidence; defects; acceptance decisions",
+          "Not run/blocked/skipped/fail; unresolved criteria; reviewer identity and evidence limits",
+          "Case definitions and actual results remain separate; feedback is not imported sign-off."
+        ],
+        [
+          "AU04",
+          "Operations / release",
+          "Candidate/target; readiness; rollout/recovery; migration; monitoring; support/runbook links",
+          "Release blockers; backup/restore gaps; known limits; authorization and environment status",
+          "No deployment or operational approval follows from export generation."
+        ],
+        [
+          "AU05",
+          "Executive / sponsor",
+          "Outcomes; milestones; confidence; key scope/release status; risks; decisions needed",
+          "Material blockers; uncertainty; forecast versus commitment; deployed/accepted distinctions",
+          "Declare omitted detail and link the complete baseline; summaries cannot conceal blockers."
+        ]
+      ],
+      "widths": [
+        14,
+        28,
+        65,
+        65,
+        65
       ]
     }
   ]

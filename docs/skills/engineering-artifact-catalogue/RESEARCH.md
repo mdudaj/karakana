@@ -4,7 +4,9 @@ Status: **Draft for review**. Research completed 2026-09-26. This package plans
 the catalogue update; it does not implement, install or promote skills.
 
 The user requested comprehensive research before an update plan, covering
-engineering documentation artifacts and using Excel as the current format.
+engineering documentation artifacts. Following the format correction, Markdown
+is the primary authoring and version-controlled format; accompanying Excel
+workbooks provide sharing and review views tailored to each audience.
 The scope includes requirements, stories, acceptance, ADRs, design, roadmaps,
 milestones, implementation plans and releases, with their supporting evidence.
 It applies across Karakana projects. No LIMS first-release documents or live
@@ -12,17 +14,26 @@ operational changes are part of this slice.
 
 ## Deliverables and reading order
 
-The [Excel research and update plan](research-and-update-plan.xlsx) is the human
-review pack: 14 sheets, 215 record rows, 38 external primary/maintainer references
-and five inspected local/upstream evidence entries. Start with `02 Findings`,
+This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
+research and proposal. The detailed plan contains all evidence, requirements,
+decisions and implementation records, including the audience profiles.
+
+The accompanying [Excel research and update plan](research-and-update-plan.xlsx)
+is a derived view for the research-review audience: 15 sheets, 226 record rows,
+38 external primary/maintainer references and five inspected local/upstream
+evidence entries. Start with `02 Findings`,
 `05 Skill Plan`, `09 Delivery Plan` and `10 Decisions`. Review fields are marked
 with both text labels and yellow fill; no decision is pre-populated as approved.
 
-The [JSON snapshot](research-and-update-plan.json) carries the same records for
-version-control review. It is not an independent editable authority. Reconcile
-workbook review edits before updating the snapshot or rendering another version.
-The [renderer](render_workbook.py) exists only to reproduce this research pack;
-it is not the proposed reusable workbook tool. It refuses to overwrite files.
+The [JSON snapshot](research-and-update-plan.json) is a generated rendering
+intermediate, carrying the same detailed records and the source hash. Edit
+Markdown first. Archive annotated workbooks and compare feedback by source ID
+and revision; review proposed changes into Markdown, then generate a new export.
+Workbook feedback cannot automatically update source content or approvals.
+The [renderer](render_workbook.py) reads `PLAN.md` directly and can derive both
+outputs. It reproduces this complete research-review pack; audience projection
+for future engineering artifacts is proposed work, not implemented here.
+It refuses to overwrite files.
 
 ## Research method and limitations
 
@@ -41,7 +52,7 @@ marketplace listings and reposts were not used as authorities.
 
 Only public publisher summaries of paid standards were inspected. The result is
 a tailored engineering proposal, not a clause-by-clause standards assessment or
-certification. Each workbook source row states its edition/revision, inspection
+certification. Each canonical source row states its edition/revision, inspection
 date, finding and adoption limit. These are inspected references, not a claim
 that every possible documentation method has been exhausted. Recheck evolving
 standards and community implementations before implementation.
@@ -118,15 +129,17 @@ dates are not evidence of delivered value.
 [Nygard's ADR guidance](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
 and [MADR](https://adr.github.io/madr/) support concise decision records with
 context, alternatives, rationale, consequences and retained supersession history.
-Our Excel adaptation should use a decision register plus ordered narrative rows,
-so important reasoning is neither truncated nor buried in a huge cell.
+Author complete ADRs in Markdown, preserving reasoning and history. A shared
+workbook can include a decision register, concise rationale/consequence summaries
+and source links; it must identify excerpts and point to the complete ADR.
 
 [42010:2022](https://www.iso.org/standard/74393.html),
 [arc42](https://arc42.org/overview/) and the [C4 model](https://c4model.com/) inform
 audience-specific views. Select the relevant context, runtime, component,
 deployment and quality concerns; do not require every possible view for each
 task. Diagrams and authoritative API/schema sources keep repository locations
-and revision links, with useful text descriptions in the workbook.
+and revision links. Markdown design records hold the narrative and useful text
+descriptions; audience workbook summaries link the complete records and views.
 [Diataxis](https://diataxis.fr/) helps distinguish user-learning/task/reference
 needs from design rationale and delivery records.
 
@@ -200,7 +213,7 @@ research evidence for a new shared workflow, not fixes applied to ent-meal.
 | `engineering-design-records` | ADRs and relevant architecture/design descriptions | System design, domain/UX skills, architecture protocol |
 | `engineering-delivery-planning` | Roadmap, milestones and bounded implementation plans | Next-milestone selection, existing issue drafts and lifecycle |
 | `engineering-release-documentation` | Release plans/assurance, notes and adoption/handover | Project release checks/runbooks, release protocol, handoffs |
-| `engineering-workbooks` | Excel creation/editing, integrity checks and review snapshots | Selected authoring skill and narrow deterministic tools |
+| `engineering-workbooks` | Derived audience Excel exports, integrity/freshness checks and feedback reporting | Markdown from the selected authoring skill and narrow deterministic tools |
 
 This is a proposal to add capability to the shared Karakana catalogue, not to
 install another framework or automatically load five skills for every task.
@@ -215,17 +228,42 @@ provenance through an adapter. Acceptance strings currently lack individual IDs:
 the adapter design must assign/persist stable criterion identities without using
 row order as identity or silently breaking existing consumers.
 
-Excel profiles should contain only the applicable tables. Shared metadata
-includes project, artifact/workbook identity, schema version, document version,
-baseline, source revision, requested action, owner/reviewer and dates. The workbook
-details 24 proposed table contracts. Typed link rows express many-to-many
-relationships by qualified IDs; baseline/version resolution must be defined in
-P01. Narrative ADR/design sections can use multiple ordered rows.
+All four authoring workflows produce Markdown with stable artifact IDs, sources,
+status, review evidence and version history. Existing structured requirement
+records, machine schemas and source diagrams retain authority for their explicitly
+identified content; Markdown links those sources rather than duplicating editable
+machine definitions. Define that mapping and identity ownership during P01.
 
-The workbook is the current review medium. Existing machine schemas, source
-diagrams and accepted repository ADRs may remain authoritative sources referenced
-from it. Register that authority per artifact; never create two freely editable
-masters. Editing a baseline must preserve history and reconsider earlier approvals.
+Excel profiles contain only applicable tables. Every export identifies project,
+artifact/export identity, audience/profile version, generation date, source
+Markdown paths/sections/IDs/revisions/hashes, baseline, requested action and
+omissions, with links to complete sources. The plan details 24 proposed export
+table contracts. Typed link rows express many-to-many
+relationships by qualified IDs; baseline/version resolution must be defined in
+P01. Full ADR/design narratives stay in Markdown.
+
+Audience profiles in `14 Audience Profiles` select useful views:
+
+| Audience | Sharing focus |
+| --- | --- |
+| Business/product | Needs, scope, stories, acceptance, outcome roadmap and user-facing release changes |
+| Engineering | Constraints, ADR summaries, design/contract links, implementation tasks and technical changes |
+| QA/UAT | Acceptance, cases, actual runs, candidate/environment, defects and review evidence |
+| Operations/release | Readiness, rollout/recovery, migration, monitoring, support and runbook links |
+| Executive/sponsor | Outcomes, milestones, confidence, material risks and decisions needed |
+
+Relevant blockers, limitations, uncertainty and trace IDs survive every applicable
+projection. Each workbook declares omitted detail and links the full baseline.
+An audience summary must not turn a forecast into a commitment or hide a release
+blocker. The current research workbook is the complete research-review profile;
+it demonstrates the proposal, not five implemented project export workflows.
+
+Markdown is the canonical documentation source. Workbook review collects proposed
+feedback against a specific source version. Archive it, report changed IDs and
+conflicts, compare source freshness, and review changes into current Markdown
+before regenerating a new export. Never synchronize two editable masters or
+import workbook agreement as source approval. Source changes preserve history
+and reconsider earlier approvals.
 
 ## Excel quality and verification contract
 
@@ -247,34 +285,39 @@ and compare results against known expectations, not just the absence of errors.
 Preserve reviewer cells, unsupported content and existing formula sources when
 editing supported workbooks. Define feature compatibility before using a library
 to save a complex workbook. Block stale overwrites, capture changed IDs/cells,
-and reconcile edits into a lossless review snapshot. Treat untrusted formula-like
+and produce a feedback report against the source version. A stale export remains
+historical evidence, with feedback reviewed against current Markdown; it cannot
+overwrite the current source. Treat untrusted formula-like
 strings as literal text and keep examples synthetic and secret-free.
 
 The current protocol checker accepts readable nonempty files. It does not inspect
-Excel sheets or evaluate content. A workbook may support several artifact kinds
-only if the actual mapped content exists and has been substantively reviewed;
-attaching the same path repeatedly is not proof. Keep a local validation/review
-report alongside the workbook. Do not introduce a second lifecycle/approval
+Excel sheets or evaluate content. Attach canonical Markdown and relevant source
+evidence for required artifacts. Accompanying workbook views must map to the
+same source version and actual reviewed content; attaching the same path repeatedly
+is not proof. Keep a validation/review report alongside the export. Do not introduce a second lifecycle/approval
 state machine or silently change existing protocol behavior in this update.
 
 ## Ordered implementation proposal
 
-The workbook contains exact inspected/proposed paths, dependency edges, exit
+The detailed Markdown plan contains inspected/proposed paths, dependency edges, exit
 evidence and requirement mappings for six slices:
 
-1. **P01 — Agree schema and adapter.** Map current requirement/story identities,
-   statuses and source provenance; define artifact profiles, links and authority.
-   Review complete synthetic examples, including a tiny-task profile.
-2. **P02 — Build narrow Excel tooling.** Add scoped read/write/validate/snapshot
-   helpers with stale-overwrite and reviewer-preservation checks. Define supported
-   workbook features and an appropriate optional dependency before changing code.
+1. **P01 — Agree Markdown content and export contracts.** Map current engine
+   identities and authority to Markdown, persist stable criterion IDs and define
+   links/history. Specify audience mappings, source manifests, freshness and
+   feedback reconciliation. Review complete synthetic examples and a tiny task.
+2. **P02 — Build narrow export and feedback tooling.** Validate Markdown and
+   generate audience Excel views with source provenance. Report feedback,
+   stale sources and conflicts; preserve annotated exports. Define supported
+   workbook features and optional dependencies before changing code.
 3. **P03 — Author focused skills.** Original instructions, conditional references,
    complete synthetic examples and meaningful behavior evals; start experimental.
 4. **P04 — Update discovery.** Generate the catalogue index and add concise shared
    guidance and selected optional skillpack entries. Preserve permissions and
    avoid loading unrelated documentation workflows.
-5. **P05 — Pilot and inspect actual output.** Synthetic feature, design/ADR and
-   roadmap/release packs; office round trips, human comments, render/accessibility
+5. **P05 — Pilot and inspect actual output.** Synthetic Markdown feature, design/ADR
+   and roadmap/release packs with audience exports; office round trips,
+   source freshness, feedback reconciliation, render/accessibility
    review and recorded limitations. Real LIMS drafting is a later requested task.
 6. **P06 — Review and integrate.** Follow the appropriate skill/code protocols,
    resolve blocking findings, run required tests/evals and review the final change.
@@ -290,10 +333,11 @@ repositories/workbooks. Existing skill/index/eval commands should be reused:
 and focused `karakana eval run --skill <skill-name>` before the broader required
 gate. These are implementation checks, not commands claimed to have run here.
 
-Twenty update requirements map to 27 planned verification scenarios. They cover
+Twenty update requirements map to 29 planned verification scenarios. They cover
 the earlier inquiry-to-drafting mistake, request boundaries, project isolation,
 IDs/links, measurable acceptance, decision history, forecast truth, release truth,
-human edits, unrelated-file false assurance, licensing, formula correctness,
+Markdown authority, audience projections, stale/conflicting feedback, human edits,
+unrelated-file false assurance, licensing, formula correctness,
 literal text and controlled promotion. They are **planned**, not passing results.
 
 No delivery dates, assigned people or estimates are invented. The proposed
@@ -308,7 +352,7 @@ and archive superseded artifacts.
 This slice changes only the research package on task branch
 `docs/engineering-artifact-catalogue-research`. There are no skill, catalogue,
 global memory, protocol, requirement-engine, dependency or LIMS changes.
-The workbook is formula-free. The renderer, JSON/XLSX record parity, IDs and
+The workbook is formula-free. The renderer, Markdown/JSON/XLSX record parity, IDs and
 planned reference mappings are checked locally; rendered evidence and the exact
 outcomes/limitations are recorded in the task verification artifact and append-only
 handoff. No application behavior tests are needed for these documentation records.
@@ -317,10 +361,16 @@ To reproduce into a new file using the repository environment with openpyxl:
 
 ```bash
 .venv/bin/python docs/skills/engineering-artifact-catalogue/render_workbook.py \
-  --output /tmp/engineering-artifact-research-review.xlsx
+  --output /tmp/engineering-artifact-research-review.xlsx \
+  --snapshot-output /tmp/engineering-artifact-research-review.json
 ```
 
-Remaining work: review this proposal, then implement the accepted content/schema
-and adapter slice before workbook tooling and skill authoring. Recommended next
+The JSON metadata and workbook document properties record the `PLAN.md` source
+SHA-256, research-review audience and UTC generation time. This is provenance
+for the detailed export, not proof of freshness or approval; compare the hash
+with the current source before relying on the workbook.
+
+Remaining work: review this proposal, then implement the accepted Markdown
+content/source/export contract before reusable export tooling and skill authoring. Recommended next
 task: **P01**, using the source register and inspected revisions as reusable
 research; investigate only unresolved compatibility and status decisions.

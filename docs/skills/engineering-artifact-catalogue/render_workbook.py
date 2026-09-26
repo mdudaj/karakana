@@ -1,16 +1,20 @@
-"""Render this research package's reviewed JSON snapshot to a new Excel file.
+"""Render this research package's canonical PLAN.md to a new Excel review file.
 
 This is a documentation helper, not the proposed engineering-workbook tool.
 Requires openpyxl in the selected Python environment. Existing files are never
-overwritten; reconcile human edits before rendering a subsequent snapshot.
+overwritten. Workbook feedback becomes reviewed Markdown change proposals.
+An optional JSON snapshot is derived from the same Markdown, not an input master.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
+import re
 import textwrap
+from datetime import datetime, timezone
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -28,18 +32,67 @@ REVIEW_VALUES = [
 ]
 
 
-def render(source: Path, output: Path) -> None:
-    if output.exists():
-        raise FileExistsError(
-            f"Refusing to overwrite {output}. Reconcile review edits and use a new filename."
-        )
-    data = json.loads(source.read_text(encoding="utf-8"))
+def load_plan(source: Path) -> dict:
+    """Read only the documented table convention used by this research package."""
+    raw = source.read_bytes()
+    content = raw.decode("utf-8")
+    def metadata(label: str) -> str:
+        match = re.search(rf"^{re.escape(label)}: (.+)$", content, re.MULTILINE)
+        if match is None:
+            raise ValueError(f"Missing {label} in {source}")
+        return match.group(1)
+
+    data = {
+        "package_version": metadata("Package version"),
+        "status": metadata("Status"),
+        "research_date": metadata("Research date"),
+        "export_audience": metadata("Export audience"),
+        "source_path": source.name,
+        "source_sha256": hashlib.sha256(raw).hexdigest(),
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "sheets": [],
+    }
+    for section in re.split(r"^## ", content, flags=re.MULTILINE)[1:]:
+        lines = section.splitlines()
+        name = lines[0]
+        purpose = next(line.removeprefix("Purpose: ") for line in lines if line.startswith("Purpose: "))
+        widths_line = next(line for line in lines if line.startswith("<!-- workbook-widths: "))
+        widths = json.loads(widths_line.removeprefix("<!-- workbook-widths: ").removesuffix(" -->"))
+        table = [line for line in lines if line.startswith("| ") and line.endswith(" |")]
+        def cells(line: str) -> list[str]:
+            return [value.strip().replace("<br>", "\n").replace("&#124;", "|")
+                    for value in line[1:-1].split("|")]
+        if len(table) < 3 or any(value != "---" for value in cells(table[1])):
+            raise ValueError(f"Invalid research table: {name}")
+        headers, rows = cells(table[0]), [cells(line) for line in table[2:]]
+        if len(widths) != len(headers) or any(len(row) != len(headers) for row in rows):
+            raise ValueError(f"Table width mismatch: {name}")
+        data["sheets"].append(dict(name=name, purpose=purpose, headers=headers, rows=rows, widths=widths))
+    if not data["sheets"]:
+        raise ValueError(f"No research tables in {source}")
+    return data
+
+
+def render(source: Path, output: Path, snapshot_output: Path | None = None) -> None:
+    if snapshot_output is not None and output.resolve() == snapshot_output.resolve():
+        raise ValueError("Workbook and JSON snapshot must use different output paths.")
+    for target in (output, snapshot_output):
+        if target is not None and target.exists():
+            raise FileExistsError(
+                f"Refusing to overwrite {target}. Preserve feedback and use a new filename."
+            )
+    data = load_plan(source)
     workbook = Workbook()
     workbook.remove(workbook.active)
     workbook.properties.title = "Engineering artifact catalogue: research and update plan"
     workbook.properties.subject = "Draft proposal; no catalogue implementation or approval implied"
     workbook.properties.creator = "Karakana documentation research"
-    workbook.properties.description = "Evidence register and proposed global engineering documentation update"
+    workbook.properties.identifier = "sha256:" + data["source_sha256"]
+    workbook.properties.keywords = "Derived audience view: " + data["export_audience"]
+    workbook.properties.description = (
+        f"Canonical source: {data['source_path']}; generated UTC: {data['generated_at_utc']}; "
+        "feedback is proposed input for reviewed Markdown changes."
+    )
     for number, spec in enumerate(data["sheets"]):
         headers = spec["headers"]
         if not headers or not all(isinstance(h, str) and h for h in headers):
@@ -50,7 +103,7 @@ def render(source: Path, output: Path) -> None:
         sheet["A1"] = spec["name"]
         sheet["A1"].font = Font(name="Arial", bold=True, size=15, color="16324F")
         sheet["A1"].alignment = Alignment(vertical="center", wrap_text=True)
-        sheet["B1"] = "Draft for review"
+        sheet["B1"] = data["status"]
         sheet["B1"].font = Font(name="Arial", italic=True, color="495766", size=11)
         sheet["A2"] = "Purpose"
         sheet["B2"] = spec["purpose"]
@@ -127,12 +180,15 @@ def render(source: Path, output: Path) -> None:
         sheet.oddFooter.center.text = "Draft research and proposed update | Page &P of &N"
         sheet.oddFooter.center.size = 9
     workbook.save(output)
+    if snapshot_output is not None:
+        snapshot_output.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Created {output}: {len(workbook.sheetnames)} sheets")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source", type=Path, default=BASE / "research-and-update-plan.json")
+    parser.add_argument("--source", type=Path, default=BASE / "PLAN.md")
     parser.add_argument("--output", type=Path, default=BASE / "research-and-update-plan.xlsx")
+    parser.add_argument("--snapshot-output", type=Path, help="Optional new derived JSON snapshot")
     args = parser.parse_args()
-    render(args.source, args.output)
+    render(args.source, args.output, args.snapshot_output)
