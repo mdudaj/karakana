@@ -1,0 +1,24 @@
+id: engineering-requirements-traceability
+name: traceability instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: A legacy criterion moves, text is edited and an old workbook reviewer agrees;
+    preserve native identity and changed-baseline limits.
+  skill: engineering-requirements
+  task_type: documentation
+  prompt_file: skills/engineering-requirements/references/traceability.md
+expectations:
+  must_include:
+  - namespace/type/ID
+  - not index-only guessing
+  - Do not carry approval
+  - cross-namespace baselines
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

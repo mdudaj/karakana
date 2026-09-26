@@ -1,0 +1,24 @@
+[
+  {
+    "acceptance_criteria": [
+      "Given an identified source record, when a view is shared, then its ID and full-source link are present."
+    ],
+    "definition_of_done": [],
+    "implementation_notes": [],
+    "issue_id": "req-example-issue-1",
+    "labels": [],
+    "metadata": {},
+    "out_of_scope": [],
+    "recommended_model_route": {},
+    "req_id": "req-example",
+    "risk_level": "low",
+    "safety_constraints": [],
+    "scope": [],
+    "story_id": "req-example-story-1",
+    "suggested_skillpack": null,
+    "suggested_skills": [],
+    "summary": "Synthetic draft only.",
+    "tests_or_evals": [],
+    "title": "Review a traceable source record"
+  }
+]

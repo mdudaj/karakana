@@ -1,0 +1,22 @@
+id: engineering-requirements-requirements
+name: requirements instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Singular scope with unresolved performance threshold and conflicting priorities.
+  skill: engineering-requirements
+  task_type: documentation
+  prompt_file: skills/engineering-requirements/references/requirements.md
+expectations:
+  must_include:
+  - Agreed Priority
+  - open acceptance decision
+  - Existing Karakana PRD JSON owns its native fields
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

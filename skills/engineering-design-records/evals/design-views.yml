@@ -1,0 +1,24 @@
+id: engineering-design-records-design-views
+name: design-views instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Describe interface/runtime concerns for different stakeholders, keeping diagram
+    source authority.
+  skill: engineering-design-records
+  task_type: documentation
+  prompt_file: skills/engineering-design-records/references/design-views.md
+expectations:
+  must_include:
+  - stakeholder/concern
+  - scenario
+  - authoritative source
+  - source, schema
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

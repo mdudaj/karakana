@@ -1,0 +1,32 @@
+id: engineering-requirements-request-boundary
+name: engineering-requirements request boundary instruction coverage
+description: Deterministic source-text coverage; does not execute a model or prove
+  response behavior.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- request-scope
+- instruction-coverage
+input:
+  task: The user asks whether documentation skills exist, then asks for a plan; preserve
+    the requested artifact and avoid premature product drafts or publication.
+  skill: engineering-requirements
+  task_type: documentation
+  prompt_file: skills/engineering-requirements/SKILL.md
+expectations:
+  must_include:
+  - A skills inquiry returns catalogue information
+  - 'Draft/revise
+
+    only when requested or already authorized'
+  - Markdown is the primary documentation source
+  - existing lifecycle/artifact gates
+  - Deterministic evals check instruction coverage
+  required_sections:
+  - When not to use this skill
+  - Safety rules
+  - Output format
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

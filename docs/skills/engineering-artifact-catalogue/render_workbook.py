@@ -1,0 +1,206 @@
+"""Render the canonical Markdown plan or blank template to a new Excel file.
+
+This is a documentation helper, not the proposed engineering-workbook tool.
+Requires openpyxl in the selected Python environment. Existing files are never
+overwritten. Workbook feedback becomes reviewed Markdown change proposals.
+An optional JSON snapshot is derived from the same Markdown, not an input master.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import re
+import textwrap
+from datetime import datetime, timezone
+from pathlib import Path
+
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.worksheet.table import Table, TableStyleInfo
+
+BASE = Path(__file__).resolve().parent
+REVIEW_VALUES = [
+    "Not reviewed",
+    "Agree with proposal",
+    "Requires revision",
+    "Needs decision",
+]
+
+
+def load_plan(source: Path) -> dict:
+    """Read only the documented table convention used by this research package."""
+    raw = source.read_bytes()
+    content = raw.decode("utf-8")
+    def metadata(label: str, default: str | None = None) -> str:
+        match = re.search(rf"^{re.escape(label)}: (.+)$", content, re.MULTILINE)
+        if match is None:
+            if default is not None:
+                return default
+            raise ValueError(f"Missing {label} in {source}")
+        return match.group(1)
+
+    is_template = metadata("Kind", "research") == "template"
+    data = {
+        "package_version": metadata("Package version"),
+        "status": metadata("Status"),
+        "export_audience": metadata("Export audience"),
+        "source_path": source.name,
+        "source_sha256": hashlib.sha256(raw).hexdigest(),
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "sheets": [],
+    }
+    if is_template:
+        data["kind"] = "template"
+        data["template_date"] = metadata("Template date")
+    else:
+        data["research_date"] = metadata("Research date")
+    for section in re.split(r"^## ", content, flags=re.MULTILINE)[1:]:
+        lines = section.splitlines()
+        name = lines[0]
+        purpose = next(line.removeprefix("Purpose: ") for line in lines if line.startswith("Purpose: "))
+        widths_line = next(line for line in lines if line.startswith("<!-- workbook-widths: "))
+        widths = json.loads(widths_line.removeprefix("<!-- workbook-widths: ").removesuffix(" -->"))
+        table = [line for line in lines if line.startswith("| ") and line.endswith(" |")]
+        def cells(line: str) -> list[str]:
+            return [value.strip().replace("<br>", "\n").replace("&#124;", "|")
+                    for value in line[1:-1].split("|")]
+        if len(table) < 3 or any(value != "---" for value in cells(table[1])):
+            raise ValueError(f"Invalid research table: {name}")
+        headers, rows = cells(table[0]), [cells(line) for line in table[2:]]
+        if len(widths) != len(headers) or any(len(row) != len(headers) for row in rows):
+            raise ValueError(f"Table width mismatch: {name}")
+        data["sheets"].append(dict(name=name, purpose=purpose, headers=headers, rows=rows, widths=widths))
+    if not data["sheets"]:
+        raise ValueError(f"No research tables in {source}")
+    return data
+
+
+def render(source: Path, output: Path, snapshot_output: Path | None = None) -> None:
+    if snapshot_output is not None and output.resolve() == snapshot_output.resolve():
+        raise ValueError("Workbook and JSON snapshot must use different output paths.")
+    for target in (output, snapshot_output):
+        if target is not None and target.exists():
+            raise FileExistsError(
+                f"Refusing to overwrite {target}. Preserve feedback and use a new filename."
+            )
+    data = load_plan(source)
+    is_template = data.get("kind") == "template"
+    workbook = Workbook()
+    workbook.remove(workbook.active)
+    workbook.properties.title = ("Generic engineering artifact template" if is_template
+                                 else "Engineering artifact catalogue: research and update plan")
+    workbook.properties.subject = ("Blank reusable template; author artifacts in Markdown" if is_template
+                                   else "Draft proposal; no catalogue implementation or approval implied")
+    workbook.properties.creator = "Engineering documentation" if is_template else "Karakana documentation research"
+    workbook.properties.identifier = "sha256:" + data["source_sha256"]
+    workbook.properties.keywords = "Derived audience view: " + data["export_audience"]
+    workbook.properties.description = (
+        f"Canonical source: {data['source_path']}; generated UTC: {data['generated_at_utc']}; "
+        "feedback is proposed input for reviewed Markdown changes."
+    )
+    for number, spec in enumerate(data["sheets"]):
+        headers = spec["headers"]
+        if not headers or not all(isinstance(h, str) and h for h in headers):
+            raise ValueError(f"Invalid headers in {spec['name']}")
+        if any(len(row) != len(headers) for row in spec["rows"]):
+            raise ValueError(f"Row length mismatch in {spec['name']}")
+        sheet = workbook.create_sheet(spec["name"])
+        sheet["A1"] = spec["name"]
+        sheet["A1"].font = Font(name="Arial", bold=True, size=12 if is_template else 15, color="16324F")
+        sheet["A1"].alignment = Alignment(vertical="center", wrap_text=True)
+        sheet["B1"] = data["status"]
+        sheet["B1"].font = Font(name="Arial", italic=True, color="495766", size=11)
+        sheet["A2"] = "Purpose"
+        sheet["B2"] = spec["purpose"]
+        sheet["A3"] = "Navigation"
+        sheet["B3"] = "Return to Read Me"
+        sheet["B3"].hyperlink = "#'00 Read Me'!A1"
+        sheet["B3"].font = Font(name="Arial", color="155CA8", underline="single", size=11)
+        for row in (2, 3):
+            for cell in sheet[row]:
+                if cell.coordinate != "B3":
+                    cell.font = Font(name="Arial", size=11)
+                cell.alignment = Alignment(vertical="top", wrap_text=True)
+        widths = [min(65, max(13, w)) for w in (spec.get("widths") or [30] * len(headers))]
+        for column, width in enumerate(widths, 1):
+            sheet.column_dimensions[get_column_letter(column)].width = width
+        sheet.row_dimensions[1].height = 58
+        sheet.row_dimensions[2].height = max(32, 15 * math.ceil(len(spec["purpose"]) / max(1, widths[1] - 2)))
+        sheet.row_dimensions[3].height = 21
+        for column, header in enumerate(headers, 1):
+            cell = sheet.cell(4, column, header)
+            cell.font = Font(name="Arial", bold=True, color="FFFFFF", size=11)
+            cell.fill = PatternFill("solid", fgColor="16324F")
+            cell.alignment = Alignment(vertical="center", wrap_text=True)
+        sheet.row_dimensions[4].height = 34
+        for row_number, row in enumerate(spec["rows"], 5):
+            line_count = 1
+            for column, value in enumerate(row, 1):
+                cell = sheet.cell(row_number, column, value)
+                if isinstance(value, str):
+                    # Records are literal text, including leading formula-like characters.
+                    cell.data_type = "s"
+                cell.font = Font(name="Arial", size=11, color="172B3A")
+                cell.alignment = Alignment(vertical="top", wrap_text=True)
+                if headers[column - 1] in {"Review Decision", "Reviewer Comments"}:
+                    cell.fill = PatternFill("solid", fgColor="FFF2CC")
+                if isinstance(value, str) and value.startswith("https://"):
+                    cell.hyperlink = value
+                    cell.hyperlink.tooltip = f"Open source for {row[0]}"
+                    cell.font = Font(name="Arial", size=11, color="155CA8", underline="single")
+                if isinstance(value, str):
+                    lines = sum(max(1, len(textwrap.wrap(part, width=max(10, int(widths[column - 1]) - 3))))
+                                for part in value.splitlines() or [""])
+                    line_count = max(line_count, lines)
+            sheet.row_dimensions[row_number].height = min(390, max(32, line_count * 15 + 9))
+        final_row = 4 + len(spec["rows"])
+        table_prefix = "EngineeringTemplate" if is_template else "EngineeringResearch"
+        table = Table(displayName=f"{table_prefix}{number:02d}",
+                      ref=f"A4:{get_column_letter(len(headers))}{final_row}")
+        table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True)
+        sheet.add_table(table)
+        if "Review Decision" in headers:
+            column = get_column_letter(headers.index("Review Decision") + 1)
+            validation = DataValidation(type="list", formula1='"' + ",".join(REVIEW_VALUES) + '"',
+                                        allow_blank=False)
+            validation.showErrorMessage = True
+            validation.errorStyle = "stop"
+            validation.errorTitle = "Use a review decision"
+            validation.error = "Choose one of the review decisions in the Read Me guide."
+            validation.showInputMessage = True
+            validation.promptTitle = "Proposal review"
+            validation.prompt = "A review response is not deployment permission or test evidence."
+            sheet.add_data_validation(validation)
+            validation.add(f"{column}5:{column}{final_row}")
+        sheet.freeze_panes = "B5"
+        sheet.sheet_view.zoomScale = 85
+        sheet.print_title_rows = "1:4"
+        sheet.print_title_cols = "A:A"
+        sheet.print_area = f"A1:{get_column_letter(len(headers))}{final_row}"
+        sheet.page_setup.orientation = "landscape"
+        sheet.page_setup.paperSize = sheet.PAPERSIZE_A3
+        # Wide research registers need horizontal pages to retain readable type.
+        sheet.sheet_properties.pageSetUpPr.fitToPage = True
+        sheet.page_setup.fitToWidth = 2 if len(headers) > 5 else 1
+        sheet.page_setup.fitToHeight = 0
+        sheet.oddFooter.center.text = ("Generic blank template | Page &P of &N" if is_template
+                                       else "Draft research and proposed update | Page &P of &N")
+        sheet.oddFooter.center.size = 9
+    workbook.save(output)
+    if snapshot_output is not None:
+        snapshot_output.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Created {output}: {len(workbook.sheetnames)} sheets")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--source", type=Path, default=BASE / "PLAN.md")
+    parser.add_argument("--output", type=Path, default=BASE / "research-and-update-plan.xlsx")
+    parser.add_argument("--snapshot-output", type=Path, help="Optional new derived JSON snapshot")
+    args = parser.parse_args()
+    render(args.source, args.output, args.snapshot_output)

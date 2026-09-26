@@ -1,0 +1,195 @@
+{
+  "observed_utc": "2026-09-26T15:05:13.786477+00:00",
+  "scope": "Local synthetic documentation/export/office observations; not product verification, acceptance or release authority",
+  "python": "3.14.4",
+  "openpyxl": "3.1.5",
+  "office": "LibreOffice 26.2.5.2 620(Build:2)",
+  "exports": {
+    "business-v0.1": {
+      "workbook_sha256": "bc3334e257eb5c35ca6efbaa4cc0cd722496d979efd09006ffcc0bf16e58dc83",
+      "snapshot_sha256": "a82a925701341f89de7cca3dafbe19ca94ff7531bf47b40587fb6b34437bde7a",
+      "payload_sha256": "580440ad11c4b97ac26d9ec2c89a153ff5a1ca915c76fbaa230535d4f08f18e3",
+      "office_returned_sha256": "dcc4e2a1b86024c31270fa22cd323a200ab5496194a64c435422a3bc2c09d93a",
+      "sheets": 15,
+      "rows": 66,
+      "source_files": 7,
+      "baseline": "pilot-0.1-unaccepted"
+    },
+    "business-v0.2": {
+      "workbook_sha256": "275c71cd8707b1f7838fffa476a71ac3862b2e3d50138119805930174b659b96",
+      "snapshot_sha256": "e6a5e70f17ef1aea1a7c25d06fe4369f9290bb1536b203042a5d0d43fdb01721",
+      "payload_sha256": "927e9bd45213dab2cd977bf0868b2177ec5a50250c67d1218ab237d678ac6675",
+      "office_returned_sha256": "d87817ffdf52a5610fe670aa2c614ac735cd1c09900e50668b05dafc9908d7a0",
+      "sheets": 15,
+      "rows": 66,
+      "source_files": 7,
+      "baseline": "pilot-0.2-unaccepted"
+    },
+    "engineering-v0.1": {
+      "workbook_sha256": "1882bd66d990f0c9e2bb21dd9286b348778eccf6cdd39dd8a71875b9e38fb658",
+      "snapshot_sha256": "015927168e59660e356c70e38a21ab1da058e2bea865c41bf5f64bb1bd623cbe",
+      "payload_sha256": "b54268e670c987e3934bd88f70482e15e4c84d9ddfe4ba2c7df7b6f43332c179",
+      "office_returned_sha256": "1a42c2f667682f024b77336e7285b6b2de063dcf217b4e596d4d8611f8858eae",
+      "sheets": 20,
+      "rows": 103,
+      "source_files": 7,
+      "baseline": "pilot-0.1-unaccepted"
+    },
+    "executive-v0.1": {
+      "workbook_sha256": "6f58fdfb31ce6dd8222518095e3cd27f1786fdb403190fba111b1105e808327c",
+      "snapshot_sha256": "766bff7af53196c04e85ee753d4ba9905f8d3243128ff6f2ac73a2a808f9ae83",
+      "payload_sha256": "18aa57e2b05e173d9b56a8e47228a8aefee55c03f725da039e9835f09cc3bff4",
+      "office_returned_sha256": "dde2f645d2ed5612e36e6928a5f7471e2651d8400d6ee521d567727ed4146779",
+      "sheets": 11,
+      "rows": 55,
+      "source_files": 7,
+      "baseline": "pilot-0.1-unaccepted"
+    },
+    "operations-v0.1": {
+      "workbook_sha256": "e699ee8ca6b8e390d35be6a2a5dd41d0c806a63acab9d10205732b7e71445bf3",
+      "snapshot_sha256": "9a9f86b5acbbb5763032065f275356a6935e66f8901c1c41ccd465571bb85542",
+      "payload_sha256": "4177cbc36bacfefbc39368972905ef459467b195364b246b57b378c155be507d",
+      "office_returned_sha256": "6ceec66440a4142773ad40936f1a8e6a5d188349ee21d11d72bc63e6c98b0714",
+      "sheets": 12,
+      "rows": 58,
+      "source_files": 7,
+      "baseline": "pilot-0.1-unaccepted"
+    },
+    "qa-v0.1": {
+      "workbook_sha256": "b3ea62b8d115fcee5fd0d120845962caf7596cd877928d84a8c8068c583bffdb",
+      "snapshot_sha256": "b48719069692a8dc231d878bdd02cfcb582411bf1211a6c9e9bc27773f2bf083",
+      "payload_sha256": "0ebcbf8af8650e262958da322c9a10fe0adce7b8c60b90d9d32e0cf35921541a",
+      "office_returned_sha256": "f130f0c9b8798b6f4a1beb3b25324ae5f3d4ff6237cdd631666d4cfa15a7dacc",
+      "sheets": 14,
+      "rows": 65,
+      "source_files": 7,
+      "baseline": "pilot-0.1-unaccepted"
+    }
+  },
+  "feedback": {
+    "clarification": {
+      "observations": 2,
+      "kinds": [
+        "cell_comment",
+        "field_change"
+      ],
+      "statuses": [
+        "proposed"
+      ],
+      "stale_sources": [],
+      "issues": []
+    },
+    "reviewer-conflict": {
+      "observations": 2,
+      "kinds": [
+        "field_change"
+      ],
+      "statuses": [
+        "conflict"
+      ],
+      "stale_sources": [],
+      "issues": []
+    },
+    "row-conflict": {
+      "observations": 3,
+      "kinds": [
+        "duplicate_or_blank_identity",
+        "field_change",
+        "row_removed"
+      ],
+      "statuses": [
+        "conflict"
+      ],
+      "stale_sources": [],
+      "issues": []
+    },
+    "unsupported": {
+      "observations": 3,
+      "kinds": [
+        "field_change",
+        "formula_input",
+        "worksheet_added"
+      ],
+      "statuses": [
+        "proposed"
+      ],
+      "stale_sources": [],
+      "issues": []
+    },
+    "stale-clarification": {
+      "observations": 2,
+      "kinds": [
+        "cell_comment",
+        "field_change"
+      ],
+      "statuses": [
+        "proposed_stale"
+      ],
+      "stale_sources": [
+        "requirements.md"
+      ],
+      "issues": []
+    },
+    "stale-value": {
+      "observations": 1,
+      "kinds": [
+        "field_change"
+      ],
+      "statuses": [
+        "conflict"
+      ],
+      "stale_sources": [
+        "requirements.md"
+      ],
+      "issues": []
+    }
+  },
+  "office_roundtrips": {
+    "business-v0.1": {
+      "observations": 0,
+      "stale_sources": [],
+      "current_source_issues": []
+    },
+    "engineering-v0.1": {
+      "observations": 0,
+      "stale_sources": [],
+      "current_source_issues": []
+    },
+    "qa-v0.1": {
+      "observations": 0,
+      "stale_sources": [],
+      "current_source_issues": []
+    },
+    "operations-v0.1": {
+      "observations": 0,
+      "stale_sources": [],
+      "current_source_issues": []
+    },
+    "executive-v0.1": {
+      "observations": 0,
+      "stale_sources": [],
+      "current_source_issues": []
+    },
+    "business-v0.2": {
+      "observations": 0,
+      "stale_sources": [],
+      "current_source_issues": []
+    }
+  },
+  "visual_inspection": {
+    "document": "executive-v0.1.pdf",
+    "pages": 21,
+    "inspected_pages": [
+      5,
+      6
+    ],
+    "preview": "readiness-preview.png",
+    "result": "Draft status, Not run/Blocked tests, unknown candidate/support/recovery and release gaps visible; separate horizontal feedback pages; not full-document accessibility proof"
+  },
+  "unperformed": [
+    "Native Excel desktop and Accessibility Checker",
+    "Assistive technology and actual recipient usability",
+    "Independent author review or model behavior benchmark",
+    "Fictional product implementation/tests/release"
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "acceptance_criteria": [
+      "Given an identified source record, when a view is shared, then its ID and full-source link are present."
+    ],
+    "actor": "reviewer",
+    "definition_of_done": [],
+    "definition_of_ready": [],
+    "outcome": "I can inspect its complete context",
+    "req_id": "req-example",
+    "required_skills": [],
+    "required_tests_or_evals": [],
+    "risk_level": "low",
+    "risks": [],
+    "standards": [],
+    "story_id": "req-example-story-1",
+    "title": "Review a traceable source record",
+    "want": "a source ID and full-source link in the shared view"
+  }
+]

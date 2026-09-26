@@ -15,6 +15,11 @@ skills:
     - ci-failure-analysis
     - karakana-handoff
   optional:
+    - engineering-requirements
+    - engineering-design-records
+    - engineering-delivery-planning
+    - engineering-release-documentation
+    - engineering-workbooks
     - next-milestone-decision
     - brainstorm-verbalized-sampling
     - system-design-thinking
