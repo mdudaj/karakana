@@ -54,6 +54,11 @@ Legacy provider overrides remain supported. Python owns gates and routing.
 
 ## Safety rules
 
+Engineering lifecycle and proportional stage gates: `docs/engineering-process.md`.
+Check prerequisite artifacts before non-trivial implementation, and all required
+artifacts at completion. Presence checks are not substantive approval or proof
+of passing tests. Preserve request type, scope and external-action permissions.
+
 - Never push directly to protected branches.
 - Do all repository work on a task branch and integrate it through a pull request.
 - Use squash merge for accepted work unless explicitly instructed otherwise.
@@ -91,4 +96,8 @@ Explicit approval is required for destructive commands, secret handling, deploym
 
 ## Known risks
 
-- Codex task generation is implemented. Codex execution, evaluations, reflection, and GitHub Actions are not implemented yet.
+- Task generation, explicit Codex execution, evaluations, reflection and GitHub
+  workflows exist. Their availability does not authorize live execution.
+- Protocol checks validate artifact presence, not semantic correctness.
+- Handoff recovery can include unrelated/test-generated references; verify
+  provenance before relying on recovered context (see engineering-process audit).

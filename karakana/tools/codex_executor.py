@@ -6,6 +6,7 @@ from pathlib import Path
 
 from karakana.memory.ubongo import UbongoMemory
 from karakana.models.router import infer_task_type, route_model
+from karakana.protocols.lifecycle import render_engineering_process
 from karakana.skills.loader import SkillLoader
 from karakana.tools.code_search import collect_repository_context
 
@@ -43,7 +44,7 @@ class CodexExecutor:
             "approval_requirements": _approval_requirements(selected_skill.requires_approval_for),
             "constraints": _constraints(),
         }
-        return template.format(**values).strip() + "\n"
+        return template.format(**values).strip() + "\n\n" + render_engineering_process()
 
     def write_task_prompt(self, prompt: str, output_path: Path | None = None) -> Path:
         path = output_path or self.repo_root / ".karakana" / "codex-task.md"

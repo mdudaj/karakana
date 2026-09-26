@@ -11,6 +11,7 @@ from karakana.actions.schemas import ActionBundle, ExtractedAction
 from karakana.actions.store import ActionStore
 from karakana.codex.schemas import CodexHandoffTask
 from karakana.models.router import route_model
+from karakana.protocols.lifecycle import render_engineering_process
 
 
 class CodexHandoffBuilder:
@@ -121,8 +122,10 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 ## Definition of Done
 
 - Patch is reviewed by a human.
-- Relevant tests pass or failures are documented.
+- Required tests pass; unrun or failing checks remain explicit verification gaps, not success.
 - No commits, pushes, PRs, deployments, or auto-merges occur automatically.
+
+{render_engineering_process()}
 """
 
 

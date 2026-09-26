@@ -47,6 +47,23 @@ Every fresh agent session and every new bounded task starts from the latest proj
 4. Verify recovered or stale handoffs before acting.
 5. For non-trivial work, run `karakana protocol start --task "<task>" --project <project> --write-plan` or classify the task with the active protocol before editing.
 
+## Engineering Process
+
+Follow `docs/engineering-process.md`: orient/classify → define acceptance →
+research/design → plan → implement → verify/validate → review → authorized
+release → handoff. Reuse current approved artifacts; reopen only affected stages.
+Tailor to the request and risk: analysis is not implementation authorization, and
+a mechanical fix does not need a fresh PRD/ADR. Keep one compact delivery record.
+
+For non-trivial implementation, attach prerequisite evidence and run
+`karakana protocol check --trace <id> --stage pre-implementation` before code.
+After verification and handoff, run `--stage completion` (the default).
+These checks validate artifact presence, not semantic correctness, test success
+or approval. Review the actual outcomes; never substitute attachment for review.
+Report implemented, verified, merged, deployed and accepted as distinct states.
+Use existing task approval for in-scope work without repeatedly asking, but stop
+for new scope, missing material decisions or actions requiring new authority.
+
 ## End Every Task
 
 Every bounded task must finish with an append-only handoff refresh so the next session can load current continuation context.
