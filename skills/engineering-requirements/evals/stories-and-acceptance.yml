@@ -1,0 +1,24 @@
+id: engineering-requirements-stories-and-acceptance
+name: stories-and-acceptance instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Author a story, a UAT case and an unexecuted result without inventing acceptance.
+  skill: engineering-requirements
+  task_type: documentation
+  prompt_file: skills/engineering-requirements/references/stories-and-acceptance.md
+expectations:
+  must_include:
+  - 'Criterion:'
+  - 'Test case/UAT script:'
+  - 'Test run:'
+  - is not a pass
+  - business acceptance
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

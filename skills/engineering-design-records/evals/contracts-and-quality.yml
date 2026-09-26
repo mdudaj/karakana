@@ -1,0 +1,26 @@
+id: engineering-design-records-contracts-and-quality
+name: contracts-and-quality instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Describe a UX and contract change while security thresholds and migration
+    evidence are unresolved.
+  skill: engineering-design-records
+  task_type: documentation
+  prompt_file: skills/engineering-design-records/references/contracts-and-quality.md
+expectations:
+  must_include:
+  - behavior and look/feel before implementation
+  - 'existing
+
+    shared components/tokens'
+  - does not override machine schema
+  - Separate proposed design
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

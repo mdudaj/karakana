@@ -1,0 +1,24 @@
+id: engineering-design-records-adr
+name: adr instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Revise a significant decision with two plausible alternatives and retain the
+    superseded record; there is no approval evidence.
+  skill: engineering-design-records
+  task_type: documentation
+  prompt_file: skills/engineering-design-records/references/adr.md
+expectations:
+  must_include:
+  - status is Proposed
+  - Accepted needs
+  - preserving the old reasoning/history
+  - Full reasoning stays in Markdown
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

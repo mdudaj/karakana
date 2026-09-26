@@ -1,0 +1,24 @@
+id: engineering-release-documentation-release-notes
+name: release-notes instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: A planned change has a successful build but no delivered evidence; produce
+    honest release documentation.
+  skill: engineering-release-documentation
+  task_type: documentation
+  prompt_file: skills/engineering-release-documentation/references/release-notes.md
+expectations:
+  must_include:
+  - omit the delivered claim
+  - successful build
+  - not a delivered Release Notes table row
+  - production deployment
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

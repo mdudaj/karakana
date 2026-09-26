@@ -1,0 +1,25 @@
+id: engineering-workbooks-workbook-contract
+name: workbook-contract instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Export a source as a new audience view and compare conflicting returned annotations;
+    preserve input bytes and source authority.
+  skill: engineering-workbooks
+  task_type: documentation
+  prompt_file: skills/engineering-workbooks/references/workbook-contract.md
+expectations:
+  must_include:
+  - --snapshot
+  - three-way proposed report
+  - there is no apply operation
+  - Macros/external calculation links reject
+  - not mark
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

@@ -1,0 +1,24 @@
+id: engineering-delivery-planning-roadmap
+name: roadmap instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Draft an outcome roadmap with an unknown baseline and forecast horizon, not
+    a promised release date.
+  skill: engineering-delivery-planning
+  task_type: documentation
+  prompt_file: skills/engineering-delivery-planning/references/roadmap.md
+expectations:
+  must_include:
+  - not a release promise
+  - missing baseline is a learning task
+  - agreement evidence
+  - review trigger
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

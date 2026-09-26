@@ -1,0 +1,27 @@
+id: engineering-delivery-planning-implementation-plan
+name: implementation-plan instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Write a copy-ready bounded task plan with evidence to inspect, checks, recovery
+    and no execution side effects.
+  skill: engineering-delivery-planning
+  task_type: documentation
+  prompt_file: skills/engineering-delivery-planning/references/implementation-plan.md
+expectations:
+  must_include:
+  - what to inspect
+  - command and expected observation
+  - unperformed checks
+  - 'not
+
+    execution'
+  - already authorized
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

@@ -1,0 +1,25 @@
+id: engineering-release-documentation-adoption-and-handover
+name: adoption-and-handover instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Write user instructions and continuation while user walkthrough and operational
+    recovery remain untested.
+  skill: engineering-release-documentation
+  task_type: documentation
+  prompt_file: skills/engineering-release-documentation/references/adoption-and-handover.md
+expectations:
+  must_include:
+  - practical task
+  - what remains untested
+  - not proof users were trained
+  - append-only handoff
+  - Do not activate users
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

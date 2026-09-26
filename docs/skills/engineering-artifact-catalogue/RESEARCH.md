@@ -1,7 +1,8 @@
 # Engineering artifact catalogue: research and proposed update
 
-Status: **Draft for review**. Research completed 2026-09-26. This package plans
-the catalogue update; it does not implement, install or promote skills.
+Status: **Local delivery for review**. Research completed 2026-09-26.
+P01–P03 are implemented locally; discovery/enablement, pilots, integration and
+stable promotion remain pending.
 
 The user requested comprehensive research before an update plan, covering
 engineering documentation artifacts. Following the format correction, Markdown
@@ -18,7 +19,8 @@ For reuse, start with the [generic Markdown template](TEMPLATE.md) and its
 accompanying [blank Excel template](engineering-artifacts-template.xlsx).
 They contain generic artifact fields, empty data rows and audience guidance,
 with no project names or project-specific features. Populate only instantiated
-copies. This is a generic template asset; catalogue skills are not yet installed.
+copies. Five experimental skills now exist in the repository; personal
+installation and project skillpack enablement are not part of P03.
 [P02](P02.md) supplies the separately invoked local audience export workflow.
 
 P01 is now delivered locally for review: the
@@ -36,6 +38,16 @@ P02 is delivered locally: Markdown validation, read-only native adapters, bindin
 proposals, five audience export profiles and three-way feedback reports. Its
 [usage and verification record](P02.md) separates local test evidence from
 independent review, project pilots and integration.
+
+[P03 delivery/source register](P03.md) records five original experimental skills:
+[requirements](../../../skills/engineering-requirements/SKILL.md),
+[design records](../../../skills/engineering-design-records/SKILL.md),
+[delivery planning](../../../skills/engineering-delivery-planning/SKILL.md),
+[release documentation](../../../skills/engineering-release-documentation/SKILL.md)
+and [workbooks](../../../skills/engineering-workbooks/SKILL.md), with fourteen
+conditional guides, four neutral worked examples and nineteen coverage evals.
+They are available through the repository loader/CLI; generated discovery and
+project enablement remain P04.
 
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
@@ -241,10 +253,11 @@ research evidence for a new shared workflow, not fixes applied to ent-meal.
 | `engineering-release-documentation` | Release plans/assurance, notes and adoption/handover | Project release checks/runbooks, release protocol, handoffs |
 | `engineering-workbooks` | Derived audience Excel exports, integrity/freshness checks and feedback reporting | Markdown from the selected authoring skill and narrow deterministic tools |
 
-This is a proposal to add capability to the shared Karakana catalogue, not to
-install another framework or automatically load five skills for every task.
-Reassess overlap during implementation: extend an existing skill if it actually
-owns the same workflow. `delivery-artifact-gate` remains the prerequisite/review
+P03 implements these focused skills in the shared repository catalogue. It adds
+no framework and does not automatically load five skills for every task.
+Overlap was checked against current skills; the new workflows author selected
+artifacts rather than replacing elicitation, reasoning or direction selection.
+`delivery-artifact-gate` remains the prerequisite/review
 guide; `requirements-elicitation` resolves ambiguity; `next-milestone-decision`
 chooses direction. Authoring skills record the selected outcome.
 
@@ -409,9 +422,9 @@ SHA-256, research-review audience and UTC generation time. This is provenance
 for the detailed export, not proof of freshness or approval; compare the hash
 with the current source before relying on the workbook.
 
-Remaining work: focused catalogue skills, discovery, project pilots and reviewed
-integration. Recommended next task: **P03**, following P01/P02 contracts, native
-source mapping, tool usage, fixtures and verification instructions. Native source
+Remaining work: discovery/optional enablement, project pilots and reviewed
+integration. Recommended next task: **P04**, following P01–P03 contracts, source
+mapping, tool/skill usage, fixtures and verification instructions. Native source
 IDs remain unchanged; exporting must not regenerate engine stories/issues or
 rewrite source/approval state. Reuse the inspected evidence and research only
 unresolved implementation/application compatibility questions.

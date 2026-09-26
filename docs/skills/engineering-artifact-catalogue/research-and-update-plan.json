@@ -1,14 +1,14 @@
 {
-  "package_version": "0.3",
+  "package_version": "0.4",
   "status": "Draft for review",
   "export_audience": "research-review",
   "source_path": "PLAN.md",
-  "source_sha256": "021cb4249f62836129b217c0f9ea1f4c578280e68c9b8cb2a348658b3f4b5ef6",
-  "generated_at_utc": "2026-09-26T14:04:36.130312+00:00",
+  "source_sha256": "54bbc6dddd4289791773ae631da024eae128e9140d2e272a6d8220b22ba8b2fb",
+  "generated_at_utc": "2026-09-26T14:31:59.762275+00:00",
   "sheets": [
     {
       "name": "00 Read Me",
-      "purpose": "Research and update plan; P01 contracts and P02 opt-in local tooling delivered; catalogue skills remain pending.",
+      "purpose": "Research and update plan; P01 contracts, P02 local tooling and P03 experimental skills delivered; discovery/pilots/integration pending.",
       "headers": [
         "Item",
         "Value",
@@ -22,7 +22,7 @@
         ],
         [
           "Version",
-          "0.3 / Draft for review",
+          "0.4 / Local delivery for review",
           "Research conclusions and implementation proposal; no approval implied."
         ],
         [
@@ -32,8 +32,8 @@
         ],
         [
           "Authority",
-          "User authorized research, planning and subsequent P01/P02 delivery",
-          "Local tooling implemented; installation, remote publishing and deployment remain separate stages."
+          "User authorized research, planning and subsequent P01–P03 delivery",
+          "Local tooling and experimental skills implemented; personal installation, remote publishing and deployment remain separate stages."
         ],
         [
           "Format",
@@ -87,8 +87,8 @@
         ],
         [
           "Next action",
-          "P03 focused authoring and workbook skills",
-          "Reuse delivered P01/P02 contracts, source adapters, usage and regression evidence; discovery, pilots and reviewed integration follow."
+          "P04 discovery and optional project enablement",
+          "Reuse delivered P01–P03 contracts, tools, experimental skills and verification; generated index/global pointers and narrow skillpack selection, then pilots/integration."
         ],
         [
           "Known limitations",
@@ -969,7 +969,7 @@
     },
     {
       "name": "05 Skill Plan",
-      "purpose": "Names and boundaries are proposed; no new skills have been created.",
+      "purpose": "Five original experimental skills created by P03; independent review and project pilots pending.",
       "headers": [
         "Skill ID",
         "Proposed skill",
@@ -1021,7 +1021,7 @@
           "engineering-workbooks",
           "Derived audience Excel exports, integrity/freshness checks and feedback comparison against Markdown",
           "Existing requirements schema; new narrow deterministic tools; openpyxl",
-          "references/workbook-contract.md; audience-profiles.md; assets/export templates; tool adapter; evals",
+          "references/workbook-contract.md; audience-profiles.md; shared existing template/P02 tool; evals",
           "Not reviewed",
           "Sharing/review only. Source content stays in Markdown; existing machine schemas and diagrams retain their explicitly linked authority."
         ]
@@ -1710,11 +1710,11 @@
         ],
         [
           "P03",
-          "Focused authoring skills and original references",
+          "Five experimental skills and original references delivered locally",
           "P01; P02",
-          "Proposed skills/engineering-requirements/; engineering-design-records/; engineering-delivery-planning/; engineering-release-documentation/; engineering-workbooks/",
+          "skills/engineering-requirements/; engineering-design-records/; engineering-delivery-planning/; engineering-release-documentation/; engineering-workbooks/; tests/test_engineering_documentation_skills.py; P03.md",
           "Write valid Karakana metadata and conditional content guides for Markdown-first authoring, with optional audience workbooks; link shared contract/tool. Add original complete synthetic examples and evals for inquiry/research/plan/draft boundaries. Start experimental.",
-          "Validate all skills; focused evals; source/license register; no proprietary skill text bundled.",
+          "Five valid/loadable experimental skills; 14 conditional guides; four neutral examples/23 records; 19 coverage evals and 16 integration tests pass. Full suite 641 tests and 166 evals pass; original source/license register. No stable promotion or model-behavior claim.",
           "REQ01; REQ04; REQ05; REQ06; REQ07; REQ08; REQ15"
         ],
         [

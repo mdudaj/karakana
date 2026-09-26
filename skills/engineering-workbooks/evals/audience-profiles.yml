@@ -1,0 +1,28 @@
+id: engineering-workbooks-audience-profiles
+name: audience-profiles instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Share an executive view while detailed tests are omitted; retain blockers
+    and complete-source links and label accessibility limits.
+  skill: engineering-workbooks
+  task_type: documentation
+  prompt_file: skills/engineering-workbooks/references/audience-profiles.md
+expectations:
+  must_include:
+  - executive
+  - 'material
+
+    test/release/risks limitations'
+  - Do not hide relevant uncertainty
+  - 'LibreOffice
+
+    results do not certify Excel'
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

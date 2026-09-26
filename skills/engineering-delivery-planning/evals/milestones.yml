@@ -1,0 +1,28 @@
+id: engineering-delivery-planning-milestones
+name: milestones instruction coverage
+description: Deterministic reference coverage of a realistic authoring/review boundary;
+  no model behavior claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Specify milestone output and acceptance while owner, date and agreement remain
+    unknown.
+  skill: engineering-delivery-planning
+  task_type: documentation
+  prompt_file: skills/engineering-delivery-planning/references/milestones.md
+expectations:
+  must_include:
+  - observable output
+  - 'remain
+
+    unconfirmed'
+  - 'actual
+
+    completion'
+  - cannot substitute for observed completion
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com
