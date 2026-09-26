@@ -84,6 +84,22 @@ associated behavior verified; distinguish local implementation from acceptance.
 - Slice approval covers ordinary in-scope implementation steps, not new scope,
   credentials, live model calls, remote publishing or deployment permissions.
 
+## Engineering documentation guidance
+
+For requested artifact authoring/review, select the relevant experimental skill
+from the [generated catalogue](../skills/README.md): requirements/stories,
+ADR/design, roadmaps/plans, release documentation or audience workbooks.
+Use the [shared content contract](engineering-artifacts.md) and
+[tool guide](skills/engineering-artifact-catalogue/P02.md). Markdown is primary;
+Excel is a derived view for a specified audience and baseline. Native engine and
+machine sources keep their declared authority. Tailor the artifact set to the task.
+
+The Karakana, LIMS and ent-meal profiles expose these as optional choices. Choose
+a documentation skill explicitly with `--skill`; listing it does not load all
+optional instructions or change the default required skill. An inquiry about
+available skills does not authorize drafting. Keep the existing lifecycle,
+project boundaries and external-action approvals; experimental is not stable.
+
 ## Commands and enforcement boundary
 
 ```bash

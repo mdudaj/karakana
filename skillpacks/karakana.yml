@@ -17,6 +17,11 @@ skills:
     - karakana-handoff
     - write-karakana-skill
   optional:
+    - engineering-requirements
+    - engineering-design-records
+    - engineering-delivery-planning
+    - engineering-release-documentation
+    - engineering-workbooks
     - okf-promotion-agent
     - viewflow-material-ui
     - next-milestone-decision

@@ -16,6 +16,11 @@ skills:
     - karakana-handoff
     - pdf-submission-renderer
   optional:
+    - engineering-requirements
+    - engineering-design-records
+    - engineering-delivery-planning
+    - engineering-release-documentation
+    - engineering-workbooks
     - viewflow-framework
     - viewflow-material-ui
     - django-debugging

@@ -1,0 +1,28 @@
+id: engineering-documentation-global-discovery
+name: engineering-documentation-global-discovery instruction/config coverage
+description: Deterministic source-text coverage; functional selection/isolation is
+  tested separately, no model response claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-documentation
+- discovery
+- instruction-coverage
+input:
+  task: Review a catalogue inquiry; preserve request type and source authority.
+  task_type: documentation
+  prompt_file: ubongo/global/engineering-standards.md
+expectations:
+  must_include:
+  - engineering-requirements
+  - engineering-design-records
+  - engineering-delivery-planning
+  - engineering-release-documentation
+  - engineering-workbooks
+  - Markdown is primary
+  - Catalogue availability does not authorize drafting
+  - not automatically loaded bodies
+  - Existing elicitation
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

@@ -1,8 +1,8 @@
 # Engineering artifact catalogue: research and proposed update
 
 Status: **Local delivery for review**. Research completed 2026-09-26.
-P01–P03 are implemented locally; discovery/enablement, pilots, integration and
-stable promotion remain pending.
+P01–P04 are implemented locally; pilots, integration and stable promotion remain
+pending.
 
 The user requested comprehensive research before an update plan, covering
 engineering documentation artifacts. Following the format correction, Markdown
@@ -19,8 +19,8 @@ For reuse, start with the [generic Markdown template](TEMPLATE.md) and its
 accompanying [blank Excel template](engineering-artifacts-template.xlsx).
 They contain generic artifact fields, empty data rows and audience guidance,
 with no project names or project-specific features. Populate only instantiated
-copies. Five experimental skills now exist in the repository; personal
-installation and project skillpack enablement are not part of P03.
+copies. Five experimental skills now exist in the repository; P04 adds optional
+project choices. Personal installation remains separate.
 [P02](P02.md) supplies the separately invoked local audience export workflow.
 
 P01 is now delivered locally for review: the
@@ -46,8 +46,11 @@ independent review, project pilots and integration.
 [release documentation](../../../skills/engineering-release-documentation/SKILL.md)
 and [workbooks](../../../skills/engineering-workbooks/SKILL.md), with fourteen
 conditional guides, four neutral worked examples and nineteen coverage evals.
-They are available through the repository loader/CLI; generated discovery and
-project enablement remain P04.
+They are available through the repository loader/CLI. [P04](P04.md) delivers the
+generated index, concise global/lifecycle pointers and optional choices in
+Karakana, LIMS and ent-meal. Select explicitly with `--skill`; optional listing
+does not load all bodies or change the default required skill. Inquiry does not
+authorize drafting, and these skills remain experimental.
 
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
@@ -422,9 +425,10 @@ SHA-256, research-review audience and UTC generation time. This is provenance
 for the detailed export, not proof of freshness or approval; compare the hash
 with the current source before relying on the workbook.
 
-Remaining work: discovery/optional enablement, project pilots and reviewed
-integration. Recommended next task: **P04**, following P01–P03 contracts, source
-mapping, tool/skill usage, fixtures and verification instructions. Native source
+Remaining work: controlled authoring/export/review pilots and reviewed
+integration. Recommended next task: **P05**, following P01–P04 contracts, source
+mapping, tool/skill usage, fixtures and verification instructions. Select bounded
+neutral scenarios and an explicit verification plan before authoring. Native source
 IDs remain unchanged; exporting must not regenerate engine stories/issues or
 rewrite source/approval state. Reuse the inspected evidence and research only
 unresolved implementation/application compatibility questions.

@@ -1,0 +1,29 @@
+id: lims-engineering-optional
+name: lims-engineering-optional instruction/config coverage
+description: Deterministic source-text coverage; functional selection/isolation is
+  tested separately, no model response claim.
+suite: skillpacks
+risk_level: medium
+tags:
+- engineering-documentation
+- discovery
+- instruction-coverage
+input:
+  task: Expose engineering documentation choices while retaining required workflow
+    skills and existing safety.
+  task_type: documentation
+  prompt_file: skillpacks/lims.yml
+expectations:
+  must_include:
+  - 'optional:'
+  - engineering-requirements
+  - engineering-design-records
+  - engineering-delivery-planning
+  - engineering-release-documentation
+  - engineering-workbooks
+  - 'required:'
+  - viewflow-framework
+  - 'requires_approval_for:'
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

@@ -1,0 +1,31 @@
+id: engineering-documentation-lifecycle
+name: engineering-documentation-lifecycle instruction/config coverage
+description: Deterministic source-text coverage; functional selection/isolation is
+  tested separately, no model response claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-documentation
+- discovery
+- instruction-coverage
+input:
+  task: Select an applicable authoring skill within the existing engineering lifecycle,
+    without treating availability as a draft request.
+  task_type: documentation
+  prompt_file: docs/engineering-process.md
+expectations:
+  must_include:
+  - Engineering documentation guidance
+  - 'Choose
+
+    a documentation skill explicitly with `--skill`'
+  - 'An inquiry about
+
+    available skills does not authorize drafting'
+  - experimental is not stable
+  - 'Native engine and
+
+    machine sources keep their declared authority'
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

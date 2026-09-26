@@ -16,6 +16,25 @@ including skipped checks and unresolved findings. A self-review is not independe
 review, and merged is not deployed or accepted. Keep project/revision/environment
 provenance explicit; test fixtures must not populate real handoff stores.
 
+## Engineering Documentation Skills
+
+Use the [shared catalogue](../../skills/README.md) and
+[content contract](../../docs/engineering-artifacts.md) from the Karakana harness.
+Select the applicable experimental skill for requested authoring or review:
+
+- `engineering-requirements`: PRDs, requirements, stories, criteria and traceability.
+- `engineering-design-records`: ADRs, design views and contract/quality descriptions.
+- `engineering-delivery-planning`: outcome roadmaps, milestones and task plans.
+- `engineering-release-documentation`: release plans, notes and adoption/handover.
+- `engineering-workbooks`: audience Excel exports and proposed-feedback reports.
+
+Markdown is primary; Excel is a derived audience view. Preserve native engine and
+machine-source authority, stable IDs and scoped evidence; global templates remain
+generic and blank. Catalogue availability does not authorize drafting: inquiry,
+research and planning retain their requested output. Optional skills are choices,
+not automatically loaded bodies; select one explicitly with `--skill` when using
+Karakana planning. Existing elicitation, lifecycle and approval rules still govern.
+
 ## Evidence-Grounded Delivery
 
 All Karakana-managed work must be grounded in inspected evidence rather than unverified assumptions.
