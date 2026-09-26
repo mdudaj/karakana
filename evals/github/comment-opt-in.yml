@@ -13,7 +13,7 @@ input:
   task_type: "issue_triage"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.4-mini"
+  expected_model: "gpt-6-luna"
   must_include:
     - "explicit"
     - "Do not touch secrets"

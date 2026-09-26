@@ -1,7 +1,7 @@
 ---
 name: delivery-artifact-gate
 description: Use this skill before implementing, revising, or reviewing project work when the work should be guided by durable artifacts such as requirements, ADRs, user stories, milestones, UX grill notes, schemas, examples, tests, or handoffs.
-version: 0.1.0
+version: 0.2.0
 risk_level: medium
 allowed_tools:
   - read_file
@@ -93,6 +93,18 @@ Create or update the smallest relevant set:
 - **Handoff**: always at end of task in Karakana-managed projects.
 
 ## Standard workflow
+
+Use research → architect → plan → deliver as a reuse-aware sequence, not a demand
+to repeat every stage on every task. Verify existing artifacts against the current
+scope, source, framework versions and required approvals; reference satisfied
+stages and proceed directly to delivery when all prerequisites are met. Research
+only new uncertainties. Record justified non-applicability in the compact plan.
+
+Follow `docs/cost-aware-continuation.md`: focused debugging tests followed by the
+full required regression gate, bounded output, one compact delivery record with
+linked handoff, escalation after two unsuccessful diagnostic attempts, and no
+automatic multi-agent fan-out or maximum reasoning. Handoffs state the next model
+and whether a new conversation is beneficial; neither substitutes for approval.
 
 1. Load the current project handoff and inspect required project docs.
 2. Restate the work request as a bounded outcome.

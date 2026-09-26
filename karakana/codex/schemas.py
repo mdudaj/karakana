@@ -23,8 +23,8 @@ class CodexHandoffTask:
     skill: str | None = None
     suggested_skills: list[str] = field(default_factory=list)
     recommended_provider: str = "openai_codex"
-    recommended_model: str = "gpt-5.4-mini"
-    escalation_model: str | None = "gpt-5.4"
+    recommended_model: str = "gpt-6-luna"
+    escalation_model: str | None = "gpt-6-sol"
     risk_level: str = "low"
     rationale: str | None = None
     context: str | None = None
@@ -32,6 +32,7 @@ class CodexHandoffTask:
     tests_to_run: list[str] = field(default_factory=list)
     approval_requirements: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
+    reasoning_effort: str | None = None
 
     def __post_init__(self) -> None:
         if self.risk_level not in RISK_LEVELS:

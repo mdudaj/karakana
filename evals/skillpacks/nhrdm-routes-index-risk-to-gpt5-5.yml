@@ -9,4 +9,4 @@ input:
   task_type: "database_or_index_migration"
 expectations:
   expected_provider: "openai_codex"
-  expected_model: "gpt-5.6-sol"
+  expected_model: "gpt-6-sol"

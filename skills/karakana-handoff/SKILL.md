@@ -1,7 +1,7 @@
 ---
 name: karakana-handoff
 description: Create, load, recover, or refresh compact project-aware continuation artifacts for task endings, new sessions, agent switches, context-window failures, and milestone transitions.
-version: 0.2.0
+version: 0.3.0
 risk_level: low
 category: productivity
 scope: bundled
@@ -97,6 +97,23 @@ Do not use a handoff to replace current code inspection, tests, review, release 
 Load or recover at session and task entry, verify references, perform the bounded task, refresh before exit, and run doctor when validity is uncertain.
 
 ## Quick Reference
+
+Record `--next-task` explicitly so recovered milestones cannot replace the current
+decision. Use `--slice-complete` to recommend a fresh conversation at a boundary;
+otherwise continue an unfinished task. Preserve `--failed-attempts` on the same
+issue; after two unsuccessful attempts, stop speculative patches and escalate.
+
+Use repeatable `--reuse-stage research=PATH`, `architect=PATH`, `plan=PATH` with
+`--reuse-reviewed` only after verifying currency, applicability and approval.
+Unchanged reviewed evidence enables direct delivery; missing/changed evidence
+reopens its stage. Hash checks do not replace semantic review of source changes.
+
+Include the recommended model and conversation reason. Recommendation only:
+verify availability and the actual active model; do not claim automatic switching.
+See `docs/cost-aware-continuation.md` for the shared execution discipline: research
+new uncertainties, focused tests then the full required regression gate, bounded
+output, compact records, two-attempt escalation, and no default agent fan-out or
+maximum reasoning. No additional model calls are authorized by this skill.
 
 ```bash
 karakana handoff load --project <project> --skillpack <skillpack>

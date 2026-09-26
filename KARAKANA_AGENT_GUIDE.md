@@ -1,5 +1,9 @@
 # Karakana Agent Instruction Guide
 
+Current routing authority: `docs/gpt-6-routing.md`, `AGENTS.md`, and
+`karakana/models/router.py`. Older model tables below describe the initial
+implementation milestones, not today's active defaults.
+
 ## 1. Mission
 
 You are an implementation agent responsible for delivering  **Karakana** , a GitHub-native AI agent harness for managing multiple software, research, and infrastructure projects.

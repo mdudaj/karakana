@@ -27,11 +27,11 @@ skills:
 model_routes:
   planning:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-sol
     rationale: Use bounded planning by default; escalate for authentication, authorization, workflow process state, deployment, or cross-project architecture risk.
   routine_code_implementation:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-luna
     rationale: Use routine implementation routing after requirements, skills, and memory are loaded.
 protocols:
   default: requirements-change

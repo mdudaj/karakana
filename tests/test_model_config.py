@@ -38,5 +38,6 @@ def test_openai_codex_config_uses_codex_cli_not_openai_api_key(monkeypatch):
     assert config["providers"]["openai"]["configured"] is False
     assert config["providers"]["openai_codex"]["configured"] is True
     assert config["providers"]["openai_codex"]["executable"] == "/usr/local/bin/codex"
-    assert config["providers"]["openai_codex"]["frontier_default"] == "gpt-5.6-sol"
-    assert "gpt-5.6-terra" in config["providers"]["openai_codex"]["available_frontier_models"]
+    assert config["providers"]["openai_codex"]["frontier_default"] == "gpt-6-sol"
+    assert "gpt-5.6-terra" in config["providers"]["openai_codex"]["registered_models"]
+    assert config["providers"]["openai_codex"]["availability_verified"] is False

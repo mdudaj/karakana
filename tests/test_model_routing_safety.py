@@ -32,6 +32,6 @@ def test_high_risk_planning_warns_below_codex_5_6():
 
 
 def test_high_risk_planning_accepts_gpt_5_6_family_variants():
-    for model in ["gpt-5.6", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"]:
+    for model in ["gpt-5.6", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-6-sol"]:
         warnings = validate_model_route("model_routing_planning", "openai_codex", model, risk_level="high")
         assert not warnings

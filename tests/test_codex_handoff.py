@@ -19,7 +19,7 @@ def test_codex_handoff_generation_from_action_bundle(tmp_path):
     assert "## Model Role Guidance" in text
     assert "Role: `routine_implementer`" in text
     assert "Token budget: `standard`" in text
-    assert "gpt-5.4-mini" in text
+    assert "gpt-6-luna" in text
 
 
 def test_codex_handoff_high_risk_payment_routes_to_gpt5_6(tmp_path):
@@ -29,4 +29,4 @@ def test_codex_handoff_high_risk_payment_routes_to_gpt5_6(tmp_path):
 
     path = CodexHandoffBuilder(tmp_path).build_from_action_bundle(bundle.action_run_id)[0]
 
-    assert "gpt-5.6-sol" in path.read_text(encoding="utf-8")
+    assert "gpt-6-sol" in path.read_text(encoding="utf-8")

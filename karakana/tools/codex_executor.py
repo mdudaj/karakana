@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from karakana.memory.ubongo import UbongoMemory
-from karakana.models.router import route_model
+from karakana.models.router import infer_task_type, route_model
 from karakana.skills.loader import SkillLoader
 from karakana.tools.code_search import collect_repository_context
 
@@ -81,30 +81,16 @@ def _files_likely_relevant(project: str, skill: str) -> str:
 
 
 def _recommended_codex_route(task: str, approval_requirements: list[str]) -> dict:
-    high_risk_terms = {
-        "authentication",
-        "permission",
-        "payment",
-        "billing",
-        "migration",
-        "database",
-        "opensearch",
-        "workflow state",
-        "process state",
-        "production",
-        "oauth",
-        "sso",
-    }
-    text = " ".join([task, *approval_requirements]).lower()
-    if any(term in text for term in high_risk_terms):
-        return route_model("high_risk_code_review")
-    return route_model("routine_code_implementation")
+    # Skill-wide approval vocabulary is not evidence that this task touches all
+    # those domains. Keep approvals in the prompt and classify the actual task.
+    return route_model(infer_task_type(task))
 
 
 def _render_recommended_codex_model(route: dict) -> str:
     lines = [
         f"- Default: `{route['model']}`",
         f"- Provider: `{route['provider']}`",
+        f"- Reasoning: `{route.get('reasoning_effort') or 'provider default'}`",
         f"- Reason: {route.get('rationale')}",
     ]
     if route.get("role") == "principal_reviewer":
@@ -112,7 +98,7 @@ def _render_recommended_codex_model(route: dict) -> str:
     else:
         escalation_route = route_model("refactoring")
         lines.append(f"- Escalate to: `{escalation_route['model']}`")
-        lines.append("- Use `gpt-5.6-sol` only if the task touches authentication, payments, migrations, process state, production deployment, or repeated failures.")
+        lines.append("- Use Sol for consequential planning, framework work, high risk or repeated diagnostic failures; Astra is explicit exceptional review only.")
     return "\n".join(lines)
 
 

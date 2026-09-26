@@ -37,8 +37,10 @@ class HandoffArtifact:
     recovered: bool = False
     previous_handoff_id: str | None = None
     warnings: list[str] = field(default_factory=list)
+    continuation: dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        self.continuation = _redact_continuation(self.continuation)
         self.current_milestone = redact_handoff_text(self.current_milestone)
         self.purpose = redact_handoff_text(self.purpose)
         self.state_summary = redact_handoff_text(self.state_summary)
@@ -69,3 +71,13 @@ class HandoffDoctorReport:
 
     def to_dict(self) -> dict[str, Any]:
         return redact_value(asdict(self))
+
+
+def _redact_continuation(value: Any) -> Any:
+    if isinstance(value, str):
+        return redact_handoff_text(value)
+    if isinstance(value, dict):
+        return {key: _redact_continuation(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_redact_continuation(item) for item in value]
+    return value

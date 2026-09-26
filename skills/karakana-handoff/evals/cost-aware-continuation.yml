@@ -1,0 +1,22 @@
+id: handoff-cost-aware-continuation
+name: Reuse stages and recommend model and conversation boundary
+description: Preserve efficient continuation without implying model execution or bypassing verification.
+suite: skills
+risk_level: medium
+tags: [handoff, routing, continuation]
+input:
+  task: Create a handoff for an approved slice with existing research and plan.
+  skill: karakana-handoff
+  task_type: planning
+  prompt_file: skills/karakana-handoff/SKILL.md
+expectations:
+  must_include:
+    - "--next-task"
+    - "--reuse-reviewed"
+    - "full required regression gate"
+    - "two unsuccessful attempts"
+    - "Recommendation only"
+    - "no default agent fan-out"
+  forbidden_patterns:
+    - "automatically switches your model"
+    - "skip the final regression gate"

@@ -600,6 +600,11 @@ def handoff_create(
     purpose: str | None = typer.Option(None, "--purpose", help="Purpose of the next session."),
     current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
+    next_task: str | None = typer.Option(None, "--next-task", help="Bounded next task; outranks recovered milestone."),
+    reuse_stage: list[str] | None = typer.Option(None, "--reuse-stage", help="Reviewed evidence STAGE=PATH (research, architect, plan); repeatable."),
+    reuse_reviewed: bool = typer.Option(False, "--reuse-reviewed", help="Attest evidence is current, applicable and appropriately approved."),
+    slice_complete: bool = typer.Option(False, "--slice-complete", help="Recommend a fresh conversation at this completed boundary."),
+    failed_attempts: int = typer.Option(0, "--failed-attempts", min=0, help="Unsuccessful diagnostic attempts on the same issue."),
     from_dogfood: str | None = typer.Option(None, "--from-dogfood", help="Specific dogfood artifact."),
     from_requirements: str | None = typer.Option(None, "--from-requirements", help="Specific requirements artifact."),
     from_milestone: str | None = typer.Option(None, "--from-milestone", help="Specific milestone decision."),
@@ -626,6 +631,8 @@ def handoff_create(
             from_milestone,
             okf_concepts_loaded=okf_concept,
             okf_concepts_changed=changed_okf_concept,
+            next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
+            slice_complete=slice_complete, failed_attempts=failed_attempts,
         )
         markdown_path = json_path = None
         if write:
@@ -722,6 +729,11 @@ def handoff_refresh(
     purpose: str = typer.Option("End of task handoff", "--purpose", help="Purpose of the next session."),
     current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
+    next_task: str | None = typer.Option(None, "--next-task", help="Bounded next task; outranks recovered milestone."),
+    reuse_stage: list[str] | None = typer.Option(None, "--reuse-stage", help="Reviewed evidence STAGE=PATH (research, architect, plan); repeatable."),
+    reuse_reviewed: bool = typer.Option(False, "--reuse-reviewed", help="Attest evidence is current, applicable and appropriately approved."),
+    slice_complete: bool = typer.Option(False, "--slice-complete", help="Recommend a fresh conversation at this completed boundary."),
+    failed_attempts: int = typer.Option(0, "--failed-attempts", min=0, help="Unsuccessful diagnostic attempts on the same issue."),
     okf_concept: list[str] | None = typer.Option(None, "--okf-concept", help="OKF concept ID loaded for this handoff."),
     changed_okf_concept: list[str] | None = typer.Option(None, "--changed-okf-concept", help="OKF concept ID changed by this work."),
     require_protocol_pass: bool = typer.Option(False, "--require-protocol-pass", help="Fail if latest protocol artifact check does not pass."),
@@ -747,6 +759,8 @@ def handoff_refresh(
             previous_handoff_id=previous.handoff_id if previous else None,
             okf_concepts_loaded=okf_concept,
             okf_concepts_changed=changed_okf_concept,
+            next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
+            slice_complete=slice_complete, failed_attempts=failed_attempts,
         )
         if protocol_result and protocol_path:
             handoff.source_artifacts.append(str(protocol_path.parent / "check.md"))
@@ -2229,6 +2243,9 @@ def model_route(
             "selected_provider": route["provider"],
             "selected_model": route["model"],
             "routing_rationale": route.get("rationale"),
+            "reasoning_effort": route.get("reasoning_effort"),
+            "fallback_model": route.get("fallback_model"),
+            "availability_verified": route.get("availability_verified", False),
             "escalation_signals": signal_list,
             "escalation_recommendation": escalation,
             "manual_override": route.get("manual_override", False),
@@ -2254,6 +2271,9 @@ def model_route(
         "provider": route["provider"],
         "model": route["model"],
         "mode": route.get("mode"),
+        "reasoning_effort": route.get("reasoning_effort"),
+        "fallback_model": route.get("fallback_model"),
+        "availability_verified": route.get("availability_verified", False),
         "rationale": route.get("rationale"),
         "cost_tier": route.get("cost_tier"),
         "capability_tier": route.get("capability_tier"),
@@ -2277,6 +2297,8 @@ def model_route(
     typer.echo(f"Task type: {selected_task_type}")
     typer.echo(f"Provider: {route['provider']}")
     typer.echo(f"Model: {route['model']}")
+    typer.echo(f"Reasoning effort: {route.get('reasoning_effort') or 'provider default'}")
+    typer.echo(f"Availability fallback (explicit only): {route.get('fallback_model') or 'none'}")
     typer.echo(f"Mode: {route.get('mode')}")
     typer.echo(f"Cost tier: {route.get('cost_tier')}")
     typer.echo(f"Capability tier: {route.get('capability_tier')}")

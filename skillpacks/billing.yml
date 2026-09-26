@@ -24,16 +24,16 @@ skills:
 model_routes:
   planning:
     provider: openai_codex
-    model: gpt-5.4-mini
+    model: gpt-6-sol
   payment_or_billing_logic:
     provider: openai_codex
-    model: gpt-5.6-sol
+    model: gpt-6-sol
   database_or_index_migration:
     provider: openai_codex
-    model: gpt-5.6-sol
+    model: gpt-6-sol
   ci_repair:
     provider: openai_codex
-    model: gpt-5.4
+    model: gpt-6-sol
 safety:
   high_risk_paths:
     - billing/**

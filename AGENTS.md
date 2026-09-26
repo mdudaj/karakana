@@ -90,14 +90,36 @@ karakana workspace handoff --project karakana
 
 ## Model Routing
 
+### Cost-aware execution and continuation
+
+Follow `docs/cost-aware-continuation.md`: research → architect → plan → deliver.
+Inspect existing evidence for currency, applicability and approval; skip satisfied
+stages and go straight to delivery when all prerequisites hold. Do not repeat
+broad research or create duplicate architecture/planning artifacts.
+
+Apply suggestions 2–7: research only new uncertainties; focused debugging tests
+then the full required regression gate; bounded tool output; one compact delivery
+record plus linked handoff; stop speculative patches after two failed diagnostic
+attempts and escalate/replan; no automatic agent fan-out or maximum reasoning.
+
+At handoff refresh supply `--next-task`, reviewed `--reuse-stage STAGE=PATH`
+references with `--reuse-reviewed`, `--slice-complete` at a completed boundary,
+and `--failed-attempts` for an unresolved diagnostic loop. Report the recommended
+model and whether a fresh conversation benefits the next task. Recommendations
+do not switch an active session or certify model availability. Verify the active
+model; record an override when necessary. Preserve failures across conversations.
+
 Use cost-effective routing by default:
 
-- Claude Haiku 4.5 for issue triage, simple summaries, lightweight documentation, changelog, and release-note prose.
-- GPT-5 mini for routine bounded planning, requirements reasoning, non-mutating repository research, evidence review, reflection, action extraction review, and low-risk assessments.
-- Codex GPT-5.4 for consequential planning before mutation: multi-file implementation planning, architecture review, framework design, protocol/workflow changes, skill design, and system-impact assessment.
-- Codex GPT-5.4-mini for routine code edits, simple tests, test design, and bounded task drafting.
-- Codex GPT-5.4 for refactoring, CI analysis/repair recommendations, deep PR review, framework-level implementation, and non-routine repository edits.
-- Codex GPT-5.6 Sol only for high-risk planning, high-risk review, or stuck work: model routing, safety policy, authentication, authorization, payment, billing, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, cross-project architecture, or repeated failures. Use `gpt-5.6-sol` as the default frontier route; `gpt-5.6-terra` and `gpt-5.6-luna` are manual override variants. Keep GPT-5.5 as a manual fallback when GPT-5.6 is unavailable.
+- GPT-6 Sol, medium reasoning: control-plane judgment, planning, architecture, coordinated implementation and review.
+- GPT-6 Luna, high reasoning (documented starting setting): bounded research, summaries, routine edits, tests and documentation.
+- GPT-6 Sol, high reasoning: authentication, authorization, billing, migrations, workflow state, model routing, safety policy and production risk.
+- GPT-6 Astra, low reasoning initially: explicit exceptional-task override after a recorded justification; never the automatic default or automatic response to a failed test.
+- GPT-5.6 Luna/Sol: explicit availability fallback for the matching capability tier. No silent downgrade or automatic paid retry. Retain other legacy models as manual overrides.
+
+See `docs/gpt-6-routing.md`. Routing and approval checks stay deterministic; no
+always-running controller or automatic agent fan-out. After two failed diagnostic
+attempts, stop speculative edits and replan/escalate; Sol-to-Astra is advisory only.
 
 Manual overrides are allowed, but record the rationale in traces or task notes.
 

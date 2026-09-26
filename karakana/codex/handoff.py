@@ -76,6 +76,7 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 
 - Provider: {task.recommended_provider}
 - Model: {task.recommended_model}
+- Reasoning: {task.reasoning_effort or 'provider default'}
 - Escalate to: {task.escalation_model or ""}
 - Rationale: {task.rationale or ""}
 
@@ -85,8 +86,9 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 
 ## Escalation Conditions
 
-- Escalate routine work from `gpt-5.4-mini` to `gpt-5.4` when tests fail, more than three files change, refactoring is needed, CI fails, or framework understanding is required.
-- Escalate to `gpt-5.6-sol` for authentication, payments, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, high-risk review, or repeated failures.
+- Escalate routine work from `gpt-6-luna` to `gpt-6-sol` for consequential complexity, framework work, risk, or two unsuccessful diagnostic attempts; not every failing test.
+- Escalate to `gpt-6-sol` for authentication, payments, migrations, OpenSearch index changes, Viewflow process-state changes, production deployment risk, high-risk review, or repeated failures.
+- If Sol remains stuck, stop and replan; Astra review requires explicit selection and a cost rationale.
 
 ## Context
 
@@ -125,8 +127,8 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 
 
 def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: str | None, skill: str | None, skillpack_context=None) -> CodexHandoffTask:
-    route = _route_for_action(action)
-    escalation = "gpt-5.6-sol" if action.risk_level == "high" else "gpt-5.4"
+    route = _route_for_action(action, skillpack_context.model_routes if skillpack_context else None)
+    escalation = "gpt-6-sol" if route["model"] == "gpt-6-luna" else None
     suggested_skills = action.suggested_skills or bundle.suggested_skills
     safety_rules = [
         "Do not commit.",
@@ -155,6 +157,7 @@ def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: st
         suggested_skills=suggested_skills,
         recommended_provider=route["provider"],
         recommended_model=route["model"],
+        reasoning_effort=route.get("reasoning_effort"),
         escalation_model=escalation,
         risk_level=action.risk_level,
         rationale=route.get("rationale"),
@@ -175,12 +178,12 @@ def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: st
     )
 
 
-def _route_for_action(action: ExtractedAction) -> dict:
+def _route_for_action(action: ExtractedAction, routes: dict | None = None) -> dict:
     if action.risk_level in {"high", "critical"}:
-        return route_model("high_risk_code_review")
+        return route_model("high_risk_code_review", skillpack_routes=routes)
     if action.action_type in {"codex_task", "implementation_checklist"}:
-        return route_model("routine_code_implementation")
-    return route_model("codex_task_drafting")
+        return route_model("routine_code_implementation", skillpack_routes=routes)
+    return route_model("codex_task_drafting", skillpack_routes=routes)
 
 
 def _context_for_action(bundle: ActionBundle, action: ExtractedAction, skillpack_context=None) -> str:
