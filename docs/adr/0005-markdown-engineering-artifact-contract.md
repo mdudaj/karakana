@@ -1,9 +1,10 @@
 # ADR 0005: Markdown engineering content and stable source bindings
 
-Status: proposed implementation contract, 2026-09-26.
-Scope: global generic engineering documentation; no runtime/schema mutation.
-The requester accepted Markdown-primary and generic-template direction. The
-specific adapter design below is delivered for review, not recorded as accepted.
+Status: P02 implementation direction authorized by requester, 2026-09-26;
+local implementation awaits independent review/integration.
+Scope: global generic engineering documentation; existing engine schemas and
+stores unchanged. P01 proposed this design; the requester subsequently agreed
+to deliver P02. That authorization is not independent review or release approval.
 
 ## Context and decision drivers
 
@@ -23,7 +24,7 @@ legacy consumers and must not create approvals or project-specific global assets
 | Add IDs directly to every legacy string/schema now | Structured references in engine | Unknown fields fail current constructors; criteria/string consumers need coordinated migration |
 | Read engine-owned sources and persist stable associations in a separate Markdown registry | Preserves current IDs/loaders and Markdown documentation authority; supports reviewable reconciliation | Needs explicit ownership, matching and staleness rules; ambiguous source changes require review |
 
-## Proposed decision
+## Decision for the authorized P02 slice
 
 Use the final option. The [content contract](../engineering-artifacts.md) owns
 human documentation format and identity/revision/export rules. Engine JSON and
@@ -52,18 +53,21 @@ work with no legacy list binding. Multiple authoritative fields require a clear
 authority map and hashes for every relevant source; one aggregate revision is
 insufficient when the underlying working tree changes.
 
-This does not implement the adapter, exporter or future workflow. P02 must prove
-binding persistence, stale/conflict detection and legacy compatibility with
-functional tests before rollout. Semantics still require substantive review.
+P02 implements an opt-in local adapter, exporter and feedback reporter; see its
+[delivery and usage record](../skills/engineering-artifact-catalogue/P02.md).
+Functional tests cover binding persistence, stale/conflict detection and legacy
+compatibility. Catalogue skills, project pilots and rollout remain outstanding.
+Semantics still require substantive review.
 Project-specific authorization and schema migrations remain separate decisions.
 
 ## Verification and recovery
 
 P01 inspects actual schemas/store/generators, exercises existing models and store
 in an isolated compatibility probe, validates example references and template
-parity, and records limitations. Future adapter cases are in the linked contract.
-Revise this proposed ADR if evidence changes; preserve its history. Revert local
-documentation through a reviewed change if rejected; no engine migration,
+parity, and records limitations. P02 records executable coverage and local office
+checks in its delivery record. Revise this ADR if evidence changes; preserve its
+history. Revert the opt-in module/dependency/docs through a reviewed change if
+rejected; no engine migration,
 production deployment or deletion of annotated exports is necessary.
 
 References: [P01 evidence/mapping](../skills/engineering-artifact-catalogue/P01.md),

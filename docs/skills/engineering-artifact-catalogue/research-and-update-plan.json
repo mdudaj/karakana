@@ -1,14 +1,14 @@
 {
-  "package_version": "0.2",
+  "package_version": "0.3",
   "status": "Draft for review",
   "export_audience": "research-review",
   "source_path": "PLAN.md",
-  "source_sha256": "6a761914088dc37ebec52bb1202611d4c1ed88fa47ddbad56ecb4caa5f715662",
-  "generated_at_utc": "2026-09-26T13:17:39.052094+00:00",
+  "source_sha256": "021cb4249f62836129b217c0f9ea1f4c578280e68c9b8cb2a348658b3f4b5ef6",
+  "generated_at_utc": "2026-09-26T14:04:36.130312+00:00",
   "sheets": [
     {
       "name": "00 Read Me",
-      "purpose": "Research and proposed update only; no catalogue or runtime changes are implemented.",
+      "purpose": "Research and update plan; P01 contracts and P02 opt-in local tooling delivered; catalogue skills remain pending.",
       "headers": [
         "Item",
         "Value",
@@ -22,7 +22,7 @@
         ],
         [
           "Version",
-          "0.2 / Draft for review",
+          "0.3 / Draft for review",
           "Research conclusions and implementation proposal; no approval implied."
         ],
         [
@@ -32,8 +32,8 @@
         ],
         [
           "Authority",
-          "User authorized research followed by planning",
-          "Implementation, installation, remote publishing and deployment are separate stages."
+          "User authorized research, planning and subsequent P01/P02 delivery",
+          "Local tooling implemented; installation, remote publishing and deployment remain separate stages."
         ],
         [
           "Format",
@@ -87,8 +87,8 @@
         ],
         [
           "Next action",
-          "Review delivered P01 content/source and audience export contracts",
-          "Then implement P02 bounded exporter/feedback tooling; later focused skills remain outstanding."
+          "P03 focused authoring and workbook skills",
+          "Reuse delivered P01/P02 contracts, source adapters, usage and regression evidence; discovery, pilots and reviewed integration follow."
         ],
         [
           "Known limitations",
@@ -98,7 +98,7 @@
         [
           "Audience",
           "Research-review: complete evidence and proposed catalogue update",
-          "Other audience profiles are defined in 14 Audience Profiles for later implementation; this helper renders this review package only."
+          "Generic profiles are implemented by the separate P02 tool; this helper renders this review package only."
         ],
         [
           "Canonical sources",
@@ -1692,20 +1692,20 @@
       "rows": [
         [
           "P01",
-          "P01 contract/examples delivered locally for review; implementation deferred",
+          "P01 contract/examples delivered locally; P02 tooling now available",
           "Research/plan review",
           "Delivered docs/engineering-artifacts.md; docs/adr/0005-markdown-engineering-artifact-contract.md; P01.md; examples/; generic TEMPLATE.md and companion XLSX. Inspect engine schemas/store/readiness before P02.",
           "Map existing PRD/story identities and machine-field authority to canonical Markdown records; define stable criterion IDs, source sections, typed relations and review history. Specify audience selection, export manifest/freshness and feedback reconciliation. Keep machine schemas/diagrams authoritative for their own content. Record consequential adapter decisions before code.",
-          "Delivered explicit source/identity/content/audience/freshness/feedback contracts, native-engine mapping and tiny/feature/ADR/release examples; detailed design pending review. P02 functional behaviors remain unimplemented.",
+          "Delivered explicit source/identity/content/audience/freshness/feedback contracts, native-engine mapping and tiny/feature/ADR/release examples; detailed design pending review. P02 functional behaviors now delivered separately; project pilots remain pending.",
           "REQ02; REQ03; REQ04; REQ09; REQ10; REQ13; REQ14; REQ20"
         ],
         [
           "P02",
-          "Markdown-to-Excel export and feedback reporting",
+          "Local export and feedback tooling delivered for review",
           "P01",
-          "Proposed karakana/tools/engineering_artifacts.py; tests/test_engineering_artifacts_workbooks.py; chosen optional dependency group in pyproject.toml",
+          "karakana/tools/engineering_artifacts.py; tests/test_engineering_artifacts.py; optional workbooks dependency in pyproject.toml; P02.md usage and verification",
           "Implement narrow Markdown read/validate, audience export and feedback-diff helpers. Validate source version/hash and stable IDs; flag stale/conflicting feedback; preserve annotated outputs and unsupported workbook content. Source changes require explicit review; no automatic approval import, remote actions or two-way master synchronization. Scope supported features and optional dependency.",
-          "Functional fixtures prove source/export parity, audience omissions and blocker visibility, traceability, literal text, freshness, conflicting feedback, no-overwrite and office round trips.",
+          "47 focused tests cover source/export parity, audience omissions/blockers, literal text, freshness, conflicting feedback and no-overwrite. Local CLI and LibreOffice round trip verified; Excel desktop and real project pilots pending.",
           "REQ03; REQ09; REQ10; REQ11; REQ12; REQ16; REQ17; REQ18"
         ],
         [

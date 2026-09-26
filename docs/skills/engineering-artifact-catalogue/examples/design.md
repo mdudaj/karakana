@@ -1,7 +1,7 @@
 ---
 contract_version: "0.1"
 namespace: "example"
-document_id: "DOC-003"
+document_id: "ADR-001"
 document_type: "adr"
 content_version: "0.1"
 status: "draft"

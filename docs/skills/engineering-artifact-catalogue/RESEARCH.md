@@ -18,8 +18,8 @@ For reuse, start with the [generic Markdown template](TEMPLATE.md) and its
 accompanying [blank Excel template](engineering-artifacts-template.xlsx).
 They contain generic artifact fields, empty data rows and audience guidance,
 with no project names or project-specific features. Populate only instantiated
-copies. This is a draft template asset, not an installed skill or implemented
-audience export workflow.
+copies. This is a generic template asset; catalogue skills are not yet installed.
+[P02](P02.md) supplies the separately invoked local audience export workflow.
 
 P01 is now delivered locally for review: the
 [content/source and export contract](../../engineering-artifacts.md),
@@ -30,7 +30,12 @@ P01 is now delivered locally for review: the
 Template version 0.2 adds stable source anchors, per-artifact source authority/hash,
 a persisted legacy-string binding table and a multiple-file source manifest.
 The user accepted the generic Markdown/Excel template direction; detailed adapter
-choices are documented for review, not fabricated as accepted or implemented.
+choices were subsequently authorized for P02 implementation.
+
+P02 is delivered locally: Markdown validation, read-only native adapters, binding
+proposals, five audience export profiles and three-way feedback reports. Its
+[usage and verification record](P02.md) separates local test evidence from
+independent review, project pilots and integration.
 
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
@@ -53,7 +58,7 @@ and revision; review proposed changes into Markdown, then generate a new export.
 Workbook feedback cannot automatically update source content or approvals.
 The [renderer](render_workbook.py) reads `PLAN.md` directly and can derive both
 outputs. It reproduces this complete research-review pack; audience projection
-for future engineering artifacts is proposed work, not implemented here.
+for instantiated engineering artifacts is implemented by the separate P02 tool.
 It refuses to overwrite files.
 
 ## Research method and limitations
@@ -281,7 +286,8 @@ Relevant blockers, limitations, uncertainty and trace IDs survive every applicab
 projection. Each workbook declares omitted detail and links the full baseline.
 An audience summary must not turn a forecast into a commitment or hide a release
 blocker. The current research workbook is the complete research-review profile;
-it demonstrates the proposal, not five implemented project export workflows.
+it demonstrates the proposal. P02 separately implements five generic local
+profiles; real project pilots remain pending.
 
 Markdown is the canonical documentation source. Workbook review collects proposed
 feedback against a specific source version. Archive it, report changed IDs and
@@ -403,9 +409,9 @@ SHA-256, research-review audience and UTC generation time. This is provenance
 for the detailed export, not proof of freshness or approval; compare the hash
 with the current source before relying on the workbook.
 
-Remaining work: review the delivered P01 contracts, then implement reusable
-export/feedback tooling and focused skills. Recommended next task: **P02**,
-following the P01 mapping, fixtures and verification instructions. Native source
+Remaining work: focused catalogue skills, discovery, project pilots and reviewed
+integration. Recommended next task: **P03**, following P01/P02 contracts, native
+source mapping, tool usage, fixtures and verification instructions. Native source
 IDs remain unchanged; exporting must not regenerate engine stories/issues or
 rewrite source/approval state. Reuse the inspected evidence and research only
 unresolved implementation/application compatibility questions.

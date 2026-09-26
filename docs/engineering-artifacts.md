@@ -1,8 +1,10 @@
 # Engineering artifact content and sharing contract
 
-Version: 0.1. Status: P01 implementation contract for review.
-This defines generic content and compatibility rules; it does not install skills,
-implement an exporter or change an existing approval process.
+Version: 0.1. Status: P02 local implementation delivered for review.
+This defines generic content and compatibility rules. The opt-in local
+[tool and usage guide](skills/engineering-artifact-catalogue/P02.md) implements
+validation, source adapters, audience exports and feedback reports. Catalogue
+skills and integration remain future slices; existing approval rules apply.
 Start with the [blank Markdown template](skills/engineering-artifact-catalogue/TEMPLATE.md)
 and [Excel companion](skills/engineering-artifact-catalogue/engineering-artifacts-template.xlsx).
 
@@ -262,12 +264,12 @@ They are illustrations, separate from blank assets; they name no real project or
 domain feature and do not assert actual user approvals/test passes/releases.
 
 [P01](skills/engineering-artifact-catalogue/P01.md) records exact inspected engine
-fields and implementation instructions. P02 must verify persisted native and
-string IDs, duplicate/reordered/edited string reconciliation, generator conflicts,
-strict legacy load/save compatibility, missing namespaces, manifest hashes for
-all sources, audience blocker retention/omissions, three-way feedback, stale
-baselines, literal text and no-overwrite. These are specified future behaviors;
-the package's template renderer does not implement them.
+fields and implementation instructions. [P02](skills/engineering-artifact-catalogue/P02.md)
+records the opt-in tool, usage, persisted native/string IDs, binding reconciliation,
+missing namespace/hash checks, audience blocker retention/omissions, three-way
+feedback, literal text and immutable outputs. Existing store compatibility is
+covered by the repository suite; export does not invoke engine generators.
+The package's template renderer remains a separate blank/research-pack helper.
 
 Contract changes need versioned documentation, updated neutral templates/examples,
 compatibility review and appropriate tests/evals when executable behavior changes.
