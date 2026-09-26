@@ -14,6 +14,13 @@ operational changes are part of this slice.
 
 ## Deliverables and reading order
 
+For reuse, start with the [generic Markdown template](TEMPLATE.md) and its
+accompanying [blank Excel template](engineering-artifacts-template.xlsx).
+They contain generic artifact fields, empty data rows and audience guidance,
+with no project names or project-specific features. Populate only instantiated
+copies. This is a draft template asset, not an installed skill or implemented
+audience export workflow.
+
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
 decisions and implementation records, including the audience profiles.
@@ -24,6 +31,9 @@ is a derived view for the research-review audience: 15 sheets, 226 record rows,
 evidence entries. Start with `02 Findings`,
 `05 Skill Plan`, `09 Delivery Plan` and `10 Decisions`. Review fields are marked
 with both text labels and yellow fill; no decision is pre-populated as approved.
+This research workbook is evidence and planning, **not the reusable template**.
+Its project names and repository paths identify inspected research sources;
+those names and features are excluded from the separate generic assets.
 
 The [JSON snapshot](research-and-update-plan.json) is a generated rendering
 intermediate, carrying the same detailed records and the source hash. Edit
@@ -233,6 +243,10 @@ status, review evidence and version history. Existing structured requirement
 records, machine schemas and source diagrams retain authority for their explicitly
 identified content; Markdown links those sources rather than duplicating editable
 machine definitions. Define that mapping and identity ownership during P01.
+Global skills and template assets must contain generic conventions, not a
+particular project's name, capabilities or release scope. Keep upstream evidence
+in research records and project data in instantiated artifacts; do not distribute
+an upstream project's populated workbook as the global template.
 
 Excel profiles contain only applicable tables. Every export identifies project,
 artifact/export identity, audience/profile version, generation date, source
@@ -363,6 +377,14 @@ To reproduce into a new file using the repository environment with openpyxl:
 .venv/bin/python docs/skills/engineering-artifact-catalogue/render_workbook.py \
   --output /tmp/engineering-artifact-research-review.xlsx \
   --snapshot-output /tmp/engineering-artifact-research-review.json
+```
+
+To reproduce the separate generic blank template:
+
+```bash
+.venv/bin/python docs/skills/engineering-artifact-catalogue/render_workbook.py \
+  --source docs/skills/engineering-artifact-catalogue/TEMPLATE.md \
+  --output /tmp/engineering-artifacts-template.xlsx
 ```
 
 The JSON metadata and workbook document properties record the `PLAN.md` source

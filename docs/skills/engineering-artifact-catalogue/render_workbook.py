@@ -1,4 +1,4 @@
-"""Render this research package's canonical PLAN.md to a new Excel review file.
+"""Render the canonical Markdown plan or blank template to a new Excel file.
 
 This is a documentation helper, not the proposed engineering-workbook tool.
 Requires openpyxl in the selected Python environment. Existing files are never
@@ -36,22 +36,29 @@ def load_plan(source: Path) -> dict:
     """Read only the documented table convention used by this research package."""
     raw = source.read_bytes()
     content = raw.decode("utf-8")
-    def metadata(label: str) -> str:
+    def metadata(label: str, default: str | None = None) -> str:
         match = re.search(rf"^{re.escape(label)}: (.+)$", content, re.MULTILINE)
         if match is None:
+            if default is not None:
+                return default
             raise ValueError(f"Missing {label} in {source}")
         return match.group(1)
 
+    is_template = metadata("Kind", "research") == "template"
     data = {
         "package_version": metadata("Package version"),
         "status": metadata("Status"),
-        "research_date": metadata("Research date"),
         "export_audience": metadata("Export audience"),
         "source_path": source.name,
         "source_sha256": hashlib.sha256(raw).hexdigest(),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "sheets": [],
     }
+    if is_template:
+        data["kind"] = "template"
+        data["template_date"] = metadata("Template date")
+    else:
+        data["research_date"] = metadata("Research date")
     for section in re.split(r"^## ", content, flags=re.MULTILINE)[1:]:
         lines = section.splitlines()
         name = lines[0]
@@ -82,11 +89,14 @@ def render(source: Path, output: Path, snapshot_output: Path | None = None) -> N
                 f"Refusing to overwrite {target}. Preserve feedback and use a new filename."
             )
     data = load_plan(source)
+    is_template = data.get("kind") == "template"
     workbook = Workbook()
     workbook.remove(workbook.active)
-    workbook.properties.title = "Engineering artifact catalogue: research and update plan"
-    workbook.properties.subject = "Draft proposal; no catalogue implementation or approval implied"
-    workbook.properties.creator = "Karakana documentation research"
+    workbook.properties.title = ("Generic engineering artifact template" if is_template
+                                 else "Engineering artifact catalogue: research and update plan")
+    workbook.properties.subject = ("Blank reusable template; author artifacts in Markdown" if is_template
+                                   else "Draft proposal; no catalogue implementation or approval implied")
+    workbook.properties.creator = "Engineering documentation" if is_template else "Karakana documentation research"
     workbook.properties.identifier = "sha256:" + data["source_sha256"]
     workbook.properties.keywords = "Derived audience view: " + data["export_audience"]
     workbook.properties.description = (
@@ -101,7 +111,7 @@ def render(source: Path, output: Path, snapshot_output: Path | None = None) -> N
             raise ValueError(f"Row length mismatch in {spec['name']}")
         sheet = workbook.create_sheet(spec["name"])
         sheet["A1"] = spec["name"]
-        sheet["A1"].font = Font(name="Arial", bold=True, size=15, color="16324F")
+        sheet["A1"].font = Font(name="Arial", bold=True, size=12 if is_template else 15, color="16324F")
         sheet["A1"].alignment = Alignment(vertical="center", wrap_text=True)
         sheet["B1"] = data["status"]
         sheet["B1"].font = Font(name="Arial", italic=True, color="495766", size=11)
@@ -149,7 +159,8 @@ def render(source: Path, output: Path, snapshot_output: Path | None = None) -> N
                     line_count = max(line_count, lines)
             sheet.row_dimensions[row_number].height = min(390, max(32, line_count * 15 + 9))
         final_row = 4 + len(spec["rows"])
-        table = Table(displayName=f"EngineeringResearch{number:02d}",
+        table_prefix = "EngineeringTemplate" if is_template else "EngineeringResearch"
+        table = Table(displayName=f"{table_prefix}{number:02d}",
                       ref=f"A4:{get_column_letter(len(headers))}{final_row}")
         table.tableStyleInfo = TableStyleInfo(name="TableStyleMedium2", showRowStripes=True)
         sheet.add_table(table)
@@ -177,7 +188,8 @@ def render(source: Path, output: Path, snapshot_output: Path | None = None) -> N
         sheet.sheet_properties.pageSetUpPr.fitToPage = True
         sheet.page_setup.fitToWidth = 2 if len(headers) > 5 else 1
         sheet.page_setup.fitToHeight = 0
-        sheet.oddFooter.center.text = "Draft research and proposed update | Page &P of &N"
+        sheet.oddFooter.center.text = ("Generic blank template | Page &P of &N" if is_template
+                                       else "Draft research and proposed update | Page &P of &N")
         sheet.oddFooter.center.size = 9
     workbook.save(output)
     if snapshot_output is not None:
