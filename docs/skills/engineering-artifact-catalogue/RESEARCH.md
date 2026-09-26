@@ -21,6 +21,17 @@ with no project names or project-specific features. Populate only instantiated
 copies. This is a draft template asset, not an installed skill or implemented
 audience export workflow.
 
+P01 is now delivered locally for review: the
+[content/source and export contract](../../engineering-artifacts.md),
+[ADR](../../adr/0005-markdown-engineering-artifact-contract.md),
+[native-engine mapping and delivery record](P01.md), and complete synthetic
+[tiny](examples/tiny.md), [feature](examples/feature.md),
+[ADR/design](examples/design.md) and [roadmap/release](examples/release.md) examples.
+Template version 0.2 adds stable source anchors, per-artifact source authority/hash,
+a persisted legacy-string binding table and a multiple-file source manifest.
+The user accepted the generic Markdown/Excel template direction; detailed adapter
+choices are documented for review, not fabricated as accepted or implemented.
+
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
 decisions and implementation records, including the audience profiles.
@@ -392,7 +403,9 @@ SHA-256, research-review audience and UTC generation time. This is provenance
 for the detailed export, not proof of freshness or approval; compare the hash
 with the current source before relying on the workbook.
 
-Remaining work: review this proposal, then implement the accepted Markdown
-content/source/export contract before reusable export tooling and skill authoring. Recommended next
-task: **P01**, using the source register and inspected revisions as reusable
-research; investigate only unresolved compatibility and status decisions.
+Remaining work: review the delivered P01 contracts, then implement reusable
+export/feedback tooling and focused skills. Recommended next task: **P02**,
+following the P01 mapping, fixtures and verification instructions. Native source
+IDs remain unchanged; exporting must not regenerate engine stories/issues or
+rewrite source/approval state. Reuse the inspected evidence and research only
+unresolved implementation/application compatibility questions.

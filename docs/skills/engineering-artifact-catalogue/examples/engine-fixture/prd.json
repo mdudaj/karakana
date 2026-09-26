@@ -1,0 +1,56 @@
+{
+  "context": "Synthetic example only; no project or product capability is represented.",
+  "functional_requirements": [
+    "The shared view includes the source record ID and full-source link."
+  ],
+  "goal": "Keep one shared record traceable to its full source.",
+  "harness_impact": {
+    "environment": [],
+    "feedback": [],
+    "instructions": [],
+    "state": [],
+    "tools": []
+  },
+  "metadata": {},
+  "model_route": {},
+  "non_functional_requirements": [],
+  "non_goals": [
+    "No publishing, deployment or automatic source mutation."
+  ],
+  "problem": "A shared summary can lose its source identity.",
+  "project": null,
+  "req_id": "req-example",
+  "risks": [
+    "Source baseline could change after sharing."
+  ],
+  "rollout_or_review_plan": [],
+  "safety_constraints": [
+    "Synthetic secret-free fixture."
+  ],
+  "skillpack": null,
+  "source": {
+    "metadata": {},
+    "path": null,
+    "project": null,
+    "skillpack": null,
+    "source_id": "SRC-001",
+    "source_type": "note",
+    "title": "Synthetic documentation scenario"
+  },
+  "standards_spec": {
+    "acceptance_criteria": [
+      "Given an identified source record, when a view is shared, then its ID and full-source link are present."
+    ],
+    "non_goals": [],
+    "spec": [],
+    "standards": []
+  },
+  "status": "draft",
+  "suggested_skillpack": null,
+  "suggested_skills": [],
+  "test_and_eval_plan": [],
+  "title": "Generic source sharing fixture",
+  "users_or_actors": [
+    "reviewer"
+  ]
+}

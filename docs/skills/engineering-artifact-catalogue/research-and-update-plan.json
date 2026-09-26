@@ -1,11 +1,10 @@
 {
   "package_version": "0.2",
   "status": "Draft for review",
-  "research_date": "2026-09-26",
   "export_audience": "research-review",
   "source_path": "PLAN.md",
-  "source_sha256": "f00f5f38d33168f1cb0874dde1b79eefa64a05555aa8b9fdf32f0b853dd3a839",
-  "generated_at_utc": "2026-09-26T12:49:18.254399+00:00",
+  "source_sha256": "6a761914088dc37ebec52bb1202611d4c1ed88fa47ddbad56ecb4caa5f715662",
+  "generated_at_utc": "2026-09-26T13:17:39.052094+00:00",
   "sheets": [
     {
       "name": "00 Read Me",
@@ -88,8 +87,8 @@
         ],
         [
           "Next action",
-          "Review proposed schema, skill split and ordered slices",
-          "Then implement the accepted first slice using skill-update protocol."
+          "Review delivered P01 content/source and audience export contracts",
+          "Then implement P02 bounded exporter/feedback tooling; later focused skills remain outstanding."
         ],
         [
           "Known limitations",
@@ -1693,11 +1692,11 @@
       "rows": [
         [
           "P01",
-          "Agree Markdown content contract, source authority and export adapter",
+          "P01 contract/examples delivered locally for review; implementation deferred",
           "Research/plan review",
-          "karakana/requirements/schemas.py; store.py; readiness.py; protocols/checks.py; docs/engineering-process.md; proposed docs/engineering-artifacts.md",
+          "Delivered docs/engineering-artifacts.md; docs/adr/0005-markdown-engineering-artifact-contract.md; P01.md; examples/; generic TEMPLATE.md and companion XLSX. Inspect engine schemas/store/readiness before P02.",
           "Map existing PRD/story identities and machine-field authority to canonical Markdown records; define stable criterion IDs, source sections, typed relations and review history. Specify audience selection, export manifest/freshness and feedback reconciliation. Keep machine schemas/diagrams authoritative for their own content. Record consequential adapter decisions before code.",
-          "Reviewed Markdown contract and complete tiny/feature/design/release examples; five audience mappings, source-to-field mapping and conflict/freshness rules.",
+          "Delivered explicit source/identity/content/audience/freshness/feedback contracts, native-engine mapping and tiny/feature/ADR/release examples; detailed design pending review. P02 functional behaviors remain unimplemented.",
           "REQ02; REQ03; REQ04; REQ09; REQ10; REQ13; REQ14; REQ20"
         ],
         [
@@ -2132,5 +2131,6 @@
         65
       ]
     }
-  ]
+  ],
+  "research_date": "2026-09-26"
 }

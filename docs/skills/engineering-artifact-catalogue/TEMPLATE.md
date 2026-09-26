@@ -2,7 +2,7 @@
 
 Kind: template
 Status: Blank template
-Package version: 0.1
+Package version: 0.2
 Template date: 2026-09-26
 Export audience: template-library
 
@@ -15,8 +15,13 @@ source-section tables for sharing. Empty rows are starter rows, not real records
 No project names, features, release scope, ownership or delivery dates are prefilled.
 Project-specific data belongs only in instantiated copies, never in this global asset.
 
+Content contract: [engineering-artifacts.md](../../engineering-artifacts.md), version 0.1.
+This is a blank library. Instantiated documents use the contract scalar frontmatter
+and explicit namespace/authority; library metadata above does not establish a project baseline.
+
 The width comments below guide Excel presentation; they do not define artifact meaning.
 
+<a id="read-me"></a>
 ## 00 Read Me
 
 Purpose: Reusable blank library. Select relevant sections for the task and audience; all delivery data is empty.
@@ -42,6 +47,7 @@ Purpose: Reusable blank library. Select relevant sections for the task and audie
 | Accessibility | Use text statuses as well as styling; check wrapping, links and assistive accessibility in the supported application before sharing. |
 | Scope | This asset is a template library. It does not implement automatic audience exports, source validation, feedback reconciliation or a new approval workflow. |
 
+<a id="control"></a>
 ## 01 Control
 
 Purpose: Fill only from the source baseline and actual export/review context.
@@ -51,9 +57,13 @@ Purpose: Fill only from the source baseline and actual export/review context.
 | Field | Value | Guidance |
 | --- | --- | --- |
 | Project identity |  | Enter the identity only in a project-specific copy. |
+| Namespace |  | Explicitly confirm identity scope; never infer from a repository name. |
+| Contract version | 0.1 | Content and export contract used by this generic library. |
+| Profile version |  | Version of the selected audience projection. |
+| Source manifest |  | List every source file, authority, revision and exact hash in Source Manifest. |
 | Artifact baseline |  | Reference the reviewed Markdown baseline. |
 | Document version |  | Keep template, document and product versions distinct. |
-| Template version | 0.1 | Version of this generic template asset. |
+| Template version | 0.2 | Version of this generic template asset. |
 | Source Markdown paths |  | Full artifact paths; source sections listed in Artifact Register. |
 | Source revision |  | Actual source revision used to export. |
 | Source SHA-256 |  | Hash actual source content, not this template. |
@@ -62,22 +72,24 @@ Purpose: Fill only from the source baseline and actual export/review context.
 | Export ID |  | Assign when producing a derived view. |
 | Audience / profile |  | Select relevant views; record profile/version. |
 | Generated UTC |  | Actual generation timestamp. |
-| Omitted content |  | Declare omitted detail and why. |
+| Omitted content |  | Declare omitted views/fields and why; preserve relevant blockers. |
 | Full-source links |  | Provide links to complete canonical artifacts. |
 | Relevant blockers / limits |  | Retain material blockers even in brief summaries. |
 | Feedback source export |  | Identify the baseline/export reviewed. |
 | Feedback reconciliation status |  | Proposed, reviewed or reconciled, with evidence. |
 
+<a id="artifact-register"></a>
 ## 02 Artifact Register
 
 Purpose: Identify complete Markdown records and explicitly linked authoritative machine sources.
 
-<!-- workbook-widths: [16, 28, 42, 28, 42, 42, 42, 42, 16, 42] -->
+<!-- workbook-widths: [16, 28, 42, 28, 42, 42, 42, 28, 65, 28, 16, 42] -->
 
-| Artifact ID | Type | Title | Status | Owner | Markdown Path | Source Section | Source Revision | Supersedes ID | Machine Source Link |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |  |  |  |  |
+| Artifact ID | Type | Title | Status | Owner | Markdown Path | Source Section | Source Revision | Source SHA-256 | Source Authority | Supersedes ID | Machine Source Link |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |  |  |  |  |
 
+<a id="sources"></a>
 ## 03 Sources
 
 Purpose: Record inspected sources and their actual authority, revision and limits.
@@ -88,6 +100,7 @@ Purpose: Record inspected sources and their actual authority, revision and limit
 | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |
 
+<a id="requirements"></a>
 ## 04 Requirements
 
 Purpose: One observable need or constraint per source record; retain unconfirmed priorities.
@@ -98,6 +111,7 @@ Purpose: One observable need or constraint per source record; retain unconfirmed
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="stories"></a>
 ## 05 Stories
 
 Purpose: Use actor, goal, benefit and conversation; link relevant needs through Links.
@@ -108,6 +122,7 @@ Purpose: Use actor, goal, benefit and conversation; link relevant needs through 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="acceptance"></a>
 ## 06 Acceptance
 
 Purpose: Define stable measurable criteria separately from actual test runs.
@@ -118,6 +133,7 @@ Purpose: Define stable measurable criteria separately from actual test runs.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |
 
+<a id="adrs"></a>
 ## 07 ADRs
 
 Purpose: Summarize decisions; full context, alternatives, rationale, consequences and history stay in Markdown.
@@ -128,6 +144,7 @@ Purpose: Summarize decisions; full context, alternatives, rationale, consequence
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="adr-source-sections"></a>
 ## 08 ADR Source Sections
 
 Purpose: Optional section locators or excerpts for complete Markdown ADR reasoning.
@@ -138,6 +155,7 @@ Purpose: Optional section locators or excerpts for complete Markdown ADR reasoni
 | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |
 
+<a id="design-views"></a>
 ## 09 Design Views
 
 Purpose: Select views for real stakeholder concerns; link complete narrative and source diagrams.
@@ -148,6 +166,7 @@ Purpose: Select views for real stakeholder concerns; link complete narrative and
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="ux-and-contracts"></a>
 ## 10 UX and Contracts
 
 Purpose: Describe intended behavior and look/feel; link actual versioned machine contracts.
@@ -158,6 +177,7 @@ Purpose: Describe intended behavior and look/feel; link actual versioned machine
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |
 
+<a id="roadmap"></a>
 ## 11 Roadmap
 
 Purpose: Describe outcomes and success measures; distinguish horizon/confidence from commitments.
@@ -168,6 +188,7 @@ Purpose: Describe outcomes and success measures; distinguish horizon/confidence 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="milestones"></a>
 ## 12 Milestones
 
 Purpose: Record goals, evidence of acceptance and explicit forecast/agreement basis.
@@ -178,6 +199,7 @@ Purpose: Record goals, evidence of acceptance and explicit forecast/agreement ba
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="implementation-tasks"></a>
 ## 13 Implementation Tasks
 
 Purpose: Name inspected references, files, interfaces, steps and observable checks before execution.
@@ -188,6 +210,7 @@ Purpose: Name inspected references, files, interfaces, steps and observable chec
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="release-plan"></a>
 ## 14 Release Plan
 
 Purpose: Record candidate scope, target, readiness, rollout and recovery without implying execution.
@@ -198,6 +221,7 @@ Purpose: Record candidate scope, target, readiness, rollout and recovery without
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="release-notes"></a>
 ## 15 Release Notes
 
 Purpose: Share delivered changes with the intended audience; link evidence and compatibility limits.
@@ -208,6 +232,7 @@ Purpose: Share delivered changes with the intended audience; link evidence and c
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="test-cases"></a>
 ## 16 Test Cases
 
 Purpose: Case definitions are not execution results.
@@ -218,6 +243,7 @@ Purpose: Case definitions are not execution results.
 | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |
 
+<a id="test-runs"></a>
 ## 17 Test Runs
 
 Purpose: Record actual observations, revision, environment, time and evidence; leave unperformed runs empty.
@@ -228,6 +254,7 @@ Purpose: Record actual observations, revision, environment, time and evidence; l
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="risks-and-decisions"></a>
 ## 18 Risks and Decisions
 
 Purpose: Record actual uncertainty and decisions needed; leave unconfirmed owners/dates unconfirmed.
@@ -238,6 +265,7 @@ Purpose: Record actual uncertainty and decisions needed; leave unconfirmed owner
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="links"></a>
 ## 19 Links
 
 Purpose: Use stable qualified IDs and typed relationships rather than physical row numbers.
@@ -248,6 +276,7 @@ Purpose: Use stable qualified IDs and typed relationships rather than physical r
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="evidence"></a>
 ## 20 Evidence
 
 Purpose: Evidence must identify a scoped observation; a file path alone is insufficient.
@@ -258,6 +287,7 @@ Purpose: Evidence must identify a scoped observation; a file path alone is insuf
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="reviews-and-approvals"></a>
 ## 21 Reviews and Approvals
 
 Purpose: Capture proposed feedback and link real review evidence; no automatic import of agreement or approvals.
@@ -268,6 +298,7 @@ Purpose: Capture proposed feedback and link real review evidence; no automatic i
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |  |
 
+<a id="change-history"></a>
 ## 22 Change History
 
 Purpose: Derive history from reviewed source changes; changed content requires reconsideration of earlier approvals.
@@ -278,6 +309,7 @@ Purpose: Derive history from reviewed source changes; changed content requires r
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |  |
 
+<a id="guidance-and-handover"></a>
 ## 23 Guidance and Handover
 
 Purpose: Select task-oriented guidance for the audience and reference actual tested runbooks.
@@ -288,6 +320,7 @@ Purpose: Select task-oriented guidance for the audience and reference actual tes
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  |  |  |  |  |  |
 
+<a id="vocabulary"></a>
 ## 24 Vocabulary
 
 Purpose: Suggested meanings, not mandatory project policies. Agree vocabularies in a project-specific copy.
@@ -317,7 +350,14 @@ Purpose: Suggested meanings, not mandatory project policies. Agree vocabularies 
 | Relation | verifies | Case or evidence checks an expected condition. |
 | Relation | included_in | Record belongs to a scoped milestone or release. |
 | Relation | supersedes | Record replaces another while preserving history. |
+| Relation | depends_on | Record needs another record or outcome. |
+| Relation | refers_to | Record links contextual source content. |
+| Binding Status | proposed | Mapping proposed for review; not export-ready. |
+| Binding Status | resolved | Reviewed association at the declared source hashes. |
+| Binding Status | unresolved | Ambiguous or stale source association; export blocker. |
+| Binding Status | retired | Removed/replaced association retained in history. |
 
+<a id="audience-profiles"></a>
 ## 25 Audience Profiles
 
 Purpose: Choose relevant sections; always retain applicable blockers, limits and source traceability.
@@ -331,3 +371,25 @@ Purpose: Choose relevant sections; always retain applicable blockers, limits and
 | QA / UAT | Criteria, cases, actual runs, candidate/environment, evidence and defects | Not run/blocked/skipped/fail; unresolved criteria; evidence limits | Case definition and result remain separate; feedback is not imported sign-off. |
 | Operations / release | Readiness, rollout/recovery, migration, monitoring, support and runbook links | Release blockers; restore gaps; known limits; authorization/environment status | Generating or sharing a view does not execute deployment or grant operational approval. |
 | Executive / sponsor | Outcomes, milestones, confidence, material risks and decisions needed | Material blockers; forecasts versus commitments; deployed/accepted distinctions | Declare omitted details and link the complete source baseline. |
+
+<a id="source-bindings"></a>
+## 26 Source Bindings
+
+Purpose: Persist reviewed individual requirement/criterion associations without changing legacy schemas. Indices and hashes locate entries; they are not identities. Source drift needs reconciliation.
+
+<!-- workbook-widths: [16, 38, 16, 16, 38, 38, 38, 38, 65, 65, 38] -->
+
+| Binding ID | Record Type | Record ID | Native Owner ID | Source Path | Source Kind | Source Field | Source Locator | Source Text SHA-256 | Source File SHA-256 | Binding Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |  |  |  |
+
+<a id="source-manifest"></a>
+## 27 Source Manifest
+
+Purpose: Identify every source used by a real export, including the binding registry. Exact byte hashes detect changed working-tree content; unavailable freshness remains explicit.
+
+<!-- workbook-widths: [16, 38, 38, 38, 38, 65, 38, 38] -->
+
+| Source ID | Source Kind | Path | Selector | Revision | SHA-256 | Authority | Full-Source Link |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  |  |  |  |  |
