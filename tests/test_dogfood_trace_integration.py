@@ -6,7 +6,7 @@ from karakana.cli import app
 from karakana.traces.store import TraceStore
 
 
-def test_dogfood_run_creates_trace():
+def test_dogfood_run_creates_trace(isolated_repo):
     result = CliRunner().invoke(app, ["dogfood", "run", "--project", "karakana", "--skillpack", "karakana"])
 
     assert result.exit_code == 0

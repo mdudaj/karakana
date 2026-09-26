@@ -70,6 +70,7 @@ of passing tests. Preserve request type, scope and external-action permissions.
 - Repeated failures or learned constraints must be encoded into durable memory, skills, docs, validators, or evals so later agents inherit the rule instead of relying on chat history.
 - Load the latest matching project handoff at session and task entry before planning or editing.
 - Refresh the project handoff at the end of every bounded task so the next session has current continuation context.
+- Preserve project/status boundaries during concept traversal. Bind completion to the exact task trace when available; classification-only traces are not task evidence. Verified explicit state can omit artifact recovery without deleting history. See `docs/handoff-provenance.md`.
 - After each completed slice, the task completion summary must list remaining
   tasks or known follow-ups and state the recommended next task.
 - All authentication and permission changes require human approval.

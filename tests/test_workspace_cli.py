@@ -3,7 +3,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_workspace_cli_commands():
+def test_workspace_cli_commands(isolated_repo):
     runner = CliRunner()
 
     assert runner.invoke(app, ["workspace", "list"]).exit_code == 0
@@ -15,7 +15,7 @@ def test_workspace_cli_commands():
     assert runner.invoke(app, ["workspace", "summary", "default"]).exit_code == 0
 
 
-def test_workspace_plan_and_handoff_cli():
+def test_workspace_plan_and_handoff_cli(isolated_repo):
     runner = CliRunner()
 
     plan = runner.invoke(app, ["workspace", "plan", "--workspace", "default", "--project", "karakana", "--task", "Review workspace"])

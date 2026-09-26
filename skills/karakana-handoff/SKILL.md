@@ -1,7 +1,7 @@
 ---
 name: karakana-handoff
 description: Create, load, recover, or refresh compact project-aware continuation artifacts for task endings, new sessions, agent switches, context-window failures, and milestone transitions.
-version: 0.3.0
+version: 0.4.0
 risk_level: low
 category: productivity
 scope: bundled
@@ -97,6 +97,14 @@ Do not use a handoff to replace current code inspection, tests, review, release 
 Load or recover at session and task entry, verify references, perform the bounded task, refresh before exit, and run doctor when validity is uncertain.
 
 ## Quick Reference
+
+Bind completion to `--protocol-trace <task-run-id>` when the task has a protocol
+trace, particularly with concurrent tasks. Classification-only records are not
+task evidence. `--require-protocol-pass` fails when no eligible trace exists.
+If automatic recovery contains stale/test artifacts, verify current state and
+use `--no-recover-artifacts` with explicit milestone, next task and notes. This
+does not bypass protocol checks or delete history. See
+`docs/handoff-provenance.md` for the boundary and regression tests.
 
 Record `--next-task` explicitly so recovered milestones cannot replace the current
 decision. Use `--slice-complete` to recommend a fresh conversation at a boundary;

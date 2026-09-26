@@ -3,7 +3,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_dogfood_cli_lifecycle():
+def test_dogfood_cli_lifecycle(isolated_repo):
     runner = CliRunner()
 
     run = runner.invoke(app, ["dogfood", "run", "--project", "karakana", "--skillpack", "karakana"])
@@ -30,7 +30,7 @@ def test_dogfood_cli_lifecycle():
     assert "# Karakana Dogfood Report" in latest.output
 
 
-def test_dogfood_checklist_cli():
+def test_dogfood_checklist_cli(isolated_repo):
     result = CliRunner().invoke(app, ["dogfood", "checklist", "--project", "karakana", "--skillpack", "karakana"])
 
     assert result.exit_code == 0

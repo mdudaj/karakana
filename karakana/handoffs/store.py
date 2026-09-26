@@ -30,7 +30,7 @@ class HandoffStore:
             raise FileNotFoundError(f"Handoff not found: {handoff_id}")
         return HandoffArtifact.from_dict(json.loads(path.read_text(encoding="utf-8")))
 
-    def list(self, project: str | None = None, limit: int = 20) -> list[HandoffArtifact]:
+    def list(self, project: str | None = None, limit: int = 20, *, skillpack: str | None = None) -> list[HandoffArtifact]:
         if not self.root.exists():
             return []
         handoffs: list[HandoffArtifact] = []
@@ -39,7 +39,7 @@ class HandoffStore:
                 handoff = HandoffArtifact.from_dict(json.loads(path.read_text(encoding="utf-8")))
             except (OSError, json.JSONDecodeError, TypeError):
                 continue
-            if project is None or handoff.project == project:
+            if (project is None or handoff.project == project) and (skillpack is None or handoff.skillpack == skillpack):
                 handoffs.append(handoff)
         handoffs.sort(key=_handoff_sort_key, reverse=True)
         return handoffs[:limit]
@@ -47,7 +47,7 @@ class HandoffStore:
     def latest(self, project: str, skillpack: str | None = None) -> HandoffArtifact | None:
         return next(
             (
-                item for item in self.list(project=project)
+                item for item in self.list(project=project, skillpack=skillpack, limit=1)
                 if skillpack is None or item.skillpack == skillpack
             ),
             None,

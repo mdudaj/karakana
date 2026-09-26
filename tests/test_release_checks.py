@@ -6,7 +6,7 @@ from karakana.cli import app
 from karakana.release.checks import run_release_check
 
 
-def test_release_check_basic_mode():
+def test_release_check_basic_mode(isolated_repo):
     report, path = run_release_check(Path.cwd(), full=False)
 
     assert report.status in {"pass", "warning"}
@@ -14,9 +14,8 @@ def test_release_check_basic_mode():
     assert any(check.name == "karakana-gitignored" for check in report.checks)
 
 
-def test_release_check_cli():
+def test_release_check_cli(isolated_repo):
     result = CliRunner().invoke(app, ["release", "check"])
 
     assert result.exit_code == 0
     assert "Release check status:" in result.output
-

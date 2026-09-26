@@ -6,7 +6,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_doctor_cli_writes_artifacts():
+def test_doctor_cli_writes_artifacts(isolated_repo):
     result = CliRunner().invoke(app, ["doctor", "--json"])
 
     assert result.exit_code == 0
@@ -15,4 +15,3 @@ def test_doctor_cli_writes_artifacts():
     run_id = payload["run_id"]
     assert (Path.cwd() / ".karakana" / "doctor" / run_id / "doctor.json").exists()
     assert (Path.cwd() / ".karakana" / "doctor" / run_id / "doctor.md").exists()
-

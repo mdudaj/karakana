@@ -103,7 +103,7 @@ class TraceStore:
                 return trace.run_id
         return run_id
 
-    def list_runs(self, limit: int = 20) -> list[RunTrace]:
+    def list_runs(self, limit: int | None = 20, *, project: str | None = None) -> list[RunTrace]:
         if not self.runs_root.exists():
             return []
         traces: list[RunTrace] = []
@@ -113,7 +113,9 @@ class TraceStore:
             trace_path = path / "trace.json"
             if trace_path.exists():
                 try:
-                    traces.append(_load_trace_file(trace_path))
+                    trace = _load_trace_file(trace_path)
+                    if project is None or trace.project == project:
+                        traces.append(trace)
                 except (OSError, json.JSONDecodeError, TypeError, KeyError, ValueError):
                     continue
         return sorted(traces, key=lambda trace: trace.started_at, reverse=True)[:limit]

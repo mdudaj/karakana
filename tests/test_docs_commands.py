@@ -23,7 +23,7 @@ def test_docs_command_reference_dry_run_and_write(tmp_path: Path):
     assert path.exists()
 
 
-def test_docs_cli_commands():
+def test_docs_cli_commands(isolated_repo):
     runner = CliRunner()
     preview = runner.invoke(app, ["docs", "command-reference"])
     assert preview.exit_code == 0

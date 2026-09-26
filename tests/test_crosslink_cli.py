@@ -3,7 +3,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_crosslink_cli_scan_list_show_review_propose_apply():
+def test_crosslink_cli_scan_list_show_review_propose_apply(isolated_repo):
     runner = CliRunner()
 
     scan = runner.invoke(app, ["crosslink", "scan", "--workspace", "nimr", "--projects", "billing,lims"])
@@ -30,4 +30,3 @@ def test_crosslink_cli_scan_list_show_review_propose_apply():
     applied = runner.invoke(app, ["crosslink", "apply", crosslink_id])
     assert applied.exit_code == 0
     assert "Dry run" in applied.output
-

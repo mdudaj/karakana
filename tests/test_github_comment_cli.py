@@ -5,7 +5,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_issue_triage_without_post_comment(monkeypatch):
+def test_issue_triage_without_post_comment(monkeypatch, isolated_repo):
     root = Path.cwd()
     monkeypatch.setenv("GITHUB_EVENT_PATH", str(root / "tests" / "fixtures" / "github-issue-event.json"))
     result = CliRunner().invoke(app, ["github", "issue-triage", "--project", "karakana", "--skill", "karakana-self-improvement"])
@@ -15,7 +15,7 @@ def test_issue_triage_without_post_comment(monkeypatch):
     assert "Posted issue comment" not in result.output
 
 
-def test_issue_triage_with_post_comment(monkeypatch):
+def test_issue_triage_with_post_comment(monkeypatch, isolated_repo):
     root = Path.cwd()
     monkeypatch.setenv("GITHUB_EVENT_PATH", str(root / "tests" / "fixtures" / "github-issue-event.json"))
     monkeypatch.setenv("GITHUB_TOKEN", "token")
@@ -28,7 +28,7 @@ def test_issue_triage_with_post_comment(monkeypatch):
     assert "Posted issue comment: https://example/1" in result.output
 
 
-def test_pr_review_with_post_comment(monkeypatch):
+def test_pr_review_with_post_comment(monkeypatch, isolated_repo):
     root = Path.cwd()
     monkeypatch.setenv("GITHUB_EVENT_PATH", str(root / "tests" / "fixtures" / "github-pr-event.json"))
     monkeypatch.setenv("GITHUB_TOKEN", "token")

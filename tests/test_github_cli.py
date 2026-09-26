@@ -5,7 +5,7 @@ from typer.testing import CliRunner
 from karakana.cli import app
 
 
-def test_github_issue_triage_cli(monkeypatch):
+def test_github_issue_triage_cli(monkeypatch, isolated_repo):
     root = Path.cwd()
     monkeypatch.setenv("GITHUB_EVENT_PATH", str(root / "tests" / "fixtures" / "github-issue-event.json"))
 
@@ -20,7 +20,7 @@ def test_github_issue_triage_cli(monkeypatch):
     assert "Improve memory validation output" in output.read_text(encoding="utf-8")
 
 
-def test_github_pr_review_cli(monkeypatch):
+def test_github_pr_review_cli(monkeypatch, isolated_repo):
     root = Path.cwd()
     monkeypatch.setenv("GITHUB_EVENT_PATH", str(root / "tests" / "fixtures" / "github-pr-event.json"))
 
@@ -35,7 +35,7 @@ def test_github_pr_review_cli(monkeypatch):
     assert "Add skill validator tests" in output.read_text(encoding="utf-8")
 
 
-def test_github_ci_failure_cli():
+def test_github_ci_failure_cli(isolated_repo):
     root = Path.cwd()
 
     result = CliRunner().invoke(
@@ -58,7 +58,7 @@ def test_github_ci_failure_cli():
     assert "AssertionError" in output.read_text(encoding="utf-8")
 
 
-def test_github_ci_failure_requires_log_file():
+def test_github_ci_failure_requires_log_file(isolated_repo):
     result = CliRunner().invoke(
         app,
         ["github", "ci-failure", "--project", "karakana", "--skill", "ci-failure-analysis"],

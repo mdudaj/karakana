@@ -19,14 +19,14 @@ def test_skill_show_cli():
     assert "Risk level: high" in result.output
 
 
-def test_skill_validate_cli():
+def test_skill_validate_cli(isolated_repo):
     result = CliRunner().invoke(app, ["skill", "validate", "skills/invenio-framework"])
 
     assert result.exit_code == 0
     assert "OK" in result.output
 
 
-def test_skill_validate_cli_accepts_skill_name():
+def test_skill_validate_cli_accepts_skill_name(isolated_repo):
     result = CliRunner().invoke(app, ["skill", "validate", "brainstorm-verbalized-sampling"])
 
     assert result.exit_code == 0
@@ -34,7 +34,7 @@ def test_skill_validate_cli_accepts_skill_name():
     assert "OK" in result.output
 
 
-def test_skill_validate_all_cli():
+def test_skill_validate_all_cli(isolated_repo):
     result = CliRunner().invoke(app, ["skill", "validate-all"])
 
     assert result.exit_code == 0

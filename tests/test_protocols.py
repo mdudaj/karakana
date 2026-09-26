@@ -161,8 +161,7 @@ def test_protocol_artifacts_differ_by_category():
     assert "screenshot_or_render_evidence" in ux
 
 
-def test_protocol_classify_cli_records_trace_fields(tmp_path, monkeypatch):
-    monkeypatch.chdir(Path.cwd())
+def test_protocol_classify_cli_records_trace_fields(isolated_repo):
     runner = CliRunner()
 
     result = runner.invoke(

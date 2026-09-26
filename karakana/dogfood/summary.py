@@ -38,14 +38,16 @@ class DogfoodStore:
             raise FileNotFoundError(f"Dogfood run not found: {dogfood_id}")
         return DogfoodRun.from_dict(json.loads(path.read_text(encoding="utf-8")))
 
-    def list(self, limit: int = 20) -> list[DogfoodRun]:
+    def list(self, limit: int = 20, *, project: str | None = None) -> list[DogfoodRun]:
         if not self.root.exists():
             return []
         runs = []
         for path in self.root.iterdir():
             data = path / "dogfood.json"
             if data.exists():
-                runs.append(DogfoodRun.from_dict(json.loads(data.read_text(encoding="utf-8"))))
+                run = DogfoodRun.from_dict(json.loads(data.read_text(encoding="utf-8")))
+                if project is None or run.project == project:
+                    runs.append(run)
         return sorted(runs, key=lambda run: run.created_at, reverse=True)[:limit]
 
     def latest(self) -> DogfoodRun | None:

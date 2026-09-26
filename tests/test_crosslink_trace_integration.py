@@ -6,7 +6,7 @@ from karakana.cli import app
 from karakana.traces.store import TraceStore
 
 
-def test_crosslink_scan_creates_trace():
+def test_crosslink_scan_creates_trace(isolated_repo):
     runner = CliRunner()
     result = runner.invoke(app, ["crosslink", "scan", "--workspace", "default"])
 
