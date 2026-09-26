@@ -1,10 +1,10 @@
 {
-  "package_version": "0.6",
+  "package_version": "0.7",
   "status": "Draft for review",
   "export_audience": "research-review",
   "source_path": "PLAN.md",
-  "source_sha256": "5c52473d18280f2edb0c274a86e0509e5ffe6be45dcd4935f74f8e0528827242",
-  "generated_at_utc": "2026-09-26T15:07:50.922548+00:00",
+  "source_sha256": "c82e7a92ab537415d59eb53b78290dfd0b8d568a61a7b6a64dcabf0565aa6a70",
+  "generated_at_utc": "2026-09-26T15:23:30.447743+00:00",
   "sheets": [
     {
       "name": "00 Read Me",
@@ -22,8 +22,8 @@
         ],
         [
           "Version",
-          "0.6 / Local delivery for review",
-          "Research conclusions and implementation proposal; no approval implied."
+          "0.7 / Catalogue review for integration",
+          "Research, local delivery and author review; no independent approval or stable promotion implied."
         ],
         [
           "Research date",
@@ -32,8 +32,8 @@
         ],
         [
           "Authority",
-          "User authorized research, planning and subsequent P01–P05 delivery",
-          "Local tooling, experimental skills, discovery and controlled pilots implemented; personal installation, remote publishing and deployment remain separate stages."
+          "User authorized research, planning, P01–P05 delivery and P06 review/PR integration",
+          "Local delivery and author review completed; publish the reviewed task branch/PR, then verify actual CI and human-review gates. Personal installation, deployment and real release drafting remain separate."
         ],
         [
           "Format",
@@ -87,8 +87,8 @@
         ],
         [
           "Next action",
-          "P06 independent review and authorized integration",
-          "Reuse delivered P01–P05 contracts, tools, skills, discovery and pilot QA; inspect full diff, address findings and prepare concrete PR; existing remote-action authority applies."
+          "Review the concrete P06 PR and squash when its gates are satisfied",
+          "Reuse P06.md for resolved findings, exact verification and limitations. Check actual head/base, CI and human review; do not infer independent approval from continuing author review."
         ],
         [
           "Known limitations",
@@ -1737,12 +1737,12 @@
         ],
         [
           "P06",
-          "Review and integrate accepted catalogue change",
+          "Catalogue author review and PR preparation; remote gates pending",
           "P05",
-          "Final diff, generated index, test/eval/validation reports, task trace and handoff",
-          "Use skill-update protocol for metadata/guidance work and python-code-change for deterministic tools; run required suite in isolated runtime; review safety/provenance; publish PR and squash only when authorized.",
-          "No P0/P1 unresolved; CI and human review as required; state local/merged/installed separately; promotion remains evidence-based.",
-          "REQ01; REQ12; REQ19"
+          "P06.md; complete upstream diff; five regression cases; generated research pack 0.7; isolated gates; task traces and append-only handoff",
+          "Resolved sparse workbook scan and dropped blank-row comments; shared 500,000-cell import/export limit; original input bytes preserved. Five skills remain experimental/optional; blank templates remain generic. Publish reviewed task branch/PR, inspect actual CI/review and squash only with required authority.",
+          "New five regressions and all 52 focused tool tests pass. Full gate results are recorded in P06.md. No unresolved author-review P0/P1; CI, human review, real project/native Excel usability and stable promotion remain separate evidence.",
+          "REQ01; REQ10; REQ11; REQ12; REQ18; REQ19"
         ]
       ],
       "widths": [

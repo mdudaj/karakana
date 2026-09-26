@@ -487,3 +487,56 @@ def test_oversized_snapshot_is_refused_without_unusable_outputs(tmp_path, monkey
     with pytest.raises(ArtifactError, match='snapshot size'):
         export_workbook(bundle, 'engineering', tmp_path/'large.xlsx', tmp_path/'large.json', 'fixture')
     assert not (tmp_path/'large.xlsx').exists() and not (tmp_path/'large.json').exists()
+
+
+@pytest.mark.parametrize("sparse", ["row", "column", "aggregate"])
+def test_sparse_workbook_scan_budget_rejects_before_iteration(tmp_path, sparse):
+    from openpyxl import load_workbook
+    from karakana.tools.engineering_artifacts import _read_workbook
+
+    output, snapshot = exported(tmp_path)
+    workbook = load_workbook(output)
+    if sparse == "row":
+        workbook["Requirements"].cell(1_000_000, 1, "distant cell")
+    elif sparse == "column":
+        workbook["Requirements"].cell(40, 16_384, "distant cell")
+    else:
+        for sheet in workbook:
+            sheet.cell(10_000, 10, "distant cell")
+    returned = tmp_path / "sparse.xlsx"
+    workbook.save(returned)
+    immutable = {p: p.read_bytes() for p in (output, snapshot, returned)}
+    with pytest.raises(ArtifactError, match="scan cell limit"):
+        _read_workbook(tmp_path, returned)
+    assert all(p.read_bytes() == raw for p, raw in immutable.items())
+
+
+def test_export_scan_budget_refuses_pair_before_writing(tmp_path, monkeypatch):
+    from karakana.tools import engineering_artifacts as tool
+
+    source = document(tmp_path)
+    bundle = load_bundle(tmp_path, [source], "example")
+    before = source.read_bytes()
+    monkeypatch.setattr(tool, "MAX_WORKBOOK_SCAN_CELLS", 100)
+    with pytest.raises(ArtifactError, match="scan cell limit"):
+        export_workbook(bundle, "business", tmp_path / "out.xlsx", tmp_path / "out.json", "fixture")
+    assert not (tmp_path / "out.xlsx").exists() and not (tmp_path / "out.json").exists()
+    assert source.read_bytes() == before
+
+
+def test_comment_on_empty_unbound_row_is_reported_and_preserved(tmp_path):
+    from openpyxl import load_workbook
+    from openpyxl.comments import Comment
+
+    output, snapshot = exported(tmp_path)
+    workbook = load_workbook(output)
+    sheet = workbook["Requirements"]
+    sheet.cell(6, sheet.max_column).comment = Comment("Retain unbound review context", "synthetic label")
+    returned = tmp_path / "comment.xlsx"
+    workbook.save(returned)
+    immutable = {p: p.read_bytes() for p in (output, snapshot, returned, tmp_path / "source.md")}
+    report = feedback_report(tmp_path, output, snapshot, [returned])
+    comments = [c for c in report["changes"] if c["kind"] == "cell_comment"]
+    assert len(comments) == 1 and comments[0]["text"] == "Retain unbound review context"
+    assert comments[0]["identity"] == ["", "", ""]
+    assert all(p.read_bytes() == raw for p, raw in immutable.items())

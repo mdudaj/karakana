@@ -245,6 +245,13 @@ meaning. Preserve reviewer annotations; no-overwrite is the default. Define the
 supported office/library feature scope before editing existing workbooks. Entry
 dropdowns assist users but are not integrity or authorization enforcement.
 
+The opt-in tool supports 20 MB compressed/64 MB expanded XLSX, 2,000 ZIP entries
+and at most 500,000 cells across worksheet rectangular ranges (rows × columns).
+It rejects distant sparse cells before feedback iteration and refuses exports
+that exceed the same scan limit. Split or trim the review range; preserve the
+original. Comments on blank rows are reported with an empty, unbound identity.
+These bounds are a narrow transport scope, not a general untrusted-file guarantee.
+
 All untrusted strings, including leading `=`, `+`, `-` or `@`, are literal text.
 No macros or external calculation dependencies by default. If calculation is
 specifically needed, use known expected results and actual recalculation evidence;

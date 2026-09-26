@@ -1,7 +1,7 @@
 # Engineering artifact catalogue: detailed research and update plan
 
 Status: Draft for review
-Package version: 0.6
+Package version: 0.7
 Research date: 2026-09-26
 Export audience: research-review
 
@@ -12,7 +12,7 @@ input for reviewed Markdown changes; it is never another editable master.
 
 The width comments are presentation hints only. Keep stable IDs when editing records.
 Verification scenarios remain the catalogue rollout plan. P01–P05 local completion
-evidence is linked in Delivery Plan; P06 remains planned.
+evidence is linked in Delivery Plan; P06 records author review and PR preparation.
 
 ## 00 Read Me
 
@@ -23,9 +23,9 @@ Purpose: Research and update plan; P01 contracts, P02 local tooling, P03 experim
 | Item | Value | Review guidance |
 | --- | --- | --- |
 | Package | Global engineering artifact catalogue research and update plan | Start with Findings, Skill Plan and Delivery Plan. |
-| Version | 0.6 / Local delivery for review | Research conclusions and implementation proposal; no approval implied. |
+| Version | 0.7 / Catalogue review for integration | Research, local delivery and author review; no independent approval or stable promotion implied. |
 | Research date | 2026-09-26 | Recheck changing standards and upstream versions before implementation. |
-| Authority | User authorized research, planning and subsequent P01–P05 delivery | Local tooling, experimental skills, discovery and controlled pilots implemented; personal installation, remote publishing and deployment remain separate stages. |
+| Authority | User authorized research, planning, P01–P05 delivery and P06 review/PR integration | Local delivery and author review completed; publish the reviewed task branch/PR, then verify actual CI and human-review gates. Personal installation, deployment and real release drafting remain separate. |
 | Format | Markdown is the primary authoring and version-controlled format | RESEARCH.md and PLAN.md are canonical for this package. XLSX and JSON are derived sharing/rendering outputs. |
 | Scope | ADR, requirements, design, stories, roadmap, plan, releases and supporting evidence | General across Karakana projects; no LIMS release commitments are drafted here. |
 | Recommendation | Four focused authoring skills plus one Excel format skill | Reuse elicitation, milestone choice, artifact gate, requirements engine and handoffs. |
@@ -36,7 +36,7 @@ Purpose: Research and update plan; P01 contracts, P02 local tooling, P03 experim
 | Source boundary | Pinned community code reviewed as research only | No third-party skill is installed or copied into the catalogue. |
 | Preserve edits | Workbook review is proposed feedback, not another master | Archive the annotated workbook, compare by stable ID, review proposed changes into Markdown and regenerate a new export. Never silently import agreement or overwrite comments. |
 | Current formulas | None in this research workbook | It is a record pack. Future calculated models must verify recalculation and meaning. |
-| Next action | P06 independent review and authorized integration | Reuse delivered P01–P05 contracts, tools, skills, discovery and pilot QA; inspect full diff, address findings and prepare concrete PR; existing remote-action authority applies. |
+| Next action | Review the concrete P06 PR and squash when its gates are satisfied | Reuse P06.md for resolved findings, exact verification and limitations. Check actual head/base, CI and human review; do not infer independent approval from continuing author review. |
 | Known limitations | Paid normative standards not read; Excel desktop accessibility test remains pending | LibreOffice rendering and structural checks are evidence, not Excel certification. |
 | Audience | Research-review: complete evidence and proposed catalogue update | Generic profiles are implemented by the separate P02 tool; this helper renders this review package only. |
 | Canonical sources | RESEARCH.md (rationale) and PLAN.md (all detailed records) | Edit Markdown first. The renderer derives the JSON snapshot and workbook directly from PLAN.md. |
@@ -290,7 +290,7 @@ Purpose: Ordered proposal; estimates and owners remain to be assigned rather tha
 | P03 | Five experimental skills and original references delivered locally | P01; P02 | skills/engineering-requirements/; engineering-design-records/; engineering-delivery-planning/; engineering-release-documentation/; engineering-workbooks/; tests/test_engineering_documentation_skills.py; P03.md | Write valid Karakana metadata and conditional content guides for Markdown-first authoring, with optional audience workbooks; link shared contract/tool. Add original complete synthetic examples and evals for inquiry/research/plan/draft boundaries. Start experimental. | Five valid/loadable experimental skills; 14 conditional guides; four neutral examples/23 records; 19 coverage evals and 16 integration tests pass. Full suite 641 tests and 166 evals pass; original source/license register. No stable promotion or model-behavior claim. | REQ01; REQ04; REQ05; REQ06; REQ07; REQ08; REQ15 |
 | P04 | Global discovery and narrow project enablement delivered locally | P03 | skills/README.md generated index; docs/engineering-process.md pointer; ubongo/global/engineering-standards.md; skillpacks/karakana.yml; lims.yml; ent-meal.yml; tests/test_engineering_skill_discovery.py; P04.md | Regenerated index and concise applicability pointers; five optional choices in three packs. Explicit selection loads one skill body and current project memory; defaults, routing and approval rules unchanged. | 21 selection/index/isolation checks and five instruction/config evals pass; full 662 tests and 171 evals pass. Skills/packs and three project memories valid; source coverage is not agent-behavior evidence. | REQ01; REQ02; REQ13; REQ14; REQ19 |
 | P05 | Controlled authoring/export/review pilots delivered locally | P04 | pilots/ brief, four original Markdown documents, machine fixtures, retained requirement amendment, six XLSX/JSON pairs, QA.md/observations/preview; tests/test_engineering_artifact_pilots.py; P05.md | Authored complete neutral scenario from resolved seed; five profiles retain blockers/source authority. Explicit reviewed wording amendment preserves IDs/history. Six actual feedback exercises and six office roundtrips; existing profile 0.1 retained as author-assessed review baseline. Real LIMS release pack remains separate. | 14 functional checks; 676 full tests; 171 deterministic evals pass. Seven-source hash/parity and six LibreOffice returns unchanged semantically; readiness PDF visually inspected. Self-review only; native Excel/assistive, audience sign-off, independent review and real application pending. | REQ09; REQ10; REQ12; REQ16; REQ19 |
-| P06 | Review and integrate accepted catalogue change | P05 | Final diff, generated index, test/eval/validation reports, task trace and handoff | Use skill-update protocol for metadata/guidance work and python-code-change for deterministic tools; run required suite in isolated runtime; review safety/provenance; publish PR and squash only when authorized. | No P0/P1 unresolved; CI and human review as required; state local/merged/installed separately; promotion remains evidence-based. | REQ01; REQ12; REQ19 |
+| P06 | Catalogue author review and PR preparation; remote gates pending | P05 | P06.md; complete upstream diff; five regression cases; generated research pack 0.7; isolated gates; task traces and append-only handoff | Resolved sparse workbook scan and dropped blank-row comments; shared 500,000-cell import/export limit; original input bytes preserved. Five skills remain experimental/optional; blank templates remain generic. Publish reviewed task branch/PR, inspect actual CI/review and squash only with required authority. | New five regressions and all 52 focused tool tests pass. Full gate results are recorded in P06.md. No unresolved author-review P0/P1; CI, human review, real project/native Excel usability and stable promotion remain separate evidence. | REQ01; REQ10; REQ11; REQ12; REQ18; REQ19 |
 
 ## 10 Decisions
 

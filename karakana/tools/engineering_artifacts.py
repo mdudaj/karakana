@@ -31,6 +31,7 @@ class ArtifactError(ValueError):
 CONTRACT_VERSION = "0.1"
 MAX_SOURCE_BYTES = 2_000_000
 MAX_WORKBOOK_BYTES = 20_000_000
+MAX_WORKBOOK_SCAN_CELLS = 500_000
 META_FIELDS = {"contract_version", "namespace", "document_id", "document_type",
                "content_version", "status", "owner", "requested_action", "source_authority"}
 DOCUMENT_STATUSES = {"draft", "in_review", "accepted", "superseded", "withdrawn"}
@@ -902,6 +903,10 @@ def export_workbook(bundle: Bundle, audience: str, output: Path, snapshot: Path,
         if source["sha256"] != _sha(raw):
             raise ArtifactError("Source changed since validation")
     payload = _project(bundle, audience, baseline_revision)
+    scan_cells = sum((4 + max(1, len(table["rows"]))) * len(table["headers"])
+                     for table in payload["tables"].values())
+    if scan_cells > MAX_WORKBOOK_SCAN_CELLS:
+        raise ArtifactError("Workbook exceeds scan cell limit; split the source set")
     digest = _sha(_json_bytes(payload))
     openpyxl = _spreadsheet()
     from openpyxl.styles import Alignment, Font, PatternFill
@@ -982,6 +987,9 @@ def _read_workbook(root: Path, source: Path):
         workbook = _spreadsheet().load_workbook(io.BytesIO(raw), data_only=False, keep_links=False)
     except (zipfile.BadZipFile, KeyError, OSError) as exc:
         raise ArtifactError("Unsupported workbook transport") from exc
+    # Sparse cells can imply a huge rectangular scan despite a tiny ZIP payload.
+    if sum(ws.max_row * ws.max_column for ws in workbook.worksheets) > MAX_WORKBOOK_SCAN_CELLS:
+        raise ArtifactError("Workbook exceeds scan cell limit; split or trim the review range")
     return workbook, raw
 
 
@@ -993,9 +1001,13 @@ def _sheet_records(ws, headers: list[str]) -> tuple[dict, list]:
         return rows, problems
     for cells in ws.iter_rows(min_row=5, max_col=len(headers)):
         values = ["" if cell.value is None else str(cell.value) for cell in cells]
+        key = tuple(values[:3])
+        for cell in cells:
+            if cell.comment:
+                problems.append({"kind": "cell_comment", "sheet": ws.title, "identity": list(key),
+                                 "cell": cell.coordinate, "author": cell.comment.author, "text": cell.comment.text})
         if not any(values):
             continue
-        key = tuple(values[:3])
         if any(not value for value in key) or key in rows:
             problems.append({"kind": "duplicate_or_blank_identity", "sheet": ws.title, "identity": list(key)})
             continue
@@ -1003,9 +1015,6 @@ def _sheet_records(ws, headers: list[str]) -> tuple[dict, list]:
         for cell in cells:
             if cell.data_type == "f":
                 problems.append({"kind": "formula_input", "sheet": ws.title, "cell": cell.coordinate})
-            if cell.comment:
-                problems.append({"kind": "cell_comment", "sheet": ws.title, "identity": list(key),
-                                 "cell": cell.coordinate, "author": cell.comment.author, "text": cell.comment.text})
     return rows, problems
 
 

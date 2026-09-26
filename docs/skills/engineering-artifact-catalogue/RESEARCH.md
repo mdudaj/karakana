@@ -1,8 +1,9 @@
 # Engineering artifact catalogue: research and proposed update
 
 Status: **Local delivery for review**. Research completed 2026-09-26.
-P01–P05 are implemented locally; independent review, real project application,
-integration and stable promotion remain pending.
+P01–P05 are implemented locally; P06 author review resolves two workbook findings
+and prepares PR integration. Independent review, real project application,
+remote integration and stable promotion remain pending until separately evidenced.
 
 The user requested comprehensive research before an update plan, covering
 engineering documentation artifacts. Following the format correction, Markdown
@@ -59,6 +60,14 @@ LibreOffice roundtrip/render and proposed-feedback outcomes are recorded in
 [pilot QA](pilots/QA.md). This is guided author self-review and tool evidence,
 not independent audience approval or a live-model behavior benchmark. Native
 Excel/assistive and real project usability checks remain unperformed.
+
+[P06](P06.md) reviews the complete catalogue against the global/generic scope,
+source authority and request boundaries. It resolves sparse-range resource use
+and omitted blank-row comments with five regressions. The shared import/export
+scan limit is 500,000 cells. Its actual gate results and PR readiness are separate
+from independent human review, merge and personal installation. Research pack 0.7
+supersedes the archived, parity-checked and unannotated 0.6 runtime copy; blank
+template version 0.2 and all six controlled pilot baselines remain unchanged.
 
 This narrative and the [detailed Markdown plan](PLAN.md) are the canonical
 research and proposal. The detailed plan contains all evidence, requirements,
