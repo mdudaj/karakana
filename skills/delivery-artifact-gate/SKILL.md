@@ -1,7 +1,7 @@
 ---
 name: delivery-artifact-gate
 description: Use this skill before implementing, revising, or reviewing project work when the work should be guided by durable artifacts such as requirements, ADRs, user stories, milestones, UX grill notes, schemas, examples, tests, or handoffs.
-version: 0.2.0
+version: 0.3.0
 risk_level: medium
 allowed_tools:
   - read_file
@@ -93,6 +93,16 @@ Create or update the smallest relevant set:
 - **Handoff**: always at end of task in Karakana-managed projects.
 
 ## Standard workflow
+
+Use the shared lifecycle in `docs/engineering-process.md`. Before non-trivial
+implementation run `protocol check --trace <id> --stage pre-implementation`;
+at completion run `--stage completion`. The earlier gate defers delivery outputs,
+not prerequisite requirements, design, contracts or applicable approval evidence.
+Both checks establish artifact presence only. Inspect content, test outcomes and
+authorization separately; a passed check is not permission to deploy or merge.
+Keep implemented, verified, merged, deployed and accepted distinct in summaries.
+For a small mechanical task reuse the existing requirement and a compact record;
+for analysis-only work use the assessment protocol without implementation burden.
 
 Use research → architect → plan → deliver as a reuse-aware sequence, not a demand
 to repeat every stage on every task. Verify existing artifacts against the current

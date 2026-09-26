@@ -98,6 +98,8 @@ def test_build_task_prompt_includes_required_context(tmp_path):
     assert "Token budget: `standard`" in prompt
     assert "Do not push directly to main" in prompt
     assert "skill_update" in prompt
+    from karakana.protocols.lifecycle import render_engineering_process
+    assert render_engineering_process() in prompt
 
 
 def test_write_task_prompt_defaults_to_runtime_file(tmp_path):

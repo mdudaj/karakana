@@ -1,6 +1,20 @@
 # Engineering Standards
 
-Document durable engineering standards that apply across Karakana-managed projects, including testing expectations, code review expectations, and maintainability conventions.
+Durable engineering standards for Karakana-managed projects.
+
+## Task Lifecycle
+
+Apply `docs/engineering-process.md` from the Karakana harness: classify the request
+and authority, establish acceptance, reuse or research/design, plan, implement,
+verify and validate, review, release only when authorized, then hand off.
+Tailor depth to risk; do not require a new PRD/ADR for a mechanical fix or repeat
+current approved research. Reopen affected decisions when scope/evidence changes.
+
+Prerequisite and completion artifact checks are distinct. File presence is not
+proof of semantic quality, test success or approval. Inspect actual results,
+including skipped checks and unresolved findings. A self-review is not independent
+review, and merged is not deployed or accepted. Keep project/revision/environment
+provenance explicit; test fixtures must not populate real handoff stores.
 
 ## Evidence-Grounded Delivery
 

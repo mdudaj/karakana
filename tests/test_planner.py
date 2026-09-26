@@ -93,6 +93,8 @@ def test_compose_planning_prompt_includes_context(tmp_path):
     assert "Role: planner" in prompt
     assert "Token budget: standard" in prompt
     assert "Do not call external model APIs" in prompt
+    from karakana.protocols.lifecycle import render_engineering_process
+    assert render_engineering_process() in prompt
 
 
 def test_compose_planning_prompt_errors_for_missing_project_memory(tmp_path):

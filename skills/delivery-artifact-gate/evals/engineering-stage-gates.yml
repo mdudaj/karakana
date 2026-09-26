@@ -1,0 +1,23 @@
+id: engineering-stage-gates
+name: Engineering stage gate instructions
+description: Guard the shared lifecycle boundary without claiming semantic certification.
+suite: skills
+risk_level: medium
+input:
+  task: "Plan a bounded change using current requirements, then verify completion."
+  project: karakana
+  skill: delivery-artifact-gate
+  task_type: planning
+  prompt_file: skills/delivery-artifact-gate/SKILL.md
+expectations:
+  must_include:
+    - "--stage pre-implementation"
+    - "--stage completion"
+    - "artifact presence only"
+    - "test outcomes"
+    - "authorization separately"
+    - "small mechanical task"
+    - "assessment protocol"
+  must_not_include:
+    - "automatically deploy"
+    - "artifact checks prove correctness"

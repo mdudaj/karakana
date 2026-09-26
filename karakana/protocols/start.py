@@ -12,6 +12,7 @@ from typing import Any
 from karakana.protocols.artifacts import MissingArtifactSuggestion, template_path
 from karakana.protocols.classifier import ProtocolClassification
 from karakana.protocols.loader import ProtocolLoader
+from karakana.protocols.lifecycle import render_engineering_process
 from karakana.traces.schemas import redact_value
 
 
@@ -127,6 +128,8 @@ def render_protocol_start(artifact: ProtocolStartArtifact) -> str:
 ## Rationale
 
 {_bullets(classification.rationale)}
+
+{render_engineering_process()}
 """
 
 

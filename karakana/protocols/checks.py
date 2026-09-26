@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from karakana.protocols.lifecycle import artifacts_for_stage
 from karakana.traces.schemas import RunTrace, redact_value
 from karakana.traces.store import TraceStore
 
@@ -82,20 +83,20 @@ class ProtocolCheckResult:
         return redact_value(asdict(self))
 
 
-def run_protocol_check(repo_root: Path, trace_id: str) -> tuple[ProtocolCheckResult, Path]:
+def run_protocol_check(repo_root: Path, trace_id: str, *, stage: str = "completion") -> tuple[ProtocolCheckResult, Path]:
     trace = TraceStore(repo_root).load(trace_id)
-    result = check_trace_protocol_artifacts(repo_root, trace)
+    result = check_trace_protocol_artifacts(repo_root, trace, stage=stage)
     store = ProtocolCheckStore(repo_root)
     path = store.save(result)
     return result, path
 
 
-def check_trace_protocol_artifacts(repo_root: Path, trace: RunTrace) -> ProtocolCheckResult:
-    required = list(dict.fromkeys(trace.required_artifacts))
+def check_trace_protocol_artifacts(repo_root: Path, trace: RunTrace, *, stage: str = "completion") -> ProtocolCheckResult:
+    required, deferred = artifacts_for_stage(trace.required_artifacts, stage)
     warnings: list[str] = []
     if not trace.protocol_id:
         warnings.append("Trace has no protocol_id.")
-    if not required:
+    if not trace.required_artifacts:
         warnings.append("Trace has no required_artifacts.")
 
     checks = [_check_artifact(repo_root, trace, artifact_kind) for artifact_kind in required]
@@ -114,7 +115,9 @@ def check_trace_protocol_artifacts(repo_root: Path, trace: RunTrace) -> Protocol
         missing_artifacts=missing,
         warnings=warnings,
         recommended_next_actions=next_actions,
-        metadata={"command": trace.command, "project": trace.project, "task_type": trace.task_type},
+        metadata={"command": trace.command, "project": trace.project, "task_type": trace.task_type,
+                  "stage": stage, "deferred_artifacts": deferred,
+                  "evidence_scope": "artifact_presence_only"},
     )
 
 
@@ -133,25 +136,39 @@ def _artifact_evidence(repo_root: Path, trace: RunTrace, artifact_kind: str) -> 
     aliases = ARTIFACT_ALIASES.get(artifact_kind, {artifact_kind})
     evidence: list[str] = []
     if artifact_kind == "trace":
-        trace_path = repo_root / ".karakana" / "runs" / trace.run_id / "trace.json"
-        if trace_path.exists():
+        trace_path = _usable_file(repo_root, f".karakana/runs/{trace.run_id}/trace.json")
+        if trace_path:
             evidence.append(str(trace_path))
     for artifact in trace.artifacts:
         if artifact.kind in aliases or artifact.kind == artifact_kind:
-            path = Path(artifact.path)
-            resolved = path if path.is_absolute() else repo_root / path
-            if resolved.exists():
+            resolved = _usable_file(repo_root, artifact.path)
+            if resolved:
                 evidence.append(str(resolved))
-            else:
-                evidence.append(f"{artifact.path} ({artifact.kind}, path missing)")
     for key, value in trace.outputs.items():
         if key in aliases or key == artifact_kind:
-            evidence.append(f"trace.outputs.{key}={value}")
+            resolved = _usable_file(repo_root, value)
+            if resolved:
+                evidence.append(str(resolved))
     if artifact_kind == "task_classification" and trace.protocol_id and trace.work_category and trace.risk_level:
         evidence.append("trace.protocol_id/work_category/risk_level")
-    if artifact_kind == "handoff" and trace.outputs.get("session_handoff"):
-        evidence.append(f"trace.outputs.session_handoff={trace.outputs['session_handoff']}")
     return sorted(set(evidence))
+
+
+def _usable_file(repo_root: Path, value: Any) -> Path | None:
+    """Validate local references, without treating claims or directories as proof."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        path = Path(value)
+        resolved = path if path.is_absolute() else repo_root / path
+        if not resolved.is_file():
+            return None
+        with resolved.open("rb") as stream:
+            if stream.read(1):
+                return resolved
+    except (OSError, ValueError):
+        return None
+    return None
 
 
 class ProtocolCheckStore:
@@ -196,6 +213,12 @@ def render_protocol_check(result: ProtocolCheckResult) -> str:
 - Protocol: {result.protocol_id or ""}
 - Category: {result.work_category or ""}
 - Risk: {result.risk_level or ""}
+- Stage: {result.metadata.get("stage", "completion")}
+- Evidence scope: artifact presence only; review content and outcomes separately.
+
+## Deferred Until Completion
+
+{_bullets(result.metadata.get("deferred_artifacts", []))}
 
 ## Required Artifacts
 

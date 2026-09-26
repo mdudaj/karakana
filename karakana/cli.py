@@ -3305,13 +3305,14 @@ def protocol_classify(
 def protocol_check(
     trace_id: str = typer.Option(..., "--trace", help="Trace run ID to check."),
     json_output: bool = typer.Option(False, "--json", help="Print JSON."),
+    stage: str = typer.Option("completion", "--stage", help="Artifact stage: pre-implementation or completion."),
 ) -> None:
     """Check whether a trace satisfies its required protocol artifacts."""
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
-    trace = trace_store.create_run(command="protocol check", task_type="protocol_check", inputs={"trace_id": trace_id})
+    trace = trace_store.create_run(command="protocol check", task_type="protocol_check", inputs={"trace_id": trace_id, "stage": stage})
     try:
-        result, path = run_protocol_check(repo_root, trace_id)
+        result, path = run_protocol_check(repo_root, trace_id, stage=stage)
     except Exception as exc:
         _fail_trace(trace_store, trace, exc)
         typer.echo(str(exc))
@@ -3339,6 +3340,7 @@ def protocol_check(
         typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
     else:
         typer.echo(f"Protocol check: {result.status}")
+        typer.echo(f"Stage: {stage}; evidence scope: artifact presence only")
         typer.echo(f"Check ID: {result.check_id}")
         typer.echo(f"Trace ID: {result.trace_id}")
         if result.missing_artifacts:

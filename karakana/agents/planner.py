@@ -6,6 +6,7 @@ from pathlib import Path
 
 from karakana.memory.ubongo import UbongoMemory
 from karakana.models.router import route_model
+from karakana.protocols.lifecycle import render_engineering_process
 from karakana.skills.loader import SkillLoader
 
 
@@ -49,7 +50,7 @@ def compose_planning_prompt(
     prompt = template.format(**values).strip()
     if skillpack_context:
         prompt += "\n\n## Skillpack Context\n\n" + skillpack_context.strip()
-    return prompt + "\n"
+    return prompt + "\n\n" + render_engineering_process()
 
 
 def write_planning_prompt(prompt: str, repo_root: Path, output_path: Path | None = None) -> Path:
