@@ -1,7 +1,7 @@
 ---
 name: design-qa-playwright
 description: "Use this skill when planning, writing, or auditing browser-based UI verification with Playwright: rendered evidence, screenshots, visual comparisons, DOM assertions, accessibility scans, responsive checks, state coverage, and regression protocols."
-version: 0.1.0
+version: 0.1.1
 risk_level: medium
 category: development
 scope: bundled
@@ -96,6 +96,9 @@ Combine with:
   error, permission-denied, disabled, stale, success, and responsive layout.
 - Run axe scans where available, but pair them with manual keyboard/focus checks.
 - Store or report artifacts so reviewers know where to inspect.
+- For responsive regressions, zero page overflow is insufficient: verify actual
+  control bounds against clipping ancestors, open disclosures and focus recovery.
+  Use the control-level reflow checklist in `references/playwright-ui-qa.md`.
 
 ## Core concepts
 

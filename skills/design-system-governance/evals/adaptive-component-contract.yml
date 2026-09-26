@@ -1,0 +1,19 @@
+id: adaptive-component-contract
+name: Adaptive component diagnosis contract
+description: Verify the maintained adaptive diagnosis reference retains scope, anatomy and semantic safeguards.
+suite: skills
+risk_level: medium
+tags: [skills, responsive, design-system]
+input:
+  task: "Repair repeated clipped queue controls and off-centre metric icons without page-local styling."
+  skill: design-system-governance
+  task_type: planning
+  prompt_file: skills/design-system-governance/references/adaptive-component-contract.md
+expectations:
+  must_include:
+    - "computed cascade"
+    - "container width"
+    - "glyph region"
+    - "Never change scope implicitly"
+    - "native Tab order"
+    - "Do not impose one card count"

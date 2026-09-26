@@ -90,6 +90,40 @@ Manual/browser:
 
 ## Delivery evidence format
 
+### Control-level reflow and focus regressions
+
+For layout bugs, pair page-width smoke checks with assertions on the affected
+search fields, selects, action buttons and context indicators. Check 320 CSS
+pixels where reflow applies, a representative compact width and the reported
+laptop viewport, with relevant sidebar states. Scroll vertically to the control,
+then inspect its bounds against both the viewport and overflow-clipping ancestors;
+verify it is not only measurable but reachable (for example, a trial click or
+keyboard activation). Opening an unrelated control must not horizontally scroll
+the whole work surface to hide the original problem.
+
+Explicitly open details/popups before checking their contents. Closed `details`
+descendants can produce misleading raw geometry; test only the intended visible
+state. Permit contained two-dimensional scrolling only for documented exceptions
+such as data tables, not all descendants of a page.
+
+Check icon centring using the glyph/text region, not only the circle dimensions.
+Verify that identity/metadata text has usable width; controls fitting inside a
+row must not count as a pass when adjacent text collapses to single characters.
+Check row balance and the distance to actionable work in rendered evidence;
+do not encode a universal maximum page height. Include populated and empty data,
+long identifiers and missing scope values where relevant.
+
+For disclosures, test Enter/Space, Tab into content, Escape and focus restoration,
+outside focus/click, and repeated navigation/cache restoration. Match assertions
+to the declared disclosure or menu pattern: the two have different keyboard
+contracts. A test which observes a hidden focused link must fail.
+
+Keep diagnostic fixtures in isolated test data. Record the red-to-green result
+when correcting an existing defect and retain screenshots for visual review.
+These checks do not certify screen-reader support or complete WCAG conformance.
+
+### Evidence fields
+
 Record:
 
 - command run;
