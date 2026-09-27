@@ -4,6 +4,13 @@ Capture durable user preferences for workflow, communication, tooling, project p
 
 ## Delivery Workflow
 
+- Subsequent implementation follows the global mergeable milestone policy in
+  `ubongo/global/engineering-standards.md`: one active milestone, one branch and
+  one coherent PR; roughly half to one day of implementation followed by
+  verification/review; finish squash merge and release checks before the next.
+  Record implemented, verified, merged, deployed and accepted separately.
+  Collect clarifications in the shared workbook while configurable implementation
+  continues; do not hold unrelated work for those answers.
 - Once the user agrees to a plan or slice, deliver the reviewable slice end to
   end without asking for additional permission in the middle of the same slice,
   unless a hard safety boundary appears: secrets, destructive actions,

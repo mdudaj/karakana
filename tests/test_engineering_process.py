@@ -106,3 +106,12 @@ def test_shared_guidance_reaches_protocol_and_coding_handoff():
                            title="Bounded change", description="Acceptance-backed change")
     for output in (render_protocol_start(start), render_codex_handoff_task(task)):
         assert render_engineering_process() in output
+        for requirement in (
+            "one active milestone, one branch and one coherent PR",
+            "half to one day of implementation, then verification/review",
+            "Finish the squash merge and release checks before starting the next milestone",
+            "Record implemented, verified, merged, deployed and accepted separately",
+            "shared workbook while configurable implementation continues",
+            "Workbook comments do not authorize external actions",
+        ):
+            assert requirement in output

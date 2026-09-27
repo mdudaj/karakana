@@ -3,6 +3,34 @@
 Status: accepted harness process, 2026-09-26. Applies to Karakana-managed tasks;
 project contracts and authorization boundaries remain in force.
 
+## Mergeable implementation milestones
+
+Global delivery policy agreed on 2026-09-27:
+
+- One active milestone, one branch and one coherent PR.
+- Size work for roughly half to one day of implementation, then verification/review.
+- Finish the squash merge and release checks before starting the next milestone.
+- Record implemented, verified, merged, deployed and accepted separately.
+- Collect clarifications in the shared workbook while configurable implementation continues.
+
+Split oversized scope before starting. Keep queued milestones inactive and keep
+repository boundaries intact; complete cross-repository milestones sequentially.
+The duration is a sizing target, not permission to skip verification. Applicable
+release checks include integration/CI and, when deployment is authorized, target
+release and post-deploy checks. If deployment is outside the agreed scope, record
+that state explicitly without claiming deployment or acceptance.
+
+Workbook rows explain the decision, reversible implementation default, required
+answer, owner, affected activation and editable stakeholder comments. Unresolved
+decisions hold only affected behavior or activation unless safe implementation
+depends on the answer. Continue independent configurable work within existing
+authority; a workbook comment does not grant authority for external actions.
+
+For accumulated legacy work, preserve every nonsecret source variant and record
+each path's integration, supersession or archive disposition before cleanup.
+These instructions guide delivery; they do not add an automatic controller or
+change deterministic approval gates.
+
 ## Research and rationale
 
 This is a tailored engineering workflow, not a claim of standards certification.
