@@ -37,6 +37,15 @@ Follow the tailored lifecycle in docs/engineering-process.md when available.
 - Handoff: record remaining work, next exact action/model/conversation; protect repeated
   failures with tests/evals. Attach the handoff then run protocol check --trace <id> --stage completion.
   After two failed diagnostic attempts, stop speculation and replan.
+For subsequent implementation, use one active milestone, one branch and one coherent PR.
+Size work for roughly half to one day of implementation, then verification/review.
+Finish the squash merge and release checks before starting the next milestone.
+Record implemented, verified, merged, deployed and accepted separately, with evidence.
+Collect clarifications in the shared workbook while configurable implementation continues.
+Unresolved decisions hold only affected behavior or activation; use reversible defaults
+within existing authority. Workbook comments do not authorize external actions.
+Keep project boundaries intact; a cross-repository request completes each milestone
+sequentially. These are delivery instructions, not an automatic merge/deploy controller.
 Tailor to risk: small mechanical work needs a concise record, not a new PRD/ADR.
 One artifact may cover several concerns only when its content genuinely covers them.
 Artifact checks establish file presence, not correctness, passing tests or approval.

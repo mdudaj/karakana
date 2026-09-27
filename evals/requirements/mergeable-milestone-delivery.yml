@@ -1,0 +1,22 @@
+id: requirements-mergeable-milestone-delivery
+name: Global implementation milestones reach planning
+description: Check the delivery policy reaches generated planning context without live execution.
+suite: requirements
+risk_level: medium
+tags: [requirements, delivery, milestones]
+input:
+  task: "Plan a bounded implementation milestone for Karakana."
+  project: karakana
+  skill: karakana-self-improvement
+  task_type: planning
+expectations:
+  expected_provider: openai_codex
+  expected_model: gpt-6-sol
+  must_include:
+    - "one active milestone, one branch and one coherent PR"
+    - "half to one day of implementation, then verification/review"
+    - "Finish the squash merge and release checks before starting the next milestone"
+    - "implemented, verified, merged, deployed and accepted separately"
+    - "shared workbook while configurable implementation continues"
+    - "Workbook comments do not authorize external actions"
+  forbidden_patterns: ["GITHUB_TOKEN", "OPENAI_API_KEY"]

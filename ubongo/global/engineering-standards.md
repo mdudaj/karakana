@@ -16,6 +16,28 @@ including skipped checks and unresolved findings. A self-review is not independe
 review, and merged is not deployed or accepted. Keep project/revision/environment
 provenance explicit; test fixtures must not populate real handoff stores.
 
+## Mergeable Implementation Milestones
+
+For subsequent implementation, use one active milestone, one branch and one
+coherent PR. Size work for roughly half to one day of implementation, then
+verification/review. Finish the squash merge and release checks before starting
+the next milestone. Record implemented, verified, merged, deployed and accepted
+separately, with revision, environment and evidence for each attained state.
+
+Collect clarifications in the shared workbook while configurable implementation
+continues. Explain the decision, current default, required answer, owner and
+affected activation; provide an editable comment column. Use reversible defaults
+within existing authority. An unresolved decision holds only affected behavior
+or activation, unless it prevents safe implementation. Comments do not themselves
+authorize merges, external writes, deployment or access changes.
+
+Split oversized work into coherent milestones before implementation. Queued work
+is not active work; do not start another milestone while integration or applicable
+release checks remain unfinished. For cross-repository requests, complete each
+repository milestone sequentially. Keep the target duration an estimate rather
+than weakening verification or silently dropping scope. Legacy consolidation
+requires preservation and path-by-path disposition before cleanup.
+
 ## Engineering Documentation Skills
 
 Use the [shared catalogue](../../skills/README.md) and

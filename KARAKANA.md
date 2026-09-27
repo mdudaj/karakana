@@ -58,6 +58,10 @@ Engineering lifecycle and proportional stage gates: `docs/engineering-process.md
 Check prerequisite artifacts before non-trivial implementation, and all required
 artifacts at completion. Presence checks are not substantive approval or proof
 of passing tests. Preserve request type, scope and external-action permissions.
+Subsequent implementation follows the global mergeable milestone policy in that
+document: one active milestone/branch/PR, bounded sizing, finish squash merge and
+release checks before the next, separate delivery states, and workbook clarifications
+alongside configurable implementation.
 
 - Never push directly to protected branches.
 - Do all repository work on a task branch and integrate it through a pull request.
