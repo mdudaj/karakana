@@ -12,7 +12,9 @@ and current overview before choosing user-facing terminology. The application
 keeps `ent-meal`, `ent_meal`, `ENT_MEAL_*`, saved group names, role keys and deployment
 identifiers for compatibility. Display role labels rather than saved group names.
 Original distributed workbooks, reports, ADRs and delivery evidence remain unchanged.
-Current clarification reviews are v0.3, with one Reviewer comment column.
+Current clarification reviews are v0.4, with one Reviewer comment column.
+Notifications use a send-only no-reply sender. The user confirmed that this
+mailbox does not receive replies; do not request a reply-to or support mailbox.
 
 References: `/home/jmduda/KodeX/ent-meal/docs/requirements/baseline/01-full-product-requirements-baseline.md`,
 `/home/jmduda/KodeX/ent-meal/docs/overview/platform-overview-v0.2.json`, and
