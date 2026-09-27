@@ -1,6 +1,6 @@
-# Enterprise MEAL Architecture
+# Sustainability Monitoring and Reporting Platform Architecture
 
-Enterprise MEAL is a configurable platform with TACATDP as the first programme configuration.
+Sustainability Monitoring and Reporting Platform is a configurable platform with TACATDP as the first programme configuration.
 
 ## Baseline stack
 

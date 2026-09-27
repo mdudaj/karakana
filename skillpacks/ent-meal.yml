@@ -1,10 +1,10 @@
 name: ent-meal
-description: Enterprise MEAL Django/Viewflow platform delivery profile
+description: Sustainability Monitoring and Reporting Platform Django/Viewflow platform delivery profile
 version: 0.1.0
 status: experimental
 project:
   id: ent-meal
-  display_name: Enterprise MEAL
+  display_name: Sustainability Monitoring and Reporting Platform
   memory: ubongo/projects/ent-meal
 skills:
   required:
@@ -63,10 +63,10 @@ tests:
     - .venv/bin/pytest -q
 conventions:
   notes:
-    - Before resuming non-trivial Enterprise MEAL UI/UX work, fetch Karakana upstream and confirm the active UX skills are current.
+    - Before resuming non-trivial Sustainability Monitoring and Reporting Platform UI/UX work, fetch Karakana upstream and confirm the active UX skills are current.
     - Work from `/home/jmduda/KodeX/ent-meal` for source changes.
     - Read `/home/jmduda/KodeX/ent-meal/KARAKANA.md` before editing.
-    - Use Viewflow shell conventions learned from LIMS, but adapt IA and labels to Enterprise MEAL.
+    - Use Viewflow shell conventions learned from LIMS, but adapt IA and labels to Sustainability Monitoring and Reporting Platform.
     - Use Google Material 3 principles through reusable tokens/components, not page-local styling.
     - Keep TACATDP as the first programme configuration, not the platform architecture.
     - Treat XLSForm/XForm support as a subsystem boundary; pyxform integration requires tests around conversion and supported question types.

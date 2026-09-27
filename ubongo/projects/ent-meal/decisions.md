@@ -1,6 +1,24 @@
-# Enterprise MEAL Decisions
+# Sustainability Monitoring and Reporting Platform decisions
 
-## 2026-08-24 — Platform name and repo
+## 2026-09-27 — Apply the agreed public name
+
+Decision: use **Sustainability Monitoring and Reporting Platform**, as already
+recorded in the requirements baseline and platform overview v0.2. Use
+**Sustainability Reporting** for compact navigation. This supersedes the original
+August naming decision below; do not ask for naming approval again.
+
+The earlier contract and project memory were stale. Read the approved requirements
+and current overview before choosing user-facing terminology. The application
+keeps `ent-meal`, `ent_meal`, `ENT_MEAL_*`, saved group names, role keys and deployment
+identifiers for compatibility. Display role labels rather than saved group names.
+Original distributed workbooks, reports, ADRs and delivery evidence remain unchanged.
+Current clarification reviews are v0.3, with one Reviewer comment column.
+
+References: `/home/jmduda/KodeX/ent-meal/docs/requirements/baseline/01-full-product-requirements-baseline.md`,
+`/home/jmduda/KodeX/ent-meal/docs/overview/platform-overview-v0.2.json`, and
+`/home/jmduda/KodeX/ent-meal/docs/ux/product-naming.md`.
+
+## 2026-08-24 — Platform name and repo (superseded)
 
 Decision: use `Enterprise MEAL` as the platform name and `ent-meal` as the repository name.
 
