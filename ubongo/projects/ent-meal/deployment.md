@@ -1,4 +1,4 @@
-# Enterprise MEAL Deployment
+# Sustainability Monitoring and Reporting Platform Deployment
 
 No production deployment exists yet.
 
