@@ -59,8 +59,11 @@ slides. Inspect XLSX interactively and follow source links for full context. Wid
 tables span horizontal print pages; the executive PDF exercise produced 21 A3 pages.
 Feedback columns can appear on separate pages and long cells/narrative may require
 opening the cell/source. A printed excerpt must not be described as the complete pack.
-Native Excel desktop, Accessibility Checker, assistive and recipient usability
-checks remain unperformed. LibreOffice transport is separate evidence.
+The [executive navigation and accessibility receipt](executive-reader-accessibility.md)
+records a read-only LibreOffice Calc 26.2.5.2 load, structural navigation checks,
+and a rendered readiness view. Native Excel desktop, Accessibility Checker,
+interactive keyboard/assistive use and recipient usability checks remain
+unperformed. LibreOffice transport is separate evidence.
 
 The [executive reader baseline receipt](executive-reader-baseline.md) and separate
 [neutral reader handout](executive-reader-script.md) prepare the next local pilot
