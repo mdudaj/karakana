@@ -21,14 +21,6 @@ claim. Review this file against current source and runtime evidence at each task
   Markdown state without changing the frozen XLSX/JSON or pretending that real
   reader acceptance has occurred. Next: make a bounded documentation patch
   after current P1/P2 delivery.
-- [ ] **KDX-06 · P2 · proposed — require project-specific requirements content.**
-  Evidence: requirement `20261001-154449-req-565169` reports ready, but its
-  generated PRD has generic user stories and functional requirements about the
-  requirements generator, rather than this task's planner and backlog behavior.
-  Acceptance: readiness rejects or flags a generated artifact whose goals,
-  stories and criteria omit the source task's specific behavior; deterministic
-  examples cover a concrete source and a generic output. Next: inspect the
-  requirements generator and readiness rules before a bounded change.
 - [ ] **KDX-07 · P3 · proposed — reconcile optional project paths.**
   Evidence: dogfood `20261001-160648-dogfood-b3997b` warns that `billing`,
   `msc-research`, and `nhrdm` skillpacks point at absent memory directories;
@@ -37,12 +29,22 @@ claim. Review this file against current source and runtime evidence at each task
   corrected or explicitly retired after checking project ownership; validation
   no longer emits stale-path warnings. Next: review those skillpacks and
   workspace definitions with their project owners before changing configuration.
+- [ ] **KDX-08 · P2 · proposed — generate source-specific story and issue drafts.**
+  Evidence: `karakana/requirements/summary.py` still renders PRD user stories
+  with “the capability described by this PRD,” and
+  `karakana/requirements/stories.py` uses generic slices for non-MSc projects.
+  KDX-06 now blocks fallback PRDs at readiness; it does not certify or rewrite
+  downstream stories. Acceptance: concrete source requirements and criteria
+  appear in reviewable story/issue drafts without inventing actors, outcomes
+  or approval; generic input stays visibly provisional. Next: design a bounded
+  generator change with positive/negative project examples and deterministic
+  tests on a separate branch.
 
 ## Completed development items
 
-These items passed local verification. PR #21 records integration of KDX-01–03;
-KDX-05 integration is tracked in its own PR. Checklist completion does not imply
-deployment or user acceptance.
+These items passed local verification. PRs #21 and #22 record integration of
+KDX-01–03 and KDX-05; KDX-06 awaits integration. Checklist completion does not
+imply deployment or user acceptance.
 
 - [x] **KDX-01 · P1 · merged — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`
@@ -62,10 +64,15 @@ deployment or user acceptance.
   but the generated PRD is generic and is not accepted as task authority. The
   project-specific requirements remain in the reviewed delivery record.
   Integrated via PR #21. Next: take KDX-06.
-- [x] **KDX-05 · P2 · locally verified — classify dogfood warnings accurately.**
+- [x] **KDX-05 · P2 · merged — classify dogfood warnings accurately.**
   Evidence: run `20261001-154355-dogfood-c4944f` misclassified `warnings: 0`
   and a warning section heading. The focused regressions and full dogfood run
   `20261001-160648-dogfood-b3997b` show zero-count eval, optional doctor
   credentials, and workspace `- None` as passed; real skillpack/workspace
-  warnings retain their messages. Next: verify integration through its PR,
-  then take KDX-06.
+  warnings retain their messages. Integrated via PR #22. Next: take KDX-06.
+- [x] **KDX-06 · P2 · locally verified — require source-specific readiness.**
+  Evidence: requirement `20261001-154449-req-565169` had passed readiness
+  despite generic fallback content. The new gate marks it `not_ready` with
+  four concrete failed checks; tests preserve ready status for an explicit
+  task-specific seed and cover legacy artifacts. Next: review this branch for
+  integration, then take KDX-08.

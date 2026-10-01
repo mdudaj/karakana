@@ -7,6 +7,24 @@ from karakana.requirements.schemas import HarnessSubsystemImpact, RequirementPRD
 from karakana.requirements.store import generate_req_id
 
 
+GENERIC_PROBLEM = "Needs review: source describes intent, but problem statement should be confirmed."
+GENERIC_GOAL_PREFIX = "Convert the source intent into reviewable requirements: "
+GENERIC_FUNCTIONAL_REQUIREMENTS = (
+    "Generate a PRD with context, problem, goal, requirements, risks, safety constraints, and review plan.",
+    "Generate user stories and issue drafts as separate reviewable artifacts.",
+    "Run Definition of Ready checks before handoff.",
+    "Preserve Codex handoff boundaries and do not execute Codex.",
+    "Create issue drafts only; do not publish GitHub issues by default.",
+    "Preserve ingestion evidence and avoid direct memory or skill writes.",
+)
+GENERIC_ACCEPTANCE_CRITERIA = (
+    "PRD includes all required sections.",
+    "Stories include acceptance criteria.",
+    "Issues are independently grabbable vertical slices.",
+    "Readiness check reports missing information.",
+)
+
+
 def generate_prd(
     source: RequirementSource,
     content: str,
@@ -46,7 +64,7 @@ def generate_prd(
         model_route=route,
         test_and_eval_plan=tests,
         rollout_or_review_plan=["Generate PRD artifact.", "Review stories and issue drafts.", "Run readiness checks.", "Hand off only after human review."],
-        metadata={"inferred": True, "source_type": source.source_type},
+        metadata={"inferred": True, "source_type": source.source_type, "source_grounding": _source_grounding(content)},
     )
 
 
@@ -69,7 +87,7 @@ def _problem(content: str) -> str:
     value = _labeled_paragraph(seed or content, "Problem")
     if value:
         return value
-    return "Needs review: source describes intent, but problem statement should be confirmed."
+    return GENERIC_PROBLEM
 
 
 def _goal(content: str) -> str:
@@ -78,7 +96,7 @@ def _goal(content: str) -> str:
     if value:
         return value
     first = next((line.strip(" -#") for line in content.splitlines() if line.strip()), "Produce structured requirements before implementation.")
-    return f"Convert the source intent into reviewable requirements: {first[:180]}"
+    return f"{GENERIC_GOAL_PREFIX}{first[:180]}"
 
 
 def _functional_requirements(content: str) -> list[str]:
@@ -87,13 +105,13 @@ def _functional_requirements(content: str) -> list[str]:
     explicit = _labeled_bullets(seed or content, "Functional requirements")
     if explicit:
         return explicit
-    requirements = ["Generate a PRD with context, problem, goal, requirements, risks, safety constraints, and review plan.", "Generate user stories and issue drafts as separate reviewable artifacts.", "Run Definition of Ready checks before handoff."]
+    requirements = list(GENERIC_FUNCTIONAL_REQUIREMENTS[:3])
     if "codex" in lowered:
-        requirements.append("Preserve Codex handoff boundaries and do not execute Codex.")
+        requirements.append(GENERIC_FUNCTIONAL_REQUIREMENTS[3])
     if "issue" in lowered:
-        requirements.append("Create issue drafts only; do not publish GitHub issues by default.")
+        requirements.append(GENERIC_FUNCTIONAL_REQUIREMENTS[4])
     if "ingest" in lowered or "memory" in lowered:
-        requirements.append("Preserve ingestion evidence and avoid direct memory or skill writes.")
+        requirements.append(GENERIC_FUNCTIONAL_REQUIREMENTS[5])
     return requirements
 
 
@@ -120,7 +138,7 @@ def _standards_spec(content: str) -> StandardsSpecContext:
     standards = ["Engineering changes must be reviewable, tested, and safety-gated.", "No secrets, deployments, pushes, PRs, or live model calls by default."]
     spec = ["Needs review: confirm exact user-facing behavior and scope."]
     seed = _section(content, "Specification / PRD Seed")
-    acceptance = _labeled_bullets(seed or content, "Acceptance criteria") or ["PRD includes all required sections.", "Stories include acceptance criteria.", "Issues are independently grabbable vertical slices.", "Readiness check reports missing information."]
+    acceptance = _labeled_bullets(seed or content, "Acceptance criteria") or list(GENERIC_ACCEPTANCE_CRITERIA)
     non_goals = _section_bullets(content, "Out of Scope")
     if "standards review" in lowered:
         standards.append("Source included Standards Review context; preserve it during decomposition.")
@@ -182,6 +200,16 @@ def _users_or_actors(content: str) -> list[str]:
     if "staff operator" in lowered or "staff-only" in lowered:
         actors.insert(0, "staff operator")
     return list(dict.fromkeys(actors))
+
+
+def _source_grounding(content: str) -> dict[str, bool]:
+    selected = _section(content, "Specification / PRD Seed") or content
+    return {
+        "problem": bool(_labeled_paragraph(selected, "Problem")),
+        "goal": bool(_labeled_paragraph(selected, "Goal")),
+        "functional_requirements": bool(_labeled_bullets(selected, "Functional requirements")),
+        "acceptance_criteria": bool(_labeled_bullets(selected, "Acceptance criteria")),
+    }
 
 
 def _section(content: str, heading: str) -> str:
