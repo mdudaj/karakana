@@ -14,16 +14,19 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Active development items
 
-No active Karakana development item is currently recorded here. Reassess after
-KDX-07 integration and the next evidence-based dogfood review.
+No active Karakana development item is currently recorded here. After KDX-07
+integration, full safe dogfood run `20261001-185351-dogfood-081dd2` passed all
+10 checks and analysis found no defects. Its generated P2 manual-review item
+calls for artifact-backed workflow coverage before a release candidate; see
+`docs/karakana-dogfood-assessment-2026-10-01.md`. Add a development item only
+when that review or new project evidence identifies a concrete change.
 
 ## Completed development items
 
-These items passed local verification. PRs #21–25 record integration of
-KDX-01–06 and KDX-08. KDX-07 awaits integration. Checklist completion does
-not imply deployment or user acceptance.
+These items passed local verification. PRs #21–26 record integration of
+KDX-01–08. Checklist completion does not imply deployment or user acceptance.
 
-- [x] **KDX-07 · P3 · locally verified — reconcile optional project paths.**
+- [x] **KDX-07 · P3 · merged — reconcile optional project paths.**
   Evidence: NIMR project ownership was checked read-only; missing `billing`,
   `msc-research` and `nhrdm` memory was restored with explicit source limits.
   The three absent NIMR checkouts are marked optional without changing their
@@ -31,7 +34,8 @@ not imply deployment or user acceptance.
   and status retains `path_exists: false`. Focused tests, 728 full tests,
   173 deterministic evals, skill/skillpack/workspace validation and affected
   memory validation passed. See `docs/kdx07-optional-project-paths-2026-10-01.md`.
-  Next: review and integrate this branch through a PR.
+  Integrated via PR #26. Next: complete artifact-backed dogfood review before
+  proposing another development item or a release candidate.
 
 - [x] **KDX-04 · P3 · merged — reconcile catalogue status wording.**
   Evidence: canonical `docs/skills/engineering-artifact-catalogue/PLAN.md`
