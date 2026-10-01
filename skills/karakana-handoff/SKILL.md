@@ -111,6 +111,12 @@ decision. Use `--slice-complete` to recommend a fresh conversation at a boundary
 otherwise continue an unfinished task. Preserve `--failed-attempts` on the same
 issue; after two unsuccessful attempts, stop speculative patches and escalate.
 
+If the selected project has active `- [ ]` items in its
+`ubongo/projects/<project>/open-issues.md`, the handoff links that file as the
+project development backlog, even when artifact recovery is disabled. Name the
+chosen item ID in `--next-task` and keep research/pilot follow-ups distinct.
+The handoff links the source rather than copying issue text or inferring approval.
+
 Use repeatable `--reuse-stage research=PATH`, `architect=PATH`, `plan=PATH` with
 `--reuse-reviewed` only after verifying currency, applicability and approval.
 Unchanged reviewed evidence enables direct delivery; missing/changed evidence

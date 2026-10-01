@@ -79,6 +79,10 @@ Follow the `Process` below from state collection through candidate comparison an
 2. Summarize completed work and current repository state.
 3. Inspect recent dogfood, requirements/readiness, ingestion, milestone, patch/review/gate, test, and eval evidence when available.
 4. Extract unresolved findings and classify P0/P1 blockers before considering implementation.
+   For a manual `--from-note` blocker, use its own line: `P0: <unresolved finding>`
+   or `P1: <unresolved finding>`. Historical IDs such as `P06` and prose saying
+   no blockers or that a finding was closed are context, not blocker reports.
+   Structured dogfood priorities remain authoritative.
 5. Identify whether requirements are current, project-specific, and ready.
 6. Generate candidate milestone types appropriate to the evidence.
 7. If several directions are plausible, use verbalized sampling to diversify candidate generation only.

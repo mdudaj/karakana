@@ -210,6 +210,25 @@ def test_handoff_selection_is_project_aware(tmp_path):
     assert (tmp_path / ".karakana" / "handoffs" / "beta").is_dir()
 
 
+def test_handoff_links_only_its_active_project_backlog(tmp_path):
+    write_project_context(tmp_path, "alpha")
+    write_project_context(tmp_path, "beta")
+    alpha = tmp_path / "ubongo" / "projects" / "alpha" / "open-issues.md"
+    beta = tmp_path / "ubongo" / "projects" / "beta" / "open-issues.md"
+    alpha.write_text("# Backlog\n\n- [x] Closed item\n", encoding="utf-8")
+    beta.write_text("# Backlog\n\n- [ ] `BETA-01` Active item\n", encoding="utf-8")
+
+    empty = create_handoff(tmp_path, "alpha", "alpha", recover_artifacts=False)
+    active = create_handoff(tmp_path, "beta", "beta", recover_artifacts=False)
+
+    assert str(alpha) not in empty.reference_artifacts
+    assert str(alpha) not in empty.inspect_first
+    assert str(beta) not in empty.reference_artifacts
+    assert str(beta) in active.reference_artifacts
+    assert str(beta) in active.inspect_first
+    assert "Project development backlog" in active.state_summary
+
+
 def test_handoff_store_reads_legacy_flat_handoffs(tmp_path):
     write_project_context(tmp_path)
     handoff = create_handoff(tmp_path, "demo", "demo", purpose="Legacy")

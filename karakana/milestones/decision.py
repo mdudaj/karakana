@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -370,13 +371,11 @@ def _collect_previous_milestone(repo_root: Path, context: DecisionContext) -> No
 
 
 def _find_note_priorities(context: DecisionContext) -> None:
-    note = (context.note or "").lower()
-    if "p0" in note:
-        finding = "P0 finding reported in the supplied note."
-        context.open_findings.append(finding)
-        context.blockers.append(finding)
-    if "p1" in note:
-        finding = "P1 finding reported in the supplied note."
+    for line in (context.note or "").splitlines():
+        match = re.fullmatch(r"\s*(P[01]):\s*(\S.*?)\s*", line, flags=re.IGNORECASE)
+        if not match:
+            continue
+        finding = f"{match.group(1).upper()} note blocker: {match.group(2)}"
         context.open_findings.append(finding)
         context.blockers.append(finding)
 
