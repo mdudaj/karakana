@@ -32,7 +32,7 @@ def collect_project_status(repo_root: Path, workspace: Workspace, project_id: st
     warnings: list[str] = []
     errors: list[str] = []
     path_exists = path.exists()
-    if not path_exists:
+    if not path_exists and (workspace.defaults.require_existing_paths or project.optional_checkout is not True):
         warnings.append(f"Project path missing: {project.id} -> {path}")
     branch = _git(path, ["branch", "--show-current"]) if path_exists else None
     git_status = _git(path, ["status", "--short"]) if path_exists else None

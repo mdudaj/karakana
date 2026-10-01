@@ -73,6 +73,8 @@ class WorkspaceValidator:
             seen.add(project.id)
             if project.path is not None and not isinstance(project.path, str):
                 result.errors.append(f"Project path must be a string: {project.id}")
+            if not isinstance(project.optional_checkout, bool):
+                result.errors.append(f"Project optional_checkout must be a boolean: {project.id}")
             if project.memory is not None and not isinstance(project.memory, str):
                 result.errors.append(f"Project memory must be a string: {project.id}")
             if project.skillpack and not skillpacks.exists(project.skillpack):
@@ -87,7 +89,7 @@ class WorkspaceValidator:
                 message = f"Project path does not exist for {project.id}: {project.path}"
                 if workspace.defaults.require_existing_paths:
                     result.errors.append(message)
-                else:
+                elif project.optional_checkout is not True:
                     result.warnings.append(message)
             if project.path and any(part in {"secrets", ".env"} for part in Path(project.path).parts):
                 result.errors.append(f"Workspace references blocked path for {project.id}: {project.path}")

@@ -27,6 +27,7 @@ class WorkspaceProject:
     id: str
     display_name: str | None = None
     path: str | None = None
+    optional_checkout: bool = False
     skillpack: str | None = None
     memory: str | None = None
     tags: list[str] = field(default_factory=list)
