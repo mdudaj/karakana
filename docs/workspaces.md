@@ -22,6 +22,11 @@ Each project should include:
 - `memory`
 - `standard_commands`
 
+Set `optional_checkout: true` only when the project is registered but its
+local checkout may intentionally be absent. Keep the configured path as the
+expected local folder; a remote repository name alone does not determine that
+folder. Check project ownership before marking a checkout optional.
+
 ## Validation
 
 Run:
@@ -31,7 +36,11 @@ karakana workspace validate nimr
 karakana workspace validate-all
 ```
 
-When `require_existing_paths` is false, missing project directories produce warnings. When true, missing paths are errors.
+When `require_existing_paths` is false, missing project directories produce
+warnings by default. An absent project marked `optional_checkout: true` does not
+produce a validation warning; workspace status still reports `path_exists:
+false`. When `require_existing_paths` is true, any missing path is an error,
+including an optional checkout. The optional flag must be a YAML boolean.
 
 ## Activation
 
@@ -44,7 +53,10 @@ karakana workspace current
 
 ## Status
 
-Workspace status is read-only. It checks configured paths, git branch, git status, skillpack validity, memory existence, and local Karakana artifact counts.
+Workspace status is read-only. It checks configured paths, git branch, git
+status, skillpack validity, memory existence, and local Karakana artifact
+counts. Inspect `path_exists` before project work; an optional checkout with
+`path_exists: false` has no local source to inspect or modify.
 
 ## Planning
 

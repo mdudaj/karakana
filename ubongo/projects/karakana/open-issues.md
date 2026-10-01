@@ -14,30 +14,33 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Active development items
 
-- [ ] **KDX-07 · P3 · proposed — reconcile optional project paths.**
-  Evidence: dogfood `20261001-160648-dogfood-b3997b` warns that `billing`,
-  `msc-research`, and `nhrdm` skillpacks point at absent memory directories;
-  workspace validation also finds absent sibling paths for `nhrdm`, `nhrils`,
-  and `billing`. Acceptance: each memory and workspace path is restored,
-  corrected or explicitly retired after checking project ownership; validation
-  no longer emits stale-path warnings. Next: review those skillpacks and
-  workspace definitions with their project owners before changing configuration.
+No active Karakana development item is currently recorded here. Reassess after
+KDX-07 integration and the next evidence-based dogfood review.
 
 ## Completed development items
 
-These items passed local verification. PRs #21–24 record integration of
-KDX-01–03, KDX-05, KDX-06, and KDX-08. KDX-04 awaits integration. Checklist
-completion does not imply deployment or user acceptance.
+These items passed local verification. PRs #21–25 record integration of
+KDX-01–06 and KDX-08. KDX-07 awaits integration. Checklist completion does
+not imply deployment or user acceptance.
 
-- [x] **KDX-04 · P3 · locally verified — reconcile catalogue status wording.**
+- [x] **KDX-07 · P3 · locally verified — reconcile optional project paths.**
+  Evidence: NIMR project ownership was checked read-only; missing `billing`,
+  `msc-research` and `nhrdm` memory was restored with explicit source limits.
+  The three absent NIMR checkouts are marked optional without changing their
+  local aliases. Default missing paths still warn, strict paths still error,
+  and status retains `path_exists: false`. Focused tests, 728 full tests,
+  173 deterministic evals, skill/skillpack/workspace validation and affected
+  memory validation passed. See `docs/kdx07-optional-project-paths-2026-10-01.md`.
+  Next: review and integrate this branch through a PR.
+
+- [x] **KDX-04 · P3 · merged — reconcile catalogue status wording.**
   Evidence: canonical `docs/skills/engineering-artifact-catalogue/PLAN.md`
   now records catalogue PR #13 and executive pilot PRs #18–20 as merged,
   preserves independent reader and recipient acceptance as pending, and
   identifies the committed 0.7 JSON/XLSX as a historical retained export.
   The frozen pair was not changed. The current source rendered to a separate
   15-sheet workbook with a matching source hash; 66 focused tests and project
-  memory validation passed. Next: review and integrate this documentation patch,
-  then take KDX-07.
+  memory validation passed. Integrated via PR #25. Next: take KDX-07.
 
 - [x] **KDX-01 · P1 · merged — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`

@@ -28,6 +28,7 @@ projects:
   - id: nhrdm
     display_name: NHRDM
     path: "../nhrdm"
+    optional_checkout: true
     skillpack: nhrdm
     memory: ubongo/projects/nhrdm
     tags:
@@ -44,6 +45,7 @@ projects:
   - id: nhrils
     display_name: NHRILS
     path: "../nhrils"
+    optional_checkout: true
     skillpack: nhrils
     memory: ubongo/projects/nhrils
     tags:
@@ -63,6 +65,7 @@ projects:
   - id: billing
     display_name: Billing System
     path: "../billing"
+    optional_checkout: true
     skillpack: billing
     memory: ubongo/projects/billing
     tags:
