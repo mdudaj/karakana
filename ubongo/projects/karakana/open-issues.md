@@ -41,31 +41,31 @@ claim. Review this file against current source and runtime evidence at each task
 ## Completed development items
 
 These items passed local verification. PR #21 records integration of KDX-01–03;
-the current KDX-05 branch awaits review. Checklist completion does not imply
+KDX-05 integration is tracked in its own PR. Checklist completion does not imply
 deployment or user acceptance.
 
-- [x] **KDX-01 · P1 · locally verified — reject incidental note priority tokens.**
+- [x] **KDX-01 · P1 · merged — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`
   as P0. An explicit-line parser and positive/negative regression tests now
   preserve `P0:`/`P1:` blockers and structured dogfood priorities. CLI check
   `20261001-154711-milestone-b40f27` reports no blocker for historical/negated
-  prose. Next: verify integration in PR #21, then continue KDX-05.
-- [x] **KDX-02 · P2 · locally verified — expose the development backlog.**
+  prose. Integrated via PR #21. Next: continue KDX-06.
+- [x] **KDX-02 · P2 · merged — expose the development backlog.**
   Evidence: the former file was an empty template; it now has stable IDs and
   task state. Isolated tests show that handoffs link only their own active
   project backlog, including with artifact recovery disabled. Memory validation
-  passed. Next: verify integration in PR #21, then continue KDX-05.
-- [x] **KDX-03 · P2 · locally verified — refresh dogfood and requirements.**
+  passed. Integrated via PR #21. Next: continue KDX-06.
+- [x] **KDX-03 · P2 · merged — refresh dogfood and requirements.**
   Evidence: dogfood `20261001-154355-dogfood-c4944f` ran the safe full
   allowlist; the five warnings were triaged in the delivery record. Requirements
   `20261001-154449-req-565169` were inspected: structural readiness passed,
   but the generated PRD is generic and is not accepted as task authority. The
-  project-specific requirements remain in the reviewed delivery record. Next:
-  verify integration in PR #21, then take KDX-05 or KDX-06.
+  project-specific requirements remain in the reviewed delivery record.
+  Integrated via PR #21. Next: take KDX-06.
 - [x] **KDX-05 · P2 · locally verified — classify dogfood warnings accurately.**
   Evidence: run `20261001-154355-dogfood-c4944f` misclassified `warnings: 0`
   and a warning section heading. The focused regressions and full dogfood run
   `20261001-160648-dogfood-b3997b` show zero-count eval, optional doctor
   credentials, and workspace `- None` as passed; real skillpack/workspace
-  warnings retain their messages. Next: review the task branch, then take
-  KDX-06 after integration.
+  warnings retain their messages. Next: verify integration through its PR,
+  then take KDX-06.
