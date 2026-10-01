@@ -21,15 +21,6 @@ claim. Review this file against current source and runtime evidence at each task
   Markdown state without changing the frozen XLSX/JSON or pretending that real
   reader acceptance has occurred. Next: make a bounded documentation patch
   after current P1/P2 delivery.
-- [ ] **KDX-05 · P2 · proposed — classify dogfood command warnings accurately.**
-  Evidence: full dogfood run `20261001-154355-dogfood-c4944f` marks `eval run`
-  as warning even though all 173 cases passed with `warnings: 0`; the parser
-  matches the word itself. The workspace status warning in this worktree is
-  real because `/tmp/crdb-mel` is absent, although only its section header was
-  captured as evidence. Acceptance: zero-count summaries stay clean; real
-  warnings retain their message and severity, with focused tests. Next: inspect
-  `karakana/dogfood/runner.py` and command-output fixtures, then repair the
-  warning classifier in a separate slice.
 - [ ] **KDX-06 · P2 · proposed — require project-specific requirements content.**
   Evidence: requirement `20261001-154449-req-565169` reports ready, but its
   generated PRD has generic user stories and functional requirements about the
@@ -38,34 +29,43 @@ claim. Review this file against current source and runtime evidence at each task
   stories and criteria omit the source task's specific behavior; deterministic
   examples cover a concrete source and a generic output. Next: inspect the
   requirements generator and readiness rules before a bounded change.
-- [ ] **KDX-07 · P3 · proposed — reconcile optional skillpack memory paths.**
-  Evidence: the same dogfood run warns that the `billing`, `msc-research`, and
-  `nhrdm` skillpacks point at absent project memory directories. Acceptance:
-  each path is restored, corrected or explicitly retired after checking its
-  project ownership; validation no longer emits stale-path warnings. Next:
-  review those skillpacks with their project owners before editing configuration.
+- [ ] **KDX-07 · P3 · proposed — reconcile optional project paths.**
+  Evidence: dogfood `20261001-160648-dogfood-b3997b` warns that `billing`,
+  `msc-research`, and `nhrdm` skillpacks point at absent memory directories;
+  workspace validation also finds absent sibling paths for `nhrdm`, `nhrils`,
+  and `billing`. Acceptance: each memory and workspace path is restored,
+  corrected or explicitly retired after checking project ownership; validation
+  no longer emits stale-path warnings. Next: review those skillpacks and
+  workspace definitions with their project owners before changing configuration.
 
 ## Completed development items
 
-These items passed local verification on
-`fix/development-backlog-priorities-20261001`. PR #21 records their integration
-state. Checklist completion does not imply deployment or user acceptance.
+These items passed local verification. PR #21 records integration of KDX-01–03;
+KDX-05 integration is tracked in its own PR. Checklist completion does not imply
+deployment or user acceptance.
 
-- [x] **KDX-01 · P1 · locally verified — reject incidental note priority tokens.**
+- [x] **KDX-01 · P1 · merged — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`
   as P0. An explicit-line parser and positive/negative regression tests now
   preserve `P0:`/`P1:` blockers and structured dogfood priorities. CLI check
   `20261001-154711-milestone-b40f27` reports no blocker for historical/negated
-  prose. Next: verify integration in PR #21, then continue KDX-05.
-- [x] **KDX-02 · P2 · locally verified — expose the development backlog.**
+  prose. Integrated via PR #21. Next: continue KDX-06.
+- [x] **KDX-02 · P2 · merged — expose the development backlog.**
   Evidence: the former file was an empty template; it now has stable IDs and
   task state. Isolated tests show that handoffs link only their own active
   project backlog, including with artifact recovery disabled. Memory validation
-  passed. Next: verify integration in PR #21, then continue KDX-05.
-- [x] **KDX-03 · P2 · locally verified — refresh dogfood and requirements.**
+  passed. Integrated via PR #21. Next: continue KDX-06.
+- [x] **KDX-03 · P2 · merged — refresh dogfood and requirements.**
   Evidence: dogfood `20261001-154355-dogfood-c4944f` ran the safe full
   allowlist; the five warnings were triaged in the delivery record. Requirements
   `20261001-154449-req-565169` were inspected: structural readiness passed,
   but the generated PRD is generic and is not accepted as task authority. The
-  project-specific requirements remain in the reviewed delivery record. Next:
-  verify integration in PR #21, then take KDX-05 or KDX-06.
+  project-specific requirements remain in the reviewed delivery record.
+  Integrated via PR #21. Next: take KDX-06.
+- [x] **KDX-05 · P2 · locally verified — classify dogfood warnings accurately.**
+  Evidence: run `20261001-154355-dogfood-c4944f` misclassified `warnings: 0`
+  and a warning section heading. The focused regressions and full dogfood run
+  `20261001-160648-dogfood-b3997b` show zero-count eval, optional doctor
+  credentials, and workspace `- None` as passed; real skillpack/workspace
+  warnings retain their messages. Next: verify integration through its PR,
+  then take KDX-06.

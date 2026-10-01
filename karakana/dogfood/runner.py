@@ -71,9 +71,11 @@ def _execute_allowlisted(repo_root: Path, command_id: str, command: str) -> Dogf
     except Exception as exc:
         return DogfoodCommandResult(command_id=command_id, command=command, status="error", duration_seconds=round(time.monotonic() - started, 3), errors=[str(exc)])
     duration = round(time.monotonic() - started, 3)
-    stdout = _redact_excerpt(result.stdout)
-    stderr = _redact_excerpt(result.stderr)
-    warning_lines = _significant_warning_lines(command_id, stdout, stderr)
+    full_stdout = _redact_output(result.stdout)
+    full_stderr = _redact_output(result.stderr)
+    stdout = full_stdout[:1200]
+    stderr = full_stderr[:1200]
+    warning_lines = _significant_warning_lines(command_id, full_stdout, full_stderr)
     status = "passed" if result.returncode == 0 else "failed"
     if warning_lines and status == "passed":
         status = "warning"
@@ -132,40 +134,61 @@ def _command_args(repo_root: Path, command: str) -> list[str]:
     return parts
 
 
-def _redact_excerpt(text: str | None, limit: int = 1200) -> str:
+def _redact_output(text: str | None) -> str:
     redacted = redact_value(text or "")
-    redacted = re.sub(r"\b(GITHUB_TOKEN|GH_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b", "[REDACTED_SECRET_NAME]", str(redacted))
-    return redacted[:limit]
+    return re.sub(r"\b(GITHUB_TOKEN|GH_TOKEN|OPENAI_API_KEY|ANTHROPIC_API_KEY)\b", "[REDACTED_SECRET_NAME]", str(redacted))
 
 
 def _significant_warning_lines(command_id: str, stdout: str, stderr: str) -> list[str]:
     lines = [line.strip() for line in f"{stdout}\n{stderr}".splitlines() if line.strip()]
-    warning_lines = [line for line in lines if _looks_like_warning(line)]
-    return [line for line in warning_lines if not _is_informational_warning(command_id, line)]
+    warning_lines = []
+    in_warning_section = False
+    for line in lines:
+        if re.fullmatch(r"(?:#{1,6}\s*)?warnings?\s*:?", line, flags=re.IGNORECASE):
+            in_warning_section = True
+            continue
+        if line.startswith("#"):
+            in_warning_section = False
+        if _is_empty_warning(line):
+            continue
+        if (in_warning_section or _looks_like_warning(line)) and not _is_informational_warning(command_id, line):
+            warning_lines.append(line)
+    return warning_lines
+
+
+def _is_empty_warning(line: str) -> bool:
+    lowered = line.lower().strip().lstrip("-*").strip()
+    return lowered in {"none", "no warnings", "warnings: none", "warning: none"} or bool(re.search(r"\bwarnings?\s*:\s*0\b", lowered))
 
 
 def _looks_like_warning(line: str) -> bool:
     lowered = line.lower().strip()
-    if lowered in {"warnings:", "warning:"}:
+    if _is_empty_warning(line):
         return False
-    if lowered.startswith("- none") or lowered in {"none", "no warnings", "warnings: none", "warning: none"}:
-        return False
-    return "warning" in lowered or lowered.startswith("- warning")
+    return bool(
+        re.match(r"(?:[-*]\s*)?warnings?(?:[:\s]|$)", lowered)
+        or re.search(r"\bwarnings?\s*:\s*[1-9]\d*\b", lowered)
+        or re.fullmatch(r"(?:[\w -]+\s+)?status:\s*warning", lowered)
+    )
 
 
 def _is_informational_warning(command_id: str, line: str) -> bool:
     if command_id != "doctor":
         return False
     lowered = line.lower()
+    if lowered == "doctor status: warning":
+        return True
     optional_credential_terms = (
         "github token",
         "github_token",
+        "gh_token",
         "openai",
         "openai_api_key",
         "anthropic",
         "anthropic_api_key",
         "credential",
         "credentials",
+        "[redacted_secret_name]",
     )
     missing_terms = ("missing", "not configured", "not set", "unavailable")
     return any(term in lowered for term in optional_credential_terms) and any(term in lowered for term in missing_terms)
