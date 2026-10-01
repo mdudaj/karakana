@@ -60,6 +60,7 @@ ARTIFACT_KINDS = {
     "product_requirements_document",
     "requirements_note",
     "requirements_traceability",
+    "research_resolution",
     "rollback_plan",
     "schema_contract",
     "screenshot_or_render_evidence",

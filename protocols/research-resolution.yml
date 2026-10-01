@@ -1,0 +1,50 @@
+protocol_id: research-resolution
+name: Research Resolution
+version: 0.1.0
+category: research
+risk_floor: low
+summary: Close every research task with actionable requirements, design, artifact and readiness choices.
+roles: [researcher, planner, reviewer]
+standards:
+  - Use current authoritative project evidence and record its limits.
+  - Select requirements and design or method choices; update or reuse their governing artifacts.
+  - Give a ready, no-change, decision-required or evidence-blocked outcome; never label an unknown material choice ready.
+  - An artifact structure check cannot approve a choice or authorize implementation.
+required_inputs:
+  - bounded research question and intended decision
+  - repository instructions, current handoff and relevant source artifacts
+steps:
+  - step_id: classify
+    action: classify
+    instruction: Identify scope, affected users, authority and the decision that research must unblock.
+  - step_id: inspect
+    action: inspect
+    instruction: Check current source, requirements, design, tests and authoritative external sources where needed.
+  - step_id: resolve
+    action: plan
+    instruction: Choose concrete requirements and design or method with evidence, acceptance and rationale; name exact artifact updates or justified reuse.
+  - step_id: review
+    action: review
+    instruction: Verify every material choice is supported. Mark ready only when artifacts and authority are current; otherwise name the owner, question and exact next action.
+  - step_id: handoff
+    action: handoff
+    instruction: Attach the research resolution, verification and handoff. Carry unresolved blockers without presenting them as implementation-ready.
+artifacts:
+  - kind: task_classification
+  - kind: trace
+  - kind: research_resolution
+    description: Structured research closeout with requirements, design, artifact choices, readiness and exact next action.
+  - kind: verification_summary
+  - kind: handoff
+approval_gates:
+  - workflow_change
+  - safety_policy_change
+  - remote_publish
+verification:
+  - Validate the research closeout structure and referenced local artifacts.
+  - Review evidence, decision quality and actual authority separately from the structural check.
+  - Run follow-up implementation's own pre-implementation gate before code.
+blocked_actions:
+  - claim_ready_with_unresolved_material_choice
+  - implement_from_research_without_follow_up_protocol
+  - treat_research_as_external_write_approval

@@ -72,7 +72,7 @@ covering several concerns, with explicit sections and links rather than duplicat
 | --- | --- |
 | Orient and classify | Verify project, repository, branch, current handoff, request type and authority. Identify risk, affected users/subsystems and governing skills. Analysis is not authorization to implement. |
 | Define | State the bounded outcome, non-goals and observable acceptance criteria. Link existing requirements; resolve material ambiguity. Record changes to agreed scope instead of silently enlarging it. |
-| Research and design | Inspect current code, contracts and tests; research only unresolved questions using authoritative sources. Record alternatives and trade-offs for consequential decisions; include UX, security, privacy, data and operational effects when applicable. |
+| Research and design | Inspect current code, contracts and tests; research only unresolved questions using authoritative sources. Close research with a requirements choice, observable acceptance, design/method choice with rationale, and explicit artifact dispositions. Record alternatives and UX, security, privacy, data and operational effects when applicable. Mark implementation ready only after material choices, artifacts and authority are settled; otherwise name the exact blocker, owner and next action. |
 | Plan | Name affected files, steps, test cases, regression scope, approvals and rollback when relevant. Run the pre-implementation artifact gate for non-trivial implementation. |
 | Implement | Work on a task branch in small reviewable changes. Reproduce bugs and add a failing regression test when feasible. Extend established abstractions; do not implement speculative future features. Stay within approved scope. |
 | Verify and validate | Verify against specifications with focused tests then the required broader suite. Validate user outcomes through relevant browser, accessibility, data or operational checks. Record commands, results, environment/revision, omissions and residual risk. |
@@ -92,10 +92,41 @@ Before calling a slice complete, required checks must pass and blocking findings
 must be resolved. If a check cannot run, state the limitation and do not claim the
 associated behavior verified; distinguish local implementation from acceptance.
 
+### Research resolution gate
+
+Every bounded research task ends with a `research-resolution` closeout. If new
+research within an implementation task changes material choices, attach the
+same closeout to that task before code proceeds. State the question, current evidence and
+limits, the selected requirements with observable acceptance, the selected design
+or method with rationale, and what happened to the requirements, ADR/design,
+plan, UX, schema, example, test or eval artifacts that matter. Update or reuse
+the actual governing artifacts; one compact file may cover requirements and
+design for a small task when it genuinely contains both. Explicitly justify
+non-applicability. A list of options or a recommendation to “review later” is
+not a resolved result.
+
+Use `ready_for_implementation` only when the material choices, artifact paths
+and required authority are current. `resolved_no_change` closes a disproved or
+already-satisfied need with evidence. If approval or a product choice remains,
+use `decision_required` and give the recommended option, named decision owner,
+exact question and next action. If evidence is missing, use `evidence_blocked`
+and name the missing fact, owner, bounded way to obtain it and independent work
+that can proceed. Neither blocked state permits a claim of implementation
+readiness. The follow-up implementation task still has its own authorization,
+artifact and verification gates. Do not manufacture evidence or approval to
+turn a blocked result into ready.
+
+`karakana protocol check` validates the closeout's required structure and local
+artifact references for new research traces; it cannot judge whether a source
+supports a conclusion or whether claimed authority is valid. Review those
+substantively. Existing protocol artifact checks remain presence-only.
+
 ## Proportional application
 
-- Analysis/research/review: findings, evidence and handoff; no implementation ADR
-  or rollback unless the task actually makes a consequential decision/change.
+- Analysis/review: findings, evidence and handoff; no implementation ADR or
+  rollback unless the task actually makes a consequential decision/change.
+- Research: a structured resolution with requirement, design and artifact
+  choices; no separate PRD/ADR when a compact record genuinely covers them.
 - Tiny mechanical/docs-only work: concise intent, diff review and applicable
   validation. No new PRD or ADR just to satisfy ceremony.
 - Bug fix: observed failure, cause evidence, regression test where feasible and
@@ -149,7 +180,9 @@ render evidence and handoff. Other required artifacts are checked. Completion is
 the default for compatibility. A pre-implementation pass is never a completion
 pass. Stage is recorded in check metadata and CLI output.
 
-Checks validate artifact **presence**, not semantic quality or authenticity.
+Checks validate artifact **presence** and, for `research_resolution`, required
+structure and local reference existence; they do not validate semantic quality
+or authenticity.
 They do not execute commands, grant approval, prove all tests passed or guarantee
 an agent followed instructions. Attached local evidence must be a readable,
 nonempty regular file; a directory, missing path or bare output string is not

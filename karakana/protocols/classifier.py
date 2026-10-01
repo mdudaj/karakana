@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+import re
 
 from karakana.protocols.loader import ProtocolLoader
 from karakana.protocols.resolver import ProtocolResolver
@@ -127,11 +128,15 @@ class ProtocolClassifier:
                 skillpack = SkillpackLoader(self.repo_root).load(skillpack_name)
                 if category in skillpack.protocols.categories:
                     return skillpack.protocols.categories[category]
+                if category == "research" and ProtocolLoader(self.repo_root).exists("research-resolution"):
+                    return "research-resolution"
                 if skillpack.protocols.default:
                     return skillpack.protocols.default
             except FileNotFoundError:
                 pass
         loader = ProtocolLoader(self.repo_root)
+        if category == "research" and loader.exists("research-resolution"):
+            return "research-resolution"
         if loader.exists("python-code-change"):
             return "python-code-change"
         protocols = loader.list_protocols()
@@ -141,6 +146,8 @@ class ProtocolClassifier:
 
 
 def _infer_category(normalized_task: str) -> tuple[str, str]:
+    if re.match(r"^(research|investigate|study)\b", normalized_task):
+        return "research", "Matched a research task verb."
     for category, terms in CATEGORY_TERMS.items():
         if _contains_any(normalized_task, terms):
             return category, f"Matched `{category}` keyword."
@@ -156,7 +163,7 @@ def _infer_risk(normalized_task: str) -> tuple[str, str]:
 
 
 def _contains_any(value: str, terms: set[str]) -> bool:
-    return any(term in value for term in terms)
+    return any(bool(re.search(r"\bui\b", value)) if term == "ui" else term in value for term in terms)
 
 
 def _flag(explicit: bool | None, inferred: bool) -> bool:

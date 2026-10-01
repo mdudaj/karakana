@@ -18,6 +18,7 @@ TEMPLATE_FILES = {
     "product_requirements_document": "product-requirements-document.md",
     "requirements_note": "requirements-note.md",
     "requirements_traceability": "requirements-traceability.md",
+    "research_resolution": "research-resolution.md",
     "rollback_plan": "rollback-plan.md",
     "safety_review": "safety-review.md",
     "schema_contract": "schema-contract.md",

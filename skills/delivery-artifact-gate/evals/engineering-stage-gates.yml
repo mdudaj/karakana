@@ -13,7 +13,7 @@ expectations:
   must_include:
     - "--stage pre-implementation"
     - "--stage completion"
-    - "artifact presence only"
+    - "artifact presence; research closeouts also check required"
     - "test outcomes"
     - "authorization separately"
     - "small mechanical task"

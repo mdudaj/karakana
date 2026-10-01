@@ -1,7 +1,7 @@
 ---
 name: delivery-artifact-gate
 description: Use this skill before implementing, revising, or reviewing project work when the work should be guided by durable artifacts such as requirements, ADRs, user stories, milestones, UX grill notes, schemas, examples, tests, or handoffs.
-version: 0.3.0
+version: 0.3.1
 risk_level: medium
 allowed_tools:
   - read_file
@@ -73,6 +73,8 @@ No non-trivial delivery is complete until every required artifact exists or the 
 
 No non-trivial delivery is complete if it relies on an unstated assumption that could have been checked against project source, official documentation, exported artifacts, runtime errors, tests, or durable memory.
 
+Research is complete only when it chooses concrete requirements with observable acceptance, a design or method with rationale, and the related artifact updates or justified reuse. Use `research-resolution` for a research task; if new research arises during implementation, attach the same closeout to that task. A recommendation that merely says “review the options later” is a blocker, not implementation readiness. Name the decision/evidence owner and exact next action without inventing approval.
+
 ## Artifact Decision Matrix
 
 Create or update the smallest relevant set:
@@ -98,8 +100,8 @@ Use the shared lifecycle in `docs/engineering-process.md`. Before non-trivial
 implementation run `protocol check --trace <id> --stage pre-implementation`;
 at completion run `--stage completion`. The earlier gate defers delivery outputs,
 not prerequisite requirements, design, contracts or applicable approval evidence.
-Both checks establish artifact presence only. Inspect content, test outcomes and
-authorization separately; a passed check is not permission to deploy or merge.
+Both checks establish artifact presence; research closeouts also check required
+structure and local references. Inspect content, test outcomes and authorization separately; a passed check is not permission to deploy or merge.
 Keep implemented, verified, merged, deployed and accepted distinct in summaries.
 For a small mechanical task reuse the existing requirement and a compact record;
 for analysis-only work use the assessment protocol without implementation burden.
@@ -109,6 +111,8 @@ to repeat every stage on every task. Verify existing artifacts against the curre
 scope, source, framework versions and required approvals; reference satisfied
 stages and proceed directly to delivery when all prerequisites are met. Research
 only new uncertainties. Record justified non-applicability in the compact plan.
+Before leaving a research stage, review its `research_resolution` record and
+actual requirement, design and related artifact paths. A structural check does not establish that the cited evidence supports the choice or grants authority.
 
 Follow `docs/cost-aware-continuation.md`: focused debugging tests followed by the
 full required regression gate, bounded output, one compact delivery record with
@@ -147,6 +151,7 @@ and whether a new conversation is beneficial; neither substitutes for approval.
 - Which user story or acceptance criterion proves the work is done?
 - Which traceability artifact links requirements to implementation surfaces and tests/evals?
 - Which tests/evals protect the rule from regression?
+- Did research settle the requirements, design/method and artifact choices, or name an exact blocker with owner and next action?
 - Which handoff entry will let the next agent continue without repeating instructions?
 - Is this implementation going beyond the artifact-backed scope?
 - Are any required artifacts missing, renamed, or only implied by chat?
