@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from karakana.requirements.msc_platform import is_msc_platform
+from karakana.requirements.prd import GENERIC_ACCEPTANCE_CRITERIA, GENERIC_FUNCTIONAL_REQUIREMENTS, GENERIC_GOAL_PREFIX, GENERIC_PROBLEM
 from karakana.requirements.schemas import IssueDraft, ReadinessCheck, RequirementPRD
 
 
@@ -15,6 +16,12 @@ GENERIC_TITLE_TERMS = {
     "cli command",
     "artifact generation",
 }
+SOURCE_SPECIFIC_CHECKS = {
+    "problem": "problem describes the source task",
+    "goal": "goal describes the source task",
+    "functional_requirements": "functional requirements describe source behavior",
+    "acceptance_criteria": "acceptance criteria verify source behavior",
+}
 
 
 def check_readiness(prd: RequirementPRD, issues: list[IssueDraft] | None = None) -> ReadinessCheck:
@@ -22,11 +29,26 @@ def check_readiness(prd: RequirementPRD, issues: list[IssueDraft] | None = None)
     failed: list[str] = []
     warnings: list[str] = []
 
-    _check(bool(prd.goal and "Needs review" not in prd.goal), "goal is clear", passed, failed)
-    _check(bool(prd.problem), "problem is clear", passed, failed)
-    _check(bool(prd.functional_requirements), "scope is defined", passed, failed)
+    problem = prd.problem.strip()
+    goal = prd.goal.strip()
+    goal_is_fallback = goal.casefold().startswith(GENERIC_GOAL_PREFIX.casefold())
+    _check(
+        _source_specific(prd, "problem", bool(problem and not problem.casefold().startswith("needs review:")), problem != GENERIC_PROBLEM),
+        SOURCE_SPECIFIC_CHECKS["problem"], passed, failed,
+    )
+    _check(
+        _source_specific(prd, "goal", bool(goal and not goal.casefold().startswith("needs review:") and not goal_is_fallback), not goal_is_fallback),
+        SOURCE_SPECIFIC_CHECKS["goal"], passed, failed,
+    )
+    _check(
+        _source_specific(prd, "functional_requirements", bool(prd.functional_requirements), any(item not in GENERIC_FUNCTIONAL_REQUIREMENTS for item in prd.functional_requirements)),
+        SOURCE_SPECIFIC_CHECKS["functional_requirements"], passed, failed,
+    )
     _check(bool(prd.non_goals), "non-goals are defined", passed, failed)
-    _check(bool(prd.standards_spec.acceptance_criteria), "acceptance criteria exist", passed, failed)
+    _check(
+        _source_specific(prd, "acceptance_criteria", bool(prd.standards_spec.acceptance_criteria), any(item not in GENERIC_ACCEPTANCE_CRITERIA for item in prd.standards_spec.acceptance_criteria)),
+        SOURCE_SPECIFIC_CHECKS["acceptance_criteria"], passed, failed,
+    )
     _check(bool(prd.suggested_skills), "suggested skills exist", passed, failed)
     if prd.suggested_skillpack:
         passed.append("suggested skillpack exists")
@@ -57,6 +79,12 @@ def check_readiness(prd: RequirementPRD, issues: list[IssueDraft] | None = None)
 
     ready = not failed
     status = "ready" if ready and not warnings else ("warning" if ready else "not_ready")
+    next_actions = (
+        ["Address failed readiness checks before using stories, issue drafts, or Codex handoff.", "Review the regenerated PRD with a human."]
+        if failed else ["Review generated stories and issues.", "Use action or Codex handoff only after approval."]
+    )
+    if set(SOURCE_SPECIFIC_CHECKS.values()).intersection(failed):
+        next_actions.insert(0, "Add task-specific Problem, Goal, Functional requirements, and Acceptance criteria to the source's Specification / PRD Seed, then regenerate the PRD.")
     return ReadinessCheck(
         req_id=prd.req_id,
         status=status,
@@ -64,8 +92,17 @@ def check_readiness(prd: RequirementPRD, issues: list[IssueDraft] | None = None)
         passed=passed,
         failed=failed,
         warnings=warnings,
-        recommended_next_actions=["Review PRD with a human.", "Generate stories and issue drafts.", "Address failed readiness checks before Codex handoff."] if failed else ["Review generated stories and issues.", "Use action or Codex handoff only after approval."],
+        recommended_next_actions=next_actions,
     )
+
+
+def _source_specific(prd: RequirementPRD, field: str, has_content: bool, legacy_specific: bool) -> bool:
+    if not has_content:
+        return False
+    grounding = prd.metadata.get("source_grounding")
+    if isinstance(grounding, dict) and field in grounding:
+        return grounding[field] is True
+    return legacy_specific
 
 
 def _check(condition: bool, label: str, passed: list[str], failed: list[str]) -> None:

@@ -79,3 +79,4 @@ Verification:
     assert "Curriculum extraction." in prd.non_goals
     assert "Repeating seed default sources does not create duplicate rows." in prd.standards_spec.acceptance_criteria
     assert "Focused Django tests for apps.curriculum." in prd.test_and_eval_plan
+    assert all(prd.metadata["source_grounding"].values())
