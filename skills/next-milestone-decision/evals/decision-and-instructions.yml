@@ -20,6 +20,8 @@ expectations:
     - "Verification Plan"
     - "Definition of Done"
     - "Do not recommend implementation when P0/P1"
+    - "P0: <unresolved finding>"
+    - "P06"
     - "not probabilities"
   required_sections:
     - "Safety rules"

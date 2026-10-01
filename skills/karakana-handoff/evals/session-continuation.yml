@@ -19,6 +19,7 @@ expectations:
     - "Exact Next Action"
     - "Return Handoff Expectations"
     - "append-only"
+    - "open-issues.md"
   required_sections:
     - "Safety rules"
     - "Output format"

@@ -70,7 +70,10 @@ def create_handoff(
     note = redact_handoff_text(from_note)
     if note:
         state.summaries.append(f"User-provided state: {note}")
-    inspect_first = _inspect_first(repo_root, project, loaded_skillpack.path, loaded_skillpack.project.memory, milestone, state.source_artifacts, workspace)
+    backlog = _active_backlog_path(repo_root, loaded_skillpack.project.memory)
+    if backlog:
+        state.summaries.append(f"Project development backlog: {backlog} (active items present).")
+    inspect_first = _inspect_first(repo_root, project, loaded_skillpack.path, loaded_skillpack.project.memory, milestone, state.source_artifacts, workspace, backlog)
     previous = previous_handoff_id or _latest_handoff_id(repo_root, project, skillpack_name)
     staleness = []
     if not recover_artifacts:
@@ -100,7 +103,7 @@ def create_handoff(
         open_findings=_unique(state.open_findings),
         inspect_first=inspect_first,
         do_not_reread=_do_not_reread(repo_root, project),
-        reference_artifacts=_unique(state.source_artifacts + [item["path"] for item in continuation["evidence"].values()]),
+        reference_artifacts=_unique(state.source_artifacts + ([backlog] if backlog else []) + [item["path"] for item in continuation["evidence"].values()]),
         okf_concepts_loaded=_unique(okf_concepts_loaded or []),
         okf_concepts_changed=_unique(okf_concepts_changed or []),
         suggested_skills=_suggested_skills(loaded_skillpack.skills.required, loaded_skillpack.skills.optional, milestone, state.suggested_skills),
@@ -205,7 +208,19 @@ def _recover_ingestion(repo_root: Path, project: str, state: RecoveredState) -> 
     state.summaries.append(f"Ingestion `{bundle.ingest_id}` is {bundle.status}; reference candidates selectively.")
 
 
-def _inspect_first(repo_root: Path, project: str, skillpack_path: str | None, memory: str | None, milestone: str, artifacts: list[str], workspace: str | None) -> list[str]:
+def _active_backlog_path(repo_root: Path, memory: str | None) -> str | None:
+    if not memory:
+        return None
+    path = repo_root / memory / "open-issues.md"
+    try:
+        if any(line.startswith("- [ ] ") for line in path.read_text(encoding="utf-8").splitlines()):
+            return str(path)
+    except (OSError, UnicodeError):
+        pass
+    return None
+
+
+def _inspect_first(repo_root: Path, project: str, skillpack_path: str | None, memory: str | None, milestone: str, artifacts: list[str], workspace: str | None, backlog: str | None) -> list[str]:
     paths = [str(repo_root / "KARAKANA.md")]
     if skillpack_path:
         paths.append(skillpack_path)
@@ -213,6 +228,8 @@ def _inspect_first(repo_root: Path, project: str, skillpack_path: str | None, me
         overview = repo_root / memory / "overview.md"
         if overview.exists():
             paths.append(str(overview))
+    if backlog:
+        paths.append(backlog)
     if workspace:
         workspace_path = repo_root / "workspaces" / f"{workspace}.yml"
         if workspace_path.exists():

@@ -163,6 +163,34 @@ def test_strict_mode_blocks_unresolved_p1_and_writes_artifact(tmp_path, monkeypa
     assert any("P1 dogfood backlog" in blocker for blocker in data["blockers"])
 
 
+def test_note_priority_requires_explicit_unresolved_line(tmp_path):
+    write_project_context(tmp_path)
+    note = "Historical P06 integration; no P0/P1 blockers. P1 was closed."
+
+    decision = generate_next_milestone(
+        tmp_path, project="msc-platform", skillpack="msc-platform",
+        from_note=note, no_brainstorm=True,
+    )
+
+    assert not any("note blocker" in item for item in decision.open_findings)
+    assert not any("note blocker" in item for item in decision.blockers)
+    assert decision.recommended_milestone != "Resolve P0/P1 Planning and Review Blockers"
+
+
+def test_explicit_note_priority_preserves_description(tmp_path):
+    write_project_context(tmp_path)
+
+    decision = generate_next_milestone(
+        tmp_path, project="msc-platform", skillpack="msc-platform",
+        from_note="Review history.\nP1: unresolved release evidence\nP0: missing source integrity",
+        no_brainstorm=True,
+    )
+
+    assert "P1 note blocker: unresolved release evidence" in decision.open_findings
+    assert "P0 note blocker: missing source integrity" in decision.open_findings
+    assert decision.recommended_milestone == "Resolve P0/P1 Planning and Review Blockers"
+
+
 def test_generated_instructions_preserve_safety_gates(tmp_path):
     write_project_context(tmp_path)
 
