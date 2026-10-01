@@ -14,13 +14,6 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Active development items
 
-- [ ] **KDX-04 · P3 · proposed — reconcile catalogue status wording.**
-  Evidence: `docs/skills/engineering-artifact-catalogue/PLAN.md` still calls
-  P06 integration pending, although the catalogue merged in PR #13 and the
-  executive pilot records merged in PRs #18–20. Acceptance: update the canonical
-  Markdown state without changing the frozen XLSX/JSON or pretending that real
-  reader acceptance has occurred. Next: make a bounded documentation patch
-  after current P1/P2 delivery.
 - [ ] **KDX-07 · P3 · proposed — reconcile optional project paths.**
   Evidence: dogfood `20261001-160648-dogfood-b3997b` warns that `billing`,
   `msc-research`, and `nhrdm` skillpacks point at absent memory directories;
@@ -32,9 +25,19 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Completed development items
 
-These items passed local verification. PRs #21–23 record integration of
-KDX-01–03, KDX-05, and KDX-06; KDX-08 awaits integration. Checklist completion
-does not imply deployment or user acceptance.
+These items passed local verification. PRs #21–24 record integration of
+KDX-01–03, KDX-05, KDX-06, and KDX-08. KDX-04 awaits integration. Checklist
+completion does not imply deployment or user acceptance.
+
+- [x] **KDX-04 · P3 · locally verified — reconcile catalogue status wording.**
+  Evidence: canonical `docs/skills/engineering-artifact-catalogue/PLAN.md`
+  now records catalogue PR #13 and executive pilot PRs #18–20 as merged,
+  preserves independent reader and recipient acceptance as pending, and
+  identifies the committed 0.7 JSON/XLSX as a historical retained export.
+  The frozen pair was not changed. The current source rendered to a separate
+  15-sheet workbook with a matching source hash; 66 focused tests and project
+  memory validation passed. Next: review and integrate this documentation patch,
+  then take KDX-07.
 
 - [x] **KDX-01 · P1 · merged — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`
@@ -66,11 +69,11 @@ does not imply deployment or user acceptance.
   four concrete failed checks; tests preserve ready status for an explicit
   task-specific seed and cover legacy artifacts. Integrated via PR #23. Next:
   take KDX-08.
-- [x] **KDX-08 · P2 · locally verified — generate source-specific drafts.**
+- [x] **KDX-08 · P2 · merged — generate source-specific drafts.**
   Evidence: non-MSc stories and issues now copy labeled functional requirements
   and criteria, flag uncertain criterion mapping, and mark missing actors,
   outcomes, or generic content for review. The exact old five-story template
   is regenerated before issue drafting; edited copies are preserved and block
   issue creation with a recovery command. Focused and full regression evidence
   is recorded in `docs/requirements-source-specific-drafts-2026-10-01.md`.
-  Next: review this branch for integration, then take KDX-04.
+  Integrated via PR #24. Next: take KDX-04.
