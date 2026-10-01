@@ -344,6 +344,7 @@ Purpose: Synthetic demonstration first; real project artifacts require a separat
 | PL03 | First-release and roadmap planning | Canonical Markdown roadmap/release pack plus executive/product/operations exports | Forecasts, commitments, actual release facts and operations blockers remain distinct and visible in applicable views. | Synthetic example only; LIMS use follows a later user request. |
 | PL04 | Human workbook review | Archived annotated export, feedback report and reviewed Markdown diff | Preserve edits by stable source ID/version; report stale/conflicting feedback after office round trip; regenerate from the reviewed source. | No automatic overwrite or imported agreement becoming authorization. |
 | PL05 | Global availability | Generated catalogue and selected optional skillpacks | Skills discoverable for appropriate documentation work; unrelated requests unaffected. | Experimental until observed evidence supports promotion. |
+| PL06 | Bounded executive audience-usefulness pilot ([resolved scope and rubric](../../research/2026-10-01-engineering-workbooks-audience-pilot.md)) | Frozen P05 executive XLSX/JSON baseline, neutral decision-finding script and separate reader observations | Three to five independent role-matched readers can distinguish release blockers, plans and actual evidence; source identity, accessibility results and unperformed checks remain explicit. | Local preparation is the next slice; actual outreach, recipient acceptance and any profile/exporter change have separate gates. |
 
 ## 13 Gate Mapping
 
