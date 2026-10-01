@@ -47,25 +47,25 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Completed development items
 
-These items are implemented and verified locally on
-`fix/development-backlog-priorities-20261001`; they await pull request review
-and are not merged or accepted.
+These items passed local verification on
+`fix/development-backlog-priorities-20261001`. PR #21 records their integration
+state. Checklist completion does not imply deployment or user acceptance.
 
 - [x] **KDX-01 · P1 · locally verified — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`
   as P0. An explicit-line parser and positive/negative regression tests now
   preserve `P0:`/`P1:` blockers and structured dogfood priorities. CLI check
   `20261001-154711-milestone-b40f27` reports no blocker for historical/negated
-  prose. Next: review this branch through a pull request.
+  prose. Next: verify integration in PR #21, then continue KDX-05.
 - [x] **KDX-02 · P2 · locally verified — expose the development backlog.**
   Evidence: the former file was an empty template; it now has stable IDs and
   task state. Isolated tests show that handoffs link only their own active
   project backlog, including with artifact recovery disabled. Memory validation
-  passed. Next: review this branch through a pull request.
+  passed. Next: verify integration in PR #21, then continue KDX-05.
 - [x] **KDX-03 · P2 · locally verified — refresh dogfood and requirements.**
   Evidence: dogfood `20261001-154355-dogfood-c4944f` ran the safe full
   allowlist; the five warnings were triaged in the delivery record. Requirements
   `20261001-154449-req-565169` were inspected: structural readiness passed,
   but the generated PRD is generic and is not accepted as task authority. The
   project-specific requirements remain in the reviewed delivery record. Next:
-  review this branch through a pull request; take KDX-05 or KDX-06 next.
+  verify integration in PR #21, then take KDX-05 or KDX-06.
