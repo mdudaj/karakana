@@ -3,26 +3,9 @@
 from __future__ import annotations
 
 from karakana.models.router import route_model
+from karakana.requirements.grounding import GENERIC_ACCEPTANCE_CRITERIA, GENERIC_FUNCTIONAL_REQUIREMENTS, GENERIC_GOAL_PREFIX, GENERIC_PROBLEM
 from karakana.requirements.schemas import HarnessSubsystemImpact, RequirementPRD, RequirementSource, StandardsSpecContext
 from karakana.requirements.store import generate_req_id
-
-
-GENERIC_PROBLEM = "Needs review: source describes intent, but problem statement should be confirmed."
-GENERIC_GOAL_PREFIX = "Convert the source intent into reviewable requirements: "
-GENERIC_FUNCTIONAL_REQUIREMENTS = (
-    "Generate a PRD with context, problem, goal, requirements, risks, safety constraints, and review plan.",
-    "Generate user stories and issue drafts as separate reviewable artifacts.",
-    "Run Definition of Ready checks before handoff.",
-    "Preserve Codex handoff boundaries and do not execute Codex.",
-    "Create issue drafts only; do not publish GitHub issues by default.",
-    "Preserve ingestion evidence and avoid direct memory or skill writes.",
-)
-GENERIC_ACCEPTANCE_CRITERIA = (
-    "PRD includes all required sections.",
-    "Stories include acceptance criteria.",
-    "Issues are independently grabbable vertical slices.",
-    "Readiness check reports missing information.",
-)
 
 
 def generate_prd(
@@ -64,7 +47,12 @@ def generate_prd(
         model_route=route,
         test_and_eval_plan=tests,
         rollout_or_review_plan=["Generate PRD artifact.", "Review stories and issue drafts.", "Run readiness checks.", "Hand off only after human review."],
-        metadata={"inferred": True, "source_type": source.source_type, "source_grounding": _source_grounding(content)},
+        metadata={
+            "inferred": True,
+            "source_type": source.source_type,
+            "source_grounding": _source_grounding(content),
+            "actors_grounded": bool(_explicit_actors(content)),
+        },
     )
 
 
@@ -195,11 +183,16 @@ def _excerpt(content: str, limit: int = 1200) -> str:
 
 
 def _users_or_actors(content: str) -> list[str]:
-    lowered = content.lower()
-    actors = ["developer", "reviewer", "Karakana operator"]
-    if "staff operator" in lowered or "staff-only" in lowered:
-        actors.insert(0, "staff operator")
-    return list(dict.fromkeys(actors))
+    return _explicit_actors(content)
+
+
+def _explicit_actors(content: str) -> list[str]:
+    selected = _section(content, "Specification / PRD Seed") or content
+    actors = _labeled_bullets(selected, "Users / Actors")
+    if actors:
+        return list(dict.fromkeys(actors))
+    actor = _labeled_paragraph(selected, "Actor")
+    return [actor] if actor else []
 
 
 def _source_grounding(content: str) -> dict[str, bool]:
