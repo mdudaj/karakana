@@ -74,6 +74,8 @@ The next pilot uses the existing synthetic `pilot-checklist` executive export. I
 
 The requirements and method are resolved for review, but the audience session is **decision required**: a Karakana maintainer must authorize a coordinator and independent readers before outreach. Local baseline verification and script preparation can proceed without that outreach. This record does not claim recipient acceptance or authorize a skill/exporter implementation change.
 
+The local preparation is recorded in the [frozen baseline and facilitator receipt](../skills/engineering-artifact-catalogue/pilots/executive-reader-baseline.md) and a separate [neutral reader handout](../skills/engineering-artifact-catalogue/pilots/executive-reader-script.md). Their preparation does not change the audience-session decision boundary.
+
 The read-only AREX assessment at `.karakana/research/arex-skill-20260926/review.md` is local runtime evidence, not a committed dependency. The public [paper](https://arxiv.org/abs/2609.02749) and [pinned library](https://github.com/VectorSpaceLab/AREX-Skill/tree/ac3fe1afa80fb9a09775ecfb2b6cc3ba850a2db6) explain the provenance/use-case inspiration. Its benchmark results were not reproduced here. This pilot measures a documentation package, not AREX effectiveness, autonomous skill use or model quality.
 
 ## Frozen input and provenance
