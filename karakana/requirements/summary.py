@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from karakana.requirements.schemas import IssueDraft, ReadinessCheck, RequirementPRD, UserStory
+from karakana.requirements.stories import generate_stories
 
 
 def render_prd(prd: RequirementPRD) -> str:
     impact = prd.harness_impact
     standards = prd.standards_spec
+    actors = prd.users_or_actors if prd.metadata.get("actors_grounded") is True else ["Needs review: identify source users or actors."]
+    story_summaries = [f"Actor: {story.actor}; requested behavior: {story.want}; outcome: {story.outcome}" for story in generate_stories(prd)]
     return f"""# Product Requirements Document
 
 ## Context
@@ -28,11 +31,11 @@ def render_prd(prd: RequirementPRD) -> str:
 
 ## Users / Actors
 
-{_bullets(prd.users_or_actors)}
+{_bullets(actors)}
 
 ## User Stories
 
-{_bullets([f"As a {actor}, I want the capability described by this PRD so that {prd.goal}" for actor in prd.users_or_actors] or ["Needs review: user stories not generated yet."])}
+{_bullets(story_summaries)}
 
 ## Functional Requirements
 
@@ -114,9 +117,9 @@ def render_stories(stories: list[UserStory]) -> str:
         body.append(
             f"""## Story: {story.title}
 
-As a {story.actor},
-I want {story.want},
-so that {story.outcome}.
+Actor: {story.actor}
+Requested behavior: {story.want}
+Outcome: {story.outcome}
 
 ### Acceptance Criteria
 

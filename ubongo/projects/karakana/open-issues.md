@@ -29,22 +29,12 @@ claim. Review this file against current source and runtime evidence at each task
   corrected or explicitly retired after checking project ownership; validation
   no longer emits stale-path warnings. Next: review those skillpacks and
   workspace definitions with their project owners before changing configuration.
-- [ ] **KDX-08 · P2 · proposed — generate source-specific story and issue drafts.**
-  Evidence: `karakana/requirements/summary.py` still renders PRD user stories
-  with “the capability described by this PRD,” and
-  `karakana/requirements/stories.py` uses generic slices for non-MSc projects.
-  KDX-06 now blocks fallback PRDs at readiness; it does not certify or rewrite
-  downstream stories. Acceptance: concrete source requirements and criteria
-  appear in reviewable story/issue drafts without inventing actors, outcomes
-  or approval; generic input stays visibly provisional. Next: design a bounded
-  generator change with positive/negative project examples and deterministic
-  tests on a separate branch.
 
 ## Completed development items
 
-These items passed local verification. PRs #21 and #22 record integration of
-KDX-01–03 and KDX-05; KDX-06 awaits integration. Checklist completion does not
-imply deployment or user acceptance.
+These items passed local verification. PRs #21–23 record integration of
+KDX-01–03, KDX-05, and KDX-06; KDX-08 awaits integration. Checklist completion
+does not imply deployment or user acceptance.
 
 - [x] **KDX-01 · P1 · merged — reject incidental note priority tokens.**
   Evidence: run `20261001-153048-milestone-0036ff` misread historical `P06`
@@ -70,9 +60,17 @@ imply deployment or user acceptance.
   `20261001-160648-dogfood-b3997b` show zero-count eval, optional doctor
   credentials, and workspace `- None` as passed; real skillpack/workspace
   warnings retain their messages. Integrated via PR #22. Next: take KDX-06.
-- [x] **KDX-06 · P2 · locally verified — require source-specific readiness.**
+- [x] **KDX-06 · P2 · merged — require source-specific readiness.**
   Evidence: requirement `20261001-154449-req-565169` had passed readiness
   despite generic fallback content. The new gate marks it `not_ready` with
   four concrete failed checks; tests preserve ready status for an explicit
-  task-specific seed and cover legacy artifacts. Next: review this branch for
-  integration, then take KDX-08.
+  task-specific seed and cover legacy artifacts. Integrated via PR #23. Next:
+  take KDX-08.
+- [x] **KDX-08 · P2 · locally verified — generate source-specific drafts.**
+  Evidence: non-MSc stories and issues now copy labeled functional requirements
+  and criteria, flag uncertain criterion mapping, and mark missing actors,
+  outcomes, or generic content for review. The exact old five-story template
+  is regenerated before issue drafting; edited copies are preserved and block
+  issue creation with a recovery command. Focused and full regression evidence
+  is recorded in `docs/requirements-source-specific-drafts-2026-10-01.md`.
+  Next: review this branch for integration, then take KDX-04.

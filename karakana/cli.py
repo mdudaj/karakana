@@ -102,7 +102,7 @@ from karakana.requirements.sources import (
     load_proposal_requirement_source,
 )
 from karakana.requirements.store import RequirementsStore
-from karakana.requirements.stories import generate_stories
+from karakana.requirements.stories import generate_stories, has_legacy_template_wants, is_legacy_template_stories
 from karakana.requirements.summary import render_requirement_summary
 from karakana.release.checklist import write_release_checklist
 from karakana.release.checks import run_doctor, run_release_check
@@ -2840,11 +2840,21 @@ def requirements_issues(from_prd: str = typer.Option(..., "--from-prd", help="Re
     repo_root = Path.cwd()
     trace_store = TraceStore(repo_root)
     trace = trace_store.create_run(command="requirements issues", task_type="requirements_issues", inputs={"req_id": from_prd})
+    regenerated_legacy_stories = False
     try:
         store = RequirementsStore(repo_root)
         prd = store.load_prd(from_prd)
         try:
             stories = store.load_stories(from_prd)
+            if is_legacy_template_stories(prd, stories):
+                stories = generate_stories(prd)
+                store.save_stories(from_prd, stories)
+                regenerated_legacy_stories = True
+            elif has_legacy_template_wants(stories):
+                raise ValueError(
+                    "Stored stories use the older generic template but contain edits. "
+                    f"Review them, or run `karakana requirements stories --from-prd {from_prd}` to replace them before generating issues."
+                )
         except FileNotFoundError:
             stories = generate_stories(prd)
             store.save_stories(from_prd, stories)
@@ -2860,6 +2870,8 @@ def requirements_issues(from_prd: str = typer.Option(..., "--from-prd", help="Re
     _success_trace(trace_store, trace)
     typer.echo(f"Issue drafts written to: {path.parent / 'issues.md'}")
     typer.echo(f"Issues: {len(issues)}")
+    if regenerated_legacy_stories:
+        typer.echo("Older template stories were regenerated from the PRD. Review the updated story and issue drafts.")
     if json_output:
         typer.echo(json.dumps([issue.to_dict() for issue in issues], indent=2, sort_keys=True))
 
