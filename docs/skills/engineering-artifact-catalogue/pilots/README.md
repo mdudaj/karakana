@@ -42,8 +42,11 @@ records author-assessed suitability for review, not domain audience sign-off.
 | Executive | [executive v0.1](exports/executive-v0.1.xlsx) | 11 / 55 | Inspect forecast outcomes, dependencies and unavailable release evidence |
 | Business amendment | [business v0.2](exports/business-v0.2.xlsx) | 15 / 66 | Review clarified criterion while retaining the original baseline |
 
-Each XLSX has a matching same-name JSON immutable feedback baseline. Include this
-whole pilot folder when sharing so relative full-source hyperlinks resolve. Start
+Each XLSX has a matching same-name JSON immutable feedback baseline. For general
+review, include this pilot folder so relative full-source hyperlinks resolve. For
+the blinded executive reader session, follow the minimal copy list in the
+[facilitator receipt](executive-reader-baseline.md); keep its claim key out of the
+reader copy. Start
 with Read Me, Control and Readiness and Blockers; source status is not approval.
 Control declares omitted detailed tables/narrative. The generated Source Manifest
 is always present; an omission labelled Source Manifest means the authored registry
@@ -58,6 +61,10 @@ Feedback columns can appear on separate pages and long cells/narrative may requi
 opening the cell/source. A printed excerpt must not be described as the complete pack.
 Native Excel desktop, Accessibility Checker, assistive and recipient usability
 checks remain unperformed. LibreOffice transport is separate evidence.
+
+The [executive reader baseline receipt](executive-reader-baseline.md) and separate
+[neutral reader handout](executive-reader-script.md) prepare the next local pilot
+slice. No independent reader session or recipient acceptance has occurred.
 
 ## Reproduce and review
 
