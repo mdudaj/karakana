@@ -1,6 +1,6 @@
 # KDX-07: project memory and optional checkouts
 
-Status: locally verified; PR integration pending.
+Status: locally verified and integrated via squash merge PR #26 (`e08b50c`).
 Task trace: `20261001-183225-c8d6de` (the earlier automatic memory classification
 `20261001-183218-c5ad19` was superseded because this change also touches the
 workspace validator).
@@ -149,3 +149,7 @@ project source, tests, deployment or recipient workflow was validated. The
 manuscript source and owner remain unidentified. `optional_checkout` only
 classifies expected local absence; it does not make a project ready for code
 work. No GitHub write, merge or deployment was performed for this slice.
+
+Integration update (2026-10-01): PR #26 was squash merged into `main`. The
+post-merge safe dogfood assessment is recorded in
+`docs/karakana-dogfood-assessment-2026-10-01.md`.
