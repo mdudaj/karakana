@@ -9,6 +9,11 @@ and authority, establish acceptance, reuse or research/design, plan, implement,
 verify and validate, review, release only when authorized, then hand off.
 Tailor depth to risk; do not require a new PRD/ADR for a mechanical fix or repeat
 current approved research. Reopen affected decisions when scope/evidence changes.
+Research must conclude with a chosen requirement and acceptance, chosen design
+or method with rationale, and explicit governing artifact dispositions. Mark
+implementation ready only after evidence, material choices, artifact updates
+and authority are settled; otherwise name the exact missing decision/evidence,
+owner and next action. Do not hand off an unbounded recommendation as a plan.
 
 Prerequisite and completion artifact checks are distinct. File presence is not
 proof of semantic quality, test success or approval. Inspect actual results,

@@ -64,6 +64,7 @@ protocols:
     memory: memory-update
     migration: data-migration
     release: release-change
+    research: research-resolution
     requirements: requirements-change
     safety: safety-policy-change
     skill: skill-update

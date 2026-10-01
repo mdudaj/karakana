@@ -54,12 +54,20 @@ research/design → plan → implement → verify/validate → review → author
 release → handoff. Reuse current approved artifacts; reopen only affected stages.
 Tailor to the request and risk: analysis is not implementation authorization, and
 a mechanical fix does not need a fresh PRD/ADR. Keep one compact delivery record.
+Every research task must resolve requirements, design/method and related artifact
+choices. Use the research-resolution protocol for research-only work; if new
+research occurs within implementation, record the same closeout in that task's
+artifacts. Mark implementation ready only when evidence, choices, governing
+artifacts and authority are settled. Otherwise name the exact blocker, owner
+and next action; do not leave a vague proposed design for the next agent.
 
 For non-trivial implementation, attach prerequisite evidence and run
 `karakana protocol check --trace <id> --stage pre-implementation` before code.
 After verification and handoff, run `--stage completion` (the default).
-These checks validate artifact presence, not semantic correctness, test success
-or approval. Review the actual outcomes; never substitute attachment for review.
+These checks validate artifact presence and, for research closeouts, required
+structure and local references. They do not prove semantic correctness, test
+success or approval. Review the actual outcomes; never substitute attachment
+for review.
 Report implemented, verified, merged, deployed and accepted as distinct states.
 Use existing task approval for in-scope work without repeatedly asking, but stop
 for new scope, missing material decisions or actions requiring new authority.
@@ -148,7 +156,10 @@ Manual overrides are allowed, but record the rationale in traces or task notes.
 
 Karakana should infer the model route from the natural-language task whenever possible. Use explicit `karakana model route --task-type ...` only when deterministic routing is needed; otherwise prefer `karakana model route --task "<task>"` or entrypoints such as `karakana plan --task "<task>"` that classify the task automatically.
 
-Use the `assessment` protocol for analysis-only harness reviews, recommendations, and state assessments that should not require ADR or rollback artifacts unless a later implementation changes architecture or behavior.
+Use the `assessment` protocol for read-only harness state assessments that do
+not select an implementation direction. When review or research must settle
+requirements, design or method choices, use `research-resolution` even if the
+request says “review.” A later implementation has its own protocol and gates.
 
 ## How to Add a Skill
 

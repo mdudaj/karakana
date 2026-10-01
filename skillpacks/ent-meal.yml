@@ -44,6 +44,7 @@ protocols:
     assessment: assessment-review
     frontend: ux-change
     implementation: python-code-change
+    research: research-resolution
     requirements: requirements-change
     skill: skill-update
 safety:

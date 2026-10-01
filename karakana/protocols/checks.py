@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from karakana.protocols.lifecycle import artifacts_for_stage
+from karakana.protocols.research_resolution import research_resolution_outcome, validate_research_resolution
 from karakana.traces.schemas import RunTrace, redact_value
 from karakana.traces.store import TraceStore
 
@@ -27,6 +28,7 @@ ARTIFACT_ALIASES = {
     "product_requirements_document": {"product_requirements_document", "prd", "requirements_prd", "requirements_prd_markdown"},
     "requirements_note": {"requirements_note", "requirements_prd", "requirements_prd_markdown"},
     "requirements_traceability": {"requirements_traceability", "traceability_matrix", "requirements_readiness"},
+    "research_resolution": {"research_resolution"},
     "rollback_plan": {"rollback_plan"},
     "safety_review": {"safety_review", "patch_review", "model_response_review", "ingestion_review"},
     "schema_contract": {"schema_contract", "schema", "api_contract", "data_contract"},
@@ -103,6 +105,15 @@ def check_trace_protocol_artifacts(repo_root: Path, trace: RunTrace, *, stage: s
     missing = [check.artifact_kind for check in checks if check.status == "failed"]
     next_actions = [f"Produce or link required artifact: {artifact_kind}." for artifact_kind in missing]
     status = "failed" if missing else ("warning" if warnings else "passed")
+    metadata = {"command": trace.command, "project": trace.project, "task_type": trace.task_type,
+                "stage": stage, "deferred_artifacts": deferred,
+                "evidence_scope": ("artifact_presence_plus_research_structure"
+                                   if "research_resolution" in required else "artifact_presence_only")}
+    research_check = next((item for item in checks if item.artifact_kind == "research_resolution" and item.status == "passed"), None)
+    if research_check:
+        outcome = research_resolution_outcome(Path(research_check.evidence[0]))
+        metadata["research_outcome"] = outcome
+        metadata["implementation_ready"] = outcome == "ready_for_implementation"
     return ProtocolCheckResult(
         check_id=generate_protocol_check_id(),
         trace_id=trace.run_id,
@@ -115,14 +126,22 @@ def check_trace_protocol_artifacts(repo_root: Path, trace: RunTrace, *, stage: s
         missing_artifacts=missing,
         warnings=warnings,
         recommended_next_actions=next_actions,
-        metadata={"command": trace.command, "project": trace.project, "task_type": trace.task_type,
-                  "stage": stage, "deferred_artifacts": deferred,
-                  "evidence_scope": "artifact_presence_only"},
+        metadata=metadata,
     )
 
 
 def _check_artifact(repo_root: Path, trace: RunTrace, artifact_kind: str) -> ProtocolArtifactCheck:
     evidence = _artifact_evidence(repo_root, trace, artifact_kind)
+    if artifact_kind == "research_resolution" and evidence:
+        errors = [validate_research_resolution(repo_root, Path(path)) for path in evidence]
+        if not any(not item for item in errors):
+            return ProtocolArtifactCheck(
+                artifact_kind=artifact_kind,
+                status="failed",
+                evidence=evidence,
+                message="Research resolution incomplete: " + "; ".join(errors[0][:5]),
+            )
+        evidence = [path for path, item in zip(evidence, errors) if not item]
     if evidence:
         return ProtocolArtifactCheck(artifact_kind=artifact_kind, status="passed", evidence=evidence)
     return ProtocolArtifactCheck(
@@ -203,6 +222,12 @@ class ProtocolCheckStore:
 
 
 def render_protocol_check(result: ProtocolCheckResult) -> str:
+    evidence_scope = ("artifact presence plus research structure and local references"
+                      if result.metadata.get("evidence_scope") == "artifact_presence_plus_research_structure"
+                      else "artifact presence only")
+    research_outcome = (f"- Research outcome: {result.metadata['research_outcome']}\n"
+                        f"- Implementation ready: {str(result.metadata['implementation_ready']).lower()}\n"
+                        if result.metadata.get("research_outcome") else "")
     return f"""# Karakana Protocol Check
 
 ## Summary
@@ -214,7 +239,8 @@ def render_protocol_check(result: ProtocolCheckResult) -> str:
 - Category: {result.work_category or ""}
 - Risk: {result.risk_level or ""}
 - Stage: {result.metadata.get("stage", "completion")}
-- Evidence scope: artifact presence only; review content and outcomes separately.
+- Evidence scope: {evidence_scope}; review content, outcomes and authority separately.
+{research_outcome}
 
 ## Deferred Until Completion
 

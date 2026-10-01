@@ -57,6 +57,8 @@ karakana protocol attach --trace <run-id> --kind requirements_note --path docs/r
 karakana protocol attach --trace <run-id> --kind product_requirements_document --path docs/requirements/prd.md
 karakana protocol attach --trace <run-id> --kind requirements_traceability --path docs/requirements/traceability.md
 karakana protocol attach --trace <run-id> --kind artifact_readiness --path docs/requirements/readiness.md
+karakana protocol template research_resolution --output docs/research/example-resolution.md
+karakana protocol attach --trace <run-id> --kind research_resolution --path docs/research/example-resolution.md
 ```
 
 For requirements or behavior-changing work, use a PRD when the task spans product behavior, UX, architecture, data, safety, or multiple agents. User stories should have testable acceptance criteria, and traceability should link requirements to stories, UX/ADR/schema artifacts, implementation surfaces, and tests/evals.
@@ -78,6 +80,18 @@ karakana protocol check --trace <run-id>
 ```
 
 The check passes only when required artifacts have evidence in the trace or linked files.
+For a new research task, `research_resolution` also has a structural check: the
+closeout must make requirements, design/method and artifact choices, name current
+evidence and authority, and identify readiness or a concrete blocker. The check
+cannot establish that the evidence, decisions or claimed approval are correct;
+review those before reusing the result for implementation.
+The check report records `research_outcome` and `implementation_ready` separately
+from the protocol pass. A structurally complete `decision_required` or
+`evidence_blocked` closeout may pass as completed research while reporting
+`implementation_ready: false`.
+Use `assessment-review` for a read-only state assessment that does not choose an
+implementation direction. If a review must resolve requirements or design,
+classify that bounded work as `research` and use `research-resolution`.
 
 ## Handoff And Patch Gates
 
@@ -100,6 +114,7 @@ handoff so the next agent can continue without relying on chat history.
 Karakana maps work categories to protocol IDs through `skillpacks/karakana.yml`:
 
 - `requirements -> requirements-change`
+- `research -> research-resolution`
 - `architecture -> architecture-decision`
 - `frontend -> ux-change`
 - `migration -> data-migration`

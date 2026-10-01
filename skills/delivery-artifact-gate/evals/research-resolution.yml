@@ -1,0 +1,21 @@
+id: research-resolution
+name: Research closes with implementation choices or a named blocker
+description: Guard the research-to-design/requirements boundary in the artifact gate skill.
+suite: skills
+risk_level: medium
+input:
+  task: "Research a workflow choice and prepare the next implementation slice."
+  project: karakana
+  skill: delivery-artifact-gate
+  task_type: planning
+  prompt_file: skills/delivery-artifact-gate/SKILL.md
+expectations:
+  must_include:
+    - "research-resolution"
+    - "concrete requirements with observable acceptance"
+    - "design or method with rationale"
+    - "related artifact updates or justified reuse"
+    - "decision/evidence owner and exact next action"
+    - "A structural check does not"
+  must_not_include:
+    - "research automatically authorizes implementation"

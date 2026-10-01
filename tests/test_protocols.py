@@ -18,6 +18,7 @@ CORE_PROTOCOLS = {
     "memory-update",
     "python-code-change",
     "release-change",
+    "research-resolution",
     "requirements-change",
     "safety-policy-change",
     "skill-update",
@@ -76,6 +77,7 @@ def test_karakana_skillpack_references_existing_protocols():
     assert skillpack.protocols.categories["implementation"] == "python-code-change"
     assert skillpack.protocols.categories["assessment"] == "assessment-review"
     assert skillpack.protocols.categories["requirements"] == "requirements-change"
+    assert skillpack.protocols.categories["research"] == "research-resolution"
     assert skillpack.protocols.categories["architecture"] == "architecture-decision"
     assert skillpack.protocols.categories["frontend"] == "ux-change"
     assert skillpack.protocols.categories["migration"] == "data-migration"
@@ -85,6 +87,7 @@ def test_karakana_skillpack_references_existing_protocols():
     assert skillpack.protocols.categories["release"] == "release-change"
     assert context.protocols["implementation"] == "python-code-change"
     assert context.protocols["assessment"] == "assessment-review"
+    assert context.protocols["research"] == "research-resolution"
 
 
 def test_protocol_cli_lists_validates_and_resolves_artifacts():
@@ -137,6 +140,7 @@ def test_protocol_classifier_selects_category_specific_protocols():
         "Update ubongo memory with a new lesson.": "memory-update",
         "Prepare release checklist and version notes.": "release-change",
         "Assess harness state and recommendations.": "assessment-review",
+        "Research the current workflow and choose requirements.": "research-resolution",
     }
 
     for task, protocol_id in cases.items():
@@ -159,6 +163,7 @@ def test_protocol_artifacts_differ_by_category():
     assert "requirements_note" in ux
     assert "ux_description" in ux
     assert "screenshot_or_render_evidence" in ux
+    assert "research_resolution" in artifact_kinds("research-resolution")
 
 
 def test_protocol_classify_cli_records_trace_fields(isolated_repo):
@@ -197,6 +202,7 @@ def test_protocol_templates_exist():
         "migration-plan.md",
         "schema-contract.md",
         "user-story.md",
+        "research-resolution.md",
     ]:
         assert (root / name).exists()
 

@@ -38,6 +38,10 @@ local-only delivery boundary; neither document authorizes live model calls.
 ## Execution discipline (suggestions 2–7)
 
 - Research new uncertainties only; reuse approved references and decisions.
+  A research stage finishes with a concrete requirement, design/method and
+  artifact disposition in a `research_resolution` closeout. If a material
+  choice or approval is unavailable, name its owner and exact next action;
+  do not mark the stage implementation-ready or repeat broad research.
 - Focused tests during debugging; full required regression gate once stabilized.
   A failed/skipped final gate is not completion.
 - Bound output to relevant failures, functions and diffs; avoid repeated dumps.

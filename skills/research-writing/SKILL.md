@@ -1,7 +1,7 @@
 ---
 name: research-writing
 description: Use this skill for academic and concept-note writing, including proposal structure, literature review, methodology, objectives, significance, scope, risk analysis, and grant requirement analysis.
-version: 0.1.0
+version: 0.1.1
 risk_level: low
 allowed_tools:
   - read_file
@@ -52,6 +52,7 @@ Do not use for code implementation, payment logic, CI repair, or infrastructure 
 3. Structure methodology and expected outputs.
 4. Review risks, limitations, and significance.
 5. Keep citations and unsupported claims visible.
+6. For a Karakana-managed research task, complete `research-resolution`: choose the supported requirement or research aim, method/design and artifact updates. If evidence or authority prevents a choice, name the owner, precise gap and next action instead of presenting the proposal as ready.
 
 ## Safety rules
 

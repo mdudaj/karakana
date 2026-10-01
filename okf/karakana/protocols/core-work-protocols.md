@@ -5,10 +5,10 @@ title: Core Work Protocols
 status: active
 owner: karakana
 project: karakana
-summary: Protocol set covering requirements, architecture, UX, data migration, safety policy, skill, memory, release, and Python implementation work.
+summary: Protocol set covering research resolution, requirements, architecture, UX, data migration, safety policy, skill, memory, release, and Python implementation work.
 source: protocols
 tags: [karakana, protocol, governance, reproducibility]
-updated: 2026-07-03
+updated: 2026-10-01
 relationships:
   related_to:
     - karakana.protocol.system
@@ -23,6 +23,8 @@ Karakana core work protocols define deterministic steps, roles, artifacts, appro
 The core set currently includes:
 
 - `requirements-change`
+- `research-resolution`
+- `assessment-review`
 - `architecture-decision`
 - `ux-change`
 - `data-migration`
@@ -33,6 +35,12 @@ The core set currently includes:
 - `python-code-change`
 
 Skillpacks map work categories to these protocols so classification can select category-specific artifact gates.
+
+The `research-resolution` path requires a structured closeout with evidence,
+requirements and design/method choices, artifact dispositions, an explicit
+readiness outcome and an exact next action. Its structural check is not a
+semantic review or authorization. Missing authority or evidence remains a
+named blocker, not an implementation-ready result.
 
 The `requirements-change` path requires PRD, requirements, user-story, acceptance, traceability, readiness, definition-of-done, verification, and handoff artifacts before implementation handoff.
 

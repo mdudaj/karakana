@@ -11,6 +11,7 @@ standards:
   - Ground findings in current repository state and durable project context.
   - Separate observations, risks, and recommendations from implementation approval.
   - Do not treat an assessment as permission to mutate code, workflows, model execution, or GitHub state.
+  - Use research-resolution when the task must choose requirements, design or method for a future implementation; assessment-review is for state review without that decision.
 required_inputs:
   - task request or assessment question
   - repository instructions
@@ -27,7 +28,7 @@ steps:
     instruction: Compare actual implementation against documented expectations, current tooling, and safety constraints.
   - step_id: plan
     action: plan
-    instruction: Produce prioritized recommendations and identify which items need separate implementation protocols.
+    instruction: Produce prioritized findings. If an implementation choice is needed, route that bounded research through research-resolution before marking it ready.
   - step_id: handoff
     action: handoff
     instruction: Record unresolved findings, referenced artifacts, and the next exact action.

@@ -55,6 +55,9 @@ Legacy provider overrides remain supported. Python owns gates and routing.
 ## Safety rules
 
 Engineering lifecycle and proportional stage gates: `docs/engineering-process.md`.
+Research closes with concrete requirements, design/method and artifact choices,
+or a named blocker with owner and exact next action. A proposed option without
+its implementation-ready decision path is not a completed research outcome.
 Check prerequisite artifacts before non-trivial implementation, and all required
 artifacts at completion. Presence checks are not substantive approval or proof
 of passing tests. Preserve request type, scope and external-action permissions.
