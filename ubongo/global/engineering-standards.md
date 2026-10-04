@@ -134,3 +134,46 @@ observed screenshots, user feedback, and comparable project design contracts.
 Do not treat ad hoc visual preference as enough for delivery. If evidence is
 missing, state the assumption and keep the change reversible and narrowly
 scoped.
+
+## Reusable Page Composition
+
+For Karakana-managed UI, a design system governs page composition as well as
+colors and spacing. Before designing or editing a page, name its audience and
+primary task, classify the page (for example landing, worklist, form, or detail),
+and inspect the project's shell, layout rules, component inventory, tokens,
+content guidance, and interaction states. Reuse the closest suitable pattern.
+Using tokens in otherwise one-off markup does not satisfy this rule.
+
+When an existing component does not meet the task, extend its shared contract or
+specify a reusable component with anatomy, content limits, actions, states,
+responsive behavior, accessibility, and token mapping. A genuinely unique page
+element may use local styling only when its purpose and non-reusability are
+recorded and the effect on sibling pages is checked. Do not solve a repeated
+layout, card, or action problem with page-local CSS. Project-specific branding
+stays in project tokens; this rule does not impose a shared palette or density.
+
+For landing and dashboard summaries, organize content around the next decision:
+one subject per card, a short title, one prominent accurately labelled fact or
+state, and only the context needed to interpret it (such as scope or period).
+Keep definitions, evidence, methodology, and long lists on a detail route unless
+omitting them would mislead the immediate decision. Sibling cards use the same
+anatomy and aligned action region. If a card opens detail, give it a clear,
+visible destination action in a consistent footer; a trailing arrow can reinforce
+navigation. An icon or tooltip must not be the only way to discover the action
+or an essential caveat. Match the displayed label to the actual measure; do not
+present data availability as performance against a target.
+
+Before delivery, inspect the rendered page with representative data, empty or
+unavailable states, and relevant compact and expanded widths. Check task order,
+copy density, component reuse, navigation clarity, keyboard/focus behavior, and
+whether the first view reveals the primary information. Resolve material HCD
+and design-system findings before calling the page complete. Use
+`hcd-ui-ux-delivery-loop`, `design-system-governance`, `material-component-spec`,
+and `ux-writing` as the applicable skills; add a reusable check when a failure
+has recurred.
+
+This rule draws on [USWDS card guidance](https://designsystem.digital.gov/components/card/),
+[NHS common-component guidance](https://service-manual.nhs.uk/standards-and-technology/service-standard-points/13-use-and-contribute-to-open-standards-common-components-and-patterns),
+[Microsoft dashboard design guidance](https://learn.microsoft.com/en-us/power-bi/create-reports/service-dashboards-design-tips),
+[NN/g minimalist design guidance](https://www.nngroup.com/articles/aesthetic-minimalist-design/),
+and [WCAG link-purpose guidance](https://www.w3.org/WAI/WCAG21/Understanding/link-purpose-in-context).
