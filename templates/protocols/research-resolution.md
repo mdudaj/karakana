@@ -37,3 +37,11 @@ next_action: "TODO: exact next bounded task"
 # Research Resolution
 
 Explain the evidence, competing options, trade-offs, requirement and design choices, artifact changes, risk and verification. Replace every TODO. A structural protocol pass does not certify the research or grant approval. If a material fact or authority remains open, keep the status blocked and name the owner and next action.
+
+## Source-alignment challenge
+
+For each material behavior or integrity claim, inspect the complete producer and consumer source paths and relevant tests. Record a contrary lifecycle or failure state that could falsify the claim, the observed result, and any artifact correction. If no source-backed behavior is claimed, explain why this section is not applicable.
+
+| Claim | Producer and consumer paths | Contrary state and test/probe result | Resolution |
+| --- | --- | --- | --- |
+| TODO | TODO | TODO | TODO |

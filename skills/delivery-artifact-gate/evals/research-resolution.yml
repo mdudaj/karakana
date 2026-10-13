@@ -17,5 +17,9 @@ expectations:
     - "related artifact updates or justified reuse"
     - "decision/evidence owner and exact next action"
     - "A structural check does not"
+    - "source-alignment challenge"
+    - "contrary lifecycle or failure state"
+    - "research_outcome"
+    - "implementation_ready"
   must_not_include:
     - "research automatically authorizes implementation"

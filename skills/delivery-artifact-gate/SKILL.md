@@ -38,6 +38,7 @@ bucket: productivity
 - Decide the required artifact set before code.
 - Create missing PRD, requirements, UX, ADR, story, traceability, milestone, schema/example, readiness, or dogfood artifacts first.
 - Treat missing required artifacts as a delivery blocker unless explicitly marked not applicable with rationale.
+- Challenge material artifact claims against producer and consumer source paths and contrary states before marking research ready.
 - Implement only artifact-backed scope.
 - Add regression tests for durable rules.
 - End with a refreshed handoff.
@@ -113,6 +114,10 @@ stages and proceed directly to delivery when all prerequisites are met. Research
 only new uncertainties. Record justified non-applicability in the compact plan.
 Before leaving a research stage, review its `research_resolution` record and
 actual requirement, design and related artifact paths. A structural check does not establish that the cited evidence supports the choice or grants authority.
+Record a source-alignment challenge for each material behavior or integrity claim:
+inspect producer and consumer paths and tests, identify a contrary lifecycle or failure state,
+and correct the artifact or document why the claim holds. Review `research_outcome`
+and `implementation_ready` separately from the structural protocol pass.
 
 Follow `docs/cost-aware-continuation.md`: focused debugging tests followed by the
 full required regression gate, bounded output, one compact delivery record with

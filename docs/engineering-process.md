@@ -120,6 +120,12 @@ turn a blocked result into ready.
 artifact references for new research traces; it cannot judge whether a source
 supports a conclusion or whether claimed authority is valid. Review those
 substantively. Existing protocol artifact checks remain presence-only.
+Before marking research ready, record a source-alignment challenge for material
+behavior, eligibility, integrity and authority claims. Inspect the producer and
+consumer paths and relevant tests, try a contrary lifecycle or failure state,
+then correct the governing artifact or explain why the claim survives. Record a
+justified non-applicability when no source-backed behavior is claimed. Read the
+research outcome and implementation-ready value separately from a structural pass.
 
 ## Proportional application
 
