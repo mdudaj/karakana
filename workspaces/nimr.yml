@@ -78,6 +78,24 @@ projects:
       validate:
         - "pytest"
 
+  - id: ilms
+    display_name: eGA ILMS / DHIS Library System
+    path: "../apps/nimr-ilms"
+    skillpack: ilms
+    memory: ubongo/projects/ilms
+    tags:
+      - dhis2
+      - angular
+      - express
+      - library
+      - gitlab
+    standard_commands:
+      status:
+        - "git status --short"
+        - "scripts/ilms-devbench status"
+      validate:
+        - "scripts/ilms-devbench test"
+
   - id: lims
     display_name: LIMS / Lab Workflows
     path: "../lims"

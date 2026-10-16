@@ -1,0 +1,26 @@
+id: dhis2-public-recovery-origin
+name: Legacy DHIS recovery email origin
+description: Ensure a wrong email origin brings in version-specific headers and real redemption verification.
+suite: skills
+risk_level: high
+tags: [dhis2, recovery, email]
+input:
+  task: Investigate an ILMS password reset email pointing at an internal service despite successful SMTP delivery.
+  project: ilms
+  skill: dhis2-legacy-account-flow
+  task_type: planning
+expectations:
+  expected_provider: openai_codex
+  expected_model: gpt-6-sol
+  must_include:
+    - X-Forwarded-Port
+    - caller-supplied
+    - mail body
+    - token redemption
+    - expired token
+    - reused token
+    - inviteToken
+    - scripts/ilms-devbench test
+    - scripts/ilms-devbench browser-test
+  required_sections: [Safety Rules]
+  safety_flags: [human_review_required]
