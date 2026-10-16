@@ -65,7 +65,7 @@ mail and generated TLS keys outside tracked files.
 - GitOps PR #95 configured the public origin before rollout. eGA pipeline
   #52191 passed all jobs and promoted `ega-16cbb003-nimr13` through GitOps commit
   `247972afe076319c0689de7f2831e4f03161303d`. Argo and both image rollouts were
-  observed Synced/Healthy. A fresh `john.mduda` recovery email was accepted by
+  observed Synced/Healthy. A fresh production recovery email was accepted by
   the eGA relay on 2026-10-16; recipient inbox receipt is not independently proven.
 - Runtime/bench PR #30 is squash-merged at
   `2ed2e639916a29673905943eeebe45403b8ab5cc` and passed GitHub validation.
