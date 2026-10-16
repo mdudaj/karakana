@@ -34,6 +34,7 @@ Hidden skills are excluded from this public index.
 
 | Skill | Status | Description | Path |
 |---|---|---|---|
+| `dhis2-legacy-account-flow` | **experimental** | Diagnose and verify DHIS 2.33 login, recovery and invitation integrations, including public email links behind reverse proxies. | `skills/dhis2-legacy-account-flow/` |
 | `gepg-billing` | stable | Use this skill for NIMR billing system work involving GePG integration, invoices, control numbers, callbacks, receipts, reconciliation, and payment safety. | `skills/gepg-billing/` |
 | `invenio-framework` | stable | Use this skill when working on Invenio Framework, InvenioRDM, NHRDM, custom fields, vocabularies, OAuth/SSO, OpenSearch, dashboards, permissions, records, deposits, or migrations. | `skills/invenio-framework/` |
 | `invenio-ils-customization` | **experimental** | Use this skill when customizing NHRILS or any Invenio-App-ILS catalogue, library circulation, patron, document, series, item, e-item, vocabulary, search, facet, statistics, notification, or backoffice workflow. Use before designing a catalogue shell, changing ILS JSON schemas, REST endpoints, permissions, OpenSearch mappings, record serializers, seeded library data, or InvenioILS UI/theme assets. | `skills/invenio-ils-customization/` |
@@ -62,6 +63,12 @@ Hidden skills are excluded from this public index.
 |---|---|---|---|
 | `research-platform` | **experimental** | Use this skill when working on software platforms that implement a research prototype, evaluation workflow, experiment design, data collection, or evidence generation for a dissertation or research project. | `skills/research-platform/` |
 | `research-writing` | stable | Use this skill for academic and concept-note writing, including proposal structure, literature review, methodology, objectives, significance, scope, risk analysis, and grant requirement analysis. | `skills/research-writing/` |
+
+## Infrastructure
+
+| Skill | Status | Description | Path |
+|---|---|---|---|
+| `gitlab-gitops-delivery` | **experimental** | Deliver source changes from GitLab through tested container publication, GitOps promotion and verified Argo CD rollout across repository boundaries. | `skills/gitlab-gitops-delivery/` |
 
 ## Self Improvement
 

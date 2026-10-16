@@ -1,0 +1,56 @@
+name: ilms
+description: eGA Angular/Express and DHIS 2.33 library system integration
+version: 0.1.0
+status: experimental
+project:
+  id: ilms
+  display_name: eGA ILMS
+  memory: ubongo/projects/ilms
+  contract: KARAKANA.md
+skills:
+  required:
+    - dhis2-legacy-account-flow
+    - gitlab-gitops-delivery
+    - ci-failure-analysis
+    - github-pr-review
+    - karakana-handoff
+  optional:
+    - brainstorm-verbalized-sampling
+    - requirements-elicitation
+    - grill-with-docs
+    - design-qa-playwright
+    - ux-writing
+    - write-karakana-skill
+safety:
+  high_risk_paths:
+    - Dockerfile
+    - docker/patches/**
+    - scripts/docker-entrypoint.sh
+    - automation/ega/**
+    - .github/workflows/**
+  blocked_paths:
+    - .env
+    - .env.*
+    - .devbench/**
+    - secrets/**
+  requires_approval_for:
+    - authentication_change
+    - permission_change
+    - database_migration
+    - production_config_change
+    - deployment
+tests:
+  commands:
+    - scripts/ilms-devbench test
+    - scripts/ilms-devbench browser-test
+  recommended_before_commit:
+    - karakana eval run --skill dhis2-legacy-account-flow
+    - karakana eval run --skill gitlab-gitops-delivery
+conventions:
+  notes:
+    - ILMS is the DHIS library system, distinct from laboratory LIMS and Invenio NHRILS.
+    - Inspect the repository map in project memory before choosing where to edit.
+    - eGA owns Angular/Express; nimr-ilms owns runtime overlays and bench; platform-gitops owns production configuration and image pins.
+    - Start from the latest handoff and current repository state. Existing explicit user authorization covers its stated scope.
+    - Verify captured email body, URL origin, token redemption and login; a 202 or SMTP acceptance is insufficient.
+    - Use synthetic fixtures and Mailpit in the internal Docker bench; never restore production records into it.
