@@ -6,6 +6,7 @@ import hashlib
 from pathlib import Path
 
 from karakana.models.router import infer_task_type, route_model
+from karakana.protocols.lifecycle import render_recommendation_guidance
 
 STAGES = ("research", "architect", "plan")
 EFFICIENCY_RULES = (
@@ -87,5 +88,6 @@ def render_continuation(guidance: dict) -> str:
         f"- Conversation: {guidance.get('conversation', 'continue')} — {guidance.get('conversation_reason', 'Verify current state first.')}",
     ]
     lines.extend(f"- Reuse {stage}: {ref['path']} (hash checked at load)" for stage, ref in guidance.get("evidence", {}).items())
+    lines.append("- " + " ".join(render_recommendation_guidance().split()))
     lines.extend(f"- {rule}" for rule in EFFICIENCY_RULES)
     return "\n".join(lines)

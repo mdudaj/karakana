@@ -72,6 +72,9 @@ def test_cli_refresh_supersedes_stale_milestone_and_loads_guidance(tmp_path, mon
     assert loaded.exit_code == 0, loaded.output
     assert "Recommended model:" in loaded.output
     assert "Conversation: new" in loaded.output
+    assert "present a preferred proposal" in loaded.output
+    assert "Record agreement and later revisions" in loaded.output
+    assert "A recommendation is not authorization for external actions" in loaded.output
 
 
 def test_legacy_handoff_remains_loadable_and_secret_is_redacted(tmp_path):
@@ -81,7 +84,11 @@ def test_legacy_handoff_remains_loadable_and_secret_is_redacted(tmp_path):
     legacy = handoff.to_dict()
     legacy.pop("continuation")
     restored = HandoffArtifact.from_dict(legacy)
-    assert "Not selected" in render_session_start(restored, "handoff.md")
+    rendered = render_session_start(restored, "handoff.md")
+    assert "Not selected" in rendered
+    assert "present a preferred proposal" in rendered
+    assert "conditional recommendation and a bounded verification step" in rendered
+    assert "User silence is not agreement" in rendered
 
 
 def test_nested_continuation_uses_handoff_redaction(tmp_path):

@@ -1,7 +1,7 @@
 ---
 name: delivery-artifact-gate
 description: Use this skill before implementing, revising, or reviewing project work when the work should be guided by durable artifacts such as requirements, ADRs, user stories, milestones, UX grill notes, schemas, examples, tests, or handoffs.
-version: 0.3.1
+version: 0.3.2
 risk_level: medium
 allowed_tools:
   - read_file
@@ -75,6 +75,19 @@ No non-trivial delivery is complete until every required artifact exists or the 
 No non-trivial delivery is complete if it relies on an unstated assumption that could have been checked against project source, official documentation, exported artifacts, runtime errors, tests, or durable memory.
 
 Research is complete only when it chooses concrete requirements with observable acceptance, a design or method with rationale, and the related artifact updates or justified reuse. Use `research-resolution` for a research task; if new research arises during implementation, attach the same closeout to that task. A recommendation that merely says “review the options later” is a blocker, not implementation readiness. Name the decision/evidence owner and exact next action without inventing approval.
+
+Before asking for a decision or waiting on user/third-party input, present a
+preferred proposal with authoritative evidence, rationale, assumptions,
+consequences and meaningful alternatives with trade-offs when feasible. Use
+existing project conventions first; research new uncertainties. If only one
+feasible path exists, explain why. For missing site facts, give a conditional recommendation
+and bounded verification rather than inventing a fact or waiting without a proposal.
+State the owner, exact confirmation, held behavior/activation and safe work now.
+Record agreement and subsequent user revisions in the governing artifacts,
+preserving accepted history and revalidating affected checks and authority.
+Reuse existing agreements and routine delegated authority without a new approval
+loop. User silence is not agreement; a proposal does not grant external-action
+or live activation authority. Independent authorized work can continue.
 
 ## Artifact Decision Matrix
 

@@ -61,6 +61,15 @@ artifacts. Mark implementation ready only when evidence, choices, governing
 artifacts and authority are settled. Otherwise name the exact blocker, owner
 and next action; do not leave a vague proposed design for the next agent.
 
+Before requesting user/third-party input or waiting on it, bring a preferred
+evidence-backed proposal, rationale, assumptions, consequences and meaningful
+alternatives with trade-offs. For missing site facts, propose a conditional path
+and bounded verification. State safe work now, affected held work, owner and exact
+confirmation; record agreement and user revisions in governing artifacts with
+history preserved. Reuse agreed/delegated authority; silence is not agreement
+and recommendations do not authorize live/external actions. See the shared
+recommendation convention in `docs/engineering-process.md`.
+
 For non-trivial implementation, attach prerequisite evidence and run
 `karakana protocol check --trace <id> --stage pre-implementation` before code.
 After verification and handoff, run `--stage completion` (the default).

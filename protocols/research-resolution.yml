@@ -7,6 +7,7 @@ summary: Close every research task with actionable requirements, design, artifac
 roles: [researcher, planner, reviewer]
 standards:
   - Use current authoritative project evidence and record its limits.
+  - Before requesting input or waiting, present a preferred evidence-backed proposal, meaningful alternatives and trade-offs, or a conditional recommendation with bounded fact verification; record agreement and revisions in governing artifacts without inferring authority.
   - Select requirements and design or method choices; update or reuse their governing artifacts.
   - Give a ready, no-change, decision-required or evidence-blocked outcome; never label an unknown material choice ready.
   - An artifact structure check cannot approve a choice or authorize implementation.
@@ -22,7 +23,7 @@ steps:
     instruction: Check current source, requirements, design, tests and authoritative external sources where needed.
   - step_id: resolve
     action: plan
-    instruction: Choose concrete requirements and design or method with evidence, acceptance and rationale; name exact artifact updates or justified reuse.
+    instruction: Choose concrete requirements and design or method with evidence, acceptance and rationale; before escalating missing decisions or facts, present the preferred proposal, assumptions, meaningful alternatives, affected work, owner and exact confirmation. Record agreement and revisions in governing artifacts; a proposal cannot establish a site fact or external-action approval.
   - step_id: review
     action: review
     instruction: Challenge each material artifact claim against the complete producer and consumer source paths and relevant tests, including contrary lifecycle, failure, eligibility and integrity states. Record the source-alignment challenge and correction or a justified non-applicability. Mark ready only when artifacts and authority are current; otherwise name the owner, question and exact next action.

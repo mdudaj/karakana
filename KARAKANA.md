@@ -66,6 +66,13 @@ document: one active milestone/branch/PR, bounded sizing, finish squash merge an
 release checks before the next, separate delivery states, and workbook clarifications
 alongside configurable implementation.
 
+Across all managed projects, offer a preferred evidence-backed proposal and
+meaningful alternatives before requesting input or waiting for decisions. Record
+agreement and user revisions in governing artifacts; preserve history and
+revalidate affected scope. Missing site facts require conditional recommendations
+and verification. This does not invent agreement or authorize external actions;
+reuse existing routine authority. See `docs/engineering-process.md`.
+
 - Never push directly to protected branches.
 - Do all repository work on a task branch and integrate it through a pull request.
 - Use squash merge for accepted work unless explicitly instructed otherwise.
