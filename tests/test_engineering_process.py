@@ -119,5 +119,9 @@ def test_shared_guidance_reaches_protocol_and_coding_handoff():
             "Record agreement and later revisions",
             "User silence is not agreement",
             "A recommendation is not authorization for external actions",
+            "self-contained review brief",
+            "user-facing completion and handoff",
+            "exact decision and next action",
+            "Technical review still requires inspecting relevant code and evidence",
         ):
             assert requirement in " ".join(output.split())

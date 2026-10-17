@@ -70,6 +70,13 @@ covering several concerns, with explicit sections and links rather than duplicat
 
 ### Recommend before requesting input
 
+Whenever work requires review, include a self-contained review brief in both the
+user-facing completion and handoff. Summarize proposed changes/defaults,
+rationale, meaningful alternatives, verification/limitations, exact decision and
+next action. Links provide optional depth for routine decision review; technical
+review still requires inspecting relevant code and evidence. Scale the brief to
+the task rather than duplicating the full specification or logs.
+
 Across all managed projects, bring a preferred feasible proposal before asking
 the user or a third party to decide, or waiting on a dependency. Ground it in
 inspected project conventions and authoritative evidence; research only new

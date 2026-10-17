@@ -15,5 +15,8 @@ expectations:
     - "Record agreement and later revisions"
     - "User silence is not agreement"
     - "A recommendation is not authorization for external actions"
+    - "self-contained review brief"
+    - "user-facing completion and handoff"
+    - "exact decision and next action"
   must_not_include:
     - "assume approval when no response arrives"

@@ -25,7 +25,12 @@ State safe work now, affected blocked work, decision owner, exact confirmation a
 governing artifact. Record agreement and later revisions in the governing artifacts;
 preserve accepted history and revalidate affected checks and authority.
 Reuse existing agreements and delegated routine authority without new approval loops.
-User silence is not agreement. A recommendation is not authorization for external actions."""
+User silence is not agreement. A recommendation is not authorization for external actions.
+When work needs review, include a self-contained review brief in both the
+user-facing completion and handoff: proposed changes/defaults, rationale,
+meaningful alternatives, verification and limitations, exact decision and next action.
+Links provide optional detail for routine decision review.
+Technical review still requires inspecting relevant code and evidence."""
 
 
 def render_engineering_process() -> str:

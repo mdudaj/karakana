@@ -210,3 +210,44 @@ transport recommendation and alternatives, then update its governing artifacts;
 unverified CRDB policy/access remains unverified. Publish/merge only with explicit
 authority. Recommend GPT-6 Sol/high for the consequential follow-up; recommendation
 does not switch the active model. No failed diagnostic loop is carried into this task.
+
+## Self-contained review briefs, 17 October
+
+User instruction: whenever work needs review, summarize it in chat and the
+handoff so routine decision review does not require opening other files. Source
+evidence: ent-meal PR70 originally deferred operating-default review to a long
+specification; the user requested the defaults here and an explicit environment
+example. The app example is a separate project artifact, not harness scope.
+
+Acceptance: generated task and session guidance requires a self-contained review
+brief in both the user-facing completion and handoff: proposed change/defaults,
+rationale, material alternatives, evidence/checks, limitations, exact decision
+and next action. Keep source links for optional detail; code/evidence inspection
+remains required for technical review. No approval or deployment gate changes.
+
+Implementation: extend the existing shared recommendation renderer, global user
+preference and handoff skill; add generated-output regression assertions and
+skill/planning eval expectations. Reuse existing design and test infrastructure;
+no second state machine or extra review ceremony. Run focused generation tests,
+then the required full suite and deterministic evals in a temporary repository,
+plus memory/skill/diff validation. User's instruction supplies local update
+authority; root branch publication/integration remains separately unapproved.
+
+Trace `20261017-090036-aa328d`. The added generated-output assertion first failed
+on missing review-brief guidance. After implementation, focused15 tests passed;
+the full **735 tests passed in19.75s** and **176 deterministic evals passed** in
+`/tmp/karakana-review-brief-checks.lbcqbq4q`. Skill/global-memory validation,
+scoped Ruff (using the ent-meal virtual environment's installed linter) and diff
+whitespace passed. No live model call or external harness write occurred.
+
+The eight-file follow-up updates shared guidance, handoff skill0.4.2, preference,
+process documentation and regression expectations. It remains on the existing
+local/unpublished convention branch. Self-review found no blocking issue; this
+does not certify model compliance or independent review. Rollback is a reviewed
+revert; prior accepted instructions and histories are retained.
+
+The earlier ent-meal driver-research continuation above is historical: PR69 is
+now integrated at eef814e and specification PR70 includes the requested nonsecret
+environment example at d81e15f. Its operating defaults remain under user review,
+and its own handoff carries a decision brief. Do not mix the two repositories'
+publication authority or reopen completed driver/topology decisions.

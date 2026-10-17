@@ -1,7 +1,7 @@
 ---
 name: karakana-handoff
 description: Create, load, recover, or refresh compact project-aware continuation artifacts for task endings, new sessions, agent switches, context-window failures, and milestone transitions.
-version: 0.4.1
+version: 0.4.2
 risk_level: low
 category: productivity
 scope: bundled
@@ -63,6 +63,11 @@ Do not use a handoff to replace current code inspection, tests, review, release 
 - one exact next action;
 - safety constraints and return-handoff expectations;
 - staleness, recovery, and missing-reference warnings.
+- a self-contained review brief when review is pending, also included in the
+  user-facing completion: proposed changes/defaults, rationale, meaningful
+  alternatives, verification/limitations, exact decision and next action.
+  Links provide optional detail for routine decision review; technical review
+  still requires inspecting relevant code and evidence.
 
 ## What Not To Do
 
@@ -161,6 +166,10 @@ karakana handoff doctor --project <project>
 - Confirm secret detection passes after rendering.
 - Confirm remaining tasks, the recommended next task, one exact next action,
   and return-handoff expectation are present.
+- For pending review, confirm the brief names the proposed defaults, rationale,
+  alternatives, evidence/limitations and exact decision without requiring file
+  navigation; keep detailed code/evidence inspection available and required when
+  technically necessary. Do not replace the brief with a PR or document link.
 - Confirm recovered handoffs explicitly require verification.
 
 ## Required checks

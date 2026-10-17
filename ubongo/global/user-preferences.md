@@ -4,6 +4,12 @@ Capture durable user preferences for workflow, communication, tooling, project p
 
 ## Delivery Workflow
 
+- When work requires review, include a self-contained review brief in both the
+  user-facing completion and handoff: proposed changes/defaults, rationale,
+  meaningful alternatives, verification/limitations, exact decision and next
+  action. Routine decision review should not require opening linked files;
+  retain links for optional detail. Technical review still requires inspecting
+  relevant code and evidence. Keep the brief concise and proportional to scope.
 - Across Karakana and every managed project, bring a preferred evidence-backed
   proposal before asking the user or a third party for a decision or waiting for
   input. Explain why it fits current project conventions, assumptions and effects;

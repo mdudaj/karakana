@@ -20,6 +20,9 @@ expectations:
     - "Return Handoff Expectations"
     - "append-only"
     - "open-issues.md"
+    - "self-contained review brief"
+    - "user-facing completion"
+    - "exact decision and next action"
   required_sections:
     - "Safety rules"
     - "Output format"
