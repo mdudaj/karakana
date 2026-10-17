@@ -187,6 +187,23 @@ review. The structural completion check and append-only handoff are trace-bound.
 
 ## Handoff and next action
 
+Continuation clarification after user review: the initial handoff wrongly
+foregrounded publication and left ent-meal's later slice agreement in long notes.
+Its `research`-only reuse fields also suggested a new architecture stage for
+completed harness work. Refined the handoff skill (0.4.1) and added an instruction
+eval: expose one concrete project action, first files/command, expected output,
+completion checks and current agreement; separate publication from engineering
+continuation while retaining actual integration gates. Completed-stage reuse
+must be accurate. The ent-meal next bounded action is to resolve only the local
+driver-support uncertainty and present the conditional encryption recommendation
+in its existing preparation record. This research/preparation can proceed while
+publication is pending; implementation retains the one-active-milestone gate.
+Correction verification: handoff skill validation and diff check passed; all
+**176 deterministic evals passed** in the isolated verification copy. No Python
+runtime changed, so the earlier 735-test result remains the code baseline rather
+than a claimed new execution. Refresh both project handoffs with explicit scope,
+agreement, first action and actual remaining integration/target gates.
+
 Finish this bounded harness slice before returning to the agreed ent-meal
 application-image/readiness slice. That follow-up should bring a concrete driver/
 transport recommendation and alternatives, then update its governing artifacts;
