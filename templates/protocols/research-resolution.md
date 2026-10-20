@@ -37,3 +37,28 @@ next_action: "TODO: exact next bounded task"
 # Research Resolution
 
 Explain the evidence, competing options, trade-offs, requirement and design choices, artifact changes, risk and verification. Replace every TODO. A structural protocol pass does not certify the research or grant approval. If a material fact or authority remains open, keep the status blocked and name the owner and next action.
+
+## Recommendation for agreement
+
+Before requesting input or waiting, give one preferred feasible proposal grounded
+in project conventions and current evidence, with rationale, assumptions and
+consequences. Include meaningful alternatives with trade-offs when available;
+explain when only one path is feasible. For missing site facts, make the proposal
+conditional and name the bounded verification. Do not invent facts or approval.
+
+| Decision / missing fact | Preferred proposal and evidence | Alternatives / trade-offs | Confirmation and owner | Safe work now / held work | Governing artifact and agreement / revision state |
+| --- | --- | --- | --- | --- | --- |
+| TODO | TODO | TODO | TODO | TODO | TODO |
+
+Record agreement and later user revisions in the governing artifacts, preserve
+accepted history and revalidate affected checks and authority. Reuse existing
+agreements and routine delegated authority; do not add another approval loop.
+User silence is not agreement or authorization for external actions.
+
+## Source-alignment challenge
+
+For each material behavior or integrity claim, inspect the complete producer and consumer source paths and relevant tests. Record a contrary lifecycle or failure state that could falsify the claim, the observed result, and any artifact correction. If no source-backed behavior is claimed, explain why this section is not applicable.
+
+| Claim | Producer and consumer paths | Contrary state and test/probe result | Resolution |
+| --- | --- | --- | --- |
+| TODO | TODO | TODO | TODO |

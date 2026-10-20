@@ -3357,7 +3357,15 @@ def protocol_check(
         typer.echo(json.dumps(result.to_dict(), indent=2, sort_keys=True))
     else:
         typer.echo(f"Protocol check: {result.status}")
-        typer.echo(f"Stage: {stage}; evidence scope: artifact presence only")
+        evidence_scope = (
+            "artifact presence, research structure and local references; semantic claims unverified"
+            if result.metadata.get("evidence_scope") == "artifact_presence_plus_research_structure"
+            else "artifact presence only"
+        )
+        typer.echo(f"Stage: {stage}; evidence scope: {evidence_scope}")
+        if result.metadata.get("research_outcome"):
+            typer.echo(f"Research outcome: {result.metadata['research_outcome']}")
+            typer.echo(f"Implementation ready: {str(result.metadata['implementation_ready']).lower()}")
         typer.echo(f"Check ID: {result.check_id}")
         typer.echo(f"Trace ID: {result.trace_id}")
         if result.missing_artifacts:

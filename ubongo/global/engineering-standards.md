@@ -15,6 +15,18 @@ implementation ready only after evidence, material choices, artifact updates
 and authority are settled; otherwise name the exact missing decision/evidence,
 owner and next action. Do not hand off an unbounded recommendation as a plan.
 
+Before requesting a decision or waiting on user/third-party input, present the
+preferred feasible proposal, evidence, rationale, assumptions, consequences and
+meaningful alternatives with trade-offs. Use current project conventions and
+authoritative sources for new uncertainties. Distinguish a recommended policy
+from an unverified site fact; propose a conditional path and bounded verification
+when the fact cannot yet be observed. Name the owner and exact confirmation,
+affected behavior/activation, safe independent work and governing artifact.
+Record agreement and user revisions there, preserving accepted history through
+the project's revision/supersession rules. Revalidate affected checks and scope.
+Reuse existing authority for routine decisions; silence does not grant agreement
+or authority. Recommendations never substitute for approval of external actions.
+
 Prerequisite and completion artifact checks are distinct. File presence is not
 proof of semantic quality, test success or approval. Inspect actual results,
 including skipped checks and unresolved findings. A self-review is not independent

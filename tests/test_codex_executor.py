@@ -73,14 +73,15 @@ Return prompt.
     )
 
 
-def test_build_task_prompt_includes_required_context(tmp_path):
-    write_memory_tree(tmp_path)
+@pytest.mark.parametrize("project", ["karakana", "ent-meal", "lims"])
+def test_build_task_prompt_includes_required_context(tmp_path, project):
+    write_memory_tree(tmp_path, project=project)
     write_skill(tmp_path)
     (tmp_path / "KARAKANA.md").write_text("# Contract\n\nProject contract content.\n", encoding="utf-8")
     (tmp_path / "AGENTS.md").write_text("# Agents\n\nRepository instructions.\n", encoding="utf-8")
 
     prompt = CodexExecutor(tmp_path).build_task_prompt(
-        project="karakana",
+        project=project,
         skill="karakana-self-improvement",
         task="Implement reflection trace schema",
         focus="schema, tests, and safety",
@@ -100,6 +101,16 @@ def test_build_task_prompt_includes_required_context(tmp_path):
     assert "skill_update" in prompt
     from karakana.protocols.lifecycle import render_engineering_process
     assert render_engineering_process() in prompt
+    normalized = " ".join(prompt.split())
+    for requirement in (
+        "present a preferred proposal",
+        "meaningful alternatives with trade-offs",
+        "conditional recommendation and a bounded verification step",
+        "Record agreement and later revisions",
+        "User silence is not agreement",
+        "A recommendation is not authorization for external actions",
+    ):
+        assert requirement in normalized
 
 
 def test_write_task_prompt_defaults_to_runtime_file(tmp_path):

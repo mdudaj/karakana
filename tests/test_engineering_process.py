@@ -113,5 +113,15 @@ def test_shared_guidance_reaches_protocol_and_coding_handoff():
             "Record implemented, verified, merged, deployed and accepted separately",
             "shared workbook while configurable implementation continues",
             "Workbook comments do not authorize external actions",
+            "present a preferred proposal",
+            "meaningful alternatives with trade-offs",
+            "conditional recommendation and a bounded verification step",
+            "Record agreement and later revisions",
+            "User silence is not agreement",
+            "A recommendation is not authorization for external actions",
+            "self-contained review brief",
+            "user-facing completion and handoff",
+            "exact decision and next action",
+            "Technical review still requires inspecting relevant code and evidence",
         ):
-            assert requirement in output
+            assert requirement in " ".join(output.split())

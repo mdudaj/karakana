@@ -1,0 +1,20 @@
+id: artifact-gate-recommendation-first
+name: Artifact preparation includes a reviewable recommendation
+description: Check shared artifact guidance carries the proposal, missing-fact and revision rules.
+suite: skills
+risk_level: high
+input:
+  task: "Resolve deployment choices before asking ICT or the user to design the solution."
+  project: karakana
+  skill: delivery-artifact-gate
+  task_type: planning
+  prompt_file: skills/delivery-artifact-gate/SKILL.md
+expectations:
+  must_include:
+    - "preferred proposal"
+    - "meaningful alternatives"
+    - "conditional recommendation"
+    - "governing artifacts"
+    - "User silence is not agreement"
+  must_not_include:
+    - "recommendations grant deployment authority"

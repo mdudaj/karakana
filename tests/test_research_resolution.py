@@ -60,6 +60,19 @@ def test_research_has_dedicated_protocol_for_project_and_global_fallback():
         assert not result.ux_change  # `ui` inside `requirements` is not a UX request.
 
 
+def test_research_review_requires_source_counterexample_record():
+    root = Path(__file__).resolve().parents[1]
+    protocol = ProtocolLoader(root).load("research-resolution")
+    review = next(step for step in protocol.steps if step.step_id == "review")
+    template = (root / "templates/protocols/research-resolution.md").read_text()
+
+    assert "source-alignment challenge" in review.instruction
+    assert "producer and consumer" in review.instruction
+    assert "contrary lifecycle" in review.instruction
+    assert "Source-alignment challenge" in template
+    assert "test/probe result" in template
+
+
 def test_research_start_and_template_cli_use_closeout(isolated_repo):
     runner = CliRunner()
     started = runner.invoke(app, ["protocol", "start", "--task",
@@ -158,6 +171,34 @@ def test_decision_required_is_complete_research_but_not_implementation_ready(tmp
     assert result.metadata["research_outcome"] == "decision_required"
     assert result.metadata["implementation_ready"] is False
     assert "Implementation ready: false" in render_protocol_check(result)
+
+
+@pytest.mark.parametrize("status,expected_ready", [
+    ("decision_required", "false"),
+    ("ready_for_implementation", "true"),
+])
+def test_protocol_check_cli_exposes_research_scope_and_readiness(tmp_path, monkeypatch, status, expected_ready):
+    record, data = make_record(tmp_path, status=status)
+    if status == "decision_required":
+        data["authority"] = {"state": "pending", "evidence": "Product approval is missing."}
+        data["pending_decisions"] = [{"owner": "Product owner", "question": "Approve the rule?",
+                                       "next_action": "Review the proposed contract."}]
+        write_record(record, data)
+    store = TraceStore(tmp_path)
+    trace = store.create_run(command="research", project="example",
+                             protocol_id="research-resolution", work_category="research",
+                             risk_level="low", required_artifacts=["trace", "research_resolution"])
+    trace.artifacts.append(TraceArtifact(path=str(record), kind="research_resolution"))
+    store.save(trace)
+    monkeypatch.chdir(tmp_path)
+
+    result = CliRunner().invoke(app, ["protocol", "check", "--trace", trace.run_id])
+
+    assert result.exit_code == 0, result.output
+    assert "Protocol check: passed" in result.output
+    assert "research structure and local references; semantic claims unverified" in result.output
+    assert f"Research outcome: {status}" in result.output
+    assert f"Implementation ready: {expected_ready}" in result.output
 
 
 @pytest.mark.parametrize("field,value", [

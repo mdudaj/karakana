@@ -1,0 +1,20 @@
+id: handoff-actionable-continuation
+name: Handoffs expose the next authorized project action
+description: Preserve later agreement and separate publication dependencies from concrete engineering continuation.
+suite: skills
+risk_level: medium
+input:
+  task: "Prepare a handoff after the user accepted the next local engineering slice; a prior patch awaits publication."
+  project: karakana
+  skill: karakana-handoff
+  task_type: planning
+  prompt_file: skills/karakana-handoff/SKILL.md
+expectations:
+  must_include:
+    - "one concrete project action"
+    - "expected output and completion checks"
+    - "Carry forward later user agreement"
+    - "Separate pending publication"
+    - "actual"
+    - "integration gate"
+    - "reuse-stage"

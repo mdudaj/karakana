@@ -68,6 +68,38 @@ Stages are iterative. Reopen only the affected stage when evidence, scope or ris
 changes. Reuse approved current artifacts; a small task can use one compact record
 covering several concerns, with explicit sections and links rather than duplicates.
 
+### Recommend before requesting input
+
+Whenever work requires review, include a self-contained review brief in both the
+user-facing completion and handoff. Summarize proposed changes/defaults,
+rationale, meaningful alternatives, verification/limitations, exact decision and
+next action. Links provide optional depth for routine decision review; technical
+review still requires inspecting relevant code and evidence. Scale the brief to
+the task rather than duplicating the full specification or logs.
+
+Across all managed projects, bring a preferred feasible proposal before asking
+the user or a third party to decide, or waiting on a dependency. Ground it in
+inspected project conventions and authoritative evidence; research only new
+uncertainties. Explain rationale, assumptions, consequences and meaningful viable
+alternatives with trade-offs. If only one path fits, state why; do not manufacture
+alternatives or claim unsupported consensus as best practice.
+
+Distinguish choices we can propose from facts only the target owner can verify.
+For missing facts, give a conditional recommendation and a bounded verification
+step. State the exact confirmation, owner, affected work/activation, independent
+work that can proceed, and the governing artifact. A proposed secure configuration
+is useful preparation; it cannot certify a target's actual configuration.
+
+Present material proposals for agreement, then record accepted choices in the
+existing requirements, ADR/design, plan or decision workbook. Record later user
+revisions and their consequences; preserve accepted history through the project's
+revision/supersession convention and revalidate affected tests and authority.
+Drafts may be revised; do not silently rewrite accepted decisions. Reuse existing
+agreements and delegated routine authority without adding an approval loop.
+User silence is not agreement. Recommendations do not authorize external writes,
+deployment, data changes or policy activation. Continue safe independent work
+within the existing scope while the affected decision or evidence remains open.
+
 | Stage | Required decision / evidence before proceeding |
 | --- | --- |
 | Orient and classify | Verify project, repository, branch, current handoff, request type and authority. Identify risk, affected users/subsystems and governing skills. Analysis is not authorization to implement. |
@@ -111,7 +143,10 @@ already-satisfied need with evidence. If approval or a product choice remains,
 use `decision_required` and give the recommended option, named decision owner,
 exact question and next action. If evidence is missing, use `evidence_blocked`
 and name the missing fact, owner, bounded way to obtain it and independent work
-that can proceed. Neither blocked state permits a claim of implementation
+that can proceed, with a conditional recommendation for the possible outcomes.
+Apply the recommendation convention above before escalating either state; carry
+the proposal and any meaningful alternatives into the governing artifacts.
+Neither blocked state permits a claim of implementation
 readiness. The follow-up implementation task still has its own authorization,
 artifact and verification gates. Do not manufacture evidence or approval to
 turn a blocked result into ready.
@@ -120,6 +155,12 @@ turn a blocked result into ready.
 artifact references for new research traces; it cannot judge whether a source
 supports a conclusion or whether claimed authority is valid. Review those
 substantively. Existing protocol artifact checks remain presence-only.
+Before marking research ready, record a source-alignment challenge for material
+behavior, eligibility, integrity and authority claims. Inspect the producer and
+consumer paths and relevant tests, try a contrary lifecycle or failure state,
+then correct the governing artifact or explain why the claim survives. Record a
+justified non-applicability when no source-backed behavior is claimed. Read the
+research outcome and implementation-ready value separately from a structural pass.
 
 ## Proportional application
 

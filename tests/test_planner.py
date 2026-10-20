@@ -72,13 +72,14 @@ Return prompt.
     )
 
 
-def test_compose_planning_prompt_includes_context(tmp_path):
-    write_memory_tree(tmp_path)
+@pytest.mark.parametrize("project", ["karakana", "ent-meal", "lims"])
+def test_compose_planning_prompt_includes_context(tmp_path, project):
+    write_memory_tree(tmp_path, project=project)
     write_skill(tmp_path)
     (tmp_path / "KARAKANA.md").write_text("# Contract\n\nProject contract content.\n", encoding="utf-8")
 
     prompt = compose_planning_prompt(
-        project="karakana",
+        project=project,
         skill="example-skill",
         task="Design the next improvement loop",
         repo_root=tmp_path,
@@ -95,6 +96,16 @@ def test_compose_planning_prompt_includes_context(tmp_path):
     assert "Do not call external model APIs" in prompt
     from karakana.protocols.lifecycle import render_engineering_process
     assert render_engineering_process() in prompt
+    normalized = " ".join(prompt.split())
+    for requirement in (
+        "present a preferred proposal",
+        "meaningful alternatives with trade-offs",
+        "conditional recommendation and a bounded verification step",
+        "Record agreement and later revisions",
+        "User silence is not agreement",
+        "A recommendation is not authorization for external actions",
+    ):
+        assert requirement in normalized
 
 
 def test_compose_planning_prompt_errors_for_missing_project_memory(tmp_path):

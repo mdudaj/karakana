@@ -89,6 +89,11 @@ The check report records `research_outcome` and `implementation_ready` separatel
 from the protocol pass. A structurally complete `decision_required` or
 `evidence_blocked` closeout may pass as completed research while reporting
 `implementation_ready: false`.
+The short CLI result prints the research outcome and implementation readiness;
+neither a `passed` result nor a `ready_for_implementation` label proves semantic
+correctness. Review the source-alignment challenge in the closeout: follow
+material claims through producer and consumer paths, test contrary lifecycle or
+failure states, and reconcile any contradiction in the governing artifacts.
 Use `assessment-review` for a read-only state assessment that does not choose an
 implementation direction. If a review must resolve requirements or design,
 classify that bounded work as `research` and use `research-resolution`.

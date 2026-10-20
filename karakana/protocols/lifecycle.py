@@ -14,9 +14,29 @@ def artifacts_for_stage(required: list[str], stage: str) -> tuple[list[str], lis
     return [kind for kind in unique if kind not in deferred], deferred
 
 
+def render_recommendation_guidance() -> str:
+    """Carry the same decision convention into task prompts and fresh sessions."""
+    return """Before asking for a decision or waiting on user/third-party input,
+present a preferred proposal grounded in current evidence and project conventions.
+Explain rationale, assumptions, consequences and meaningful alternatives with trade-offs;
+if only one feasible path exists, explain why. Do not invent alternatives or facts.
+Missing site facts need a conditional recommendation and a bounded verification step.
+State safe work now, affected blocked work, decision owner, exact confirmation and
+governing artifact. Record agreement and later revisions in the governing artifacts;
+preserve accepted history and revalidate affected checks and authority.
+Reuse existing agreements and delegated routine authority without new approval loops.
+User silence is not agreement. A recommendation is not authorization for external actions.
+When work needs review, include a self-contained review brief in both the
+user-facing completion and handoff: proposed changes/defaults, rationale,
+meaningful alternatives, verification and limitations, exact decision and next action.
+Links provide optional detail for routine decision review.
+Technical review still requires inspecting relevant code and evidence."""
+
+
 def render_engineering_process() -> str:
     """Keep primary agent entrypoints aligned without duplicating skill bodies."""
-    return """## Engineering Process
+    recommendation = render_recommendation_guidance().replace("\n", "\n  ")
+    return f"""## Engineering Process
 
 Follow the tailored lifecycle in docs/engineering-process.md when available.
 - Orient: verify project, branch, handoff, request type, scope, risk and authority.
@@ -28,6 +48,7 @@ Follow the tailored lifecycle in docs/engineering-process.md when available.
   UX/accessibility, security, data and operational effects. Mark ready only when
   choices, artifacts and authority are settled; otherwise name the owner, exact
   decision/evidence gap and next action. Do not leave vague proposed choices.
+- Recommend before escalating: {recommendation}
 - Plan: name files, bounded steps, regression checks, approvals and applicable rollback.
   Before non-trivial implementation run protocol check --trace <id> --stage pre-implementation.
 - Implement: small reviewable task-branch changes; reproduce bugs and add regression tests

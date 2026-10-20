@@ -4,6 +4,25 @@ Capture durable user preferences for workflow, communication, tooling, project p
 
 ## Delivery Workflow
 
+- When work requires review, include a self-contained review brief in both the
+  user-facing completion and handoff: proposed changes/defaults, rationale,
+  meaningful alternatives, verification/limitations, exact decision and next
+  action. Routine decision review should not require opening linked files;
+  retain links for optional detail. Technical review still requires inspecting
+  relevant code and evidence. Keep the brief concise and proportional to scope.
+- Across Karakana and every managed project, bring a preferred evidence-backed
+  proposal before asking the user or a third party for a decision or waiting for
+  input. Explain why it fits current project conventions, assumptions and effects;
+  offer meaningful alternatives with trade-offs when available. If only one path
+  is feasible, explain why. Missing site facts require a conditional proposal and
+  bounded verification, not invented facts or unsupported claims of best practice.
+- Present material choices for agreement, then record the agreed decision in the
+  governing artifacts. Incorporate user revisions, preserve decision history and
+  recheck affected implementation, verification and authority. Identify what can
+  proceed now, what is held, the owner and exact confirmation needed. Continue
+  independent authorized work; reuse existing agreements and routine delegated
+  authority without adding approval loops. Silence is not agreement, and a
+  proposed setting does not authorize live activation or external actions.
 - Subsequent implementation follows the global mergeable milestone policy in
   `ubongo/global/engineering-standards.md`: one active milestone, one branch and
   one coherent PR; roughly half to one day of implementation followed by

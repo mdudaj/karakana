@@ -300,6 +300,7 @@ def test_protocol_attach_cli_makes_check_pass(tmp_path, monkeypatch):
     assert attach_result.exit_code == 0
     assert check_result.exit_code == 0
     assert "Protocol check: passed" in check_result.output
+    assert "evidence scope: artifact presence only" in check_result.output
 
 
 def test_all_declared_templates_render():
