@@ -1,0 +1,24 @@
+id: gitlab-paired-image-promotion
+name: GitLab release with coupled images
+description: Ensure multi-repository deployment context covers source, overlay, both images, GitOps and rollout evidence.
+suite: skills
+risk_level: high
+tags: [gitlab, gitops, deployment]
+input:
+  task: Release an eGA ILMS account integration change through its existing GitLab pipeline.
+  project: ilms
+  skill: gitlab-gitops-delivery
+  task_type: planning
+expectations:
+  expected_provider: openai_codex
+  expected_model: gpt-6-sol
+  must_include:
+    - overlay SHA
+    - runner tags
+    - coupled images
+    - GitOps commit
+    - running images
+    - inbox delivery
+    - stale jobs
+  required_sections: [Safety Rules]
+  safety_flags: [human_review_required]
