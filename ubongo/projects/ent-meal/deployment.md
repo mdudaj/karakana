@@ -2,7 +2,32 @@
 
 No production deployment exists yet.
 
-## Preview access and release verification
+## Current CRDB UAT continuation — 23 October2026
+
+The owner's Windows-to-Ubuntu checkpoint is committed in ent-meal main through
+[PR99](https://github.com/mdudaj/ent-meal/pull/99), squash `80aa22b`.
+Start with the [immutable source checkpoint](https://github.com/mdudaj/ent-meal/blob/80aa22b45f6631e8b80022e711d0d934497c8c68/docs/deployment/ubuntu-continuation-2026-10-23.md)
+or its path `docs/deployment/ubuntu-continuation-2026-10-23.md` after fetching
+application main. Do not require Windows-only ignored runtime artifacts or rerun
+the older pinned builder/database bootstrap merely to resume in Ubuntu.
+
+The current UAT release is `entmeal-uat-preview-20261022` on rootless Podman/systemd
+at SMPAPP. Server TLS smoke passed. Lingering, boot dependencies, restart-on-failure
+and runtime/permanent443 forwarding were configured. Windows TCP still times out;
+browser admin sign-in and actual logout/reboot/failure recovery remain unverified.
+The zero-header capture has a client-overlap caveat; no specific network cause is
+proved. CRDB access has only been established from Windows/CyberArk.
+
+Latest workbook edits and original history are versioned. Portfolio simplification,
+fixture conversion and the generic deployment CLI remain follow-ups. The old
+NIMR GitHub workflow remains manually disabled, with zero runners at the last check.
+Preferred CI/CD direction is hosted tests/Oracle-inclusive builds plus conditional
+internal deployment-only execution. Next Ubuntu task can prepare isolated CI;
+runner registration/CD still require the unrun SMPAPP GitHub egress probe and a
+guarded running-release update/identity contract. Source integration is not site
+acceptance and does not clear Oracle/security holds or erase attempt fences.
+
+## Historical NIMR preview access and release verification
 
 As of 28 September 2026, the preview runs in the `msmt-02` GitOps cluster.
 Verify its public surface before connecting VPN: HTTPS `/healthz/`, `/readyz/`,

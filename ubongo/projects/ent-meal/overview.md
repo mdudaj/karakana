@@ -15,7 +15,20 @@ obsolete name from historical records. `ent-meal` remains the technical project 
 See `docs/ux/product-naming.md` in the application repository.
 
 Load the latest handoff and `docs/delivery/first-release-milestones.md` for current
-release state. FR02 is squash merged at `16ee712`; live preview checks remain
+release state. **23 October2026:** the completed Windows work and portable Ubuntu
+checkpoint are squash merged through
+[ent-meal PR99](https://github.com/mdudaj/ent-meal/pull/99) at `80aa22b`.
+Read `docs/deployment/ubuntu-continuation-2026-10-23.md` from fetched application
+main before following an older Linux runtime handoff. It includes the current
+organisation/settings artifacts, exact operator receipts, CI/CD direction and
+pending portfolio work. This documentation integration does not require a new
+runtime image. Server-side UAT health and persistence/443 configuration passed;
+browser ingress and actual post-session/reboot/failure recovery remain unverified.
+The GitHub egress probe is prepared but unrun; legacy NIMR deployment remains
+manually disabled. Next independent Ubuntu task is the isolated hosted-CI slice;
+CD activation still needs site egress, deployment identity and guarded upgrades.
+
+Earlier checkpoint (historical): FR02 is squash merged at `16ee712`; live preview checks remain
 user-deferred until VPN is available. Local v0.3 clarification/name corrections
 are a separate review branch and do not imply integration or acceptance.
 
