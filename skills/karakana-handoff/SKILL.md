@@ -1,7 +1,7 @@
 ---
 name: karakana-handoff
 description: Create, load, recover, or refresh compact project-aware continuation artifacts for task endings, new sessions, agent switches, context-window failures, and milestone transitions.
-version: 0.4.2
+version: 0.4.3
 risk_level: low
 category: productivity
 scope: bundled
@@ -123,6 +123,14 @@ Record `--next-task` explicitly so recovered milestones cannot replace the curre
 decision. Use `--slice-complete` to recommend a fresh conversation at a boundary;
 otherwise continue an unfinished task. Preserve `--failed-attempts` on the same
 issue; after two unsuccessful attempts, stop speculative patches and escalate.
+
+Supply `--next-task-brief` with the next task's problem, preferred scope,
+acceptance/verification, relevant files and first action. This dedicated field
+appears in both saved Markdown and `handoff load` session-start output. Keep
+completed-work context in `--from-note`; placing the brief only there does not
+make it visible when loading. Verify the actual load output before reporting
+that the next-task brief is available. Historical handoffs without the field
+remain readable and explicitly report that no brief was recorded.
 
 If the selected project has active `- [ ]` items in its
 `ubongo/projects/<project>/open-issues.md`, the handoff links that file as the

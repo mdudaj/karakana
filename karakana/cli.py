@@ -601,6 +601,7 @@ def handoff_create(
     current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
     next_task: str | None = typer.Option(None, "--next-task", help="Bounded next task; outranks recovered milestone."),
+    next_task_brief: str | None = typer.Option(None, "--next-task-brief", help="Next task problem, scope, acceptance and first action; printed on load."),
     reuse_stage: list[str] | None = typer.Option(None, "--reuse-stage", help="Reviewed evidence STAGE=PATH (research, architect, plan); repeatable."),
     reuse_reviewed: bool = typer.Option(False, "--reuse-reviewed", help="Attest evidence is current, applicable and appropriately approved."),
     slice_complete: bool = typer.Option(False, "--slice-complete", help="Recommend a fresh conversation at this completed boundary."),
@@ -632,6 +633,7 @@ def handoff_create(
             okf_concepts_loaded=okf_concept,
             okf_concepts_changed=changed_okf_concept,
             next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
+            next_task_brief=next_task_brief,
             slice_complete=slice_complete, failed_attempts=failed_attempts,
         )
         markdown_path = json_path = None
@@ -730,6 +732,7 @@ def handoff_refresh(
     current_milestone: str | None = typer.Option(None, "--current-milestone", help="Explicit current milestone."),
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
     next_task: str | None = typer.Option(None, "--next-task", help="Bounded next task; outranks recovered milestone."),
+    next_task_brief: str | None = typer.Option(None, "--next-task-brief", help="Next task problem, scope, acceptance and first action; printed on load."),
     reuse_stage: list[str] | None = typer.Option(None, "--reuse-stage", help="Reviewed evidence STAGE=PATH (research, architect, plan); repeatable."),
     reuse_reviewed: bool = typer.Option(False, "--reuse-reviewed", help="Attest evidence is current, applicable and appropriately approved."),
     slice_complete: bool = typer.Option(False, "--slice-complete", help="Recommend a fresh conversation at this completed boundary."),
@@ -764,6 +767,7 @@ def handoff_refresh(
             okf_concepts_loaded=okf_concept,
             okf_concepts_changed=changed_okf_concept,
             next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
+            next_task_brief=next_task_brief,
             slice_complete=slice_complete, failed_attempts=failed_attempts,
             recover_artifacts=recover_artifacts,
         )

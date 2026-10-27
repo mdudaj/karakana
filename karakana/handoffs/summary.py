@@ -31,6 +31,10 @@ def render_handoff(handoff: HandoffArtifact) -> str:
 
 {handoff.current_milestone}
 
+## Next Task Brief
+
+{handoff.next_task_brief or "No next-task brief recorded for this handoff."}
+
 ## Decisions Already Made
 
 {_bullets(handoff.decisions)}
@@ -101,6 +105,10 @@ def render_session_start(handoff: HandoffArtifact, path: str) -> str:
 - Current milestone: {handoff.current_milestone}
 - Purpose: {handoff.purpose}
 - Recovered: {handoff.recovered}
+
+## Next Task Brief
+
+{handoff.next_task_brief or "No next-task brief recorded for this handoff."}
 
 ## OKF Concepts
 
