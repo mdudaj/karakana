@@ -11,6 +11,7 @@ from karakana.handoffs.redaction import redact_handoff_text
 from karakana.handoffs.continuation import build_continuation
 from karakana.handoffs.schemas import HandoffArtifact
 from karakana.handoffs.store import HandoffStore, generate_handoff_id
+from karakana.handoffs.quick_reference import build_quick_reference
 from karakana.ingestion.store import IngestionStore
 from karakana.milestones.store import MilestoneStore
 from karakana.requirements.store import RequirementsStore
@@ -52,6 +53,11 @@ def create_handoff(
     slice_complete: bool = False,
     failed_attempts: int = 0,
     recover_artifacts: bool = True,
+    next_task_brief: str | None = None,
+    backlog_position: str | None = None,
+    delivery_states: list[str] | None = None,
+    backlog_source: str | None = None,
+    backlog_items: list[str] | None = None,
 ) -> HandoffArtifact:
     skillpack_name = skillpack or project
     loaded_skillpack = SkillpackLoader(repo_root).load(skillpack_name)
@@ -70,9 +76,15 @@ def create_handoff(
     note = redact_handoff_text(from_note)
     if note:
         state.summaries.append(f"User-provided state: {note}")
-    backlog = _active_backlog_path(repo_root, loaded_skillpack.project.memory)
+    quick_reference = build_quick_reference(repo_root, backlog_position, delivery_states,
+                                            backlog_source, backlog_items)
+    backlog = (quick_reference.get("backlog", {}).get("source") if backlog_source
+               else _active_backlog_path(repo_root, loaded_skillpack.project.memory))
     if backlog:
-        state.summaries.append(f"Project development backlog: {backlog} (active items present).")
+        state.summaries.append(
+            f"Explicit backlog source: {backlog}; reconcile the authored snapshot against this authority."
+            if backlog_source else f"Project development backlog: {backlog} (active items present)."
+        )
     inspect_first = _inspect_first(repo_root, project, loaded_skillpack.path, loaded_skillpack.project.memory, milestone, state.source_artifacts, workspace, backlog)
     previous = previous_handoff_id or _latest_handoff_id(repo_root, project, skillpack_name)
     staleness = []
@@ -88,6 +100,8 @@ def create_handoff(
         loaded_skillpack.to_dict()["model_routes"], reuse_stages, reuse_reviewed,
         slice_complete, failed_attempts,
     )
+    if quick_reference:
+        continuation["quick_reference"] = quick_reference
     return HandoffArtifact(
         handoff_id=generate_handoff_id(),
         created_at=now,
@@ -108,6 +122,7 @@ def create_handoff(
         okf_concepts_changed=_unique(okf_concepts_changed or []),
         suggested_skills=_suggested_skills(loaded_skillpack.skills.required, loaded_skillpack.skills.optional, milestone, state.suggested_skills),
         exact_next_action=exact_next_action,
+        next_task_brief=next_task_brief or "",
         safety_constraints=_safety_constraints(loaded_skillpack.safety.requires_approval_for),
         return_handoff_expected=True,
         staleness_notes=staleness,

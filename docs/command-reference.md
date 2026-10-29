@@ -82,6 +82,7 @@ Common commands:
 ```bash
 karakana handoff load --project msc-platform --skillpack msc-platform
 karakana handoff refresh --project msc-platform --skillpack msc-platform
+karakana handoff refresh --project msc-platform --next-task "Selected next slice" --next-task-brief "Problem, scope, acceptance, relevant files and first action."
 ```
 
 Safe default behavior: Append-only local artifacts; load recovers bounded state when absent.

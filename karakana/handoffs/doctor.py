@@ -8,6 +8,7 @@ from pathlib import Path
 from karakana.handoffs.redaction import contains_unredacted_secret
 from karakana.handoffs.schemas import HandoffDoctorReport
 from karakana.handoffs.store import HandoffStore
+from karakana.handoffs.quick_reference import quick_reference_data, quick_reference_warnings
 
 
 def diagnose_handoff(repo_root: Path, project: str, skillpack: str | None = None, stale_after_days: int = 7) -> HandoffDoctorReport:
@@ -45,6 +46,11 @@ def diagnose_handoff(repo_root: Path, project: str, skillpack: str | None = None
         "secret_redaction": secret_safe,
         "project_matches": workspace_match,
     }
+    backlog_warnings = quick_reference_warnings(handoff)
+    warnings.extend(backlog_warnings)
+    backlog_data = quick_reference_data(handoff).get("backlog", {})
+    if isinstance(backlog_data, dict) and backlog_data.get("source"):
+        checks["backlog_snapshot_current"] = not backlog_warnings
     status = "error" if errors else ("warning" if warnings else "passed")
     return HandoffDoctorReport(project, handoff.handoff_id, status, checks, warnings, errors)
 

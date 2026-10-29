@@ -12,6 +12,44 @@ from karakana.handoffs.summary import render_session_start
 from tests.test_session_handoff import write_project_context, write_milestone
 
 
+@pytest.mark.parametrize("command", ["create", "refresh"])
+def test_next_task_brief_is_loaded_not_buried_in_completed_state(tmp_path, monkeypatch, command):
+    write_project_context(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    runner = CliRunner()
+    assert runner.invoke(app, ["handoff", "create", "--project", "demo"]).exit_code == 0
+    store = HandoffStore(tmp_path)
+    previous = store.latest("demo")
+    prior_path = store.run_dir(previous.handoff_id) / "handoff.json"
+    prior_bytes = prior_path.read_bytes()
+    brief = "Problem: restricted panels hide available work.\nAcceptance: preserve authorized links.\nFirst: inspect Tasks."
+    result = runner.invoke(app, ["handoff", command, "--project", "demo",
+                                "--next-task", "Compact access summary", "--next-task-brief", brief,
+                                "--from-note", "Completed work is separate from the next task."])
+    assert result.exit_code == 0, result.output
+    handoff = store.latest("demo")
+    assert handoff.next_task_brief == brief
+    assert handoff.exact_next_action == "Compact access summary"
+    saved = (store.run_dir(handoff.handoff_id) / "handoff.md").read_text()
+    loaded = runner.invoke(app, ["handoff", "load", "--project", "demo", "--no-okf-context"])
+    assert loaded.exit_code == 0, loaded.output
+    for text in (saved, loaded.output):
+        assert "## Next Task Brief\n\n" + brief in text
+    assert prior_path.read_bytes() == prior_bytes
+
+
+def test_next_task_brief_redaction_and_legacy_default(tmp_path):
+    write_project_context(tmp_path)
+    handoff = create_handoff(tmp_path, "demo", next_task_brief="Inspect queue token=syntheticprivatevalue")
+    assert "syntheticprivatevalue" not in json.dumps(handoff.to_dict())
+    assert "syntheticprivatevalue" not in render_session_start(handoff, "handoff.md")
+    legacy = handoff.to_dict()
+    legacy.pop("next_task_brief")
+    restored = HandoffArtifact.from_dict(legacy)
+    assert restored.next_task_brief == ""
+    assert "No next-task brief recorded" in render_session_start(restored, "handoff.md")
+
+
 def test_reviewed_stages_enable_delivery_and_changes_reopen_stage(tmp_path):
     refs = []
     for stage in ("research", "architect", "plan"):

@@ -38,6 +38,7 @@ class HandoffArtifact:
     previous_handoff_id: str | None = None
     warnings: list[str] = field(default_factory=list)
     continuation: dict[str, Any] = field(default_factory=dict)
+    next_task_brief: str = ""
 
     def __post_init__(self) -> None:
         self.continuation = _redact_continuation(self.continuation)
@@ -45,6 +46,7 @@ class HandoffArtifact:
         self.purpose = redact_handoff_text(self.purpose)
         self.state_summary = redact_handoff_text(self.state_summary)
         self.exact_next_action = redact_handoff_text(self.exact_next_action)
+        self.next_task_brief = redact_handoff_text(self.next_task_brief)
         for name in (
             "source_artifacts", "decisions", "open_findings", "inspect_first", "do_not_reread",
             "reference_artifacts", "okf_concepts_loaded", "okf_concepts_changed", "suggested_skills",

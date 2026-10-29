@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
+
 from karakana.handoffs.schemas import HandoffArtifact
 from karakana.handoffs.continuation import render_continuation
+from karakana.handoffs.quick_reference import render_quick_reference, quick_reference_warnings
 
 
 def render_handoff(handoff: HandoffArtifact) -> str:
@@ -22,6 +25,14 @@ def render_handoff(handoff: HandoffArtifact) -> str:
 - Purpose: {handoff.purpose}
 - Source run/artifact: {source}
 - Recovered: {handoff.recovered}
+
+{render_quick_reference(handoff)}
+
+{_attention(handoff)}
+
+## Next Task Brief
+
+{handoff.next_task_brief or "No next-task brief recorded for this handoff."}
 
 ## Current State Summary
 
@@ -93,7 +104,25 @@ def render_handoff(handoff: HandoffArtifact) -> str:
 """
 
 
-def render_session_start(handoff: HandoffArtifact, path: str) -> str:
+def render_session_start(handoff: HandoffArtifact, path: str, *, details: bool = False) -> str:
+    advisory = f"""## Do Not Reread Unless Needed
+
+{_bullets(handoff.do_not_reread)}
+
+## Suggested Skills
+
+{_bullets(handoff.suggested_skills)}
+
+""" if details else ""
+    concepts = f"""## OKF Concepts
+
+Loaded:
+{_bullets(handoff.okf_concepts_loaded)}
+
+Changed:
+{_bullets(handoff.okf_concepts_changed)}
+
+""" if details or handoff.okf_concepts_loaded or handoff.okf_concepts_changed else ""
     return f"""# Karakana Session Start
 
 - Handoff: {path}
@@ -102,38 +131,45 @@ def render_session_start(handoff: HandoffArtifact, path: str) -> str:
 - Purpose: {handoff.purpose}
 - Recovered: {handoff.recovered}
 
-## OKF Concepts
+{render_quick_reference(handoff)}
 
-Loaded:
-{_bullets(handoff.okf_concepts_loaded)}
+{_attention(handoff)}
 
-Changed:
-{_bullets(handoff.okf_concepts_changed)}
+## Next Task Brief
 
-## Inspect First
+{handoff.next_task_brief or "No next-task brief recorded for this handoff."}
+
+{concepts}## Inspect First
 
 {_bullets(handoff.inspect_first)}
 
-## Do Not Reread Unless Needed
-
-{_bullets(handoff.do_not_reread)}
-
-## Suggested Skills
-
-{_bullets(handoff.suggested_skills)}
-
-## Exact Next Action
-
-{handoff.exact_next_action}
-
-## Safety
+{advisory}## Safety
 
 {_bullets(handoff.safety_constraints)}
 
 ## Continuation Guidance
 
-{render_continuation(handoff.continuation)}
+{render_continuation(handoff.continuation, details=details)}
+
+Use `handoff load --project {handoff.project} --details` for advisory references and full continuation guidance.
 """
+
+
+def _attention(handoff: HandoffArtifact) -> str:
+    # A successful protocol receipt is informational, not an attention item.
+    # It remains available in the full saved handoff's Warnings/history section.
+    actionable = [warning for warning in handoff.warnings if not (
+        warning.startswith("Protocol check ") and warning.endswith(" is passed."))]
+    values = [*handoff.open_findings, *actionable, *quick_reference_warnings(handoff)]
+    if handoff.recovered:
+        values.append("Recovered state: verify the current source and authority before acting.")
+    try:
+        age = (datetime.now(timezone.utc) - datetime.fromisoformat(handoff.updated_at)).total_seconds() / 86400
+        if age > 7:
+            values.append("Handoff is older than 7 days; recheck current source and backlog before acting.")
+    except (ValueError, TypeError):
+        values.append("Handoff timestamp is invalid; verify snapshot freshness.")
+    return "## Attention\n\n" + _bullets(list(dict.fromkeys(values))) if values else ""
 
 
 def _return_expectation(handoff: HandoffArtifact) -> str:
