@@ -76,7 +76,7 @@ def next_stage(guidance: dict) -> str:
     return "deliver"
 
 
-def render_continuation(guidance: dict) -> str:
+def render_continuation(guidance: dict, *, details: bool = True) -> str:
     route = guidance.get("model_route", {})
     model = f"{route.get('provider')} / {route.get('model')} ({route.get('role')})" if route else "Not selected: supply the next bounded task."
     lines = [
@@ -89,5 +89,6 @@ def render_continuation(guidance: dict) -> str:
     ]
     lines.extend(f"- Reuse {stage}: {ref['path']} (hash checked at load)" for stage, ref in guidance.get("evidence", {}).items())
     lines.append("- " + " ".join(render_recommendation_guidance().split()))
-    lines.extend(f"- {rule}" for rule in EFFICIENCY_RULES)
+    if details:
+        lines.extend(f"- {rule}" for rule in EFFICIENCY_RULES)
     return "\n".join(lines)

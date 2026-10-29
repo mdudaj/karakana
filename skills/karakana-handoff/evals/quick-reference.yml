@@ -1,0 +1,22 @@
+id: handoff-quick-reference
+name: Current position and sourced backlog precede next work
+description: Keep delivery states separate and current backlog useful without inventing progress.
+suite: skills
+risk_level: medium
+input:
+  task: "Refresh a handoff after source integration while target acceptance and CI remain deferred."
+  project: karakana
+  skill: karakana-handoff
+  task_type: planning
+  prompt_file: skills/karakana-handoff/SKILL.md
+expectations:
+  must_include:
+    - "--backlog-position"
+    - "--delivery-state"
+    - "--backlog-source"
+    - "--backlog-item"
+    - "Do not invent a"
+    - "completion percentage"
+    - "owner deferrals"
+    - "complete next-task brief"
+    - "--details"

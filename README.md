@@ -155,6 +155,35 @@ Start every task by loading the latest project handoff. If none exists, Karakana
 karakana handoff load --project <project> --skillpack <skillpack>
 ```
 
+Load now starts with a quick reference: current backlog position, separately
+recorded Implemented/Verified/Merged/Deployed/Accepted states, a sourced backlog
+snapshot and the complete next-task brief. Missing states stay **Not recorded**;
+the harness does not infer completion or approval. `handoff load --details` adds
+advisory references and full continuation guidance. Changed or missing backlog
+sources are reported for reconciliation without rewriting the saved snapshot.
+
+Author an explicit snapshot when refreshing (all values are recorded claims):
+
+```bash
+karakana handoff refresh --project PROJECT --skillpack PROJECT \
+  --backlog-position "R1 / UX stabilisation" \
+  --delivery-state "implemented=local source complete" \
+  --delivery-state "verified=focused and browser checks passed" \
+  --delivery-state "merged=review pending" \
+  --delivery-state "deployed=no deployment performed" \
+  --delivery-state "accepted=named target acceptance open" \
+  --backlog-source docs/backlog.md \
+  --backlog-item 'UX-01|next|Qualify remaining form layout' \
+  --backlog-item 'CI|deferred|Wait for owner-selected connectivity proof' \
+  --next-task "Qualify remaining form layout" \
+  --next-task-brief "Problem, preferred scope, acceptance and first action."
+```
+
+The source must exist and items require a source. Delivery stages and backlog
+states are validated; use `--help` for values. Prefer the current authoritative
+project backlog over old bootstrap memory. See the
+[research, design and compatibility record](docs/delivery/2026-10-29-handoff-quick-reference.md).
+
 To start an interactive agent while making the handoff visible before the agent UI takes over, use the Karakana launchers:
 
 ```bash

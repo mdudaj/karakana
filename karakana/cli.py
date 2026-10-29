@@ -602,6 +602,10 @@ def handoff_create(
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
     next_task: str | None = typer.Option(None, "--next-task", help="Bounded next task; outranks recovered milestone."),
     next_task_brief: str | None = typer.Option(None, "--next-task-brief", help="Next task problem, scope, acceptance and first action; printed on load."),
+    backlog_position: str | None = typer.Option(None, "--backlog-position", help="Explicit current lane and position in the backlog."),
+    delivery_state: list[str] | None = typer.Option(None, "--delivery-state", help="Recorded STAGE=VALUE; implemented, verified, merged, deployed, accepted. Repeatable."),
+    backlog_source: str | None = typer.Option(None, "--backlog-source", help="Authoritative local backlog file; fingerprinted for freshness."),
+    backlog_item: list[str] | None = typer.Option(None, "--backlog-item", help="ID|STATE|SUMMARY; done, in_progress, next, queued, blocked, deferred, conditional. Repeatable."),
     reuse_stage: list[str] | None = typer.Option(None, "--reuse-stage", help="Reviewed evidence STAGE=PATH (research, architect, plan); repeatable."),
     reuse_reviewed: bool = typer.Option(False, "--reuse-reviewed", help="Attest evidence is current, applicable and appropriately approved."),
     slice_complete: bool = typer.Option(False, "--slice-complete", help="Recommend a fresh conversation at this completed boundary."),
@@ -634,6 +638,8 @@ def handoff_create(
             okf_concepts_changed=changed_okf_concept,
             next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
             next_task_brief=next_task_brief,
+            backlog_position=backlog_position, delivery_states=delivery_state,
+            backlog_source=backlog_source, backlog_items=backlog_item,
             slice_complete=slice_complete, failed_attempts=failed_attempts,
         )
         markdown_path = json_path = None
@@ -687,6 +693,7 @@ def handoff_load(
     skillpack: str | None = typer.Option(None, "--skillpack", help="Skillpack; defaults to project."),
     workspace: str | None = typer.Option(None, "--workspace", help="Optional workspace identity."),
     no_create: bool = typer.Option(False, "--no-create", help="Do not recover a handoff when none exists."),
+    details: bool = typer.Option(False, "--details", help="Include advisory references, skills and full continuation guidance."),
     okf_context: bool = typer.Option(True, "--okf-context/--no-okf-context", help="Select OKF concepts as entry context."),
     okf_tag: list[str] | None = typer.Option(None, "--okf-tag", help="OKF tag filter. Repeatable."),
     okf_depth: int = typer.Option(1, "--okf-depth", min=0, help="OKF relationship traversal depth."),
@@ -720,7 +727,7 @@ def handoff_load(
         selected = _okf_handoff_concepts(repo_root, project, okf_tag or [], okf_depth, okf_limit)
         handoff.okf_concepts_loaded = [concept.concept_id for concept in selected]
     path = store.run_dir(handoff.handoff_id) / "handoff.md"
-    typer.echo(render_session_start(handoff, str(path)))
+    typer.echo(render_session_start(handoff, str(path), details=details))
 
 
 @handoff_app.command("refresh")
@@ -733,6 +740,10 @@ def handoff_refresh(
     from_note: str | None = typer.Option(None, "--from-note", help="Additional current state."),
     next_task: str | None = typer.Option(None, "--next-task", help="Bounded next task; outranks recovered milestone."),
     next_task_brief: str | None = typer.Option(None, "--next-task-brief", help="Next task problem, scope, acceptance and first action; printed on load."),
+    backlog_position: str | None = typer.Option(None, "--backlog-position", help="Explicit current lane and position in the backlog."),
+    delivery_state: list[str] | None = typer.Option(None, "--delivery-state", help="Recorded STAGE=VALUE; implemented, verified, merged, deployed, accepted. Repeatable."),
+    backlog_source: str | None = typer.Option(None, "--backlog-source", help="Authoritative local backlog file; fingerprinted for freshness."),
+    backlog_item: list[str] | None = typer.Option(None, "--backlog-item", help="ID|STATE|SUMMARY; done, in_progress, next, queued, blocked, deferred, conditional. Repeatable."),
     reuse_stage: list[str] | None = typer.Option(None, "--reuse-stage", help="Reviewed evidence STAGE=PATH (research, architect, plan); repeatable."),
     reuse_reviewed: bool = typer.Option(False, "--reuse-reviewed", help="Attest evidence is current, applicable and appropriately approved."),
     slice_complete: bool = typer.Option(False, "--slice-complete", help="Recommend a fresh conversation at this completed boundary."),
@@ -768,6 +779,8 @@ def handoff_refresh(
             okf_concepts_changed=changed_okf_concept,
             next_task=next_task, reuse_stages=reuse_stage, reuse_reviewed=reuse_reviewed,
             next_task_brief=next_task_brief,
+            backlog_position=backlog_position, delivery_states=delivery_state,
+            backlog_source=backlog_source, backlog_items=backlog_item,
             slice_complete=slice_complete, failed_attempts=failed_attempts,
             recover_artifacts=recover_artifacts,
         )

@@ -14,12 +14,23 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Active development items
 
-No active Karakana development item is currently recorded here. After KDX-07
-integration, full safe dogfood run `20261001-185351-dogfood-081dd2` passed all
-10 checks and analysis found no defects. Its generated P2 manual-review item
-calls for artifact-backed workflow coverage before a release candidate; see
-`docs/karakana-dogfood-assessment-2026-10-01.md`. Add a development item only
-when that review or new project evidence identifies a concrete change.
+- [ ] **KDX-09 · P2 · local implementation / review pending — useful handoff quick reference.**
+  Evidence: the owner repeatedly needed backlog position/status in addition to
+  next-task text; long ent-meal handoffs lacked structured status and relied on
+  pasted backlog prose. Scope and current verification are in
+  `docs/delivery/2026-10-29-handoff-quick-reference.md`. Preserve the unmerged
+  `8ff3467` next-task-brief dependency and append-only artifact history.
+  Acceptance: actual create/refresh/load shows explicit delivery states, sourced
+  backlog items, current position and the complete next brief; legacy/redaction/
+  stale-source/CLI tests, full regression and evals pass. Next: finish verification,
+  inspect actual project loads, then owner-reviewed source PR/squash integration.
+  No automatic execution, merge, deployment or acceptance follows from the output.
+
+Prior checkpoint: after KDX-07 integration, full safe dogfood run
+`20261001-185351-dogfood-081dd2` passed all10 checks and analysis found no defects.
+Its P2 manual-review item calls for artifact-backed workflow coverage before a
+release candidate; see `docs/karakana-dogfood-assessment-2026-10-01.md`. This remains
+a release-review follow-up distinct from KDX-09's observed continuation defect.
 
 ## Completed development items
 

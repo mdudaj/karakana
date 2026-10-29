@@ -132,6 +132,21 @@ make it visible when loading. Verify the actual load output before reporting
 that the next-task brief is available. Historical handoffs without the field
 remain readable and explicitly report that no brief was recorded.
 
+Author the quick reference at refresh with `--backlog-position`, repeatable
+`--delivery-state STAGE=VALUE` (implemented, verified, merged, deployed, accepted),
+`--backlog-source PATH` and repeatable `--backlog-item 'ID|STATE|SUMMARY'`.
+Backlog states are done, in_progress, next, queued, blocked, deferred, conditional.
+Use the current authoritative project backlog, not stale generic bootstrap notes;
+name the current item and preserve external gates and owner deferrals. These are
+recorded claims, not independent verification or authority. Do not invent a
+completion percentage or label unrecorded deployment/acceptance complete. Missing
+states remain Not recorded. Do not copy the whole backlog into the next-task brief.
+The source is fingerprinted; changed/missing-source warnings require reconciliation,
+not automatic snapshot updates. Default load puts status/backlog first and retains
+the complete next-task brief and safety. Use `handoff load --details` for advisory
+references and full continuation guidance. Verify both the actual quick reference
+and complete brief at the real load entry point; saved Markdown alone is insufficient.
+
 If the selected project has active `- [ ]` items in its
 `ubongo/projects/<project>/open-issues.md`, the handoff links that file as the
 project development backlog, even when artifact recovery is disabled. Name the

@@ -1,8 +1,18 @@
-# Sustainability Monitoring and Reporting Platform Open Issues
+# Sustainability Monitoring and Reporting Platform backlog authority
 
-- Confirm CRDB target environment details for Docker, database hosting, Entra app registration, SMTP/Graph mail, and Power BI access.
-- Define the first domain model slice: portfolio item, programme configuration, results framework, indicator registry, and party/beneficiary registry.
-- Decide whether the first form-runtime slice starts with XLSForm upload/conversion or with imported TACATDP baseline dataset normalization.
-- Define user roles and Microsoft Entra group mapping with SFU.
-- Define TACATDP migration path from Power Pages/Dataverse/Kobo baseline into Sustainability Monitoring and Reporting Platform.
-- Plan reply to Hailo Kibiki's architecture message: acknowledge the need for future integrations and scalability, confirm that Sustainability Monitoring and Reporting Platform is being designed as a configurable platform rather than a TACATDP-only tool, clarify that KPI/form structure should be co-designed with Avitus and programme owners, and propose 4–5 initial data-collection configurations as demonstration workstreams only if they share a common configurable form/runtime/submission model.
+Use `../ent-meal/docs/delivery/first-release-milestones.md`, its **single active
+Release 1 backlog**, and the latest dated entries for current implementation,
+integration and acceptance state. The latest project handoff carries a sourced
+quick-reference snapshot and one concrete next-task brief; reconcile its recorded
+state with the repository before acting.
+
+This replaces the historical bootstrap list that proposed defining domain models,
+choosing a first form runtime and preparing an architecture reply. Those entries
+must not be requeued as current source work or treated as authorization to send
+messages. Source integration, CRDB target proof, security decisions and named UAT
+acceptance are distinct outcomes. The October23 Ubuntu checkpoint is superseded
+for CI priority by the October27 owner deferral: hosted tests/Oracle-inclusive
+builds wait for actual CRDB-server GitHub API proof; prior timeout unresolved.
+
+Keep the active backlog in its owning repository. Do not duplicate its rows or
+maintain competing progress percentages in this memory file.
