@@ -1,7 +1,7 @@
 ---
 name: design-system-governance
 description: Use this skill before frontend work that affects visual consistency, spacing, colors, layout, reusable components, page surfaces, forms, tabs, cards, or cross-project UI rules, especially when repeated UI corrections indicate the project lacks a single design-system source of truth.
-version: 0.1.1
+version: 0.1.2
 risk_level: medium
 allowed_tools:
   - read_file
@@ -44,6 +44,11 @@ bucket: development
   shared component partials, and representative templates before editing. Use
   the reference to extract implementation rules, not to copy visual identity.
 - Build UI from reusable components or partials first; page templates compose them.
+- Classify each page by audience, primary task, and page type before selecting
+  its layout. Token use alone does not make one-off markup design-system aligned.
+- For landing/dashboard cards, use a shared concise summary and footer-action
+  contract; do not turn each card into a paragraph or hide its destination in an
+  icon or tooltip.
 - Preserve project-specific visual identity through tokens, not one-off page colors.
 - Use `ux-skill-router` first when a UI request spans multiple concerns and the
   correct specialist skill sequence is not obvious.
@@ -93,7 +98,16 @@ Do not use for backend-only changes, text-only copy edits, or tiny visual fixes 
 
 ## Core Rule
 
-Do not fix repeated UI problems with page-local CSS. First identify or create the reusable design-system rule, then patch the shared component/token/partial and add assertions or visual checks that prove the rule.
+Do not fix repeated UI problems with page-local CSS. First identify or create the reusable design-system rule, then patch the shared component/token/partial and add assertions or visual checks that prove the rule. A page using tokens with bespoke repeated markup still fails this gate. Allow a local exception only for a genuinely unique element with a recorded purpose, non-reusability rationale, and sibling-page impact check.
+
+For landing and dashboard summary cards, specify a stable anatomy: one subject,
+short title, accurately labelled prominent fact or state, only decision-critical
+context, and a consistently placed destination action when detail is available.
+Use a visible action label; a trailing arrow may reinforce it. Tooltips provide
+supplemental information and must not carry the only action meaning or an
+essential qualification. Move long explanations and lists to the detail route
+unless a short caveat is needed to prevent a misleading summary. Define these
+rules in the project's shared component contract, not separately on each page.
 
 ## Design-System Contract
 
@@ -114,7 +128,7 @@ Each UI project should have a durable contract covering:
 
 ## Standard workflow
 
-1. Inspect the existing project UI system: tokens, base templates, shared CSS, component partials, and one mature comparable project when available.
+1. Name the audience, primary decision or task, and page type; inspect the existing project UI system: tokens, base templates, shared CSS, component partials, and one mature comparable project when available.
 2. Classify the request as token, layout, surface, component, framework-rendering, visual-regression, or governance.
 3. Check whether existing project guidance, UX specs, component contracts, or
    specialist skills already cover the UI pattern. If not, perform targeted
@@ -122,7 +136,7 @@ Each UI project should have a durable contract covering:
 4. For a new product, portal, major UX refresh, or first implementation slice, define the shell layout, route ownership, navigation groups, token set, component inventory, responsive rules, accessibility rules, and visual evidence before page implementation begins.
 5. For branded apps, inspect brand assets and derive project-specific tokens before choosing colors.
 6. Update the durable artifact or skill before page edits when a new general rule is being introduced.
-7. Patch shared tokens/components/partials first; update page templates only to compose those components.
+7. Patch shared tokens/components/partials first; update page templates only to compose those components. Document any genuinely unique local element and its sibling-page impact.
 8. For auth/access UX, compare against the closest mature project before editing. Preserve the required access flow in copy and code, for example invite → activate → SSO → role/organization scope.
 9. Move prototype diagnostics into a debug boundary before polishing shareable UX.
 10. Add or update tests for DOM contracts that can be asserted cheaply.
@@ -143,6 +157,13 @@ Each UI project should have a durable contract covering:
 
 - Is the rule project-specific styling or cross-project component behavior?
 - Does the project already have a token/component that should be reused?
+- Are the audience, primary task, and page type explicit, and does the first
+  rendered view prioritize that task?
+- Is a shared component actually reused or extended, beyond merely applying
+  its tokens to new page-local markup? Is any local exception justified?
+- On landing/dashboard cards, are title, fact or state, essential context, and
+  footer action brief, accurate, consistent, and visually aligned? Can users
+  identify the destination without an icon-only cue or tooltip?
 - If a mature reference project exists, were its tokens, shell CSS, component
   partials, and representative templates inspected before editing?
 - If project guidance does not cover this feature or interaction pattern, is the
