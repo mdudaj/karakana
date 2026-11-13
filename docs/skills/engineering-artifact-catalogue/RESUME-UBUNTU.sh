@@ -21,10 +21,10 @@ fi
 brief=$(cat "$note")
 "${cli[@]}" handoff refresh \
     --project karakana --skillpack karakana \
-    --purpose 'Resume documentation convention/templates work on Ubuntu' \
-    --current-milestone 'First convention/templates slice; research reusable' \
+    --purpose 'Resume documentation template review' \
+    --current-milestone 'Research complete; template review next' \
     --from-note "$brief" \
-    --next-task 'Plan and deliver the first bounded convention/template skill slice' \
+    --next-task 'Review documentation templates and recommend revisions before implementation' \
     --next-task-brief "$brief" \
     --reuse-stage "research=$research" --reuse-reviewed \
     --no-recover-artifacts
