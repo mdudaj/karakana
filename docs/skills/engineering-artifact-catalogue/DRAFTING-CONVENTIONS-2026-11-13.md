@@ -2,11 +2,14 @@
 
 Research and implementation proposal, 13 November 2026. Research trace: `20261113-110352-78004f`. This records research and a proposed direction; it does not activate new skills, change client documents, or authorise implementation.
 
-Current continuation: the owner accepted the requirements and design directions
-and selected CT01–CT08 implementation. That slice is locally implemented and
-verified; [delivery results](#convention-and-templates-delivery-results) distinguish
-it from integration and sample acceptance. The [bounded implementation plan](#bounded-convention-and-templates-plan)
-and original research remain below with their authority/history preserved.
+Current continuation: CT01–CT08 is squash integrated through PR #36 at `f2319cc`.
+The owner subsequently selected parser integrity research and then implementation.
+Its [evidence, fix plan and local results](PARSER-INTEGRITY-2026-11-13.md) record
+PI01–PI08 as locally implemented and verified; source publication/integration is
+separate. The accepted reviews,
+[local delivery results](#convention-and-templates-delivery-results),
+[convention/templates plan](#bounded-convention-and-templates-plan) and original
+research remain below with their authority/history preserved.
 
 ## Recommendation
 

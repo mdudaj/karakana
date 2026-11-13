@@ -337,9 +337,18 @@ def _mapping(loader, node):
 _UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _mapping)
 
 
+def _structured_heading(line: str) -> str | None:
+    """Recognize reserved H2 titles consistently before and during extraction."""
+    if not line.startswith("## "):
+        return None
+    title = re.sub(r"^\d{2} ", "", line[3:].strip(" \t")).strip(" \t")
+    return title if title in TABLE_HEADERS else None
+
+
 def parse_document(root: Path, source: Path, namespace: str) -> dict:
     path, raw = _read(root, source)
-    content = raw.decode("utf-8")
+    # Normalize the parsing view only; provenance/freshness still hash raw bytes.
+    content = raw.decode("utf-8").replace("\r\n", "\n")
     match = re.match(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|$)", content, re.S)
     if not match:
         raise ArtifactError("Instantiated source requires scalar YAML frontmatter")
@@ -364,8 +373,13 @@ def parse_document(root: Path, source: Path, namespace: str) -> dict:
     tables, narratives = {}, []
     body = content[match.end():]
     previous = ""
+    declared = set()
     for line in body.splitlines():
-        if line.startswith("## ") and re.sub(r"^\d{2} ", "", line[3:]) in TABLE_HEADERS:
+        title = _structured_heading(line)
+        if title is not None:
+            if title in declared:
+                raise ArtifactError("Duplicate structured section: " + title)
+            declared.add(title)
             if not re.fullmatch(r'<a id="[a-z0-9][a-z0-9-]*"></a>', previous):
                 raise ArtifactError("Structured sections require explicit anchors")
         if line.strip():
@@ -382,17 +396,25 @@ def parse_document(root: Path, source: Path, namespace: str) -> dict:
         if anchor in anchors:
             raise ArtifactError("Duplicate section anchor")
         anchors.add(anchor)
-        heading = re.search(r"^## (.+)$", section, re.M)
-        title = re.sub(r"^\d{2} ", "", heading.group(1)) if heading else ""
-        lines = [line for line in section.splitlines() if line.startswith("| ") and line.endswith(" |")]
-        if title in TABLE_HEADERS:
+        heading = re.search(r"^## .+$", section, re.M)
+        title = _structured_heading(heading.group(0)) if heading else None
+        if title is not None:
+            lines = []
+            for line in section.splitlines():
+                candidate = line.strip(" \t")
+                if candidate.startswith("|") or candidate.endswith("|"):
+                    if not line.startswith("| ") or not line.endswith(" |"):
+                        raise ArtifactError(f"Malformed Markdown table row in {title}#{anchor}")
+                    lines.append(line)
             if title in tables or len(lines) < 3:
                 raise ArtifactError("Duplicate or empty structured section")
             def cells(line):
                 return [_text(v.strip().replace("<br>", "\n").replace("&#124;", "|"))
                         for v in line[1:-1].split("|")]
             headers = cells(lines[0])
-            if headers != TABLE_HEADERS[title] or any(v != "---" for v in cells(lines[1])):
+            separator = cells(lines[1])
+            if (headers != TABLE_HEADERS[title] or len(separator) != len(headers)
+                    or any(v != "---" for v in separator)):
                 raise ArtifactError("Structured section headers differ from contract")
             rows = []
             for line in lines[2:]:
@@ -407,8 +429,8 @@ def parse_document(root: Path, source: Path, namespace: str) -> dict:
                 narratives.append({"anchor": anchor, "text": _text(narrative)})
         else:
             narratives.append({"anchor": anchor, "text": _text(section.strip())})
-    if re.search(r"^## (" + "|".join(re.escape(k) for k in TABLE_HEADERS) + r")\s*$", parts[0], re.M):
-        raise ArtifactError("Structured sections require explicit anchors")
+    if declared - tables.keys():
+        raise ArtifactError("Unparsed structured sections: " + ", ".join(sorted(declared - tables.keys())))
     return {"metadata": meta, "path": str(path.relative_to(root.resolve())),
             "sha256": _sha(raw), "tables": tables, "narratives": narratives}
 
