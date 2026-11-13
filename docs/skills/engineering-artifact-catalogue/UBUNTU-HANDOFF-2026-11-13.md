@@ -6,9 +6,9 @@ Project: Karakana. Date: 13 November 2026.
 
 Deliver engineering documentation skills supported by purposeful content templates, examples and checks. The motivation is concise technical documentation rather than authoring history or repeated review arrangements. Keep genuine product approval requirements, audit behaviour and operating authority.
 
-Research and the implementation proposal are complete in [DRAFTING-CONVENTIONS-2026-11-13.md](DRAFTING-CONVENTIONS-2026-11-13.md). Reuse that evidence; do not restart broad research. The owner requested committing/syncing the research, a loadable handoff, updating `main`, then switching to the next task branch to continue. Integration is through draft PR [#33](https://github.com/mdudaj/karakana/pull/33), to be squash-merged after documentation checks. Verify its actual merged state and local source before proceeding; this note is not a merge receipt.
+Research and the implementation proposal are complete in [DRAFTING-CONVENTIONS-2026-11-13.md](DRAFTING-CONVENTIONS-2026-11-13.md). Reuse that evidence; do not restart broad research. The owner requested committing/syncing the research, a loadable handoff, updating `main`, then switching to the next task branch to continue. [PR #33](https://github.com/mdudaj/karakana/pull/33) was squash-merged at `bdb5c7e70fb047d82c3d27e4a1398ef3064b69ee`, and the continuation branch was published from it. Verify current refs before proceeding; later handoff corrections may advance `main`.
 
-No skills, application code, client documents or server settings have changed in this slice. No server connection is required. Runtime traces and handoffs under `.karakana/` are ignored; they do not transfer through Git. This tracked note provides the portable continuation context.
+No skills, application code, client documents or server settings have changed in the research slice. The portable loader correction uses existing handoff commands without changing the Python loader. No server connection is required. Runtime traces and handoffs under `.karakana/` are ignored; they do not transfer through Git. This entire tracked note is supplied as the Next Task Brief, so ordinary handoff loading prints all instructions below. If reading this in loaded context, import is complete: do not rerun the bootstrap or wait for another chat prompt; continue with the next bounded slice.
 
 ## Next bounded slice
 
@@ -34,7 +34,7 @@ Verification completed on Windows: direct probes in temporary repositories, rese
 
 ## Update the Ubuntu checkout
 
-From the Karakana repository root, with local work saved and a clean working tree:
+Agent action after loading: verify the checkout is Karakana and inspect working-tree state. With local work saved and a clean working tree, update `main` and switch to the continuation branch:
 
 ```bash
 git fetch origin
@@ -43,37 +43,14 @@ git pull --ff-only origin main
 git switch feat/documentation-conventions-templates-20261113
 ```
 
-The continuation branch is to be published from updated `main`. If it is not present after fetching, stop and inspect the remote branches and PR #33 state; do not reset or discard local work. Do not continue from the old research branch after a squash merge.
+The continuation branch is published. If it is not present after fetching, stop and inspect the remote branches and PR #33 state; do not reset or discard local work. If local continuation has no unique work but trails its remote, fast-forward it before editing. If the branch has unique work, inspect and preserve it before resolving divergence. Do not continue from the old research branch after a squash merge.
 
-Read this note and the proposal, then load current context using the block below. It checks CLI availability, appends a local runtime handoff, and loads it. It does not install packages, edit source, call a model or connect to the app server. Historical Windows trace IDs are evidence references, not portable local validation results.
+## One-command bootstrap
+
+On the first Ubuntu load, run the command below from an updated Karakana checkout. The wrapper checks CLI availability, appends a local runtime handoff with this complete note as the visible Next Task Brief, then loads it. Future `karakana handoff load --project karakana --skillpack karakana` calls print the same full brief. The wrapper does not install packages, switch branches, edit source, call a model or connect to the app server. The agent follows the loaded branch instructions after loading. Historical Windows trace IDs are evidence references, not portable local validation results.
 
 ```bash
-(
-set -euo pipefail
-note=docs/skills/engineering-artifact-catalogue/UBUNTU-HANDOFF-2026-11-13.md
-research=docs/skills/engineering-artifact-catalogue/DRAFTING-CONVENTIONS-2026-11-13.md
-test -f KARAKANA.md
-test -f "$note"
-test -f "$research"
-if command -v karakana >/dev/null 2>&1; then
-    cli=(karakana)
-elif [ -x .venv/bin/karakana ]; then
-    cli=(.venv/bin/karakana)
-else
-    echo 'STOP: Karakana CLI unavailable; inspect docs/installation.md before setup.' >&2
-    exit 1
-fi
-"${cli[@]}" handoff refresh \
-    --project karakana --skillpack karakana \
-    --purpose 'Resume documentation convention/templates work on Ubuntu' \
-    --current-milestone 'First convention/templates slice; research reusable' \
-    --from-note "$(cat "$note")" \
-    --next-task 'Deliver the first bounded documentation convention and initial templates slice' \
-    --next-task-brief 'Read the portable handoff and proposal; inspect existing skills; define the concrete first slice and its acceptance; run its pre-implementation gate; implement and verify only that slice.' \
-    --reuse-stage "research=$research" --reuse-reviewed \
-    --no-recover-artifacts
-"${cli[@]}" handoff load --project karakana --skillpack karakana
-)
+bash docs/skills/engineering-artifact-catalogue/RESUME-UBUNTU.sh
 ```
 
 An older local protocol check displayed during refresh does not validate this new task. Start and bind the next slice's own protocol trace. Preserve all prior runtime history. End the slice with a trace-bound append-only handoff and distinguish implemented, verified, merged, deployed and accepted states.
