@@ -2,7 +2,7 @@
 name: engineering-delivery-planning
 description: Author or revise outcome roadmaps, milestones and bounded implementation
   plans in Markdown once delivery direction is selected.
-version: 0.1.0
+version: 0.1.1
 risk_level: medium
 category: documentation
 scope: bundled
@@ -44,6 +44,12 @@ Use for requested roadmap/milestone/implementation-plan authoring, revision or r
 Use next-milestone-decision when the question is what to do next. Do not execute the selected plan or invent estimates, owners or committed dates.
 
 ## Quick Reference
+
+For requested authoring/review, read the relevant
+[shared conventions](../engineering-documentation-conventions/SKILL.md).
+Use the [document map](../engineering-documentation-conventions/references/document-map.md)
+to distinguish the new requirements/design packs from existing planning guidance.
+Resource links are not automatically loaded or enforced.
 
 Preserve the request type. A skills inquiry returns catalogue information; do not
 draft. Research returns evidence, planning returns a proposed plan. Draft/revise

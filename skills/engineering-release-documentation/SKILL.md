@@ -3,7 +3,7 @@ name: engineering-release-documentation
 description: Author or revise Markdown release plans, evidence-backed release notes
   and adoption or handover guidance, separating planned scope from actual release
   and operational facts.
-version: 0.1.0
+version: 0.1.1
 risk_level: medium
 category: documentation
 scope: bundled
@@ -46,6 +46,12 @@ Use for requested release-plan/notes/adoption/handover authoring, revision or re
 Do not publish, tag, deploy, activate users or claim operational acceptance from drafting. Existing release checks, runbooks and Karakana handoffs retain their authority.
 
 ## Quick Reference
+
+For requested authoring/review, read the relevant
+[shared conventions](../engineering-documentation-conventions/SKILL.md).
+Use the [document map](../engineering-documentation-conventions/references/document-map.md)
+to identify existing release/guide/runbook resources and later template work.
+Resource links are not automatically loaded or enforced.
 
 Preserve the request type. A skills inquiry returns catalogue information; do not
 draft. Research returns evidence, planning returns a proposed plan. Draft/revise

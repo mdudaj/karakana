@@ -3,7 +3,7 @@ name: engineering-workbooks
 description: Export canonical engineering documents as audience Excel views and report
   returned-workbook feedback against an immutable source baseline using local Karakana
   tools.
-version: 0.1.0
+version: 0.1.1
 risk_level: medium
 category: documentation
 scope: bundled
@@ -45,6 +45,12 @@ Use for requested engineering artifact Excel exports, baseline checks or returne
 Do not use for unrelated financial/data-analysis models or general Excel editing. Do not author a second master, apply feedback automatically or publish to remote services.
 
 ## Quick Reference
+
+For requested engineering document sharing/review, read the relevant
+[shared conventions](../engineering-documentation-conventions/SKILL.md).
+The [document map](../engineering-documentation-conventions/references/document-map.md)
+distinguishes narrative packs from supported P02 structured sources. Resource
+links do not automatically load content or extend parser/export support.
 
 Preserve the request type. A skills inquiry returns catalogue information; do not
 draft. Research returns evidence, planning returns a proposed plan. Draft/revise

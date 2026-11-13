@@ -16,6 +16,7 @@ from karakana.skills.loader import SkillLoader
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = (
+    "engineering-documentation-conventions",
     "engineering-requirements", "engineering-design-records",
     "engineering-delivery-planning", "engineering-release-documentation",
     "engineering-workbooks",

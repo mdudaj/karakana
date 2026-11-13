@@ -1,0 +1,25 @@
+id: engineering-documentation-conventions-request-scope
+name: engineering-documentation-conventions request-scope instruction coverage
+description: Deterministic source-text coverage only; no model execution, artifact
+  correctness or recipient-acceptance claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: An inquiry about available requirements templates followed by a review request;
+    preserve scope and existing accepted decisions.
+  skill: engineering-documentation-conventions
+  task_type: documentation
+  prompt_file: skills/engineering-documentation-conventions/SKILL.md
+expectations:
+  must_include:
+  - an inquiry returns information
+  - a review returns
+  - Draft/revise only when requested
+  - Accepted review decisions carry forward
+  - does not recursively read
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

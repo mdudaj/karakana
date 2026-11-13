@@ -17,6 +17,7 @@ skills:
     - karakana-handoff
     - write-karakana-skill
   optional:
+    - engineering-documentation-conventions
     - engineering-requirements
     - engineering-design-records
     - engineering-delivery-planning
