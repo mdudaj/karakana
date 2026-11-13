@@ -104,6 +104,27 @@ record keeps the old ID/history. Markdown table values encode a literal pipe as
 `&#124;` and an in-cell line break as `<br>`; full narratives stay outside cells.
 P02 implements this narrow convention, not a general Markdown editor.
 
+The parsing view treats LF and CRLF line endings equivalently, including mixed
+LF/CRLF documents. Source bytes are not rewritten: manifest/freshness hashes still
+identify the original bytes, so a newline-only source change makes an older view
+stale. Standalone CR and BOM conversion are outside this supported convention.
+
+Known structured H2 titles retain optional two-digit numbering and ignore
+horizontal whitespace around the title. They require explicit anchors, unique
+declarations and a parsed table. Within such a section, a line with a leading or
+trailing boundary pipe is a table candidate: it must satisfy the supported
+`| cell |` syntax, exact headers, separator width and row width, or parsing is
+refused. Malformed candidates cannot disappear beside valid or empty starter rows.
+Diagnostics identify the section/anchor without reproducing source cell contents.
+
+Correctly parsed all-empty rows contribute no records; intentional empty tables
+and properly declared narrative sources remain supported. Unknown headings and
+ordinary prose with interior-only pipes remain narrative. Use narrative sections
+for literal table illustrations. Structural success does not establish mandatory
+content counts, substantive quality or delivery readiness; those require their
+applicable profile and review. The clean narrative assets described above remain
+outside P02's structured-source compatibility claim.
+
 ## Content profiles and proportional use
 
 Select applicable records, not every possible document for every task. A tiny

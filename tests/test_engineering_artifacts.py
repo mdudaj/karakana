@@ -1,4 +1,5 @@
 from pathlib import Path
+import hashlib
 import json
 import shutil
 
@@ -6,6 +7,7 @@ import pytest
 
 from karakana.tools.engineering_artifacts import (
     ArtifactError, load_bundle, export_workbook, feedback_report, propose_bindings,
+    parse_document, TABLE_HEADERS, main as artifact_main,
 )
 
 
@@ -540,3 +542,234 @@ def test_comment_on_empty_unbound_row_is_reported_and_preserved(tmp_path):
     assert len(comments) == 1 and comments[0]["text"] == "Retain unbound review context"
     assert comments[0]["identity"] == ["", "", ""]
     assert all(p.read_bytes() == raw for p, raw in immutable.items())
+
+
+def newline_variant(raw, ending):
+    raw = raw.replace(b"\r\n", b"\n")
+    front, body = raw.split(b"\n---\n", 1)
+    if ending == "CRLF":
+        return raw.replace(b"\n", b"\r\n")
+    if ending == "mixed_body":
+        return front + b"\n---\n" + body.replace(b"\n", b"\r\n")
+    if ending == "mixed_front":
+        return front.replace(b"\n", b"\r\n") + b"\r\n---\r\n" + body
+    return raw
+
+
+@pytest.mark.parametrize("ending", ["LF", "CRLF", "mixed_body", "mixed_front"])
+def test_parser_newline_equivalence_preserves_raw_provenance(tmp_path, ending):
+    source = document(tmp_path)
+    original = source.read_bytes().replace(b"\r\n", b"\n")
+    source.write_bytes(original)
+    baseline = parse_document(tmp_path, source, "example")
+    raw = newline_variant(original, ending)
+    source.write_bytes(raw)
+    current = parse_document(tmp_path, source, "example")
+    for key in ("metadata", "tables", "narratives"):
+        assert current[key] == baseline[key]
+    bundle = load_bundle(tmp_path, [source], "example")
+    assert [r["record_id"] for r in bundle.records] == ["REQ-001"]
+    assert current["sha256"] == hashlib.sha256(raw).hexdigest()
+    assert bundle.records[0]["source_hash"] == current["sha256"]
+    if ending != "LF":
+        assert current["sha256"] != baseline["sha256"]
+    assert source.read_bytes() == raw
+
+
+@pytest.mark.parametrize("title", ["Requirements", "04 Requirements", "Requirements \t", " 04 Requirements\t"])
+def test_known_heading_recognition_is_consistent_with_anchor_checks(tmp_path, title):
+    source = document(tmp_path)
+    raw = source.read_bytes().replace(b"\r\n", b"\n").replace(b"## Requirements\n", f"## {title}\n".encode())
+    source.write_bytes(raw)
+    assert len(load_bundle(tmp_path, [source], "example").records) == 1
+    source.write_bytes(raw.replace(b'<a id="requirements"></a>', b""))
+    with pytest.raises(ArtifactError, match="explicit anchors"):
+        load_bundle(tmp_path, [source], "example")
+
+
+@pytest.mark.parametrize("fault", ["left_space", "left_pipe", "right_pipe", "right_space", "indent"])
+@pytest.mark.parametrize("neighbor", ["valid", "blank"])
+@pytest.mark.parametrize("strict", [True, False])
+def test_malformed_boundary_rows_cannot_disappear(tmp_path, fault, neighbor, strict):
+    source = document(tmp_path, "private-source-value")
+    text = source.read_text()
+    row = next(line for line in text.splitlines() if line.startswith("| REQ-001 |"))
+    extra = row.replace("REQ-001", "REQ-002")
+    extra = {
+        "left_space": extra.replace("| REQ-002", "|REQ-002", 1),
+        "left_pipe": extra[1:],
+        "right_pipe": extra[:-1],
+        "right_space": extra[:-2] + "|",
+        "indent": "  " + extra,
+    }[fault]
+    if neighbor == "blank":
+        blank = "| " + " | ".join([""] * len(TABLE_HEADERS["Requirements"])) + " |"
+        text = text.replace(row, blank)
+    source.write_text(text + extra + "\n")
+    before = source.read_bytes()
+    with pytest.raises(ArtifactError) as exc:
+        load_bundle(tmp_path, [source], "example", strict=strict)
+    assert "Requirements" in str(exc.value) and "requirements" in str(exc.value)
+    assert "private-source-value" not in str(exc.value) and "REQ-002" not in str(exc.value)
+    assert source.read_bytes() == before
+
+
+@pytest.mark.parametrize("ending", ["LF", "CRLF"])
+@pytest.mark.parametrize("fault", ["bad_class", "bad_row"])
+@pytest.mark.parametrize("operation", ["validate", "export"])
+def test_cli_refuses_invalid_structured_sources_before_output(tmp_path, capsys, ending, fault, operation):
+    source = document(tmp_path)
+    raw = source.read_bytes()
+    if fault == "bad_class":
+        raw = raw.replace(b"| Stakeholder |", b"| InvalidClass |")
+    else:
+        row = next(line for line in raw.splitlines() if line.startswith(b"| REQ-001 |"))
+        raw += row.replace(b"| REQ-001", b"|REQ-002", 1) + b"\n"
+    raw = newline_variant(raw, ending)
+    source.write_bytes(raw)
+    args = ["--root", str(tmp_path), operation, "--source", str(source), "--namespace", "example"]
+    if operation == "export":
+        args += ["--audience", "business", "--baseline-revision", "fixture",
+                 "--output", str(tmp_path / "out.xlsx"), "--snapshot", str(tmp_path / "out.json")]
+    assert artifact_main(args) == 2
+    assert "Operation refused:" in capsys.readouterr().out
+    assert not (tmp_path / "out.xlsx").exists() and not (tmp_path / "out.json").exists()
+    assert source.read_bytes() == raw
+
+
+@pytest.mark.parametrize("ending", ["LF", "CRLF"])
+@pytest.mark.parametrize("kind", ["blank_table", "narrative", "unknown_heading"])
+def test_intentional_empty_and_narrative_sources_remain_valid(tmp_path, ending, kind):
+    source = document(tmp_path)
+    raw = source.read_bytes().replace(b"\r\n", b"\n")
+    if kind == "blank_table":
+        row = next(line for line in raw.splitlines() if line.startswith(b"| REQ-001 |"))
+        blank = "| " + " | ".join([""] * len(TABLE_HEADERS["Requirements"])) + " |"
+        raw = raw.replace(row, blank.encode())
+    elif kind == "unknown_heading":
+        raw = raw.replace(b"## Requirements\n", b"## Requirement overview\n")
+    else:
+        raw = raw.split(b"\n---\n", 1)[0] + b'\n---\n\n# Source\n\n<a id="context"></a>\n## Context\n\nReader | scope is explanatory prose.\n'
+    raw = newline_variant(raw, ending)
+    source.write_bytes(raw)
+    bundle = load_bundle(tmp_path, [source], "example")
+    assert not bundle.records and not bundle.issues
+    tables = bundle.documents[0]["tables"]
+    if kind == "blank_table":
+        assert tables["Requirements"]["rows"] == []
+    else:
+        assert not tables and bundle.documents[0]["narratives"]
+    assert source.read_bytes() == raw
+
+
+def test_known_declaration_cannot_hide_inside_a_narrative_section(tmp_path):
+    source = document(tmp_path)
+    source.write_text(source.read_text().replace('<a id="requirements"></a>',
+        '<a id="context"></a>\n## Context\n\n  <a id="requirements"></a>'))
+    with pytest.raises(ArtifactError, match="Requirements"):
+        load_bundle(tmp_path, [source], "example")
+
+
+def test_duplicate_known_heading_cannot_hide_behind_whitespace(tmp_path):
+    source = document(tmp_path)
+    text = source.read_text()
+    section = text.split('<a id="requirements"></a>', 1)[1]
+    source.write_text(text + '\n<a id="second"></a>' + section.replace('## Requirements', '## 04 Requirements \t'))
+    with pytest.raises(ArtifactError, match="Duplicate"):
+        load_bundle(tmp_path, [source], "example")
+
+
+def test_duplicate_declaration_cannot_hide_after_a_valid_table(tmp_path):
+    source = document(tmp_path)
+    text = source.read_text()
+    section = text.split('<a id="requirements"></a>', 1)[1].replace("REQ-001", "REQ-002")
+    source.write_text(text + '\n<a id="context"></a>\n## Context\n\n  <a id="second"></a>' + section)
+    with pytest.raises(ArtifactError, match="Duplicate"):
+        load_bundle(tmp_path, [source], "example")
+
+
+@pytest.mark.parametrize("ending", ["LF", "CRLF"])
+def test_separator_width_must_match_declared_headers(tmp_path, ending):
+    source = document(tmp_path)
+    raw = source.read_bytes()
+    separator = next(line for line in raw.splitlines() if line.startswith(b"| --- |"))
+    source.write_bytes(newline_variant(raw.replace(separator, b"| --- |"), ending))
+    with pytest.raises(ArtifactError, match="headers"):
+        load_bundle(tmp_path, [source], "example")
+
+
+@pytest.mark.parametrize("corpus,count,tables", [("catalogue", 27, 16), ("skills", 23, 20)])
+def test_legacy_corpora_keep_records_and_empty_tables_with_crlf(tmp_path, corpus, count, tables):
+    repo = Path(__file__).resolve().parents[1]
+    if corpus == "catalogue":
+        shutil.copytree(repo / "docs/skills/engineering-artifact-catalogue/examples", tmp_path / "examples")
+        sources = sorted((tmp_path / "examples").glob("*.md"))
+    else:
+        sources = []
+        for source in sorted((repo / "skills").glob("engineering-*/examples/*.md")):
+            target = tmp_path / source.name
+            shutil.copyfile(source, target)
+            sources.append(target)
+    baseline = load_bundle(tmp_path, sources, "example")
+    baseline_records = [(r["table"], r["record_id"], r["values"]) for r in baseline.records]
+    for source in sources:
+        source.write_bytes(source.read_bytes().replace(b"\r\n", b"\n").replace(b"\n", b"\r\n"))
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    current = load_bundle(tmp_path, sources, "example")
+    assert [(r["table"], r["record_id"], r["values"]) for r in current.records] == baseline_records
+    assert len(current.records) == count
+    assert sum(len(d["tables"]) for d in current.documents) == tables
+    assert sum(1 for d in current.documents for name, t in d["tables"].items()
+               if name == "Release Notes" and not t["rows"]) == 1
+    assert all(p.read_bytes() == raw for p, raw in before.items())
+
+
+def test_crlf_cli_export_keeps_requirements_and_original_source_hash(tmp_path, capsys):
+    pytest.importorskip("openpyxl")
+    source = document(tmp_path)
+    raw = newline_variant(source.read_bytes(), "CRLF")
+    source.write_bytes(raw)
+    assert artifact_main(["--root", str(tmp_path), "export", "--source", str(source),
+        "--namespace", "example", "--audience", "business", "--baseline-revision", "fixture",
+        "--output", str(tmp_path / "out.xlsx"), "--snapshot", str(tmp_path / "out.json")]) == 0
+    assert "Created new audience workbook" in capsys.readouterr().out
+    payload = json.loads((tmp_path / "out.json").read_text())["payload"]
+    assert payload["tables"]["Requirements"]["rows"][0][2] == "REQ-001"
+    assert payload["sources"][0]["sha256"] == hashlib.sha256(raw).hexdigest()
+    assert (tmp_path / "out.xlsx").is_file() and source.read_bytes() == raw
+
+
+def test_newline_only_change_stays_stale_without_losing_feedback_identity(tmp_path):
+    from openpyxl import load_workbook
+
+    source = document(tmp_path)
+    source.write_bytes(source.read_bytes().replace(b"\r\n", b"\n"))
+    output, snapshot = exported(tmp_path, [source])
+    wb = load_workbook(output)
+    ws = wb["Requirements"]
+    headers = [c.value for c in ws[4]]
+    ws.cell(5, headers.index("Feedback") + 1, "Review newline-only source change")
+    returned = tmp_path / "returned.xlsx"
+    wb.save(returned)
+    source.write_bytes(newline_variant(source.read_bytes(), "CRLF"))
+    before = {p: p.read_bytes() for p in (source, output, snapshot, returned)}
+    report = feedback_report(tmp_path, output, snapshot, [returned])
+    assert report["stale_sources"] == ["source.md"]
+    assert not report["current_source_issues"]
+    change = next(c for c in report["changes"] if c.get("field") == "Feedback")
+    assert change["identity"] == ["example", "requirement", "REQ-001"]
+    assert change["status"] == "proposed_stale" and change["current"] == ""
+    assert all(p.read_bytes() == raw for p, raw in before.items())
+
+
+def test_feedback_reports_malformed_current_source_under_diagnostic_loading(tmp_path):
+    output, snapshot = exported(tmp_path)
+    source = tmp_path / "source.md"
+    raw = source.read_bytes()
+    row = next(line for line in raw.splitlines() if line.startswith(b"| REQ-001 |"))
+    source.write_bytes(raw + row.replace(b"| REQ-001", b"|REQ-002", 1) + b"\n")
+    before = {p: p.read_bytes() for p in (source, output, snapshot)}
+    report = feedback_report(tmp_path, output, snapshot, [output])
+    assert report["stale_sources"] == ["source.md"]
+    assert report["current_source_issues"] == ["Current source cannot be validated: ArtifactError"]
+    assert all(p.read_bytes() == raw for p, raw in before.items())

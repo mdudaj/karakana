@@ -1,30 +1,35 @@
-# Documentation skills and templates: continuation
+# Documentation and parser integrity: continuation
 
-Requirements and design directions, including standards/reference wording, were
-accepted for this review round. The [current plan and delivery record](DRAFTING-CONVENTIONS-2026-11-13.md)
-retains the research, agreement history, CT01–CT08 scope and verification results.
+The accepted requirements/design directions and CT01–CT08 convention/template
+slice are integrated through PR #36 at `f2319cc`. Preserve that completed work.
+The [parent plan](DRAFTING-CONVENTIONS-2026-11-13.md) retains decisions and the
+remaining roadmap.
 
-The convention-and-templates slice is implemented locally on the continuation
-branch: an experimental optional shared convention, requirements/design narrative
-templates, separate guides and matching synthetic examples, skill/profile wiring
-and compatibility tests/evals. Check the linked delivery results and current Git
-state before claiming verification, publication, integration or sample acceptance.
-Local implementation does not establish those later states.
+The next PI01–PI08 parser slice has a complete
+[research, implementation and verification record](PARSER-INTEGRITY-2026-11-13.md).
+Its local checkpoint passed 140 focused tests, 818 full tests and 183 deterministic
+evals. It fixes LF/CRLF record loss and silent malformed-row filtering, preserving
+raw-byte hashes, valid empty tables, narrative sources and native/source authority.
+No mandatory content profile, general Markdown engine or automatic selection/
+enforcement was added. The clean narrative assets remain outside P02's structured
+source contract.
 
-Next: review the completed requirements/design samples and actual verification
-evidence, then finish the source review/integration under existing authority before
-selecting the next implementation slice. Carry accepted review decisions forward;
-reopen only material revisions. Parser repairs, machine content profiles, automatic
-selection/enforcement, new client projections and remaining template packs retain
-their later slices. The new narrative assets are not P02 structured-export inputs;
-existing exact-table sources and historical example/workbook baselines are retained.
-The Jovina review/revision plan follows verified harness changes; client revisions
-are not part of this continuation task.
+First inspect current `main`, the PI code/tests and the associated PR state.
+The owner selected source review/publication/squash integration after local
+verification. If integration is pending, finish that task on
+`research/engineering-artifact-parser-integrity-20261113` under its recorded
+authority and exact-head checks. If it is merged, carry the receipt forward and
+select the next bounded roadmap task instead of reopening research or the fix.
 
-Continue on `feat/documentation-conventions-templates-20261113`. First inspect
-current Git state and the linked CT01–CT08 delivery results, then the two narrative
-examples under `skills/engineering-requirements/assets/` and
-`skills/engineering-design-records/assets/`. Follow repository instructions and use
-the task's own protocol. Reuse completed research; no app-server connection, live
-model calls or client changes are needed. A handoff is context, not new external
+After integration, the next candidate is bounded content-profile/checks resolution:
+which document-specific completeness checks should supplement structural parsing
+without rejecting legitimate narrative/empty states or inventing substantive
+approval. Reuse the accepted conventions and prior findings; settle scope, method,
+compatibility and tests before its own implementation. Task-time resource selection/
+enforcement, remaining template/export packs, pilot and Jovina retain later scope.
+
+Follow repository instructions, load the current task handoff and use a task
+branch for edits. Verify evidence before claiming integration or acceptance; the
+linked records retain historical checkpoints. No app-server connection, live
+model calls or client revisions are needed. Loading is context, not fresh external
 publication, merge or deployment authority.
