@@ -12,6 +12,24 @@ project application and integration remain pending; existing approval rules appl
 Start with the [blank Markdown template](skills/engineering-artifact-catalogue/TEMPLATE.md)
 and [Excel companion](skills/engineering-artifact-catalogue/engineering-artifacts-template.xlsx).
 
+## Narrative content packs
+
+The experimental [shared documentation conventions](../skills/engineering-documentation-conventions/SKILL.md)
+and [document map](../skills/engineering-documentation-conventions/references/document-map.md)
+connect the five engineering skills to relevant content resources. Requirements
+and system design have clean narrative templates, separate authoring guides and
+matching synthetic examples. Other types retain their existing guidance; their
+dedicated clean packs remain later work.
+
+The new `assets/` packs support readable document authoring. They do not change
+the canonical-source authority/metadata requirements below, supply a client export
+projection or establish P02 structured-source compatibility. Retain required
+canonical records and their authority; select the supported exact-table sources
+and existing `examples/` fixtures for P02 validation/exports. A narrative adapter,
+machine content profiles and automated selection/enforcement are later slices.
+The optional coordinator and resource links provide instructions/discovery;
+the current loader does not recursively load them or enforce content compliance.
+
 ## Source authority
 
 Markdown is the primary authoring, review and version-history format for engineering

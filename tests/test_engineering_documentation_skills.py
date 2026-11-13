@@ -16,6 +16,7 @@ from karakana.tools.engineering_artifacts import load_bundle, export_workbook, f
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = (
+    "engineering-documentation-conventions",
     "engineering-requirements", "engineering-design-records",
     "engineering-delivery-planning", "engineering-release-documentation",
     "engineering-workbooks",
@@ -53,6 +54,55 @@ def test_conditional_skill_resources_resolve_inside_repository(name):
                 continue
             path = (source.parent / target.split("#", 1)[0]).resolve()
             assert path.is_relative_to(ROOT) and path.is_file(), (source, target)
+
+
+def test_owning_skills_expose_common_conventions_and_narrative_packs():
+    common = ROOT / "skills/engineering-documentation-conventions/SKILL.md"
+    for name in SKILLS[1:]:
+        skill = ROOT / "skills" / name / "SKILL.md"
+        targets = {
+            (skill.parent / link.split("#", 1)[0]).resolve()
+            for link in re.findall(r"\[[^\]]+\]\(([^)]+)\)", skill.read_text())
+            if "://" not in link and not link.startswith("#")
+        }
+        assert common in targets, name
+        if name in {"engineering-requirements", "engineering-design-records"}:
+            assets = set((skill.parent / "assets").glob("*.md"))
+            assert len(assets) == 2 and assets <= targets
+            assert not assets & set((skill.parent / "examples").glob("*.md"))
+
+
+def test_narrative_example_requirement_and_criterion_references_resolve():
+    requirements = (ROOT / "skills/engineering-requirements/assets/requirements-example.md").read_text()
+    design = (ROOT / "skills/engineering-design-records/assets/system-design-example.md").read_text()
+    defined_requirements = re.findall(r"^\| (REQ-\d+) \|", requirements, re.M)
+    criterion_rows = [line.split("|")[1:-1] for line in requirements.splitlines()
+                     if re.match(r"^\| AC-\d+ \|", line)]
+    assert defined_requirements and criterion_rows
+    assert len(defined_requirements) == len(set(defined_requirements))
+    criterion_ids = [row[0].strip() for row in criterion_rows]
+    assert len(criterion_ids) == len(set(criterion_ids))
+    covered = set()
+    for row in criterion_rows:
+        linked = set(re.findall(r"REQ-\d+", row[1]))
+        assert linked and linked <= set(defined_requirements), row
+        covered |= linked
+    assert covered == set(defined_requirements)
+    assert set(re.findall(r"REQ-\d+", design)) == set(defined_requirements)
+    assert set(re.findall(r"AC-\d+", design)) == set(criterion_ids)
+    assert "{{" not in requirements and "{{" not in design
+
+
+@pytest.mark.parametrize("name", ("engineering-requirements", "engineering-design-records"))
+def test_narrative_templates_have_complete_substitution_fields(name):
+    assets = ROOT / "skills" / name / "assets"
+    template = next(assets.glob("*-template.md")).read_text()
+    example = next(assets.glob("*-example.md")).read_text()
+    fields = re.findall(r"\{\{([a-z_]+)\}\}", template)
+    assert fields and len(fields) == len(set(fields))
+    assert "{{" not in re.sub(r"\{\{[a-z_]+\}\}", "", template)
+    # Completed resources must not accidentally ship template substitution fields.
+    assert not re.search(r"\{\{.*?\}\}", example)
 
 
 def test_authored_examples_are_valid_alone_and_combined(tmp_path):

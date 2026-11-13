@@ -1,0 +1,28 @@
+id: engineering-requirements-narrative-pack
+name: engineering-requirements narrative-pack instruction coverage
+description: Deterministic source-text coverage only; no model execution, artifact
+  correctness or recipient-acceptance claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Review a requirements specification with an unresolved response target and
+    an independent approval rule; preserve criteria versus actual test evidence.
+  skill: engineering-requirements
+  task_type: documentation
+  prompt_file: skills/engineering-requirements/references/requirements-template-guide.md
+expectations:
+  must_include:
+  - not supported P02 structured-export inputs
+  - ISO/IEC/IEEE 29148:2018
+  - unknown measure remains an explicit open acceptance decision
+  - Valid product approval behavior
+  - does not justify `Pass`
+  - 'Canonical
+
+    export metadata'
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

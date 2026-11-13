@@ -1,9 +1,30 @@
 # Documentation skills and templates: continuation
 
-Research is complete. The current plan is [DRAFTING-CONVENTIONS-2026-11-13.md](DRAFTING-CONVENTIONS-2026-11-13.md). The documentation skills, templates and enforcement changes have not been implemented.
+Requirements and design directions, including standards/reference wording, were
+accepted for this review round. The [current plan and delivery record](DRAFTING-CONVENTIONS-2026-11-13.md)
+retains the research, agreement history, CT01–CT08 scope and verification results.
 
-Next: review the existing documentation catalogue and templates against the proposed conventions. Prepare any missing representative requirements/design templates and examples needed for that review. Present a concise recommendation covering document structure, language, required and optional sections, and validation. Review the templates with the owner before implementing skills or enforcement changes.
+The convention-and-templates slice is implemented locally on the continuation
+branch: an experimental optional shared convention, requirements/design narrative
+templates, separate guides and matching synthetic examples, skill/profile wiring
+and compatibility tests/evals. Check the linked delivery results and current Git
+state before claiming verification, publication, integration or sample acceptance.
+Local implementation does not establish those later states.
 
-After template review, continue through the agreed implementation slices in the plan. The Jovina document review and revision plan follow the verified harness changes; do not revise those client documents yet.
+Next: review the completed requirements/design samples and actual verification
+evidence, then finish the source review/integration under existing authority before
+selecting the next implementation slice. Carry accepted review decisions forward;
+reopen only material revisions. Parser repairs, machine content profiles, automatic
+selection/enforcement, new client projections and remaining template packs retain
+their later slices. The new narrative assets are not P02 structured-export inputs;
+existing exact-table sources and historical example/workbook baselines are retained.
+The Jovina review/revision plan follows verified harness changes; client revisions
+are not part of this continuation task.
 
-Continue on `feat/documentation-conventions-templates-20261113`. Follow repository instructions and determine the environment, branch checks and tools needed from current state. Reuse the completed research; no app-server connection is needed.
+Continue on `feat/documentation-conventions-templates-20261113`. First inspect
+current Git state and the linked CT01–CT08 delivery results, then the two narrative
+examples under `skills/engineering-requirements/assets/` and
+`skills/engineering-design-records/assets/`. Follow repository instructions and use
+the task's own protocol. Reuse completed research; no app-server connection, live
+model calls or client changes are needed. A handoff is context, not new external
+publication, merge or deployment authority.

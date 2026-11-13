@@ -3,7 +3,7 @@ name: engineering-design-records
 description: Author or revise Markdown ADRs and design descriptions that retain alternatives,
   stakeholder concerns, quality constraints and authoritative interface or diagram
   links.
-version: 0.1.0
+version: 0.2.0
 risk_level: medium
 category: documentation
 scope: bundled
@@ -46,6 +46,15 @@ Use for requested ADR/design authoring, revision or review. Use a compact record
 Use system-design-thinking for unresolved system reasoning, and existing domain/UX skills for their actual implementation constraints. Do not create a new decision process or replace a machine schema.
 
 ## Quick Reference
+
+For requested authoring/review, read the relevant
+[shared conventions](../engineering-documentation-conventions/SKILL.md).
+For a readable system design use the
+[design guide](references/system-design-template-guide.md),
+[clean template](assets/system-design-template.md) and
+[worked example](assets/system-design-example.md). These assets are distinct from
+the existing structured examples used for P02 exports; resource links are not
+automatically loaded or enforced.
 
 Preserve the request type. A skills inquiry returns catalogue information; do not
 draft. Research returns evidence, planning returns a proposed plan. Draft/revise

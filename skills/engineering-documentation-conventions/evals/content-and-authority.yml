@@ -1,0 +1,27 @@
+id: engineering-documentation-conventions-content-and-authority
+name: engineering-documentation-conventions content-and-authority instruction coverage
+description: Deterministic source-text coverage only; no model execution, artifact
+  correctness or recipient-acceptance claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Select a design document, retain unresolved quality thresholds and actual
+    product approval behavior, and describe standards applicability without a conformity
+    claim.
+  skill: engineering-documentation-conventions
+  task_type: documentation
+  prompt_file: skills/engineering-documentation-conventions/SKILL.md
+expectations:
+  must_include:
+  - applicable product/release
+  - unknown thresholds
+  - Product approval workflows
+  - "exact\n   editions"
+  - Separate acceptance criteria, planned tests and actual test results
+  - not supported P02 structured-export inputs
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com

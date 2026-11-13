@@ -21,10 +21,10 @@ fi
 brief=$(cat "$note")
 "${cli[@]}" handoff refresh \
     --project karakana --skillpack karakana \
-    --purpose 'Resume documentation template review' \
-    --current-milestone 'Research complete; template review next' \
+    --purpose 'Resume documentation conventions continuation' \
+    --current-milestone 'Read tracked continuation for current delivery state' \
     --from-note "$brief" \
-    --next-task 'Review documentation templates and recommend revisions before implementation' \
+    --next-task 'Review current documentation delivery evidence and select the next bounded task from the tracked continuation' \
     --next-task-brief "$brief" \
     --reuse-stage "research=$research" --reuse-reviewed \
     --no-recover-artifacts

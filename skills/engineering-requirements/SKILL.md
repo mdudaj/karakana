@@ -2,7 +2,7 @@
 name: engineering-requirements
 description: Author or revise Markdown PRDs, requirements, user stories, acceptance
   criteria and traceability from resolved project intent and source evidence.
-version: 0.1.0
+version: 0.2.0
 risk_level: medium
 category: documentation
 scope: bundled
@@ -45,6 +45,15 @@ Use for requested authoring/revision of a PRD, specification, stories, criteria 
 Use requirements-elicitation for material unresolved intent and grill-with-docs for a challenged plan. Do not decompose or generate engine issues merely to answer a skills inquiry.
 
 ## Quick Reference
+
+For requested authoring/review, read the relevant
+[shared conventions](../engineering-documentation-conventions/SKILL.md).
+For a readable narrative specification use the
+[requirements guide](references/requirements-template-guide.md),
+[clean template](assets/requirements-template.md) and
+[worked example](assets/requirements-example.md). These assets are distinct from
+the existing structured examples used for P02 exports; resource links are not
+automatically loaded or enforced.
 
 Preserve the request type. A skills inquiry returns catalogue information; do not
 draft. Research returns evidence, planning returns a proposed plan. Draft/revise

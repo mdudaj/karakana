@@ -1,0 +1,26 @@
+id: engineering-design-records-narrative-pack
+name: engineering-design-records narrative-pack instruction coverage
+description: Deterministic source-text coverage only; no model execution, artifact
+  correctness or recipient-acceptance claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Review a small design change with permission failures, diagram sources and
+    pending quality evidence; tailor existing views and retain actual decision authority.
+  skill: engineering-design-records
+  task_type: documentation
+  prompt_file: skills/engineering-design-records/references/system-design-template-guide.md
+expectations:
+  must_include:
+  - small change can reference current governing views
+  - editable diagram source
+  - ISO/IEC/IEEE 42010:2022
+  - not supported P02 structured-export inputs
+  - planned check
+  - actual decision status/authority
+  forbidden_patterns:
+  - (?m)^git push
+  - (?m)^.*curl .*api.github.com
