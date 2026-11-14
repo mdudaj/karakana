@@ -82,7 +82,6 @@ Common commands:
 ```bash
 karakana handoff load --project msc-platform --skillpack msc-platform
 karakana handoff refresh --project msc-platform --skillpack msc-platform
-karakana handoff refresh --project msc-platform --next-task "Selected next slice" --next-task-brief "Problem, scope, acceptance, relevant files and first action."
 ```
 
 Safe default behavior: Append-only local artifacts; load recovers bounded state when absent.
@@ -411,19 +410,20 @@ karakana release checklist
 
 ## docs
 
-Purpose: Generate and check documentation.
+Purpose: Generate/check documentation and explicitly prepare document tasks.
 
 Common commands:
 ```bash
 karakana docs command-reference
 karakana docs check
+karakana docs content prepare --request docs/skills/engineering-artifact-catalogue/content-checks/prepare-example.json
 ```
 
-Safe default behavior: Preview by default.
+Safe default behavior: Command reference previews by default; content prepare creates a fresh local prompt/result bundle without checking content or running a model.
 
-Write/execute flags: --write
+Write/execute flags: --write for command reference; content prepare --output selects a fresh directory under .karakana/
 
 Example:
 ```bash
-karakana docs check
+karakana docs content prepare --request docs/skills/engineering-artifact-catalogue/content-checks/prepare-example.json --format json
 ```

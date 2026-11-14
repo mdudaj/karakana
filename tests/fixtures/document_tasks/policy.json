@@ -1,0 +1,7 @@
+{
+  "policy_version": "0.1",
+  "project": "example",
+  "bindings": [
+    {"artifact_type": "requirements", "role": "template", "path": "docs/template.md", "revision": "example-1", "mode": "default"}
+  ]
+}

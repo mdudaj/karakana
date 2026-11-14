@@ -1,7 +1,7 @@
 ---
 name: engineering-documentation-conventions
 description: Select and tailor engineering documentation resources and apply shared language, reference and source-authority conventions during requested document authoring or review.
-version: 0.1.3
+version: 0.1.4
 risk_level: medium
 category: documentation
 scope: bundled
@@ -146,6 +146,14 @@ and evidence authenticity remain review concerns. Narrative checking does not ad
 P02 export support or automatic task enforcement.
 
 ## Verification
+
+For explicitly selected local preparation, `karakana docs content prepare`
+loads only selected resources and fixed project context into new-only prompt/result
+bundles. Project defaults require explicit opt-in; declared locks cannot be silently
+overridden. Preparation does not draft product documents, check content or run a
+model; completeness/readiness/acceptance remain not assessed. S2 task-time check/verify is not delivered.
+Existing direct M2 and P02 tools retain their contracts.
+See the [preparation guide](../../docs/skills/engineering-artifact-catalogue/content-checks/README.md#explicit-task-preparation-s1).
 
 Validate skill metadata and links, run the coordinator's deterministic evals and
 affected discovery/source-compatibility tests. Review actual example content

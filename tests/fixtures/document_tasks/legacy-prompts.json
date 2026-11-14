@@ -1,0 +1,50 @@
+{
+  "baseline": "500123bf9fda7aae52ed44e6113d80d489eaba73",
+  "fixtures": "Synthetic memory/skill from tests/test_planner.py; hashes captured before S1 refactor",
+  "cases": [
+    {
+      "case": "fallback",
+      "kwargs": {},
+      "sha256": "78238a782dd19165158929bb769570cdd2ba3c705c6c1fedd3102a35230ba669",
+      "bytes": 6762
+    },
+    {
+      "case": "contract",
+      "kwargs": {},
+      "sha256": "7a9d5566197e82aed991c9336d86171a15bf817f45428dc7164490a263ccda0b",
+      "bytes": 6779
+    },
+    {
+      "case": "skillpack",
+      "kwargs": {
+        "skillpack_context": "Selected pack context"
+      },
+      "sha256": "2efec6d955d33441c938f8e641137860a8525bd06bbfdee4a0a89a4f2c089bf4",
+      "bytes": 6824
+    },
+    {
+      "case": "custom_route",
+      "kwargs": {
+        "model_route": {
+          "provider": "mock",
+          "model": "mock-model",
+          "role": "fixture",
+          "token_budget": 11,
+          "token_policy": "fixed",
+          "escalation_policy": "none",
+          "rationale": "synthetic"
+        }
+      },
+      "sha256": "78fb9e4586f58af7019745d2770ebcfcd945e134db3c19166433e7d43b259b10",
+      "bytes": 6523
+    },
+    {
+      "case": "missing_memory",
+      "kwargs": {
+        "allow_missing_memory": true
+      },
+      "sha256": "0fcc72ba8c747e5cc97a21400a4595e6bc20be9fc65783e3538dae18da9892e0",
+      "bytes": 6038
+    }
+  ]
+}

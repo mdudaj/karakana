@@ -1,0 +1,19 @@
+{
+  "request_version": "0.1",
+  "project": "example",
+  "skill": "example-skill",
+  "task": {
+    "id": "EXAMPLE-TASK",
+    "action": "author",
+    "text": "Draft the selected synthetic example scope. This is test data, not product facts.",
+    "audience": "Example reviewers",
+    "scope": "Synthetic explicit document preparation",
+    "revision": "0.1",
+    "artifact_types": ["requirements"]
+  },
+  "resources": [
+    {"artifact_type": "requirements", "role": "guide", "path": "docs/guide.md", "revision": "example-1"}
+  ],
+  "use_project_defaults": false,
+  "context": null
+}

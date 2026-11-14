@@ -1,0 +1,21 @@
+id: engineering-documentation-conventions-explicit-preparation
+name: Explicit S1 preparation and authority instruction coverage
+description: Source-text coverage only; actual API and CLI behavior has separate tests.
+suite: skills
+risk_level: medium
+tags: [engineering-artifacts, instruction-coverage]
+input:
+  task: Prepare only explicitly selected document resources without checking or accepting content.
+  skill: engineering-documentation-conventions
+  task_type: documentation
+  prompt_file: skills/engineering-documentation-conventions/SKILL.md
+expectations:
+  must_include:
+    - karakana docs content prepare
+    - explicit opt-in
+    - new-only
+    - not assessed
+    - S2 task-time check/verify is not delivered
+    - P02 tools retain their contracts
+  forbidden_patterns:
+    - (?m)^git push

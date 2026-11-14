@@ -29,7 +29,7 @@ claim. Review this file against current source and runtime evidence at each task
   not passed or release qualification. Normal validated documentary PR/squash
   integration is authorised; KDX11 requirements brief is next.
 
-- [ ] **KDX-11 · P2 · requirements/design merged; implementation plan accepted; S1 brief next — task-time profile selection and result reporting.**
+- [ ] **KDX-11 · P2 · S1 accepted; validated integration in progress; S2 brief next — task-time profile selection and result reporting.**
   Evidence: M2 is opt-in; the planner loads one selected skill without recursive
   resource selection. KDX10 observed exit0 with typed not_ready/blocked states,
   actual frontmatter CP input refusing narrative support, and evidence still held.
@@ -47,15 +47,24 @@ claim. Review this file against current source and runtime evidence at each task
   to finish this round. Design revision0.1 DD01-DD12 is recorded in
   `docs/research/2026-11-14-task-time-content-design.md`; owner replied
   “reviwed accepted” after its summary on2026-11-14, without revisions.
-  No executable implementation or default gate was activated.
+  Those document-review stages activated no executable feature or default gate.
   Design integrated through PR43 squash `29df39d`; no design approval/integration
   remains. Owner selected planning with “execute”. Plan revision0.1 IP01-IP08 is
   drafted in `docs/research/2026-11-14-task-time-content-implementation-plan.md`:
   S1 guarded resource/prompt preparation, then S2 M2 reporting/saved verification
   after S1 acceptance/integration. Owner replied “accepted” after the IP01-IP08
   revision0.1 summary on2026-11-14 without revisions; code execution remains separate.
-  Next: complete normal validated documentary PR/squash integration of the plan,
-  then present the separate S1 implementation brief. Existing skills/templates
+  Plan integrated through PR44 squash `500123b`. Owner selected S1 with “execute”;
+  `docs content prepare`, strict resource/policy selection, captured shared rendering,
+  guarded new-only bundles, fixtures/tests and actual capability docs are implemented
+  on `feat/kdx11-s1-prepare-20261114`. Delivery evidence:
+  `docs/delivery/2026-11-14-kdx11-s1-preparation.md`. Final1058 tests and187 evals pass;
+  code/installed-wheel/CLI and scope/source checks are retained. Owner replied
+  “accepted” after the S1 delivery summary on2026-11-14, without revisions.
+  Normal validated S1 publication/PR/squash integration is authorised; exact
+  receipts govern its completion. No deployment is inferred. S2 check/verify
+  remains unimplemented and separately selected only after accepted/merged S1.
+  Next: complete integration and present the S2 execution brief. Existing skills/templates
   already support actual project-document drafting; KDX11 automation is not its
   prerequisite. Keep KDX10's separate evidence gaps visible.
 
