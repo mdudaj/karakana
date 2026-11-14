@@ -1,0 +1,19 @@
+{
+  "context_version": "0.1",
+  "namespace": "example",
+  "documents": [
+    {
+      "key": "req",
+      "path": "skills/engineering-requirements/assets/requirements-example.md",
+      "format": "narrative-0.1",
+      "profile": {"id": "requirements", "version": "0.1"}
+    },
+    {
+      "key": "design",
+      "path": "skills/engineering-design-records/assets/system-design-example.md",
+      "format": "narrative-0.1",
+      "profile": {"id": "system-design", "version": "0.1"},
+      "requirements": ["req"]
+    }
+  ]
+}

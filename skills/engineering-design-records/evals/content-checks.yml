@@ -1,0 +1,24 @@
+id: engineering-design-records-m1-content-checks
+name: engineering-design-records M1 content-check instruction coverage
+description: Deterministic instruction coverage only; no model execution, content
+  correctness or acceptance claim.
+suite: skills
+risk_level: medium
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Review the supported M1 narrative checking workflow, refusing advanced features
+    and preserving P02 and actual acceptance boundaries.
+  skill: engineering-design-records
+  task_type: documentation
+  prompt_file: skills/engineering-design-records/SKILL.md
+expectations:
+  must_include:
+  - M1 standard narrative packs
+  - explicit check context
+  - mechanical pass never establishes acceptance
+  - not supported in M1
+  - does not add P02 export support
+  forbidden_patterns:
+  - (?m)^git push

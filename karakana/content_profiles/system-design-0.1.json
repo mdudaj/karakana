@@ -1,0 +1,205 @@
+{
+  "profile_id": "system-design",
+  "profile_version": "0.1",
+  "formats": [
+    "narrative-0.1"
+  ],
+  "checks": [
+    "metadata",
+    "coverage",
+    "records",
+    "references",
+    "wording",
+    "gaps",
+    "claims"
+  ],
+  "slots": [
+    {
+      "id": "metadata",
+      "heading": "",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "standards",
+      "heading": "Standards and references",
+      "kind": "mixed",
+      "required": true
+    },
+    {
+      "id": "purpose",
+      "heading": "Purpose and scope",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "context",
+      "heading": "System context",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "structure",
+      "heading": "Solution structure",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "runtime",
+      "heading": "Runtime behavior",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "interfaces",
+      "heading": "Data and interfaces",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "quality",
+      "heading": "Security and quality",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "operations",
+      "heading": "Deployment and operations",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "decisions",
+      "heading": "Decisions and trade-offs",
+      "kind": "mixed",
+      "required": true
+    },
+    {
+      "id": "verification",
+      "heading": "Verification and unresolved matters",
+      "kind": "table",
+      "required": true
+    }
+  ],
+  "tables": [
+    {
+      "id": "metadata",
+      "slot": "metadata",
+      "headers": [
+        [
+          "Document information",
+          "Value"
+        ]
+      ],
+      "required_fields": [
+        "Document information",
+        "Value"
+      ],
+      "record_type": "metadata",
+      "identity": "Document information",
+      "min_rows": 1
+    },
+    {
+      "id": "standards",
+      "slot": "standards",
+      "headers": [
+        [
+          "Reference",
+          "Edition",
+          "Application"
+        ],
+        [
+          "Reference",
+          "Edition / revision",
+          "Application"
+        ]
+      ],
+      "required_fields": [
+        "Reference",
+        "Application"
+      ],
+      "record_type": "standard",
+      "identity": "",
+      "min_rows": 1
+    },
+    {
+      "id": "structure",
+      "slot": "structure",
+      "headers": [
+        [
+          "Element",
+          "Responsibility",
+          "Interfaces / dependencies"
+        ]
+      ],
+      "required_fields": [
+        "Element",
+        "Responsibility",
+        "Interfaces / dependencies"
+      ],
+      "record_type": "component",
+      "identity": "Element",
+      "min_rows": 1
+    },
+    {
+      "id": "quality",
+      "slot": "quality",
+      "headers": [
+        [
+          "Requirement / concern",
+          "Design response",
+          "Verification reference / unresolved measure"
+        ]
+      ],
+      "required_fields": [
+        "Requirement / concern",
+        "Design response",
+        "Verification reference / unresolved measure"
+      ],
+      "record_type": "design_response",
+      "identity": "",
+      "min_rows": 1
+    },
+    {
+      "id": "decisions",
+      "slot": "decisions",
+      "headers": [
+        [
+          "Decision",
+          "Rationale / alternatives",
+          "Consequences",
+          "ADR / source"
+        ]
+      ],
+      "required_fields": [
+        "Decision",
+        "Rationale / alternatives",
+        "Consequences",
+        "ADR / source"
+      ],
+      "record_type": "decision",
+      "identity": "",
+      "min_rows": 1
+    },
+    {
+      "id": "verification",
+      "slot": "verification",
+      "headers": [
+        [
+          "Requirement / risk",
+          "Design coverage",
+          "Planned check / evidence",
+          "Remaining gap"
+        ]
+      ],
+      "required_fields": [
+        "Requirement / risk",
+        "Design coverage",
+        "Planned check / evidence"
+      ],
+      "record_type": "verification",
+      "identity": "",
+      "min_rows": 1
+    }
+  ]
+}

@@ -22,4 +22,8 @@ The two new `assets/` packs are narrative authoring resources. Existing
 `examples/` files use the [P02 structured source/export contract](../../../docs/skills/engineering-artifact-catalogue/P02.md).
 Keep their exact metadata, tables and native bindings for supported exports.
 Do not pass narrative assets to P02 and claim their content is validated/exported;
-the narrative adapter, machine profiles and client projections are later slices.
+the P02 narrative adapter and client projections are later slices. The separate
+[M1 content checker](../../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
+checks the two standard narrative packs through explicit profiles/context, with
+advanced mappings and saved-report verification still unsupported. It adds no
+automatic task-time selection/enforcement or P02 export compatibility.

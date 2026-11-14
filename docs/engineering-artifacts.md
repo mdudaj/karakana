@@ -26,7 +26,12 @@ the canonical-source authority/metadata requirements below, supply a client expo
 projection or establish P02 structured-source compatibility. Retain required
 canonical records and their authority; select the supported exact-table sources
 and existing `examples/` fixtures for P02 validation/exports. A narrative adapter,
-machine content profiles and automated selection/enforcement are later slices.
+automated selection/enforcement and advanced context checking are later slices.
+The separate opt-in [M1 content checker](skills/engineering-artifact-catalogue/content-checks/README.md)
+now checks the two standard narrative packs with explicit profiles and a local
+context. Its scoped mechanical results do not add P02 export support or certify
+meaning, factual truth, readiness or acceptance. Nonempty deferred context features
+and saved-report verification are explicitly unsupported in M1.
 The optional coordinator and resource links provide instructions/discovery;
 the current loader does not recursively load them or enforce content compliance.
 
