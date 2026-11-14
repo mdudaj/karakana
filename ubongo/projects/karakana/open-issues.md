@@ -29,7 +29,7 @@ claim. Review this file against current source and runtime evidence at each task
   not passed or release qualification. Normal validated documentary PR/squash
   integration is authorised; KDX11 requirements brief is next.
 
-- [ ] **KDX-11 · P2 · requirements accepted; design brief next — task-time profile selection and result reporting.**
+- [ ] **KDX-11 · P2 · requirements merged; design accepted; planning brief next — task-time profile selection and result reporting.**
   Evidence: M2 is opt-in; the planner loads one selected skill without recursive
   resource selection. KDX10 observed exit0 with typed not_ready/blocked states,
   actual frontmatter CP input refusing narrative support, and evidence still held.
@@ -42,11 +42,17 @@ claim. Review this file against current source and runtime evidence at each task
   TT01-TT12/A01-A12. Explicit selection/checking, typed separate outcomes and
   advisory lifecycle integration; no new default stage gate. Owner replied
   “accepted” after the revision0.1 summary on2026-11-14, without revisions.
-  Runtime design/code have not started. Normal validated documentary PR/squash
-  integration is authorised by the standing acceptance convention.
-  Next: finish that integration, then present a separate design task brief.
-  Keep KDX10's remaining evidence gap visible; requirements acceptance does not
-  execute design/code or activate a default gate.
+  Requirements integrated through PR42 squash `a969174`; no requirements approval
+  or integration remains. Owner selected design with “execute”, then confirmed
+  to finish this round. Design revision0.1 DD01-DD12 is recorded in
+  `docs/research/2026-11-14-task-time-content-design.md`; owner replied
+  “reviwed accepted” after its summary on2026-11-14, without revisions.
+  No executable implementation or default gate was activated.
+  Next: complete normal validated documentary PR/squash integration, then present
+  a separate implementation-planning brief. Planning/code follow only if selected.
+  Existing skills/templates
+  already support actual project-document drafting; KDX11 automation is not its
+  prerequisite. Keep KDX10's separate evidence gaps visible.
 
 Prior checkpoint: after KDX-07 integration, full safe dogfood run
 `20261001-185351-dogfood-081dd2` passed all10 checks and analysis found no defects.
