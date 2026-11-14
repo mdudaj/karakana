@@ -1,5 +1,5 @@
 ---
-status: decision_required
+status: ready_for_implementation
 question: What document-specific completeness and evidence requirements should govern the first content profiles without confusing structural validity, substantive review and readiness?
 evidence:
   - source: docs/engineering-artifacts.md
@@ -45,13 +45,11 @@ artifact_choices:
     disposition: not_applicable
     rationale: No interface is delivered this round; CP09 specifies understandable diagnostic behavior for the later design and UX-writing review.
 authority:
-  state: pending
-  evidence: Owner accepted the CP01-CP10 requirements review with "accepted" on 2026-11-13. Requirements/two-profile scope are accepted; CD01-CD12 design was subsequently accepted on 2026-11-14. M1 was subsequently selected with execute and is now locally implemented/verified. M1 source integration and M2 remain separate; no remote publication is authorised.
-pending_decisions:
-  - owner: Project owner
-    question: Select source integration of locally verified M1, and separately review the exact M2 reference-edge amendment before M2?
-    next_action: Reuse accepted CP/CD and M1 verification; review source and separately authorise PR/squash integration, preserving the M2-only amendment decision.
-next_action: Review locally implemented/verified M1 and its source-integration evidence; M2 reference-edge amendment remains pending.
+  state: approved
+  evidence: Owner accepted the reviewed context0.2 links amendment with "accepted" on 2026-11-14 after its self-contained review summary. Existing CP/CD and M1 acceptance remain intact. Standing clarification that accepted work includes normal validated PR/squash integration applies to this completed documentation slice; M2 code execution is a separate next task.
+pending_decisions: []
+next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
+next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
 ---
 
 # Document content-profile requirements review
@@ -272,3 +270,40 @@ standard-pack checker, 885 passing tests, 186 passing evals and unchanged P02/as
 baselines. Accepted CP/CD choices are preserved; this is partial local delivery,
 not M2 completion or independent acceptance. Source review and separately
 authorised PR/squash integration are next. No new PR/merge/deployment occurred.
+
+
+## Post-M1 amendment-review continuation — 2026-11-14
+
+M1 is squash merged through PR38 at `208bf72`; its integration/release dependency
+is complete. The owner selected the targeted M2 amendment review with **“execute”**.
+CP01-CP10 and their accepted standards/tailoring remain unchanged. The concrete
+source-cell/target-record schema clarification, rationale, cases and exact owner
+decision are in [design revision0.2](CONTENT-PROFILE-DESIGN-2026-11-13.md#m2-reference-link-amendment--revision-02-proposed-2026-11-14)
+and the [updated implementation plan](CONTENT-PROFILE-IMPLEMENTATION-PLAN-2026-11-14.md).
+Those review results await scoped owner acceptance; they do not activate M2.
+Earlier local-only/integration-pending statements remain preserved history.
+
+
+## Owner amendment acceptance — 2026-11-14
+
+The owner replied **“accepted”** after the completed amendment review summary.
+This accepts design revision0.2's context0.2 `links` contract without revisions:
+unique source cells, one-to-many target sets, registered target types/baselines,
+anchors for non-ID rows, canonical-reference reconciliation and context0.1
+compatibility. The original CP01-CP10/CD01-CD12 acceptance and tailored standards
+remain intact. Earlier proposed/pending/readiness-false entries are review history;
+this scoped acceptance supersedes them for the amendment decision.
+
+Acceptance trace: `20261114-072153-949637`. Research outcome is now
+`ready_for_implementation` for the resolved design/plan, with no material amendment
+decision outstanding. This readiness does not execute M2 or claim that its code,
+new tests or verification are delivered. The owner's standing clarification that
+accepted work includes its normal validated PR/squash integration is applied to
+this completed documentation slice. Complete that integration, then present the
+M2 implementation brief; deployment and live model calls remain separate.
+
+Only acceptance/continuation metadata and this history entry changed after the
+reviewed proposal. Reuse its66 passing content tests and source-backed review;
+validate current YAML/JSON/links, diff scope and acceptance consistency before
+integration. Do not repeat the already accepted requirements/design review or ask
+again for M1 integration or this amendment's acceptance.
