@@ -2,7 +2,7 @@
 name: engineering-requirements
 description: Author or revise Markdown PRDs, requirements, user stories, acceptance
   criteria and traceability from resolved project intent and source evidence.
-version: 0.2.0
+version: 0.2.1
 risk_level: medium
 category: documentation
 scope: bundled
@@ -119,6 +119,15 @@ copy, with assumptions and forecast limits recorded.
 ## Pitfalls
 
 A story sentence is a discussion aid, not a complete specification. A defined acceptance case is not a passed test. Do not guess priority from ID prefixes.
+
+## Opt-in content checking
+
+For explicitly requested checking of the M1 standard narrative packs, use the
+[content-check guide](../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
+and an explicit check context. A mechanical pass never establishes acceptance.
+Advanced context mappings and saved-report verification are not supported in M1;
+requests for unavailable capabilities are refused rather than ignored. Narrative
+content checking does not add P02 export support or automatic task enforcement.
 
 ## Verification
 

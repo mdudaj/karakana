@@ -1,35 +1,47 @@
-# Documentation and parser integrity: continuation
+# Narrative content checker M1: continuation
 
-The accepted requirements/design directions and CT01–CT08 convention/template
-slice are integrated through PR #36 at `f2319cc`. Preserve that completed work.
-The [parent plan](DRAFTING-CONVENTIONS-2026-11-13.md) retains decisions and the
-remaining roadmap.
+CT01-CT08 convention/templates are integrated through PR #36 (`f2319cc`), and
+PI01-PI08 parser integrity through PR #37 (`fc93fbc`). Preserve those completed
+slices. The [parent roadmap](DRAFTING-CONVENTIONS-2026-11-13.md) retains history;
+the current [bounded plan and M1 results](CONTENT-PROFILE-IMPLEMENTATION-PLAN-2026-11-14.md)
+govern continuation alongside the accepted
+[requirements](CONTENT-PROFILE-REQUIREMENTS-2026-11-13.md) and
+[design](CONTENT-PROFILE-DESIGN-2026-11-13.md).
 
-The next PI01–PI08 parser slice has a complete
-[research, implementation and verification record](PARSER-INTEGRITY-2026-11-13.md).
-Its local checkpoint passed 140 focused tests, 818 full tests and 183 deterministic
-evals. It fixes LF/CRLF record loss and silent malformed-row filtering, preserving
-raw-byte hashes, valid empty tables, narrative sources and native/source authority.
-No mandatory content profile, general Markdown engine or automatic selection/
-enforcement was added. The clean narrative assets remain outside P02's structured
-source contract.
+M1 is implemented, locally verified and owner-accepted on
+`feat/engineering-content-checker-m1-20261114`. Its final gate passed **885 tests**
+(67 new) and **186 deterministic evals**, zero warnings, plus actual installed-wheel,
+CLI, skill/skillpack and sixteen protected-source byte-preservation controls.
+These are historical verified-source receipts; reconcile current source/CI before
+reuse. No native Windows installation qualification or standards certification
+is claimed; actual LF/CRLF bytes were tested.
 
-First inspect current `main`, the PI code/tests and the associated PR state.
-The owner selected source review/publication/squash integration after local
-verification. If integration is pending, finish that task on
-`research/engineering-artifact-parser-integrity-20261113` under its recorded
-authority and exact-head checks. If it is merged, carry the receipt forward and
-select the next bounded roadmap task instead of reopening research or the fix.
+The module `karakana.tools.engineering_content` and
+[usage guide/default context](content-checks/README.md) provide explicit M1 standard
+requirements/system-design narrative checks, strict raw-table consumption, content/
+reference diagnostics and immutable current-run reports. The optional content/dev
+parser is pinned to4.3.0. Review remains required; gaps/readiness/acceptance are
+separate. Advanced context mappings, context0.2/links and saved-report verification
+are explicitly unsupported. P02 structural/native-binding/export behavior remains
+unchanged; narrative checking does not add P02 export support or automatic gates.
 
-After integration, the next candidate is bounded content-profile/checks resolution:
-which document-specific completeness checks should supplement structural parsing
-without rejecting legitimate narrative/empty states or inventing substantive
-approval. Reuse the accepted conventions and prior findings; settle scope, method,
-compatibility and tests before its own implementation. Task-time resource selection/
-enforcement, remaining template/export packs, pilot and Jovina retain later scope.
+First inspect current `main`, the M1 source/tests and the branch PR state. The owner
+clarified **“squash merge, thats approved means”**: M1 commit/push, PR publication
+and validated squash integration are authorised; do not ask for that approval
+again. If its PR is pending, finish this integration task with current CI and an
+expected-head guard. If it is merged, carry the squash/tree/parent/release receipt
+forward and use the latest handoff instead of restarting M1 implementation.
 
-Follow repository instructions, load the current task handoff and use a task
-branch for edits. Verify evidence before claiming integration or acceptance; the
-linked records retain historical checkpoints. No app-server connection, live
-model calls or client revisions are needed. Loading is context, not fresh external
-publication, merge or deployment authority.
+After M1 squash integration and release checks, the next bounded issue is the M2
+explicit-reference mapping amendment. The accepted design promises source-cell/
+target mappings but omits a two-endpoint field. The plan proposes optional `links`
+in context0.2, each edge with existing `from`/`to` Locators, preserving0.1. Obtain
+the owner's agreement on that exact amendment before activating M2; it was not
+approved merely by M1 acceptance/integration. M2 then adds actual tailored sources,
+open-item/claim evidence mappings and recomputed report verification. Automatic
+selection/enforcement, remaining templates/exports, pilot and Jovina remain later.
+
+Follow repository instructions, load/expose the latest handoff summary and keep
+task/project boundaries. Loading context grants no fresh deployment, model-call
+or client-revision authority. No app-server connection is needed. Prefer GPT-6 Sol
+high for integrity review; a fresh conversation benefits the completed boundary.

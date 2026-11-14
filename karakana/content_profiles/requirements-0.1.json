@@ -1,0 +1,200 @@
+{
+  "profile_id": "requirements",
+  "profile_version": "0.1",
+  "formats": [
+    "narrative-0.1"
+  ],
+  "checks": [
+    "metadata",
+    "coverage",
+    "records",
+    "references",
+    "wording",
+    "gaps",
+    "claims"
+  ],
+  "slots": [
+    {
+      "id": "metadata",
+      "heading": "",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "standards",
+      "heading": "Standards and references",
+      "kind": "mixed",
+      "required": true
+    },
+    {
+      "id": "purpose",
+      "heading": "Purpose and scope",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "context",
+      "heading": "Context and users",
+      "kind": "prose",
+      "required": true
+    },
+    {
+      "id": "functional",
+      "heading": "Functional requirements",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "quality",
+      "heading": "Quality requirements and constraints",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "interfaces",
+      "heading": "Interfaces and data",
+      "kind": "prose",
+      "required": false
+    },
+    {
+      "id": "acceptance",
+      "heading": "Acceptance and verification",
+      "kind": "table",
+      "required": true
+    },
+    {
+      "id": "gaps",
+      "heading": "Unresolved matters",
+      "kind": "table",
+      "required": false
+    }
+  ],
+  "tables": [
+    {
+      "id": "metadata",
+      "slot": "metadata",
+      "headers": [
+        [
+          "Document information",
+          "Value"
+        ]
+      ],
+      "required_fields": [
+        "Document information",
+        "Value"
+      ],
+      "record_type": "metadata",
+      "identity": "Document information",
+      "min_rows": 1
+    },
+    {
+      "id": "standards",
+      "slot": "standards",
+      "headers": [
+        [
+          "Reference",
+          "Edition",
+          "Application"
+        ],
+        [
+          "Reference",
+          "Edition / revision",
+          "Application"
+        ]
+      ],
+      "required_fields": [
+        "Reference",
+        "Application"
+      ],
+      "record_type": "standard",
+      "identity": "",
+      "min_rows": 1
+    },
+    {
+      "id": "functional",
+      "slot": "functional",
+      "headers": [
+        [
+          "ID",
+          "Requirement",
+          "Rationale / source",
+          "Acceptance criteria"
+        ]
+      ],
+      "required_fields": [
+        "ID",
+        "Requirement",
+        "Rationale / source",
+        "Acceptance criteria"
+      ],
+      "record_type": "requirement",
+      "identity": "ID",
+      "min_rows": 1
+    },
+    {
+      "id": "quality",
+      "slot": "quality",
+      "headers": [
+        [
+          "ID",
+          "Requirement / constraint",
+          "Conditions and measure",
+          "Verification reference"
+        ]
+      ],
+      "required_fields": [
+        "ID",
+        "Requirement / constraint",
+        "Conditions and measure",
+        "Verification reference"
+      ],
+      "record_type": "requirement",
+      "identity": "ID",
+      "min_rows": 1
+    },
+    {
+      "id": "acceptance",
+      "slot": "acceptance",
+      "headers": [
+        [
+          "Criterion ID",
+          "Requirement ID",
+          "Conditions / event",
+          "Expected outcome",
+          "Verification method"
+        ]
+      ],
+      "required_fields": [
+        "Criterion ID",
+        "Requirement ID",
+        "Conditions / event",
+        "Expected outcome",
+        "Verification method"
+      ],
+      "record_type": "criterion",
+      "identity": "Criterion ID",
+      "min_rows": 1
+    },
+    {
+      "id": "gaps",
+      "slot": "gaps",
+      "headers": [
+        [
+          "ID",
+          "Unresolved fact / assumption",
+          "Effect on acceptance",
+          "Resolution source / role"
+        ]
+      ],
+      "required_fields": [
+        "ID",
+        "Unresolved fact / assumption",
+        "Effect on acceptance",
+        "Resolution source / role"
+      ],
+      "record_type": "gap",
+      "identity": "ID",
+      "min_rows": 0
+    }
+  ]
+}
