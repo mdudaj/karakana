@@ -1,0 +1,2 @@
+Synthetic source evidence for deterministic checker examples.
+This file makes no claim about execution or acceptance of any real system.

@@ -42,6 +42,11 @@ def test_built_wheel_resources_cli_and_optional_parser(isolated_repo, tmp_path):
         {'key': 'req', 'path': 'req.md', 'format': 'narrative-0.1', 'profile': {'id': 'requirements', 'version': '0.1'}},
         {'key': 'design', 'path': 'design.md', 'format': 'narrative-0.1', 'profile': {'id': 'system-design', 'version': '0.1'}, 'requirements': ['req']}]}
     (working / 'context.json').write_text(json.dumps(context))
+    shutil.copytree(ROOT / 'tests/fixtures/engineering_content', working / 'tests/fixtures/engineering_content')
+    contexts = working / 'docs/skills/engineering-artifact-catalogue/content-checks'
+    contexts.mkdir(parents=True)
+    for name in ('tailored', 'evidence'):
+        shutil.copyfile(ROOT / f'docs/skills/engineering-artifact-catalogue/content-checks/{name}.json', contexts / f'{name}.json')
     code = '''
 import sys, json
 from pathlib import Path
@@ -52,6 +57,18 @@ assert Path(engineering_content.__file__).is_relative_to(Path(sys.argv[1]))
 for name in ('requirements', 'system-design'):
     assert json.loads(files('karakana.content_profiles').joinpath(name+'-0.1.json').read_bytes())['profile_id'] == name
 assert engineering_content.main(['--root', '.', 'check', '--context', 'context.json', '--format', 'json']) == 0
+import contextlib, io
+for name in ('tailored', 'evidence'):
+    context = Path('docs/skills/engineering-artifact-catalogue/content-checks') / (name + '.json')
+    result = engineering_content.check_content(Path.cwd(), context)
+    assert result.ok, result.to_dict()['findings']
+    report = Path(name + '-report.json')
+    report.write_text(json.dumps(result.to_dict()))
+    assert engineering_content.verify_report(Path.cwd(), context, report).to_dict()['verification'] == 'current'
+    capture = io.StringIO()
+    with contextlib.redirect_stdout(capture):
+        assert engineering_content.main(['--root', '.', 'verify', '--context', str(context), '--report', str(report), '--format', 'json']) == 0
+    assert json.loads(capture.getvalue())['verification'] == 'current'
 '''
     result = invoke([sys.executable, '-I', '-c', code, str(site)], working)
     report = json.loads(result.stdout)

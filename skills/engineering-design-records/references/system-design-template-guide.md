@@ -6,11 +6,11 @@ Content pack version: 0.1. Use the
 They are narrative assets, not supported P02 structured-export inputs. Retain
 declared authority for existing schemas, diagram sources and native engine fields.
 
-For explicitly requested mechanical checks of a completed standard pack, use
-the [M1 content checker](../../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
+For explicitly requested mechanical checks of a completed standard or tailored pack, use
+the [content checker](../../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
 with an explicit context. It reports source-located errors/warnings and unresolved
-gaps; advanced tailoring/evidence mappings and saved-report verification are
-unsupported. A blank template is a valid starter, not completed content. Keep
+gaps. Explicit source mappings and saved-report verification are supported;
+verify recomputes raw manifests and assessments rather than trusting a saved pass. A blank template is a valid starter, not completed content. Keep
 substantive review and actual acceptance separate from this check.
 
 ## Selection and tailoring

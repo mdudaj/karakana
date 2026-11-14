@@ -47,8 +47,8 @@ authority:
   state: approved
   evidence: Owner accepted the reviewed context0.2 links amendment with "accepted" on 2026-11-14 after its self-contained review summary. Existing CP/CD and M1 acceptance remain intact. Standing clarification that accepted work includes normal validated PR/squash integration applies to this completed documentation slice; M2 code execution is a separate next task.
 pending_decisions: []
-next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
-next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
+next_action: Complete owner-approved M2 source PR and validated squash integration; release-check/sync and refresh the handoff, then select the next bounded task.
+next_action: Complete owner-approved M2 source PR and validated squash integration; release-check/sync and refresh the handoff, then select the next bounded task.
 ---
 
 # Content-profile checker implementation plan
@@ -555,3 +555,131 @@ reviewed proposal. Reuse its66 passing content tests and source-backed review;
 validate current YAML/JSON/links, diff scope and acceptance consistency before
 integration. Do not repeat the already accepted requirements/design review or ask
 again for M1 integration or this amendment's acceptance.
+
+
+## M2 execution selected — 2026-11-14
+
+Owner selected the completed M2 implementation brief with **“execute”**. Trace
+`20261114-072845-d267f5`; branch `feat/content-m2-contexts-verify-20261114` from
+`af27b67` (PR39). Accepted CP/CD/revision0.2 govern without reopening design.
+This selects in-scope implementation, temporary regression fixtures, verification
+and review; normal validated integration follows owner acceptance of delivery.
+No deployment/live model calls or automatic task enforcement are selected.
+
+Implementation follows the existing file/test boundaries. The reader will retain
+actual heading paths/anchors and registered raw-table cells; context resolution
+and graph/evidence checks may use a small owning module in content_profiles,
+included in the checker fingerprint. References remain bounded local reads.
+Review source-kind/baseline and canonical-ID reconciliation on the resolved graph;
+verify recomputes all report assessment fields and raw manifests, never trusting
+a supplied digest or passed flag. Invalid/incompatible reports refuse explicitly.
+
+Reuse accepted CLI diagnostic requirements and ux-writing's source-located,
+actionable state-copy pattern; no GUI or render artifact applies. Research/ADR/
+requirements/standards are settled and reused. New implementation facts or
+necessary choices are recorded here with their evidence and limits.
+
+
+## M2 local delivery results — 2026-11-14
+
+Implementation trace `20261114-072845-d267f5`; prerequisite gate passed before
+code (`20261114-073043-protocol-check-a3db71`). Owner's **“execute”** selected this
+M2 delivery against the settled artifacts. Branch:
+`feat/content-m2-contexts-verify-20261114`, base `af27b67` (PR39).
+
+Delivered strict advanced context0.1/0.2 schemas and actual heading-path/anchor/
+registered-cell source maps; governing coverage and cycle/conditional-omission
+checks; version0.2 from/to edges with canonical-set, kind, baseline, uniqueness
+and graph reconciliation; located open-item effects/resolver/action/affected
+scopes; observed-result/decision fields, timezone-aware time and local evidence
+hashes/external-evidence limits. `verify_report` and module `verify` recompute
+current input manifests and every persisted assessment/status/coverage field;
+forged digests/pass flags, report tampering, byte drift and incompatible report
+versions refuse. Context0.1 remains supported; even empty links requires0.2.
+Report0.2/checker0.2.0 are explicit; M1 report0.1 must be regenerated, not upgraded
+silently. Packaged profiles and dependency pins remain unchanged.
+
+Added working neutral compact/governing/observation/evidence fixtures and tailored/
+evidence contexts outside protected asset/legacy-example collections. Updated
+three experimental skill patch versions, their instruction-only evals and owning
+references, shared contract and guide. Generated skill index reconciled with no
+diff. P02/native/export/feedback, workflow/protocol/model policies and clients are
+unchanged. Nothing runs automatically and no remote/model/evidence fetch is added.
+
+### Source-alignment closeout and regression evidence
+
+| Material claim / contrary probe | Source producer -> consumer | Resolution and artifact choice |
+| --- | --- | --- |
+| Non-ID design rows and renamed/repeated headings can select one actual cell | reader source paths/anchors/raw tables -> context resolver -> typed graph checks | Actual row/cell anchors, full heading paths, ambiguous-selector and normalized duplicate-edge cases implemented; no new native IDs or fuzzy/row-number selector. Reuse accepted locator contract. |
+| Governing records might be mistaken for copied facts or lose baseline authority | selected raw Source rows -> canonical physical identity/checked baseline owner -> reference/effect checks | Keep physical path/line, resolve authority from declared checked views; same physical record reused is not a new record, while competing physical IDs still fail. Positive/negative fixture tests and code encode this implementation choice. |
+| Optional mappings could hide existing content or unknown effects | native table inventory/default gaps -> coverage projections/open-item enrichment | Preserve original declared rows; refuse unselected native tables. Enrich a canonical gap once instead of suppressing it. Two cell selectors cannot overwrite one row's affected scope. New counterexamples failed before their fixes and pass afterward. |
+| A test result could supply accepted-decision evidence | declared claim kind/location -> accepted-decision row check | Require decision-kind coverage; wrong-kind counterexample reproduced and now refuses. Fields/hashes show declared provenance only, never authenticity or checker-granted approval. |
+| Saved semantic equality/digest could certify freshness | all source/context/evidence/profile/code/parser bytes -> manifest plus recomputed report | Exact raw comparison AND all assessment/status fields required. Changed evidence, LF/CRLF, order-only changes, parser/profile/code/source drift, tampered or deep malformed reports covered. JSON nesting bounded64; strict schema/unknown-key/caps preserved. |
+
+Research/method outcome is resolved using the accepted contracts and existing
+plan; no new material owner choice or external-framework research was needed.
+Requirements CP01-CP10 and design/revision0.2 are reused; schema/example/test/UX
+and delivery documentation now reflect actual implementation. An extra ADR/PRD,
+GUI/render record, migration or workbook is not applicable. The implementation
+choices above do not change source authority or accepted requirements.
+
+### Verification actually performed
+
+- Final **961 tests passed in25.66s**, including **76 new cases** over baseline885.
+  Focused compatibility gate passed278 before later integrity cases; final full
+  gate includes all subsequent fixes and wheel qualification. New tests assert
+  actual consumer behavior rather than planning text.
+- **186/186 deterministic evals passed, zero warnings**; final receipt
+  `.karakana/eval-runs/20261114-075135-eval-c5c8a3/`. Skill and skillpack validation
+  passed. Instruction cases cover source text, not model execution or authoring quality.
+- Actual built wheel installed into a temporary target outside the checkout ran
+  default check plus tailored/evidence check and API/CLI verify. Optional parser
+  imports were actually blocked in a separate installed subprocess; P02 Markdown
+  still worked. No dependency expansion or native Windows install claim.
+- Actual final module CLI checked/wrote/verified default, tailored and evidence
+  contexts. Defaults kept7 gaps, evidence kept1 and1 declared claim; acceptance
+  stayed not_assessed/review_required true. Tailored had no declared gaps and
+  readiness not_assessed. Runtime receipts: `.karakana/reviews/20261114-content-m2/`.
+- All16 protected originals (accepted assets, P02 module, legacy examples, native
+  fixtures and workbook/template) remain byte-identical. Actual LF/CRLF fixtures
+  exercise semantic equality with raw staleness. Guide links/JSON/context sources,
+  diff scope and whitespace checked. No test writes checkout runtime.
+
+Final source review is agent self-review, not independent acceptance or standards
+certification. Evidence locations/declarations do not authenticate facts; omission
+applicability, unmapped prose and substantive adequacy remain review concerns.
+Raw reports are not signed attestations. No unresolved implementation blocker is
+known; no M2 PR/merge/deployment has occurred. Current delivery is local/uncommitted,
+implemented and verified; owner acceptance of this completed M2 is next. Under the
+standing clarification, that acceptance includes normal commit/push, exact-head
+CI, guarded squash and release/sync without another approval loop. No deployment
+or live calls follow. After integration, automatic selection/enforcement and other
+packs/exports/pilot/client work remain separate queued tasks.
+
+Recommended next task: review completed M2 source/evidence here, then integrate
+accepted work. Exact next action: owner accepts or states delivery findings; record
+that decision, close any actual issue and complete the normal validated PR/squash.
+Recommend GPT-6 Sol high for integrity-sensitive review/integration; continue this
+conversation for acceptance, with a fresh conversation useful after integration.
+Advice only: no observed model switch or availability claim. Completion protocol
+and final exact-trace handoff receipts live in the runtime delivery record.
+
+
+## Owner M2 delivery acceptance and integration approval — 2026-11-14
+
+The owner replied **“accepted, squash merge”** after the completed M2 delivery
+summary (961 passing tests,186 passing evals and the local uncommitted state).
+This accepts the verified M2 delivery without revisions and explicitly authorises
+normal task-branch commit/push, PR publication, exact-head validation and squash
+integration. No separate integration confirmation is outstanding. CP/CD/revision0.2
+acceptance remains intact; this is owner delivery acceptance, not independent
+technical review or standards certification.
+
+Release trace: `20261114-075748-428824`. All30 delivered file hashes and16 protected
+originals were reconciled before this acceptance-only update. Reuse the existing
+961-test/186-eval and actual wheel/CLI evidence; code/tests/fixtures/skill content
+remain unchanged. Complete guarded squash and verify reviewed tree/sole parent,
+clean synced main and release checks; record actual outcome in the append-only
+handoff. Deployment, live model calls and later automatic selection/enforcement
+or client/pilot work remain separate. Earlier delivery-pending/local-only states
+are history, superseded by this scoped acceptance and later merge evidence.

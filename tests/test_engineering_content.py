@@ -1,4 +1,4 @@
-"""Real narrative checks, source-loss controls and explicit M1 support limits."""
+"""Real narrative checks, source-loss controls and explicit version and evidence limits."""
 
 from pathlib import Path
 import hashlib
@@ -58,16 +58,16 @@ def test_real_packs_keep_identity_unknowns_and_sources(pack):
     assert report["acceptance"] == "not_assessed"
     assert {d["document_id"] for d in report["documents"]} == {"EX-REQ", "EX-DES"}
     assert {item["record_id"] for item in report["open_acceptance_items"] if item["record_id"]} >= {"Q-01", "Q-02"}
-    assert report["coverage"]["saved_report_verification"] == "unsupported"
+    assert report["coverage"]["saved_report_verification"] == "supported"
     assert not any(f["severity"] == "error" for f in report["findings"])
     assert all(p.read_bytes() == value for p, value in before.items())
 
 
 @pytest.mark.parametrize("feature", ["references", "coverage", "omissions", "open_items", "claims"])
-def test_m1_never_ignores_requested_advanced_features(pack, feature):
+def test_invalid_advanced_mappings_are_never_ignored(pack, feature):
     pack[1][feature] = [{}]
     save_context(pack)
-    assert run(pack)["completeness"] == "unsupported"
+    assert run(pack)["completeness"] == "incomplete"
 
 
 def test_empty_advanced_arrays_are_accepted(pack):
@@ -163,9 +163,9 @@ def test_cli_json_and_new_report_no_overwrite(pack, capsys):
     assert (root / "report.json").read_bytes() == before
 
 
-def test_verify_is_explicitly_unavailable(pack, capsys):
+def test_verify_refuses_a_missing_saved_report(pack, capsys):
     assert main(["--root", str(pack[0]), "verify", "--context", "context.json", "--report", "old.json"]) == 2
-    assert "not supported in M1" in capsys.readouterr().out
+    assert "stale, mismatched or incompatible" in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("text", [
@@ -268,18 +268,18 @@ def test_missing_reference_range_member_is_not_silently_expanded(pack):
     assert run(pack)["completeness"] == "incomplete"
 
 
-def test_accepted_decision_does_not_get_approval_from_m1(pack):
+def test_unmapped_accepted_decision_does_not_get_approval(pack):
     mutate(pack, "; Proposed |", "; Accepted |", "design.md")
     report = run(pack)
-    assert report["completeness"] == "unsupported"
+    assert report["completeness"] == "incomplete"
     assert report["acceptance"] == "not_assessed"
 
 
 def test_source_change_during_read_refuses_current_run(pack, monkeypatch):
     from karakana.tools import engineering_content as tool
     original = tool.read_narrative
-    def changed(raw, key, path, profile, md):
-        result = original(raw, key, path, profile, md)
+    def changed(raw, key, path, profile, md, mapped_slots=()):
+        result = original(raw, key, path, profile, md, mapped_slots)
         if key == "req":
             with (pack[0] / path).open("a") as stream:
                 stream.write('\nChanged during read.\n')

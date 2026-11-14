@@ -82,7 +82,7 @@ class Inputs:
 def load_profile(profile_id, version):
     name = REGISTRY.get((profile_id, version))
     if name is None:
-        raise ContentError("Select a registered content profile and version supported in M1.",
+        raise ContentError("Select a registered requirements or system-design content profile and supported version.",
                            rule="CP-PROFILE-001", unsupported=True)
     raw = files("karakana.content_profiles").joinpath(name).read_bytes()
     if len(raw) > MAX_CONFIG_BYTES:

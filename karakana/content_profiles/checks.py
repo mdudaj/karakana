@@ -44,12 +44,12 @@ def references(value, expected, extras=()):
     return result
 
 
-def assess(narratives, context, md):
+def assess(narratives, context, md, resolved=None):
     findings, gaps, results = [], [], {}
     inventories = {}
 
-    def add(doc, rule, message, *, line=1, section="", field=None, record_id=None, warning=False, unsupported=False):
-        loc = {"path": doc.path, "line": line, "section": section}
+    def add(doc, rule, message, *, line=1, section="", field=None, record_id=None, warning=False, unsupported=False, path=None):
+        loc = {"path": path or doc.origins.get(section, {}).get("path", doc.path), "line": line, "section": section}
         if field:
             loc["field"] = field
         if record_id and RECORD_ID.fullmatch(record_id):
@@ -59,9 +59,25 @@ def assess(narratives, context, md):
 
     def edge(doc, row, field, expected, extras=(), section=""):
         try:
-            return references(row.values[field], expected, extras)
+            mapped = resolved.links.get((row.path, row.line, field)) if resolved else None
+            if mapped is None:
+                return references(row.values[field], expected, extras)
+            try:
+                canonical = references(row.values[field], expected, extras)
+            except ContentError as exc:
+                # A custom prose cell may be declared explicitly; malformed or dangling
+                # canonical IDs/ranges must still fail even beside a valid mapping.
+                mentions = set(MENTION.findall(row.values[field]))
+                if not exc.unsupported or RANGE.search(row.values[field]) or not mentions <= set(extras):
+                    raise
+                canonical = None
+            if canonical is not None and canonical != mapped:
+                raise ContentError("Explicit targets conflict with the canonical reference set. Reconcile both declarations.", rule="CP-REFERENCE-001")
+            if not mapped <= set(expected):
+                raise ContentError("An explicit target is outside this cell's selected baseline.", rule="CP-REFERENCE-001")
+            return mapped
         except ContentError as exc:
-            add(doc, exc.rule, str(exc), line=row.line, field=field, section=section, unsupported=exc.unsupported)
+            add(doc, exc.rule, str(exc), line=row.line, path=row.path, field=field, section=section, unsupported=exc.unsupported)
             return set()
 
     identities, document_ids = {}, {}
@@ -97,10 +113,13 @@ def assess(narratives, context, md):
                 if slot["required"]:
                     add(doc, "CP-COVERAGE-001", "Required standard-pack content is missing or empty. Complete the selected section/table.",
                         line=section.line if section else 1, section=slot["heading"])
-                else:
-                    add(doc, "CP-COVERAGE-002", "Conditional content is absent; its applicability remains for review. Tailored omissions are not checked in M1.",
+                elif slot["id"] not in doc.omissions:
+                    add(doc, "CP-COVERAGE-002", "Conditional content is absent; review its applicability or locate an omission rationale.",
                         section=slot["heading"], warning=True)
-            covered.append({"slot": slot["id"], "state": "checked" if present else "missing" if slot["required"] else "not_assessed"})
+            item = {"slot": slot["id"], "state": "checked" if present else "omitted_with_rationale" if slot["id"] in doc.omissions else "missing" if slot["required"] else "not_assessed"}
+            if slot["id"] in doc.selections: item["source"] = doc.selections[slot["id"]]
+            if slot["id"] in doc.omissions: item["rationale"] = doc.omissions[slot["id"]]
+            covered.append(item)
         reqs, criteria, questions = {}, {}, {}
         for spec in profile["tables"]:
             section = next(s["heading"] for s in profile["slots"] if s["id"] == spec["slot"])
@@ -110,57 +129,60 @@ def assess(narratives, context, md):
                     value = plain(md, row.values[field])
                     if not value.strip() or SUBSTITUTION.search(value):
                         add(doc, "CP-CONTENT-001", "Complete the required field with source content, not a blank or substitution prompt.",
-                            line=row.line, section=section, field=field)
+                            line=row.line, path=row.path, section=section, field=field)
                 # Edition has two explicitly supported header names.
                 if spec["record_type"] == "standard" and not all(row.values.values()):
-                    add(doc, "CP-CONTENT-001", "Complete reference, edition and application fields.", line=row.line, section=section)
+                    add(doc, "CP-CONTENT-001", "Complete reference, edition and application fields.", line=row.line, path=row.path, section=section)
                 for field, value in row.values.items():
                     if SUBSTITUTION.search(plain(md, value)):
                         add(doc, "CP-CONTENT-001", "Replace the unresolved substitution field or move a literal example into code.",
-                            line=row.line, section=section, field=field)
+                            line=row.line, path=row.path, section=section, field=field)
                 rid = row.values.get(spec["identity"], "")
                 if spec["identity"]:
                     if not rid or rid in seen:
-                        add(doc, "CP-ID-001", "A table identity is missing or duplicated.", line=row.line, section=section)
+                        add(doc, "CP-ID-001", "A table identity is missing or duplicated.", line=row.line, path=row.path, section=section)
                     seen.add(rid)
                 kind = spec["record_type"]
                 if kind in {"requirement", "criterion", "gap"}:
                     if not RECORD_ID.fullmatch(rid):
-                        add(doc, "CP-ID-001", "M1 record IDs use a literal uppercase prefix and numeric suffix, without changing their identity.",
-                            line=row.line, section=section, unsupported=True)
+                        add(doc, "CP-ID-001", "Record IDs use a literal uppercase prefix and numeric suffix, without changing their identity.",
+                            line=row.line, path=row.path, section=section, unsupported=True)
                         continue
                     identity = (kind, rid)
-                    if identity in identities:
-                        add(doc, "CP-ID-001", "A qualified record identity is duplicated in this namespace.", line=row.line,
+                    physical = (row.path, row.line)
+                    if identity in identities and identities[identity] != physical:
+                        add(doc, "CP-ID-001", "A qualified record identity is duplicated in this namespace.", line=row.line, path=row.path,
                             section=section, record_id=rid)
-                    identities[identity] = doc.key
+                    identities[identity] = physical
                     if kind == "requirement":
                         reqs[rid] = (row, spec["id"])
                         statement = row.values.get("Requirement", row.values.get("Requirement / constraint", ""))
                         if WORDING.search(plain(md, statement)):
                             add(doc, "CP-WORDING-001", "This statement may be vague or describe authoring activity. Review its observable product behavior or measure.",
-                                line=row.line, section=section, record_id=rid, warning=True)
+                                line=row.line, path=row.path, section=section, record_id=rid, warning=True)
                     elif kind == "criterion":
                         criteria[rid] = row
                     else:
                         questions[rid] = row
                         gaps.append({"document": doc.key, "record_id": rid, "kind": "declared_question",
-                                     "location": {"path": doc.path, "line": row.line, "section": section},
+                                     "location": {"path": row.path, "line": row.line, "section": section},
                                      "affected_records": sorted(set(MENTION.findall(row.values["Effect on acceptance"]))),
                                      "resolution_detail": "not_assessed"})
                 if kind == "verification" and row.values.get("Remaining gap", "").strip():
                     gaps.append({"document": doc.key, "record_id": None, "kind": "declared_design_gap",
-                                 "location": {"path": doc.path, "line": row.line, "section": section},
+                                 "location": {"path": row.path, "line": row.line, "section": section},
                                  "affected_records": sorted(set(MENTION.findall(row.values["Requirement / risk"]))),
                                  "resolution_detail": "not_assessed"})
                 if kind == "decision" and re.search(r"(?:^|;|\bStatus\s*:)\s*Accepted\s*[.]?\s*$", row.values["Decision"], re.I):
-                    add(doc, "CP-CLAIM-001", "Accepted-decision evidence checking is not supported in M1. Use a later evidence-mapping check.",
-                        line=row.line, section=section, unsupported=True)
+                    if not resolved or not resolved.claim_covers(row.path, row.line):
+                        add(doc, "CP-CLAIM-001", "Locate the actual accepted decision and its revision, actor, time and evidence fields.",
+                            line=row.line, path=row.path, section=section)
         for line, value in doc.prose:
+            value = plain(md, value)
             if SUBSTITUTION.search(value):
                 add(doc, "CP-CONTENT-001", "Replace the unresolved substitution prompt with actual source content.", line=line)
             if CLAIM.search(value):
-                add(doc, "CP-CLAIM-REVIEW", "This prose may claim an observed result or accepted decision. M1 does not validate that evidence; review the source.",
+                add(doc, "CP-CLAIM-REVIEW", "This prose may claim an observed result or accepted decision. Unmapped prose claims are not validated; review their source and evidence.",
                     line=line, warning=True)
         known_headings = {s["heading"] for s in profile["slots"]}
         unassessed = sorted(h for h in doc.sections if h not in known_headings)
@@ -177,7 +199,7 @@ def assess(narratives, context, md):
         reqs, criteria, questions = inventories[doc.key]
         if doc.profile["profile_id"] == "requirements":
             if specifications[doc.key].get("requirements"):
-                add(doc, "CP-REFERENCE-001", "M1 requirements documents define their records directly, without inherited baselines.", unsupported=True)
+                add(doc, "CP-REFERENCE-001", "Requirements documents define their records directly, without inherited baselines.", unsupported=True)
             forward, backward = set(), set()
             for rid, (row, table) in reqs.items():
                 field = "Acceptance criteria" if table == "functional" else "Verification reference"
@@ -194,10 +216,17 @@ def assess(narratives, context, md):
                 add(doc, "CP-REFERENCE-001", "Declare the supported requirements documents used by this design.")
                 continue
             target_reqs, target_criteria, target_questions = set(), set(), set()
+            physical_records = {}
             for key in baselines:
                 r, c, q = inventories[key]
-                if target_reqs & r.keys() or target_criteria & c.keys():
-                    add(doc, "CP-REFERENCE-001", "The selected requirement baselines contain ambiguous identities.")
+                for kind, records in (("requirement", r), ("criterion", c)):
+                    for rid, value in records.items():
+                        row = value[0] if kind == "requirement" else value
+                        identity = (kind, rid)
+                        physical = (row.path, row.line)
+                        if identity in physical_records and physical_records[identity] != physical:
+                            add(doc, "CP-REFERENCE-001", "The selected requirement baselines contain ambiguous identities.")
+                        physical_records[identity] = physical
                 target_reqs.update(r); target_criteria.update(c); target_questions.update(q)
             coverage = set()
             for row in doc.tables.get("quality", []):

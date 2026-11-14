@@ -1,7 +1,7 @@
 ---
 name: engineering-documentation-conventions
 description: Select and tailor engineering documentation resources and apply shared language, reference and source-authority conventions during requested document authoring or review.
-version: 0.1.1
+version: 0.1.2
 risk_level: medium
 category: documentation
 scope: bundled
@@ -135,12 +135,15 @@ copies every library table into every task.
 
 ## Opt-in content checking
 
-For explicitly requested checking of the M1 standard narrative packs, use the
+For explicitly requested standard or tailored narrative checks, use the
 [content-check guide](../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
 and an explicit check context. A mechanical pass never establishes acceptance.
-Advanced context mappings and saved-report verification are not supported in M1;
-requests for unavailable capabilities are refused rather than ignored. Narrative
-content checking does not add P02 export support or automatic task enforcement.
+M2 supports source locators, governing coverage, conditional omission rationale,
+open-item/claim evidence and recomputed saved-report verification. Context0.1
+remains supported; `links` requires context0.2. Verify compares both raw manifests
+and recomputed assessments; an equal digest alone is not freshness. Unknown facts
+and evidence authenticity remain review concerns. Narrative checking does not add
+P02 export support or automatic task enforcement.
 
 ## Verification
 
