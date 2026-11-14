@@ -1,5 +1,5 @@
 ---
-status: decision_required
+status: ready_for_implementation
 question: How should accepted CP01-CP10 and CD01-CD12 be delivered as bounded useful milestones, including the missing explicit-reference mapping shape?
 evidence:
   - source: docs/skills/engineering-artifact-catalogue/CONTENT-PROFILE-REQUIREMENTS-2026-11-13.md
@@ -7,7 +7,7 @@ evidence:
   - source: docs/skills/engineering-artifact-catalogue/CONTENT-PROFILE-DESIGN-2026-11-13.md
     finding: CD01-CD12 is accepted and permits sizing-based delivery splits. It promises explicit source-cell/target mapping but its exhaustive context shape has no edge field.
   - source: pyproject.toml
-    finding: No content extra or packaged content-profile resources exist. Dev installation is the existing CI dependency path; no workflow change is needed.
+    finding: Merged M1 declares the optional content/dev parser and packaged profiles. Existing installation/CI paths remain applicable; this amendment changes no dependency or workflow.
   - source: tests/test_engineering_documentation_skills.py
     finding: Tests protect the two-file narrative asset packs and collect legacy examples as P02 inputs; new context examples belong outside those collections.
 requirements:
@@ -44,13 +44,11 @@ artifact_choices:
     path: tests/test_engineering_artifacts.py
     rationale: Existing tests remain compatibility controls; this plan maps actual future cases rather than adding wording-only tests.
 authority:
-  state: pending
-  evidence: Owner selected and accepted verified M1, then clarified "squash merge, thats approved means" on 2026-11-14. M1 task-branch commit/push, PR publication and validated squash integration are authorised without another confirmation. M2/context0.2, deployment and live model calls remain separate.
-pending_decisions:
-  - owner: Project owner
-    question: Accept the proposed context0.2 links array for M2 explicit-reference mappings, or retain unsupported reporting for that syntax?
-    next_action: Review the small proposed shape and alternatives below; record agreement before M2 implementation. This decision does not block M1.
-next_action: Complete the authorised M1 PR and validated squash integration, then release-check/sync and refresh the handoff. M2 amendment agreement remains separate.
+  state: approved
+  evidence: Owner accepted the reviewed context0.2 links amendment with "accepted" on 2026-11-14 after its self-contained review summary. Existing CP/CD and M1 acceptance remain intact. Standing clarification that accepted work includes normal validated PR/squash integration applies to this completed documentation slice; M2 code execution is a separate next task.
+pending_decisions: []
+next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
+next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
 ---
 
 # Content-profile checker implementation plan
@@ -61,8 +59,10 @@ Baseline verified after `git fetch origin`: local HEAD and `origin/main` both
 `research/engineering-content-profile-requirements-20261113`. The accepted
 requirements and design are local uncommitted documents; preserve them.
 
-Current execution: **M1 is locally implemented, verified and owner-accepted**; see the delivery
-results at the end. Earlier plan-only wording is retained as history.
+Current execution: **M1 is implemented, verified, owner-accepted and squash merged**
+through PR38 at `208bf72`; release checks passed. The M2 amendment review is
+prepared below and in design revision0.2; its acceptance remains pending. Earlier
+plan/local-only wording is retained as history, superseded by the current entries.
 
 This is an implementation **plan**, not code delivery. It reuses
 [CP01-CP10](CONTENT-PROFILE-REQUIREMENTS-2026-11-13.md) and
@@ -469,3 +469,89 @@ review, exact-head CI and guarded squash, verify resulting tree/parent and clean
 main synchronization, then release-check and refresh continuation. Prior885 tests/
 186 evals are reused only after source-hash reconciliation; publication-note
 changes do not replace that review or imply independent technical acceptance.
+
+
+## M1 merge receipt and M2 amendment review — 2026-11-14
+
+M1 integrated through [PR38](https://github.com/mdudaj/karakana/pull/38), squash
+`208bf72b11d9178696fa904f7eec133cfa012d20`, parent
+`fc93fbcf6b3d7f79fcffa6406c2bfc983b6f3654`, reviewed tree
+`1ec24a94fb239083a94fe5c5c6eec4a3be75b9e6`. Exact-head CI, tree/parent proof,
+postmerge release and CLI checks passed; main was clean/synced before this review
+branch. Prior885 tests/186 evals are M1 evidence, not M2 results. No deployment.
+M1 integration is satisfied; earlier integration-pending instructions are history.
+
+Owner selected this amendment review with **“execute”** after the next-task brief.
+Trace: `20261114-071536-43dc7e`; branch:
+`docs/content-m2-links-amendment-20261114`. The governing proposed contract is
+[design revision0.2](CONTENT-PROFILE-DESIGN-2026-11-13.md#m2-reference-link-amendment--revision-02-proposed-2026-11-14).
+It expands the earlier two-endpoint sketch with exact cell/record resolution,
+registered field kinds, one-to-many sets, canonical-reference conflict handling,
+non-ID row anchors, version compatibility and executable acceptance cases.
+Requirements CP01-CP10 remain accepted unchanged. This review selects a concrete
+preferred proposal, not owner acceptance of its resulting revision or M2 code.
+
+### Incremental M2 implementation instructions after agreement/task selection
+
+1. Inspect accepted CP/CD, the revision0.2 contract, this plan, actual
+   `karakana/content_profiles/{schemas,reader,checks,report,loader}.py`, both
+   packaged profiles, `karakana/tools/engineering_content.py` and
+   `tests/test_engineering_content*.py`. Reuse M1 outcomes; inspect affected
+   producer/consumer interfaces rather than repeating broad research.
+2. Record the actual owner decision and affected revisions here and in CD; start
+   M2's own implementation trace/branch after this documentation slice has been
+   accepted/integrated. Close its pre-implementation artifact gate before code.
+3. Add actual regression cases in `tests/test_engineering_content_context.py` for
+   version0.1 refusal/compatibility and the revision0.2 case list. Implement strict
+   typed locators/links in schemas, actual anchor-to-cell/source mapping in reader,
+   registered field-to-record-kind relationships in the profile/check layer and
+   canonical/explicit graph reconciliation in checks. No duplicate fact store.
+4. Preserve the remaining accepted M2 work in the existing execution instructions:
+   governing coverage, conditional omissions, open-item/claim evidence and saved
+   report verification. Include every read source/context input in the raw manifest,
+   and recompute the semantic assessment. An unchanged digest is not freshness.
+5. Run focused content/context and P02/source-compatibility tests, then the existing
+   full pytest, validation/eval, actual CLI/wheel and source-preservation gates.
+   Review source-located failures, positive/negative context cases and both byte
+   and semantic drift. Use temporary roots for tests; no working runtime fixtures.
+   Actual commands/results must be appended at delivery, not inferred from this plan.
+
+Artifacts: reuse CP and accepted CD reasoning; update only this plan and CD's
+schema/example/review appendix, plus CP's current continuation/history. No new
+PRD/ADR file, workbook, GUI/render artifact, dependency, migration or production
+schema is needed for this documentation slice. Local references, example JSON,
+whitespace and relevant existing M1 checks are the proportional verification.
+
+Research outcome: **decision_required**; implementation readiness: **false**.
+Exact owner/action: project owner accepts or revises design revision0.2 links
+contract, or chooses retained unsupported custom syntax. Then record that choice
+and select M2. This is the only open amendment decision. No code/skill/workflow,
+publication, merge, deployment or live-model change occurs in this review task.
+Recommendation: GPT-6 Sol high for integrity-sensitive implementation after its
+prerequisites; continue this conversation for scoped design acceptance, with a
+fresh conversation useful for the subsequent implementation boundary.
+
+
+## Owner amendment acceptance — 2026-11-14
+
+The owner replied **“accepted”** after the completed amendment review summary.
+This accepts design revision0.2's context0.2 `links` contract without revisions:
+unique source cells, one-to-many target sets, registered target types/baselines,
+anchors for non-ID rows, canonical-reference reconciliation and context0.1
+compatibility. The original CP01-CP10/CD01-CD12 acceptance and tailored standards
+remain intact. Earlier proposed/pending/readiness-false entries are review history;
+this scoped acceptance supersedes them for the amendment decision.
+
+Acceptance trace: `20261114-072153-949637`. Research outcome is now
+`ready_for_implementation` for the resolved design/plan, with no material amendment
+decision outstanding. This readiness does not execute M2 or claim that its code,
+new tests or verification are delivered. The owner's standing clarification that
+accepted work includes its normal validated PR/squash integration is applied to
+this completed documentation slice. Complete that integration, then present the
+M2 implementation brief; deployment and live model calls remain separate.
+
+Only acceptance/continuation metadata and this history entry changed after the
+reviewed proposal. Reuse its66 passing content tests and source-backed review;
+validate current YAML/JSON/links, diff scope and acceptance consistency before
+integration. Do not repeat the already accepted requirements/design review or ask
+again for M1 integration or this amendment's acceptance.

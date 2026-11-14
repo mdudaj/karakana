@@ -1,7 +1,13 @@
 ---
-status: decision_required
-question: Which bounded checker architecture should implement the accepted CP01-CP10 requirements while preserving P02 and honest content-review limits?
+status: ready_for_implementation
+question: Accept the bounded M2 context0.2 links amendment below while retaining accepted CD01-CD12 and context0.1 compatibility?
 evidence:
+  - source: karakana/content_profiles/schemas.py
+    finding: M1 permits context0.1 only and has no links key; its refusal is compatibility evidence, not an M2 implementation.
+  - source: karakana/content_profiles/checks.py
+    finding: Canonical reference parsing and forward/reverse baseline graphs must retain dangling-ID and coverage errors when explicit mappings are added.
+  - source: karakana/content_profiles/system-design-0.1.json
+    finding: Design response and verification tables have no identity column; unique source-cell anchors must be supported rather than invented row IDs.
   - source: docs/skills/engineering-artifact-catalogue/CONTENT-PROFILE-REQUIREMENTS-2026-11-13.md
     finding: Owner accepted CP01-CP10 and requirements/system-design first scope without revisions; design acceptance and implementation selection remain separate.
   - source: pyproject.toml
@@ -17,6 +23,9 @@ requirements:
     acceptance: Supported content produces scoped completeness findings; unsupported source shapes cannot pass. Existing structured/narrative emptiness, raw-byte freshness and export/binding results remain unchanged.
     artifact: docs/skills/engineering-artifact-catalogue/CONTENT-PROFILE-REQUIREMENTS-2026-11-13.md
 design:
+  - choice: Propose optional context0.2 links with existing from/to Locators, strict registered cell and record kinds, unique source selection, canonical-target-set reconciliation and preserved0.1 behavior.
+    rationale: Represents the promised two-endpoint operation without overloading coverage or file references; the revision0.2 appendix specifies exact errors, examples, alternatives and the pending owner decision.
+    artifact: docs/skills/engineering-artifact-catalogue/CONTENT-PROFILE-DESIGN-2026-11-13.md
   - choice: >-
       Owner accepted CD01-CD12: an opt-in local checker, packaged declarative profiles, source-selecting context, token-based narrative reading with strict table consumption, separate diagnostic/readiness outcomes and recomputed freshness verification.
     rationale: Adds checks for the accepted narrative packs without converting sources, replacing P02, introducing a second editable master or activating task-time enforcement.
@@ -51,13 +60,11 @@ artifact_choices:
     path: tests/test_engineering_artifacts.py
     rationale: Reuse existing compatibility results and add the real new content/CLI/freshness cases during implementation; parser-library spikes below are research evidence only.
 authority:
-  state: pending
-  evidence: Owner replied "accepted" on 2026-11-14 after the CD01-CD12 design summary, accepting that design without revisions. Requirements and design are settled; detailed implementation planning and task selection remain next. This does not select production implementation, dependency installation, publication or live actions.
-pending_decisions:
-  - owner: Project owner
-    question: Select verified M1 source integration; separately accept or revise the proposed context0.2 reference-edge amendment before M2?
-    next_action: Review M1 code and verified evidence for separately authorised integration; record agreement on the exact M2 amendment before M2 code.
-next_action: M1 implemented and verified locally; review source/evidence and separately authorise PR/squash integration. M2/context0.2 agreement remains later.
+  state: approved
+  evidence: Owner accepted the reviewed context0.2 links amendment with "accepted" on 2026-11-14 after its self-contained review summary. Existing CP/CD and M1 acceptance remain intact. Standing clarification that accepted work includes normal validated PR/squash integration applies to this completed documentation slice; M2 code execution is a separate next task.
+pending_decisions: []
+next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
+next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
 ---
 
 # Content-profile checker design review
@@ -69,8 +76,10 @@ Requirements: [accepted CP01-CP10](CONTENT-PROFILE-REQUIREMENTS-2026-11-13.md).
 The accepted requirements remain unchanged. The owner accepted this design on
 2026-11-14 without revisions. Original proposal/pending wording below is retained
 as review history; the acceptance entry at the end governs continuation. The
-checker is not implemented. The overall closeout remains decision_required only
-for the separate implementation task/plan and authority, not design acceptance.
+checker's M1 subset is now implemented and merged through PR38 at `208bf72`.
+The overall closeout remains decision_required for the targeted M2 amendment
+below, not for the already accepted CD01-CD12. Earlier implementation-pending
+statements remain historical; this current status and later entries govern.
 
 ## Boundary and actors
 
@@ -527,3 +536,167 @@ standard-pack checker, 885 passing tests, 186 passing evals and unchanged P02/as
 baselines. Accepted CP/CD choices are preserved; this is partial local delivery,
 not M2 completion or independent acceptance. Source review and separately
 authorised PR/squash integration are next. No new PR/merge/deployment occurred.
+
+
+## M2 reference-link amendment — revision 0.2 proposed, 2026-11-14
+
+Review trace: `20261114-071536-43dc7e`; source baseline: merged M1 `208bf72`.
+This section proposes a narrowly scoped extension of CD04/CD06/CD07/CD09/CD12.
+CP01-CP10 and accepted CD01-CD12 retain their acceptance and reasoning. The owner
+said **“execute”** after the amendment task brief, selecting review/documentation;
+acceptance of this resulting revision is not yet recorded. No production schema
+or checker behavior changes in this task. M1 integration is complete, not a blocker.
+
+### Contract and example
+
+Context `0.2` adds optional `links`; missing or empty means no explicit links.
+Each entry has exactly `from` and `to`, each using the existing Locator contract.
+All other context fields retain their accepted meanings. Context `0.1` remains
+supported, with its existing keys; even empty `links` is rejected under `0.1`.
+Context version does not change the narrative format or profile version. M1 keeps
+rejecting `0.2`; M2 implements this contract only after the decision/task gates.
+
+The following is a proposed context fragment, not a runnable M1 context or new
+source of truth. Two entries demonstrate multiple targets for the actual example's
+REQ-01 acceptance cell; existing reverse references remain independently checked.
+
+```json
+{
+  "context_version": "0.2",
+  "links": [
+    {
+      "from": {"document": "req", "heading": ["Functional requirements"], "record_id": "REQ-01", "field": "Acceptance criteria"},
+      "to": {"document": "req", "heading": ["Acceptance and verification"], "record_id": "AC-01"}
+    },
+    {
+      "from": {"document": "req", "heading": ["Functional requirements"], "record_id": "REQ-01", "field": "Acceptance criteria"},
+      "to": {"document": "req", "heading": ["Acceptance and verification"], "record_id": "AC-02"}
+    }
+  ]
+}
+```
+
+`from` must include `field` and resolve exactly once to a nonempty registered
+reference-bearing cell in a declared profiled Document. A section or whole row
+alone is not a source cell. For an identified row, use its actual `record_id`.
+For a row without an identity, use an existing explicit anchor that locates that
+row/cell uniquely, plus the field. An anchor on the containing multirow section
+is insufficient. A heading path plus field is usable only when it selects exactly
+one cell. Do not add row-number/fuzzy selectors or infer IDs from cell prose.
+Missing unique source anchors require author correction; the checker never edits
+sources to insert them. M2's reader must retain actual anchor-to-row/cell positions.
+
+`to` must include `record_id`, omit `field`, and resolve exactly once to an actual
+record of the required kind in the selected baseline. No new native IDs are
+created. Requirements cells resolve within the owning requirements document;
+design cells resolve only within their explicitly declared requirements documents.
+File-only `references`, arbitrary prose and unprofiled evidence files cannot supply
+target record inventories. Existing duplicate identity/baseline checks still apply.
+
+| Registered source cell | Permitted target record |
+| --- | --- |
+| Requirements functional `Acceptance criteria` or quality `Verification reference` | Criterion in the owning requirements document |
+| Requirements acceptance `Requirement ID` | Functional/quality requirement in the owning requirements document |
+| Design quality `Requirement / concern` or verification `Requirement / risk` | Requirement in a declared requirements baseline |
+| Design quality `Verification reference / unresolved measure` or verification `Planned check / evidence` | Criterion in a declared requirements baseline |
+
+An edge denotes the declaration for its entire source cell, not a token offset.
+Group entries by the resolved source cell; different target records are allowed.
+If canonical target IDs/ranges occur, their resolved target set must equal that
+cell's explicit target set. A matching set corroborates the existing references;
+it does not add duplicate graph edges. An additional or missing explicit target
+is a conflict. Invalid/dangling canonical IDs and malformed ranges remain errors,
+including when a valid explicit edge exists. For a nonempty custom-reference cell
+with no canonical target IDs, explicit entries declare its complete target set;
+without entries it remains unsupported. Do not claim that parsing proves the
+mapping matches every phrase: content meaning still requires substantive review.
+Q/unknown references retain their independent unresolved effects and never become
+criterion/requirement edges through this array. Forward/reverse requirement-to-
+criterion consistency and design coverage are checked on the resolved graph.
+
+Reject duplicate explicit edges after resolving locators, including different
+heading/anchor selectors for the same endpoints; reject unknown keys/fields,
+wrong kinds/baselines, absent/ambiguous selectors and conflicting mappings. A
+canonical reference matching one explicit edge is corroboration, not a duplicate
+input entry. Locator/source changes invalidate a saved report's raw manifest;
+reordering the same links may preserve its assessment digest but not byte freshness.
+Keep existing source guards, bounded reads, immutable output and no-network rules.
+Do not introduce rule/severity overrides or automatic ready/accepted states.
+
+### Rationale, alternatives and consequences
+
+A separate versioned edge array implements the already accepted disambiguation
+operation without changing `coverage` (profile-slot coverage) or `references`
+(file registration). It reuses actual source records and preserves version0.1.
+The cost is strict locator resolution, per-field typing and graph reconciliation;
+author-supplied anchors may be necessary for previously unidentifiable cells.
+Assumption: authors can provide explicit configuration and unique source anchors;
+when they cannot, report unsupported/ambiguous rather than guess.
+
+Keeping the current schema and unsupported syntax is a feasible smaller alternative,
+but leaves the promised custom-reference disambiguation unavailable. Overloading
+coverage avoids a new top-level field but changes its meaning and still fails to
+represent two endpoints clearly. A token expression language is unnecessary scope.
+
+### Source-alignment challenge and acceptance cases
+
+| Claim | Producer -> consumer and contrary state | Observed evidence / required M2 result |
+| --- | --- | --- |
+| Existing schema supports explicit edges | `schemas.validate_context` -> current checker; either0.2 or `links` supplied | M1 rejects both; retain refusal until M2 actually delivers it. |
+| All rows already have selectable identities | Packaged design quality/verification tables -> reader/locator consumer; tables declare empty identity | Observed no stable row ID; require a unique actual anchor/cell selection, never manufacture an ID or select the first row. |
+| A mapping cannot hide a bad source reference | `checks.references` -> forward/reverse graph; AC-99 plus a valid explicit target | Existing parser reports dangling ID; proposed M2 must retain that error and enforce equal canonical/mapped sets. |
+| A target of the wrong type can satisfy coverage | Profile/declared Document inventory -> edge resolver; criterion supplied for a requirement cell | Reject wrong type/document; identical-looking IDs cannot bypass declared baseline or duplicate-identity checks. |
+| Explicit references resolve semantic truth | Source prose + context -> mechanically resolved graph; misleading custom text still points to a real row | Report located declarations and require review; no authenticity, readiness or approval claim. |
+| Equivalent link order proves report freshness | Context bytes -> raw manifest and semantic digest -> verify | Recompute both; semantic equality alone cannot establish freshness. |
+
+M2 regression cases must include: absent/empty links under0.2; links under0.1;
+unknown versions/keys; one-to-many and reverse consistency; missing/ambiguous cells;
+row/cell anchors and alias-selector duplicates; wrong-kind/out-of-baseline targets;
+custom prose without mappings; complete mapped custom targets; canonical matching,
+extra/missing/conflicting targets and dangling IDs despite mappings; unresolved Q
+preservation; link-order byte changes and target-source drift. These are planned
+cases, not tests implemented or passed by this documentation task.
+
+Standards use remains the accepted tailored guidance in CP's Standards and references:
+ISO/IEC/IEEE29148:2018 for traceable requirements/verification,42010:2022 for relevant
+architecture concerns/views,ISO/IEC25010:2023 for applicable quality concerns and
+ISO/IEC/IEEE15289:2019 for information-item content. No new edition or clause-level
+conformity claim is introduced; no external standard text was newly researched.
+
+### Exact decision and readiness
+
+Preferred choice: accept this context0.2 links contract. Decision owner: project
+owner. Alternative decision: retain unsupported explicit mappings. Safe completed
+work is this source-grounded review, schema/example and plan clarification. Held
+work is activation/implementation of M2; owner agreement on this revision and
+selection of M2 are still required. `research_outcome: decision_required` and
+`implementation_ready: false` until that scoped decision is recorded. The blocker
+is exactly amendment acceptance, not M1 integration or a broad architecture restart.
+Record agreement or revisions here and in the existing plan, preserving history;
+then run M2's own prerequisite gate before code. No additional approval for the
+already completed M1 integration is outstanding.
+
+
+## Owner amendment acceptance — 2026-11-14
+
+The owner replied **“accepted”** after the completed amendment review summary.
+This accepts design revision0.2's context0.2 `links` contract without revisions:
+unique source cells, one-to-many target sets, registered target types/baselines,
+anchors for non-ID rows, canonical-reference reconciliation and context0.1
+compatibility. The original CP01-CP10/CD01-CD12 acceptance and tailored standards
+remain intact. Earlier proposed/pending/readiness-false entries are review history;
+this scoped acceptance supersedes them for the amendment decision.
+
+Acceptance trace: `20261114-072153-949637`. Research outcome is now
+`ready_for_implementation` for the resolved design/plan, with no material amendment
+decision outstanding. This readiness does not execute M2 or claim that its code,
+new tests or verification are delivered. The owner's standing clarification that
+accepted work includes its normal validated PR/squash integration is applied to
+this completed documentation slice. Complete that integration, then present the
+M2 implementation brief; deployment and live model calls remain separate.
+
+Only acceptance/continuation metadata and this history entry changed after the
+reviewed proposal. Reuse its66 passing content tests and source-backed review;
+validate current YAML/JSON/links, diff scope and acceptance consistency before
+integration. Do not repeat the already accepted requirements/design review or ask
+again for M1 integration or this amendment's acceptance.
