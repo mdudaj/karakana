@@ -59,11 +59,65 @@ Exit0 means the prompt was prepared, not product readiness. Content report is nu
 completeness/readiness/acceptance/saved verification remain not assessed. Exit2
 means refusal or I/O/drift failure, with safe located corrections. CLI syntax
 errors use stderr with empty stdout; valid JSON-mode invocations return typed JSON
-even for domain failures. No new protocol-stage gate is introduced. S2 task-time
-`docs content check`/`verify` commands are not delivered. Use existing direct M2
-check/verify below when separately requested; P02 keeps its separate contract.
+even for domain failures. No new protocol-stage gate is introduced. Explicit
+task-time check/verify is available separately below; preparation never invokes it.
 
-## Check and verify
+## Explicit task checking and saved-bundle verification (S2)
+
+`karakana docs content check` requires a request with an existing supported context.
+It uses the unchanged M2 checker, preserving every declared document, finding,
+coverage field and scoped gap. All context profile types must appear in the task's
+artifact_types; there is no filtering or substitute profile. The
+[check request](check-example.json) selects the existing synthetic default-pack
+context and no guide/template; adapt it to actual sources before product use.
+
+```bash
+karakana docs content check --request docs/skills/engineering-artifact-catalogue/content-checks/check-example.json --format json --output .karakana/examples/kdx11-check
+karakana docs content verify --request docs/skills/engineering-artifact-catalogue/content-checks/check-example.json --bundle .karakana/examples/kdx11-check --format json --output .karakana/examples/kdx11-verified
+```
+
+Each output must be fresh; choose new names on subsequent runs. Both commands
+write a bare M2 `content-report.json` and a task result0.1 `result.json` with an
+equal nested report. Default output is a fresh `.karakana/document-tasks/<run-id>/`.
+No source or old output is rewritten. Incomplete/unsupported assessments may still
+produce diagnostic bundles; a partial write is never successful and its nonempty
+files remain incomplete evidence.
+
+Task checking captures the request, optional fixed `docs/content-policy.json`,
+explicit resources and context, plus optional AGENTS.md/KARAKANA.md presence/bytes.
+It does not render planning instructions or require checkout skills/memory when
+resources are empty. The request's skill/action/audience/scope/revision remain
+caller declarations, not evidence of actual document metadata or authorisation.
+Preparation still requires its selected checkout assets. Parser loading is lazy;
+missing content support refuses the check, without an automatic install or download.
+
+`check_task(root, request_path, output=None)` and
+`verify_task(root, request_path, bundle, output=None)` in `karakana.document_tasks`
+return the same task result as the CLI. Exit0 means `checked` or `verified` with
+mechanically complete content; warnings/gaps can remain. Exit2 means a blocked,
+unsupported, incomplete, stale/mismatched or failed operation. Readiness and
+acceptance never advance automatically; review is required. No aggregate
+product-ready or accepted boolean is provided.
+
+Saved verification reads strict bounded JSON, requires equal raw/nested report
+copies, delegates bare-report verification to M2 and independently recomputes
+every deterministic task field. Guide/policy/request/code/optional-presence drift
+can make the whole bundle stale even when raw content is current; both states are
+visible. Changed saved acceptance/outcome cannot hide behind a matching digest.
+Only validated run ID/generation/output metadata and M2 generation time are
+volatile; successful verification metadata follows M2's existing rules. Check
+bundles and successful verify bundles are supported; preparation-only, foreign,
+unsupported-version, malformed and partial bundles refuse. A current incomplete
+check remains incomplete and exits2. Saved input is rechecked and never updated.
+
+Wrapper captures retain32 physical inputs/2MB each/16MB total/128KB configuration;
+M2 has its separate unchanged32-file/16MB budget (combined at most64/32MB). Saved
+result/report files each have a2MB read/write limit. Plain text shows scope first,
+separate states, all findings and scoped gap details, with terminal controls escaped.
+JSON stdout is one object; CLI syntax errors use stderr and empty stdout. These
+commands add no protocol gate, model call, source apply, export or deployment.
+
+## Direct M2 check and verify
 
 Install the optional content dependency. Development installation supplies the same
 pinned parser; other Karakana/P02 commands remain usable without it.

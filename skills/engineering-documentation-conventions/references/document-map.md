@@ -1,6 +1,6 @@
 # Engineering document resource map
 
-Map version: 0.3. Content resources are selected by the requested artifact and
+Map version: 0.4. Content resources are selected by the requested artifact and
 reader need. Explicit project instructions and declared source authority govern.
 
 | Document type | Owning skill and resources | Available content pack |
@@ -34,5 +34,7 @@ Explicit local S1 preparation is available through `karakana docs content prepar
 with a strict request: [guide and example](../../../docs/skills/engineering-artifact-catalogue/content-checks/README.md#explicit-task-preparation-s1).
 Only selected resources and fixed planning inputs enter the generated prompt;
 project defaults require opt-in. Preparation runs no model or content check and
-adds no automatic routing/enforcement. Task-time check/verify remains S2; the
-existing direct M2 module and P02 keep their separate contracts.
+adds no automatic routing/enforcement. Explicit `docs content check` and `verify`
+preserve raw M2 reports, scoped gaps and separate task provenance/freshness;
+complete/current does not establish acceptance. The existing direct M2 module
+and P02 keep their separate contracts.

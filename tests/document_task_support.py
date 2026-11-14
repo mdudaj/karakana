@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import json
+import shutil
 
 from tests.test_planner import write_memory_tree, write_skill
 
@@ -28,3 +29,24 @@ def add_policy(root, *, mode="default"):
     policy["bindings"][0]["mode"] = mode
     (root / "docs/content-policy.json").write_text(json.dumps(policy))
     return policy
+
+
+def make_assessment(root, *, version="0.2", both=True):
+    request = make_task(root)
+    request["context"] = "context.json"
+    request["task"]["action"] = "review"
+    request["task"]["artifact_types"] = ["requirements", "system-design"] if both else ["requirements"]
+    context = {"context_version": version, "namespace": "example", "documents": []}
+    for key, owner, kind in [("req", "requirements", "requirements"), ("design", "design-records", "system-design")][:2 if both else 1]:
+        shutil.copyfile(Path(__file__).parents[1] / f"skills/engineering-{owner}/assets/{kind}-example.md", root / (key + ".md"))
+        entry = {"key": key, "path": key + ".md", "format": "narrative-0.1", "profile": {"id": kind, "version": "0.1"}}
+        if key == "design":
+            entry["requirements"] = ["req"]
+        context["documents"].append(entry)
+    save_request(root, request)
+    save_context(root, context)
+    return request, context
+
+
+def save_context(root, context):
+    (root / "context.json").write_text(json.dumps(context))

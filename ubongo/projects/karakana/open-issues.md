@@ -29,7 +29,7 @@ claim. Review this file against current source and runtime evidence at each task
   not passed or release qualification. Normal validated documentary PR/squash
   integration is authorised; KDX11 requirements brief is next.
 
-- [ ] **KDX-11 · P2 · S1 accepted; validated integration in progress; S2 brief next — task-time profile selection and result reporting.**
+- [ ] **KDX-11 · P2 · S1 merged; S2 owner accepted, validated integration authorised — task-time profile selection and result reporting.**
   Evidence: M2 is opt-in; the planner loads one selected skill without recursive
   resource selection. KDX10 observed exit0 with typed not_ready/blocked states,
   actual frontmatter CP input refusing narrative support, and evidence still held.
@@ -64,7 +64,22 @@ claim. Review this file against current source and runtime evidence at each task
   Normal validated S1 publication/PR/squash integration is authorised; exact
   receipts govern its completion. No deployment is inferred. S2 check/verify
   remains unimplemented and separately selected only after accepted/merged S1.
-  Next: complete integration and present the S2 execution brief. Existing skills/templates
+  S1 integration completed through PR45 squash `d04bef7`; exact published tree,
+  parent/33 hashes, required CI, clean synced main, postmerge release and real
+  preparation CLI were verified. Owner selected S2 with “execute” on2026-11-14.
+  S2 adds explicit M2 assessment and independent saved task/report verification.
+  Implementation/local qualification completed on its own task branch:1164 tests
+  (106 new),187 evals/no warnings and default release19/19 pass; actual API/CLI/
+  wheel, saved-field tampering and state/boundary cases are retained.
+  Evidence: `docs/delivery/2026-11-14-kdx11-s2-assessment.md`; completed S2 delivery
+  review, acceptance and integration remain separate. No deployment is selected.
+  Owner accepted S2 without revisions on2026-11-14 and asked to start document
+  refinement. Standing normal validated PR/squash integration is authorised;
+  actual merge/postmerge receipts govern completion. This records the accepted
+  prepublication checkpoint. No additional Karakana feature/research slice is
+  selected: after integration, load ent-meal's own latest handoff and expose its
+  document-refinement brief here. KDX10 evidence holds do not block that work.
+  Existing skills/templates
   already support actual project-document drafting; KDX11 automation is not its
   prerequisite. Keep KDX10's separate evidence gaps visible.
 

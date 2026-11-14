@@ -1,7 +1,7 @@
 ---
 name: engineering-documentation-conventions
 description: Select and tailor engineering documentation resources and apply shared language, reference and source-authority conventions during requested document authoring or review.
-version: 0.1.4
+version: 0.1.5
 risk_level: medium
 category: documentation
 scope: bundled
@@ -151,7 +151,14 @@ For explicitly selected local preparation, `karakana docs content prepare`
 loads only selected resources and fixed project context into new-only prompt/result
 bundles. Project defaults require explicit opt-in; declared locks cannot be silently
 overridden. Preparation does not draft product documents, check content or run a
-model; completeness/readiness/acceptance remain not assessed. S2 task-time check/verify is not delivered.
+model; completeness/readiness/acceptance remain not assessed.
+`karakana docs content check` explicitly checks declared context documents and
+saves equal raw M2/task report copies. `karakana docs content verify` recomputes
+the saved report and every deterministic task field; raw content can be current
+while resource/policy/request/code changes make the whole bundle stale.
+Complete/current never means accepted; review remains required and scoped gaps
+retain their effects, resolver and next action where declared. Readiness and
+acceptance never advance automatically. No automatic enforcement is added.
 Existing direct M2 and P02 tools retain their contracts.
 See the [preparation guide](../../docs/skills/engineering-artifact-catalogue/content-checks/README.md#explicit-task-preparation-s1).
 
