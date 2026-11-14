@@ -29,7 +29,7 @@ claim. Review this file against current source and runtime evidence at each task
   not passed or release qualification. Normal validated documentary PR/squash
   integration is authorised; KDX11 requirements brief is next.
 
-- [ ] **KDX-11 · P2 · requirements merged; design accepted; planning brief next — task-time profile selection and result reporting.**
+- [ ] **KDX-11 · P2 · requirements/design merged; implementation plan accepted; S1 brief next — task-time profile selection and result reporting.**
   Evidence: M2 is opt-in; the planner loads one selected skill without recursive
   resource selection. KDX10 observed exit0 with typed not_ready/blocked states,
   actual frontmatter CP input refusing narrative support, and evidence still held.
@@ -48,9 +48,14 @@ claim. Review this file against current source and runtime evidence at each task
   `docs/research/2026-11-14-task-time-content-design.md`; owner replied
   “reviwed accepted” after its summary on2026-11-14, without revisions.
   No executable implementation or default gate was activated.
-  Next: complete normal validated documentary PR/squash integration, then present
-  a separate implementation-planning brief. Planning/code follow only if selected.
-  Existing skills/templates
+  Design integrated through PR43 squash `29df39d`; no design approval/integration
+  remains. Owner selected planning with “execute”. Plan revision0.1 IP01-IP08 is
+  drafted in `docs/research/2026-11-14-task-time-content-implementation-plan.md`:
+  S1 guarded resource/prompt preparation, then S2 M2 reporting/saved verification
+  after S1 acceptance/integration. Owner replied “accepted” after the IP01-IP08
+  revision0.1 summary on2026-11-14 without revisions; code execution remains separate.
+  Next: complete normal validated documentary PR/squash integration of the plan,
+  then present the separate S1 implementation brief. Existing skills/templates
   already support actual project-document drafting; KDX11 automation is not its
   prerequisite. Keep KDX10's separate evidence gaps visible.
 
