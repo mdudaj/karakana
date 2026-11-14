@@ -9,6 +9,60 @@ This is separate from [P02](../P02.md): exact-table validation, native bindings,
 workbook exports and feedback retain their contracts. Narrative checking does not
 add P02 export support. No planner, hook, skill selection or protocol runs it automatically.
 
+## Explicit task preparation (S1)
+
+`karakana docs content prepare` prepares a prompt and task result from an explicit
+request. It does not draft product documents, check content, run a model, load a
+handoff or activate a policy. Text is default; JSON stdout contains one result.
+
+```bash
+karakana docs content prepare --request docs/skills/engineering-artifact-catalogue/content-checks/prepare-example.json
+karakana docs content prepare --request docs/skills/engineering-artifact-catalogue/content-checks/prepare-example.json --format json
+```
+
+The [example request](prepare-example.json) is an illustrative instruction with no
+product facts or acceptance. Adapt task/action/audience/types/scope/revision and
+selected resources to the real task. A request must declare request_version0.1,
+project, skill, task, resources, use_project_defaults and nullable context. See the
+[accepted request/policy/result contracts](../../../research/2026-11-14-task-time-content-design.md).
+All paths except --root are root-relative. Selected resources are literal local
+inputs, not recursively followed links; examples remain labelled synthetic. An
+empty resource list is valid and leaves recommendations unselected. Checkout
+skills/memory/assets must exist when required; the wheel does not contain them.
+Preparation works without the optional content parser.
+
+The prepared prompt preserves explicit action, task text, audience, scope and
+revision, including when a custom planner template omits task/output fields.
+Author/review/inquiry requests are not silently converted to implementation plans.
+
+Only the fixed optional `docs/content-policy.json` is considered. Project defaults
+require `use_project_defaults: true`; task overrides are recorded. Declared locks
+require an identical explicit selection, and cannot be waived by a command flag.
+Absent policy is recorded; no policy file is installed or activated by this feature.
+Prose instructions and scoped owner authority remain subject to substantive review.
+
+Optional context0.1/0.2 selects profiles/versions through the existing M2 contract.
+Preparation validates declarations only: it does not read document sources or
+assess content. Sources may not exist yet; unsafe declarations or unsupported
+formats/profiles are refused, with no conversion or fallback. Requests cannot
+filter a context's document/profile types out of coverage.
+
+Successful calls create a fresh `.karakana/document-tasks/<run-id>/` with
+`prompt.md` and `result.json`. --output can choose another fresh directory under
+.karakana/; existing directories/files are refused. Inputs are captured/hashed
+and rechecked for bytes, target and presence drift, along with wrapper code.
+Limits:32 physical inputs,2MB per input,16MB total,128KB per JSON configuration;
+result JSON is at most2MB. Failures preserve sources/old outputs; nonempty partial
+bundles remain incomplete evidence, never silently overwritten or accepted.
+
+Exit0 means the prompt was prepared, not product readiness. Content report is null;
+completeness/readiness/acceptance/saved verification remain not assessed. Exit2
+means refusal or I/O/drift failure, with safe located corrections. CLI syntax
+errors use stderr with empty stdout; valid JSON-mode invocations return typed JSON
+even for domain failures. No new protocol-stage gate is introduced. S2 task-time
+`docs content check`/`verify` commands are not delivered. Use existing direct M2
+check/verify below when separately requested; P02 keeps its separate contract.
+
 ## Check and verify
 
 Install the optional content dependency. Development installation supplies the same

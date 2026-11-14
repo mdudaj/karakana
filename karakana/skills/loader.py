@@ -32,9 +32,14 @@ class SkillLoader:
         if not skill_path.exists():
             raise FileNotFoundError(f"Skill not found: {skill_path}")
 
-        metadata, body = parse_skill_markdown(skill_path.read_text(encoding="utf-8"))
-        activation = _parse_activation(metadata.get("activation"))
-        return Skill(
+        return skill_from_markdown(skill_path, skill_path.read_text(encoding="utf-8"), name)
+
+
+def skill_from_markdown(skill_path: Path, source: str, name: str) -> Skill:
+    """Construct the same skill from explicitly captured text, without file reads."""
+    metadata, body = parse_skill_markdown(source)
+    activation = _parse_activation(metadata.get("activation"))
+    return Skill(
             name=str(metadata.get("name", name)),
             description=str(metadata.get("description", "")),
             version=str(metadata.get("version", "")),

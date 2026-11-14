@@ -31,6 +31,7 @@ from karakana.config.loader import load_config
 from karakana.config.summary import render_config, render_config_validation, render_paths
 from karakana.config.validator import validate_config
 from karakana.docs.generator import check_docs, command_reference
+from karakana.document_tasks.cli import app as document_content_app
 from karakana.dogfood.backlog import generate_backlog
 from karakana.dogfood.checklist import generate_checklist
 from karakana.dogfood.findings import analyze_dogfood
@@ -141,6 +142,7 @@ copilot_app = typer.Typer(help="Start GitHub Copilot CLI with Karakana handoff c
 crosslink_app = typer.Typer(help="Detect reusable cross-project knowledge.")
 dogfood_app = typer.Typer(help="Dogfood Karakana on itself.")
 docs_app = typer.Typer(help="Generate and check Karakana documentation.")
+docs_app.add_typer(document_content_app, name="content")
 eval_app = typer.Typer(help="Run deterministic Karakana evaluations.")
 github_app = typer.Typer(help="Generate safe GitHub workflow artifacts.")
 improve_app = typer.Typer(help="Generate self-improvement proposals from traces.")

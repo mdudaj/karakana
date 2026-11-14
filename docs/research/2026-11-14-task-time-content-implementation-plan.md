@@ -304,3 +304,18 @@ This acceptance does not start S1/S2 code, add automatic gates, invoke models or
 deploy. TT/DD approvals remain settled, and KDX10's independent evidence holds
 remain open. Exact integration/continuation receipts belong to the release
 trace and append-only handoff; actual project-document drafting is independent.
+
+## S1 execution selected — 2026-11-14
+
+After plan integration PR44/`500123b`, the owner selected the exact S1 execution
+brief with **“execute”**. S1.1-S1.5 is implemented on its own task branch; current
+actual verification and delivery-review state are recorded in the
+[S1 delivery record](../delivery/2026-11-14-kdx11-s1-preparation.md).
+This history preserves the earlier planning checkpoint. IP01-IP08 and TT/DD
+contracts are unchanged. S1 delivery acceptance/integration remains separate;
+S2 has not started. Do not infer whole KDX11 completion from S1 preparation.
+
+Owner subsequently accepted completed S1 without revisions on2026-11-14. Normal
+validated S1 publication/PR/squash integration is authorised by the standing
+convention; exact receipts govern its completion. IP01-IP08 remain unchanged.
+After accepted/merged S1, present the S2 execution brief; S2 has not been selected.

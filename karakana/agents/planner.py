@@ -2,12 +2,29 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 
 from karakana.memory.ubongo import UbongoMemory
 from karakana.models.router import route_model
 from karakana.protocols.lifecycle import render_engineering_process
 from karakana.skills.loader import SkillLoader
+from karakana.skills.schemas import Skill
+
+
+@dataclass(frozen=True)
+class PlanningInputs:
+    """Already captured values for rendering; construction grants no execution."""
+
+    project: str
+    task: str
+    selected_skill: Skill
+    project_memory: str
+    project_contract: str
+    template: str
+    model_route: dict
+    skillpack_context: str | None = None
+    required_output: str | None = None
 
 
 def compose_planning_prompt(
@@ -37,19 +54,27 @@ def compose_planning_prompt(
     template = _read_optional(repo_root / "prompts" / "planner.prompt.md", _default_template())
 
     route = model_route or route_model("planning")
+    return render_planning_prompt(PlanningInputs(
+        project, task, selected_skill, project_memory, project_contract, template,
+        route, skillpack_context,
+    ))
+
+
+def render_planning_prompt(inputs: PlanningInputs) -> str:
+    """Render captured values without reading files, writing output or calling models."""
     values = {
-        "task": task,
-        "project": project,
-        "selected_skill": _render_skill(selected_skill),
-        "project_memory": project_memory,
-        "project_contract": project_contract,
-        "model_role_guidance": _render_model_role_guidance(route),
-        "required_output": _required_output(),
+        "task": inputs.task,
+        "project": inputs.project,
+        "selected_skill": _render_skill(inputs.selected_skill),
+        "project_memory": inputs.project_memory,
+        "project_contract": inputs.project_contract,
+        "model_role_guidance": _render_model_role_guidance(inputs.model_route),
+        "required_output": inputs.required_output if inputs.required_output is not None else _required_output(),
         "safety_rules": _safety_rules(),
     }
-    prompt = template.format(**values).strip()
-    if skillpack_context:
-        prompt += "\n\n## Skillpack Context\n\n" + skillpack_context.strip()
+    prompt = inputs.template.format(**values).strip()
+    if inputs.skillpack_context:
+        prompt += "\n\n## Skillpack Context\n\n" + inputs.skillpack_context.strip()
     return prompt + "\n\n" + render_engineering_process()
 
 

@@ -1,0 +1,14 @@
+{
+  "request_version": "0.1", "project": "karakana", "skill": "engineering-requirements",
+  "task": {
+    "id": "preparation-example", "action": "review",
+    "text": "Prepare instructions for a requirements review. This example defines no product facts or acceptance.",
+    "audience": "Karakana maintainers", "scope": "Illustrative local requirements-review preparation",
+    "revision": "example-1", "artifact_types": ["requirements"]
+  },
+  "resources": [
+    {"artifact_type": "requirements", "role": "guide", "path": "skills/engineering-requirements/references/requirements-template-guide.md", "revision": "0.1"},
+    {"artifact_type": "requirements", "role": "template", "path": "skills/engineering-requirements/assets/requirements-template.md", "revision": "0.1"}
+  ],
+  "use_project_defaults": false, "context": null
+}
