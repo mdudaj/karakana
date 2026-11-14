@@ -1,0 +1,90 @@
+{
+  "context_version": "0.2",
+  "namespace": "example",
+  "documents": [
+    {
+      "key": "req",
+      "path": "tests/fixtures/engineering_content/compact.md",
+      "format": "narrative-0.1",
+      "profile": {
+        "id": "requirements",
+        "version": "0.1"
+      }
+    }
+  ],
+  "references": [
+    {
+      "key": "governing",
+      "path": "tests/fixtures/engineering_content/governing.md",
+      "format": "narrative-0.1",
+      "purpose": "Canonical synthetic records"
+    },
+    {
+      "key": "observations",
+      "path": "tests/fixtures/engineering_content/observations.md",
+      "format": "narrative-0.1",
+      "purpose": "Synthetic provenance and unresolved scope"
+    }
+  ],
+  "coverage": [
+    {
+      "document": "req",
+      "slot": "functional",
+      "source": {
+        "document": "governing",
+        "heading": [
+          "Requirement records"
+        ]
+      }
+    },
+    {
+      "document": "req",
+      "slot": "quality",
+      "source": {
+        "document": "governing",
+        "heading": [
+          "Quality records"
+        ]
+      }
+    },
+    {
+      "document": "req",
+      "slot": "acceptance",
+      "source": {
+        "document": "governing",
+        "heading": [
+          "Criteria"
+        ]
+      }
+    }
+  ],
+  "omissions": [
+    {
+      "document": "req",
+      "slot": "interfaces",
+      "rationale": {
+        "document": "observations",
+        "anchor": "rationale"
+      }
+    }
+  ],
+  "links": [
+    {
+      "from": {
+        "document": "governing",
+        "heading": [
+          "Requirement records"
+        ],
+        "record_id": "REQ-01",
+        "field": "Acceptance criteria"
+      },
+      "to": {
+        "document": "governing",
+        "heading": [
+          "Criteria"
+        ],
+        "record_id": "AC-01"
+      }
+    }
+  ]
+}

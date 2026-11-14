@@ -10,7 +10,7 @@ from .loader import sha
 from .schemas import ContentReport
 
 
-CODE = ("__init__.py", "schemas.py", "loader.py", "reader.py", "checks.py", "report.py")
+CODE = ("__init__.py", "schemas.py", "loader.py", "reader.py", "checks.py", "report.py", "context.py")
 
 
 def json_bytes(data):
@@ -39,26 +39,33 @@ def failure(exc, *, path="context"):
             "location": exc.location or {"path": path, "line": 1}, "message": str(exc)}
 
 
-def build_report(namespace, documents, findings, gaps, inputs, profiles, *, manifest=None):
+def build_report(namespace, documents, findings, gaps, inputs, profiles, *, manifest=None, details=None):
     documents = sorted(documents, key=lambda d: d["key"])
     findings = sorted(findings, key=lambda f: (f["location"].get("path", ""), f["location"].get("line", 0),
-                                               f["rule_id"], f["location"].get("record_id", ""), f["message"]))
-    gaps = sorted(gaps, key=lambda g: (g["document"], g["location"]["line"], g["record_id"] or ""))
+                                               f["rule_id"], f["location"].get("record_id", ""), f["message"], json_bytes(f)))
+    gaps = sorted(gaps, key=lambda g: (g["document"], g["location"]["line"], g["record_id"] or "", json_bytes(g)))
     errors = [f for f in findings if f["severity"] == "error"]
     status = "unsupported" if any(f["category"] == "unsupported" for f in errors) else "incomplete" if errors else "complete"
     coverage = {
-        "scope": "M1 standard narrative packs only",
-        "supported": ["default_profile_coverage", "record_integrity", "selected_requirement_links", "current_run_manifest"],
-        "advanced_context": "unsupported", "saved_report_verification": "unsupported",
+        "scope": "Explicitly selected standard and tailored narrative profiles",
+        "supported": ["default_profile_coverage", "record_integrity", "selected_requirement_links", "current_run_manifest",
+                      "unique_source_locators", "governing_coverage", "conditional_omissions", "context_links_0.2",
+                      "located_open_items", "located_claim_evidence", "recomputed_saved_reports"],
+        "advanced_context": "supported", "saved_report_verification": "supported",
+        "claims": sorted((details or {}).get("claims", []), key=lambda x: json_bytes(x)),
         "unassessed": ["semantic_correctness", "evidence_authenticity", "omission_applicability",
-                       "open_item_resolution_details", "unmapped_prose_claims", "product_readiness", "acceptance"],
+                       "unmapped_open_item_details", "unmapped_prose_claims", "product_readiness", "acceptance"],
     }
+    for document in documents:
+        affected = any(any(scope["document"] == document["key"] for scope in gap.get("affected_scopes", []))
+                       if gap.get("affected_scopes") else gap["document"] == document["key"] for gap in gaps)
+        document.update(readiness="unresolved" if affected else "not_assessed", acceptance="not_assessed", review_required=True)
     assessment = {"namespace": namespace, "documents": documents, "findings": findings,
                   "open_acceptance_items": gaps, "coverage": coverage, "completeness": status}
     if manifest is None:
         manifest = {"sources": inputs.manifest(), "profiles": sorted(profiles, key=lambda x: x["id"]),
                     "checker": checker_fingerprint(), "parser_version": parser_version()}
-    data = {"report_version": "0.1", **assessment,
+    data = {"report_version": "0.2", **assessment,
             "review_required": True, "readiness": "unresolved" if gaps else "not_assessed",
             "acceptance": "not_assessed", "generated_utc": datetime.now(timezone.utc).isoformat(),
             "manifest": manifest,
@@ -69,11 +76,15 @@ def build_report(namespace, documents, findings, gaps, inputs, profiles, *, mani
 def render_text(report):
     data = report.to_dict()
     if report.ok:
-        first = (f"Content checks passed for the selected M1 profiles. Review is required; "
+        first = (f"Content checks passed for the selected profiles. Review is required; "
                  f"{len(data['open_acceptance_items'])} source gap entries remain unresolved.")
     else:
         first = "Content check is " + data["completeness"] + ". Correct the reported errors or select supported content."
-    lines = [first, "Saved-report verification is not supported in M1. Run check again for current inputs."]
+    lines = [first]
+    if data.get("verification") == "current":
+        lines.insert(0, "Saved report matches the current inputs and recomputed checks. Review is still required.")
+    elif data.get("verification"):
+        lines.insert(0, "Saved report is stale, mismatched or incompatible. Run check again for current inputs.")
     for finding in data["findings"]:
         loc = finding["location"]
         lines.append(f"{finding['rule_id']} {finding['severity']} {loc.get('path', 'input')}:{loc.get('line', 1)}: {finding['message']}")

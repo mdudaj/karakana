@@ -63,8 +63,8 @@ authority:
   state: approved
   evidence: Owner accepted the reviewed context0.2 links amendment with "accepted" on 2026-11-14 after its self-contained review summary. Existing CP/CD and M1 acceptance remain intact. Standing clarification that accepted work includes normal validated PR/squash integration applies to this completed documentation slice; M2 code execution is a separate next task.
 pending_decisions: []
-next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
-next_action: Complete validated PR/squash integration of the accepted documentation slice, then present the M2 implementation task brief using these settled artifacts.
+next_action: Complete owner-approved M2 source PR and validated squash integration; release-check/sync and refresh the handoff, then select the next bounded task.
+next_action: Complete owner-approved M2 source PR and validated squash integration; release-check/sync and refresh the handoff, then select the next bounded task.
 ---
 
 # Content-profile checker design review
@@ -700,3 +700,35 @@ reviewed proposal. Reuse its66 passing content tests and source-backed review;
 validate current YAML/JSON/links, diff scope and acceptance consistency before
 integration. Do not repeat the already accepted requirements/design review or ask
 again for M1 integration or this amendment's acceptance.
+
+
+## M2 implementation continuation — 2026-11-14
+
+Owner selected M2 with **“execute”**. The accepted CP/CD/revision0.2 contracts are
+now implemented and verified locally, with no new design decision outstanding.
+See the [compact delivery results](CONTENT-PROFILE-IMPLEMENTATION-PLAN-2026-11-14.md#m2-local-delivery-results--2026-11-14)
+for actual behavior, source-alignment cases, commands/results and limitations.
+This is agent-verified local delivery, not owner acceptance, integration or deployment.
+Review this completed slice next; accepted work includes its normal validated
+PR/squash integration under the standing owner clarification. Historical M1/M2
+planning/pending entries remain preserved and are superseded by current results.
+
+
+## Owner M2 delivery acceptance and integration approval — 2026-11-14
+
+The owner replied **“accepted, squash merge”** after the completed M2 delivery
+summary (961 passing tests,186 passing evals and the local uncommitted state).
+This accepts the verified M2 delivery without revisions and explicitly authorises
+normal task-branch commit/push, PR publication, exact-head validation and squash
+integration. No separate integration confirmation is outstanding. CP/CD/revision0.2
+acceptance remains intact; this is owner delivery acceptance, not independent
+technical review or standards certification.
+
+Release trace: `20261114-075748-428824`. All30 delivered file hashes and16 protected
+originals were reconciled before this acceptance-only update. Reuse the existing
+961-test/186-eval and actual wheel/CLI evidence; code/tests/fixtures/skill content
+remain unchanged. Complete guarded squash and verify reviewed tree/sole parent,
+clean synced main and release checks; record actual outcome in the append-only
+handoff. Deployment, live model calls and later automatic selection/enforcement
+or client/pilot work remain separate. Earlier delivery-pending/local-only states
+are history, superseded by this scoped acceptance and later merge evidence.
