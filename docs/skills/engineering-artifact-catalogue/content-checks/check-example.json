@@ -1,0 +1,17 @@
+{
+  "request_version": "0.1",
+  "project": "karakana",
+  "skill": "engineering-requirements",
+  "task": {
+    "id": "assessment-example",
+    "action": "review",
+    "text": "Mechanically check the explicitly selected synthetic examples. These are not product facts or acceptance evidence.",
+    "audience": "Karakana maintainers",
+    "scope": "Illustrative local requirements and system-design assessment",
+    "revision": "example-1",
+    "artifact_types": ["requirements", "system-design"]
+  },
+  "resources": [],
+  "use_project_defaults": false,
+  "context": "docs/skills/engineering-artifact-catalogue/content-checks/default-packs.json"
+}

@@ -319,3 +319,30 @@ Owner subsequently accepted completed S1 without revisions on2026-11-14. Normal
 validated S1 publication/PR/squash integration is authorised by the standing
 convention; exact receipts govern its completion. IP01-IP08 remain unchanged.
 After accepted/merged S1, present the S2 execution brief; S2 has not been selected.
+
+
+## S2 execution selected — 2026-11-14
+
+S1 was squash merged through PR45 `d04bef7`; source/tree/parent/33 hashes, both
+applicable CI workflows, clean main and postmerge release/CLI were verified. Owner
+selected S2 with “execute” after the self-contained S2 brief. S2.1-S2.4 implementation
+and local qualification proceed under trace `20261114-105904-203af5` on its own
+task branch. The [S2 delivery record](../delivery/2026-11-14-kdx11-s2-assessment.md)
+records current evidence; no new TT/DD/IP decision or automatic gate is introduced.
+Earlier pending S1/S2 wording preserves historical checkpoints. S2 delivery
+acceptance/integration and deployment are not inferred from execution authority.
+
+
+S2 delivery checkpoint: S2.1-S2.4 are implemented and locally verified,1164 tests
+(106 new over S1),187 evals/no warnings, default release19/19 and actual CLI/wheel
+state/provenance checks pass. Exact source/receipts and A01-A12 evidence are in
+the S2 delivery record and trace. Owner completed-delivery review is pending; no
+S2 PR/merge or deployment is inferred. Accepted TT/DD/IP rows remain unchanged.
+
+
+Owner accepted the completed S2 delivery on2026-11-14, without revisions, and
+asked to start document refinement. Normal validated PR/squash integration is
+authorised. IP01-IP08/TT/DD contracts are unchanged; no further Karakana feature
+slice is selected. After actual integration/postmerge verification, load ent-meal's
+latest handoff and expose the current document-refinement brief in conversation.
+Acceptance and integration are distinct; exact release receipts govern completion.

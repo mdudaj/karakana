@@ -30,3 +30,30 @@ def save_preparation(inputs, result, prompt, output, recheck):
     except (OSError, ArtifactError, UnicodeError) as exc:
         raise TaskError("Output was refused or incomplete. Existing files were preserved; choose a permitted fresh directory.",
                         code="DT-OUTPUT-001", outcome="failed") from exc
+
+
+def save_assessment(inputs, result, output, recheck):
+    """Publish the exact bare report, then its wrapper; reserve a new directory."""
+    requested = str(output) if output is not None else ".karakana/document-tasks/" + result["run"]["id"]
+    target = inputs.path(requested)
+    relative = target.relative_to(inputs.root)
+    if len(relative.parts) < 2 or relative.parts[0] != ".karakana":
+        raise TaskError("Choose a fresh output directory under .karakana/.", code="DT-OUTPUT-001", outcome="failed")
+    result["run"]["bundle"] = relative.as_posix()
+    bare = json_bytes(result["content_report"])
+    if max(len(bare), len(json_bytes(result))) > MAX_SOURCE_BYTES:
+        raise TaskError("Result/report exceeds the supported saved-report byte limit. Reduce selected inputs.", code="DT-LIMIT-001", outcome="failed")
+    recheck()
+    try:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if inputs.path(requested) != target:
+            raise TaskError("The output target changed. Choose a fresh permitted output.", code="DT-OUTPUT-001", outcome="failed")
+        target.mkdir(exist_ok=False)
+        write_new(inputs.root, {target / "content-report.json": bare})
+        recheck()
+        if inputs.path(requested) != target:
+            raise TaskError("The output target changed before publication.", code="DT-OUTPUT-001", outcome="failed")
+        write_new(inputs.root, {target / "result.json": json_bytes(result)})
+    except (OSError, ArtifactError, UnicodeError) as exc:
+        raise TaskError("Output was refused or incomplete. Existing files were preserved; choose a permitted fresh directory.",
+                        code="DT-OUTPUT-001", outcome="failed") from exc

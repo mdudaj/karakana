@@ -1,5 +1,5 @@
 id: engineering-documentation-conventions-explicit-preparation
-name: Explicit S1 preparation and authority instruction coverage
+name: Explicit preparation and assessment authority instruction coverage
 description: Source-text coverage only; actual API and CLI behavior has separate tests.
 suite: skills
 risk_level: medium
@@ -15,7 +15,10 @@ expectations:
     - explicit opt-in
     - new-only
     - not assessed
-    - S2 task-time check/verify is not delivered
+    - karakana docs content check
+    - karakana docs content verify
+    - every deterministic task field
+    - acceptance never advance automatically
     - P02 tools retain their contracts
   forbidden_patterns:
     - (?m)^git push

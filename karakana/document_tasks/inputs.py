@@ -23,7 +23,7 @@ def credential_path(path):
 
 def fingerprint():
     names = ["document_tasks/" + n + ".py" for n in
-             ("__init__", "schemas", "inputs", "selection", "prepare", "report", "bundles", "cli")]
+             ("__init__", "schemas", "inputs", "selection", "prepare", "assessment", "verify", "report", "bundles", "cli")]
     names += ["cli.py", "agents/planner.py", "skills/loader.py", "skills/schemas.py",
               "memory/ubongo.py", "memory/schemas.py", "models/router.py", "protocols/lifecycle.py",
               "content_profiles/schemas.py", "content_profiles/loader.py", "tools/engineering_artifacts.py"]

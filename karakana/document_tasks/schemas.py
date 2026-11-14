@@ -1,6 +1,7 @@
 """Strict S1 request/policy contracts; M2 context semantics stay in M2."""
 
 from copy import deepcopy
+import json
 import re
 
 from karakana.content_profiles.schemas import ContentError, strict_json, shape, text
@@ -38,8 +39,12 @@ def contract(value, required, pointer=""):
 
 def decode(raw):
     try:
-        return strict_json(raw)
-    except (ContentError, UnicodeError) as exc:
+        value = strict_json(raw)
+        # JSON numeric exponents can overflow to infinity without using NaN/Infinity
+        # tokens; escaped lone surrogates also need rejecting before later output.
+        json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
+        return value
+    except (ContentError, UnicodeError, ValueError, OverflowError) as exc:
         raise TaskError("Use strict UTF-8 JSON without duplicate keys, nonstandard numbers or excessive nesting.") from exc
 
 

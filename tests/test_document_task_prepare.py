@@ -36,7 +36,7 @@ def test_selected_capture_and_saved_result_are_actual_and_source_preserving(tmp_
     assert result["content_report"] is None
     assert result["freshness"] == {"inputs": "current", "saved_bundle": "not_assessed"}
     assert result["selection"]["instruction_review_required"] is True
-    assert result["manifest"]["wrapper"]["version"] == "0.1.0"
+    assert result["manifest"]["wrapper"]["version"] == "0.2.0"
     assert all(p.read_bytes() == raw for p, raw in before.items())
 
 

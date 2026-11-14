@@ -3,7 +3,7 @@ name: engineering-design-records
 description: Author or revise Markdown ADRs and design descriptions that retain alternatives,
   stakeholder concerns, quality constraints and authoritative interface or diagram
   links.
-version: 0.2.3
+version: 0.2.4
 risk_level: medium
 category: documentation
 scope: bundled
@@ -138,7 +138,10 @@ P02 export support or automatic task enforcement.
 For explicitly selected local preparation, `karakana docs content prepare`
 loads only selected resources and fixed project context into a new prompt/result
 bundle. It does not draft product documents, check content or run a model. Content
-and acceptance remain not assessed; task-time check/verify integration is later S2 work.
+and acceptance remain not assessed. Explicit `karakana docs content check` checks
+the selected narrative context; `karakana docs content verify` recomputes saved
+content and task provenance. Complete/current does not mean accepted; scoped gaps,
+review and unassessed acceptance remain visible. No automatic gate is introduced.
 See the [preparation guide](../../docs/skills/engineering-artifact-catalogue/content-checks/README.md#explicit-task-preparation-s1).
 
 Check source adequacy and observable acceptance with actual reviewers/evidence.

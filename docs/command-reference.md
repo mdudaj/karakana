@@ -410,18 +410,20 @@ karakana release checklist
 
 ## docs
 
-Purpose: Generate/check documentation and explicitly prepare document tasks.
+Purpose: Generate/check documentation and explicitly prepare, check or verify document tasks.
 
 Common commands:
 ```bash
 karakana docs command-reference
 karakana docs check
+karakana docs content check --request docs/skills/engineering-artifact-catalogue/content-checks/check-example.json
+karakana docs content verify --request REQUEST.json --bundle .karakana/document-tasks/CHECK-RUN-ID
 karakana docs content prepare --request docs/skills/engineering-artifact-catalogue/content-checks/prepare-example.json
 ```
 
-Safe default behavior: Command reference previews by default; content prepare creates a fresh local prompt/result bundle without checking content or running a model.
+Safe default behavior: Command reference previews by default; content prepare/check/verify create fresh local bundles, preserve separate completeness/freshness/acceptance states and run no model.
 
-Write/execute flags: --write for command reference; content prepare --output selects a fresh directory under .karakana/
+Write/execute flags: --write for command reference; content commands --output select a fresh directory under .karakana/; verify requires --bundle
 
 Example:
 ```bash

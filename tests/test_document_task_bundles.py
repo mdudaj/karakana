@@ -84,3 +84,54 @@ def test_oversized_saved_result_refuses_before_publication(tmp_path, monkeypatch
     result = prepare_task(tmp_path, "request.json")
     assert result["outcome"] == "failed"
     assert not list(tmp_path.glob('.karakana/**/result.json'))
+
+
+@pytest.mark.parametrize('operation', ['check','verify'])
+@pytest.mark.parametrize('fault', ['existing','outside','partial','resource_drift','source_drift','code_drift','limit','target_drift'])
+def test_assessment_output_safety_preserves_sources_and_incomplete_evidence(tmp_path, monkeypatch, operation, fault):
+    from karakana.document_tasks import bundles, assessment, check_task, verify_task
+    from tests.document_task_support import make_assessment
+    make_assessment(tmp_path)
+    saved=check_task(tmp_path,'request.json') if operation=='verify' else None
+    before={p:p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
+    output='.karakana/output';writer=bundles.write_new;calls=0
+    if fault=='existing':
+        d=tmp_path/output;d.mkdir(parents=True);(d/'result.json').write_text('Retained owner annotation')
+    elif fault=='outside':output='docs/output'
+    elif fault=='limit':monkeypatch.setattr(bundles,'MAX_SOURCE_BYTES',100)
+    elif fault=='code_drift':
+        original=assessment.fingerprint;n=0
+        def code():
+            nonlocal n
+            n+=1;x=original()
+            if n>1:x['sha256']='changed'
+            return x
+        monkeypatch.setattr(assessment,'fingerprint',code)
+    def write(root,outputs):
+        nonlocal calls
+        calls+=1
+        if fault=='partial' and calls==2:
+            next(iter(outputs)).write_text('{"partial":');raise OSError('Synthetic disk failure')
+        writer(root,outputs)
+        if calls==1:
+            if fault=='resource_drift':(tmp_path/'docs/guide.md').write_text('Changed guide during output')
+            elif fault=='source_drift':
+                p=tmp_path/'req.md';p.write_text(p.read_text()+'\nChanged source during output.\n')
+            elif fault=='target_drift':
+                d=tmp_path/output;d.rename(tmp_path/'.karakana/retained-partial');d.symlink_to(tmp_path/'docs',target_is_directory=True)
+    monkeypatch.setattr(bundles,'write_new',write)
+    result=(verify_task(tmp_path,'request.json',saved['run']['bundle'],output) if saved
+            else check_task(tmp_path,'request.json',output))
+    assert result['outcome'] not in {'checked','verified'}
+    if fault=='partial':
+        assert (tmp_path/output/'result.json').read_text()=='{"partial":'
+        assert (tmp_path/output/'content-report.json').is_file()
+    elif fault in {'resource_drift','source_drift'}:
+        assert not (tmp_path/output/'result.json').exists()
+        assert (tmp_path/output/'content-report.json').is_file()
+    elif fault=='existing':assert (tmp_path/output/'result.json').read_text()=='Retained owner annotation'
+    elif fault=='target_drift':
+        assert not (tmp_path/'docs/result.json').exists()
+        assert (tmp_path/'.karakana/retained-partial/content-report.json').is_file()
+    else:
+        assert all(p.read_bytes()==raw for p,raw in before.items())
