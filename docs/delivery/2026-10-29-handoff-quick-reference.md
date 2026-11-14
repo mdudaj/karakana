@@ -31,7 +31,7 @@ authority:
   state: approved
   evidence: Owner explicitly requests research and enhancement of harness handoff output. Local reviewable code/tests/docs are in scope; no push, merge, external messages or deployment.
 pending_decisions: []
-next_action: Pass prerequisites, retain red CLI regressions, implement optional quick-reference authoring/rendering, verify full gates and actual app/harness handoffs.
+next_action: Quick-reference delivery and next-task-brief dependency are integrated in PR32; use current project backlog and post-M2 decision record for continuation.
 ---
 
 # Handoff quick reference
@@ -165,3 +165,17 @@ real findings, stale/recovered state and failed/source-change notices stay visib
 Runtime evidence is under `.karakana/reviews/20261029-handoff-quick-reference/`
 and the app's separate form-flow evidence directory. Final post-commit handoffs
 record exact local commits; no PR, merge, deploy or live provider call occurred.
+
+
+## Integration status reconciled — 2026-11-14
+
+GitHub PR #32, [Show backlog position, delivery status and complete next-task
+briefs](https://github.com/mdudaj/karakana/pull/32), was squash merged on
+2026-10-29 at `a1eb2eac5a8ebd5f73c7746497f2f7ae14c4b0f5`. The commit is an
+ancestor of current merged M2 `da3d29d`; its17-file tree includes both this
+quick-reference delivery and `docs/delivery/2026-10-27-handoff-next-task-brief.md`.
+The old local unmerged/review-pending wording above is preserved history and is
+superseded by this actual integration evidence. No reapplication or second merge
+of `8ff3467` is needed. Current project load actually exposes the quick reference
+and complete next brief. Repository backlog KDX-09 is reconciled to merged;
+source/evidence limitations and deployment/independent acceptance remain separate.

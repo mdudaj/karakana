@@ -1,7 +1,7 @@
 ---
 name: engineering-documentation-conventions
 description: Select and tailor engineering documentation resources and apply shared language, reference and source-authority conventions during requested document authoring or review.
-version: 0.1.2
+version: 0.1.3
 risk_level: medium
 category: documentation
 scope: bundled

@@ -14,17 +14,31 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Active development items
 
-- [ ] **KDX-09 · P2 · local implementation / review pending — useful handoff quick reference.**
-  Evidence: the owner repeatedly needed backlog position/status in addition to
-  next-task text; long ent-meal handoffs lacked structured status and relied on
-  pasted backlog prose. Scope and current verification are in
-  `docs/delivery/2026-10-29-handoff-quick-reference.md`. Preserve the unmerged
-  `8ff3467` next-task-brief dependency and append-only artifact history.
-  Acceptance: actual create/refresh/load shows explicit delivery states, sourced
-  backlog items, current position and the complete next brief; legacy/redaction/
-  stale-source/CLI tests, full regression and evals pass. Next: finish verification,
-  inspect actual project loads, then owner-reviewed source PR/squash integration.
-  No automatic execution, merge, deployment or acceptance follows from the output.
+- [ ] **KDX-10 · P2 · assessment complete / authentic-action qualification held — local workflow qualification.**
+  Evidence: current merged M2 `da3d29d` was exercised in an isolated public-source
+  checkout; full-release24 components pass,186 evals pass,142 captured M2 tests
+  pass. Real task requirements, direct prompt generation, historical M2 diff
+  review/gating, ingestion and project-bound crosslink analysis were exercised.
+  Results/limits: `docs/delivery/2026-11-14-kdx10-workflow-qualification.md`.
+  Remaining: all27 original action sources are dogfood fixtures; no authentic
+  reviewed non-fixture response/action input was available. Owner: Karakana
+  maintainer. Next: select a genuine retained source/review and replay local
+  extraction/handoff; no live call is implicitly authorised. Sibling-project
+  checks remain outside isolated scope until paths/authority are supplied.
+  Owner accepted the completed assessment on2026-11-14; these held chains are
+  not passed or release qualification. Normal validated documentary PR/squash
+  integration is authorised; KDX11 requirements brief is next.
+
+- [ ] **KDX-11 · P2 · proposed requirements review — task-time profile selection and result reporting.**
+  Evidence: M2 is opt-in; the planner loads one selected skill without recursive
+  resource selection. KDX10 observed exit0 with typed not_ready/blocked states,
+  actual frontmatter CP input refusing narrative support, and evidence still held.
+  Acceptance for this proposed review: observable applicability/type/context,
+  selection/result UX, structured status/unsupported/held behavior and human
+  approval boundaries are settled here before design/code. No automatic ready,
+  acceptance, default enforcement or live/source action is inferred.
+  Next: owner reviews the qualification summary and selects this requirements
+  round or another priority. Keep KDX10's remaining evidence gap visible.
 
 Prior checkpoint: after KDX-07 integration, full safe dogfood run
 `20261001-185351-dogfood-081dd2` passed all10 checks and analysis found no defects.
@@ -33,6 +47,19 @@ release candidate; see `docs/karakana-dogfood-assessment-2026-10-01.md`. This re
 a release-review follow-up distinct from KDX-09's observed continuation defect.
 
 ## Completed development items
+
+- [x] **KDX-09 · P2 · merged — useful handoff quick reference.**
+  Evidence: GitHub PR #32 is merged at
+  `a1eb2eac5a8ebd5f73c7746497f2f7ae14c4b0f5` (2026-10-29), an ancestor of current
+  `da3d29d`. That squash includes the next-task-brief and quick-reference delivery
+  records, source, tests and instruction eval. Current actual project load exposes
+  position, five delivery states, sourced backlog and the complete next brief.
+  See `docs/delivery/2026-10-29-handoff-quick-reference.md` for retained753-test/
+  179-eval implementation evidence and the appended integration reconciliation.
+  The earlier "unmerged8ff3467"/review-pending entry described a local checkpoint;
+  PR #32 supersedes it. Deployment, independent review and product acceptance are
+  not inferred from merge. Focused current output/compatibility checks are recorded
+  in `docs/research/2026-11-14-post-m2-next-milestone.md`.
 
 These items passed local verification. PRs #21–26 record integration of
 KDX-01–08. Checklist completion does not imply deployment or user acceptance.

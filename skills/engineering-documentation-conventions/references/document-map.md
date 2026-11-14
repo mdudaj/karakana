@@ -1,6 +1,6 @@
 # Engineering document resource map
 
-Map version: 0.1. Content resources are selected by the requested artifact and
+Map version: 0.2. Content resources are selected by the requested artifact and
 reader need. Explicit project instructions and declared source authority govern.
 
 | Document type | Owning skill and resources | Available content pack |
@@ -23,7 +23,9 @@ The two new `assets/` packs are narrative authoring resources. Existing
 Keep their exact metadata, tables and native bindings for supported exports.
 Do not pass narrative assets to P02 and claim their content is validated/exported;
 the P02 narrative adapter and client projections are later slices. The separate
-[M1 content checker](../../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
-checks the two standard narrative packs through explicit profiles/context, with
-advanced mappings and saved-report verification still unsupported. It adds no
+[content checker](../../../docs/skills/engineering-artifact-catalogue/content-checks/README.md)
+checks standard and tailored requirements/system-design narrative profiles through
+an explicit context. M2 supports governing coverage, conditional omission rationale,
+located open-item/claim evidence and recomputed saved-report verification. Context0.1
+remains supported; explicit links requires context0.2. It adds no
 automatic task-time selection/enforcement or P02 export compatibility.
