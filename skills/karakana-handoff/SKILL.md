@@ -1,7 +1,7 @@
 ---
 name: karakana-handoff
 description: Create, load, recover, or refresh compact project-aware continuation artifacts for task endings, new sessions, agent switches, context-window failures, and milestone transitions.
-version: 0.4.3
+version: 0.4.4
 risk_level: low
 category: productivity
 scope: bundled
@@ -179,6 +179,20 @@ karakana handoff doctor --project <project>
 - Hiding stale or missing references.
 - Creating hidden lifecycle behavior that users cannot opt out of.
 - Mixing multiple projects in one flat handoff directory instead of using project-scoped handoff storage.
+
+
+## First-encounter task briefs
+
+When creating a task brief or next-task brief, use the shared
+[task brief context contract](../../docs/task-briefs.md) and
+[blank brief](../../templates/protocols/task-brief.md). Lead with product purpose,
+related feature/capability, people/workflow, task relevance and why now, current
+state, intended outcome, scope/authority and governing evidence before technical
+steps. Explain local acronyms; mark missing facts unconfirmed. Apply the
+first-encounter review; field presence does not establish relevance or approval.
+Preserve the requested action and existing safety/approval boundaries.
+Keep this compact opening in the explicit `next_task_brief` field and verify it
+in actual `handoff load` output; a state-summary paragraph alone may be omitted.
 
 ## Verification
 

@@ -14,6 +14,15 @@ claim. Review this file against current source and runtime evidence at each task
 
 ## Active development items
 
+- [ ] **KDX-12 · P2 · implemented/verified locally; review/integration pending — first-encounter task context.**
+  User requested research and harness update15 November2026 after an EDCS task
+  brief assumed product/feature relevance. Evidence/design/acceptance:
+  `docs/delivery/2026-11-15-task-brief-context.md`. Shared brief guidance/template,
+  optional authored Codex metadata and explicit gaps preserve existing advisory
+  readiness/execution boundaries. Final1192 tests/190 evals, skill/strict skillpack/memory checks pass. Human
+  review, publication and integration remain pending. EDCS jobs remains held; KDX09/10/11 states unchanged.
+
+
 - [ ] **KDX-10 · P2 · assessment complete / authentic-action qualification held — local workflow qualification.**
   Evidence: current merged M2 `da3d29d` was exercised in an isolated public-source
   checkout; full-release24 components pass,186 evals pass,142 captured M2 tests

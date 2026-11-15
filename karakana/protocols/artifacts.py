@@ -10,6 +10,7 @@ from karakana.traces.schemas import TraceArtifact
 from karakana.traces.store import TraceStore
 
 TEMPLATE_FILES = {
+    "task_brief": "task-brief.md",
     "acceptance_criteria": "acceptance-criteria.md",
     "adr": "adr.md",
     "artifact_readiness": "artifact-readiness.md",

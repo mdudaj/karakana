@@ -1,5 +1,7 @@
 """Shared engineering guidance and artifact stage selection; no execution."""
 
+from karakana.briefs import render_brief_guidance
+
 CHECK_STAGES = {"pre-implementation", "completion"}
 DELIVERY_OUTPUTS = {
     "change_summary", "verification_summary", "screenshot_or_render_evidence", "handoff",
@@ -36,12 +38,14 @@ Technical review still requires inspecting relevant code and evidence."""
 def render_engineering_process() -> str:
     """Keep primary agent entrypoints aligned without duplicating skill bodies."""
     recommendation = render_recommendation_guidance().replace("\n", "\n  ")
+    brief = render_brief_guidance().replace("\n", "\n  ")
     return f"""## Engineering Process
 
 Follow the tailored lifecycle in docs/engineering-process.md when available.
 - Orient: verify project, branch, handoff, request type, scope, risk and authority.
   Analysis/review requests do not authorize implementation or external writes.
 - Define: state outcome, non-goals and observable acceptance criteria; link current requirements.
+- Task brief context: {brief}
 - Research/design: reuse verified current evidence; research only unresolved questions.
   Close research with chosen requirements and observable acceptance, design/method
   rationale, and governing artifact updates or reuse. Record consequential trade-offs,

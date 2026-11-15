@@ -9,6 +9,7 @@ from pathlib import Path
 
 from karakana.actions.schemas import ActionBundle, ExtractedAction
 from karakana.actions.store import ActionStore
+from karakana.briefs import render_brief_context
 from karakana.codex.schemas import CodexHandoffTask
 from karakana.models.router import route_model
 from karakana.protocols.lifecycle import render_engineering_process
@@ -53,6 +54,10 @@ def render_codex_handoff_task(task: CodexHandoffTask) -> str:
 ## Task
 
 {task.title}
+
+{render_brief_context(task.metadata.get("brief_context"))}
+
+## Task Details
 
 {task.description}
 
@@ -133,6 +138,9 @@ def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: st
     route = _route_for_action(action, skillpack_context.model_routes if skillpack_context else None)
     escalation = "gpt-6-sol" if route["model"] == "gpt-6-luna" else None
     suggested_skills = action.suggested_skills or bundle.suggested_skills
+    # A project override must not silently re-label another project's context.
+    brief_context = ({} if project and action.project and project != action.project
+                     else action.metadata.get("brief_context", {}))
     safety_rules = [
         "Do not commit.",
         "Do not push.",
@@ -169,6 +177,7 @@ def _task_from_action(bundle: ActionBundle, action: ExtractedAction, project: st
         tests_to_run=tests_to_run,
         approval_requirements=approval_requirements,
         metadata={
+            "brief_context": brief_context,
             "artifacts": [action.metadata.get("artifact_path")] if action.metadata.get("artifact_path") else [],
             "skillpack": skillpack_context.skillpack.name if skillpack_context else None,
             "role": route.get("role"),

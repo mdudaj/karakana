@@ -283,3 +283,14 @@ restoring false-positive passes. No schema migration or deployment is involved.
   `20260926-063900-ec75bd`). These establish presence/structural validity only.
 - Recommended follow-up after integration: fix project-provenance
   filtering and test-runtime isolation in handoff recovery as a separate slice.
+
+## First-encounter task brief context
+
+Every task/next-task brief starts with a compact explanation of product purpose,
+related feature/capability, affected people/workflow, problem/relevance now, current
+state/prerequisites, intended outcome, scope/authority and governing evidence.
+Show product → feature → this task before technical instructions. Explain local
+acronyms, separate current/target and accepted/proposed facts, and mark unknowns
+unconfirmed. Use the [shared convention](task-briefs.md) and its first-encounter
+review. Links and field counts do not prove relevance, truth, readiness or approval.
+This authoring rule preserves the requested action and existing advisory gates.

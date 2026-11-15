@@ -1,7 +1,7 @@
 ---
 name: next-milestone-decision
 description: Inspect current project evidence, compare plausible next milestones, select a grounded direction, and generate copy-ready execution instructions.
-version: 0.1.0
+version: 0.1.1
 risk_level: medium
 category: productivity
 scope: bundled
@@ -113,6 +113,18 @@ Generate an instruction that another agent can execute directly. Include the mil
 - Producing a broad roadmap instead of one bounded milestone.
 - Hiding missing evidence behind confident probabilities.
 - Generating instructions that silently authorize writes, pushes, deployments, or safety changes.
+
+
+## First-encounter task briefs
+
+When creating a task brief or next-task brief, use the shared
+[task brief context contract](../../docs/task-briefs.md) and
+[blank brief](../../templates/protocols/task-brief.md). Lead with product purpose,
+related feature/capability, people/workflow, task relevance and why now, current
+state, intended outcome, scope/authority and governing evidence before technical
+steps. Explain local acronyms; mark missing facts unconfirmed. Apply the
+first-encounter review; field presence does not establish relevance or approval.
+Preserve the requested action and existing safety/approval boundaries.
 
 ## Verification
 

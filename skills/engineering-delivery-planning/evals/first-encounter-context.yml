@@ -1,0 +1,27 @@
+id: first-encounter-brief-guidance
+name: Task brief guidance exposes product and feature relevance
+description: Source instruction coverage only; behavioral tests and human review remain separate.
+suite: skills
+risk_level: medium
+tags: [task-brief, first-encounter]
+input:
+  task: Write a next-task brief for a developer who has never seen the project.
+  skill: engineering-delivery-planning
+  task_type: planning
+  prompt_file: karakana/briefs.py
+expectations:
+  must_include:
+    - When creating a task brief or next-task brief
+    - project/product purpose
+    - related feature/capability
+    - people/workflow affected
+    - task relevance and why now
+    - current state/prerequisites
+    - intended outcome
+    - scope and authority
+    - governing evidence
+    - product → feature → this task
+    - links supplement it
+    - mark missing context unconfirmed
+    - This convention preserves the requested action
+    - truth, readiness or acceptance

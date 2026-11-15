@@ -2,7 +2,7 @@
 name: engineering-delivery-planning
 description: Author or revise outcome roadmaps, milestones and bounded implementation
   plans in Markdown once delivery direction is selected.
-version: 0.1.1
+version: 0.1.2
 risk_level: medium
 category: documentation
 scope: bundled
@@ -115,6 +115,18 @@ copy, with assumptions and forecast limits recorded.
 ## Pitfalls
 
 A dated feature list is not an outcome roadmap. An estimate is not an accepted milestone. Planning instructions do not authorize deployment or remote mutation.
+
+
+## First-encounter task briefs
+
+When creating a task brief or next-task brief, use the shared
+[task brief context contract](../../docs/task-briefs.md) and
+[blank brief](../../templates/protocols/task-brief.md). Lead with product purpose,
+related feature/capability, people/workflow, task relevance and why now, current
+state, intended outcome, scope/authority and governing evidence before technical
+steps. Explain local acronyms; mark missing facts unconfirmed. Apply the
+first-encounter review; field presence does not establish relevance or approval.
+Preserve the requested action and existing safety/approval boundaries.
 
 ## Verification
 

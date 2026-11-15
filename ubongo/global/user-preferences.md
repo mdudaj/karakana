@@ -41,3 +41,14 @@ Capture durable user preferences for workflow, communication, tooling, project p
   as in-scope technical verification, not as a separate product permission
   question. If the sandbox blocks Docker socket access, request the technical
   escalation directly and continue.
+
+## Task Brief Context — Global
+
+- Start every task/next-task brief with context a first-time developer can use:
+  product purpose → related feature/capability → this task, affected people/workflow,
+  problem and relevance now, current versus intended state, scope/authority and
+  governing evidence. Expand local acronyms and explain immediate contribution.
+- Keep the opening compact and self-contained; links supplement it. Explicitly
+  mark unconfirmed facts and accepted/proposed status. Do not invent feature
+  relevance, beneficiaries, priority or approval. Apply docs/task-briefs.md before
+  presenting the technical steps; structural completeness is not factual review.
