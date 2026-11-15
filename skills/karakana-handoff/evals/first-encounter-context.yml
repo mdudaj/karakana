@@ -1,0 +1,22 @@
+id: session-brief-first-encounter
+name: Session continuation retains first-encounter task context
+description: Instruction coverage only, not generated model quality or factual acceptance.
+suite: skills
+risk_level: medium
+tags: [task-brief, handoff]
+input:
+  task: Refresh the continuation with the related feature and relevance before technical steps.
+  skill: karakana-handoff
+  task_type: documentation
+  prompt_file: skills/karakana-handoff/SKILL.md
+expectations:
+  must_include:
+    - First-encounter task briefs
+    - product purpose
+    - related feature/capability
+    - task relevance and why now
+    - mark missing facts unconfirmed
+    - field presence does not establish relevance or approval
+    - explicit `next_task_brief` field
+    - actual `handoff load` output
+    - state-summary paragraph alone may be omitted

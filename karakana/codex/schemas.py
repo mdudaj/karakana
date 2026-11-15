@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from karakana.traces.schemas import redact_value
+from karakana.briefs import redact_brief_context
 
 REVIEW_STATUSES = {"passed", "warning", "blocked", "error"}
 SEVERITIES = {"info", "low", "medium", "high", "critical"}
@@ -40,6 +41,8 @@ class CodexHandoffTask:
         self.description = redact_value(self.description)
         self.context = redact_value(self.context)
         self.metadata = redact_value(self.metadata)
+        if isinstance(self.metadata, dict) and "brief_context" in self.metadata:
+            self.metadata["brief_context"] = redact_brief_context(self.metadata["brief_context"])
 
     def to_dict(self) -> dict[str, Any]:
         return redact_value(asdict(self))

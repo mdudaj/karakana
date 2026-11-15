@@ -8,6 +8,9 @@ Current engineering lifecycle authority: `docs/engineering-process.md` and the
 stage-aware checks in `karakana/protocols/`. The milestone descriptions below are
 historical planning context, not evidence of current implementation status.
 
+Task brief authoring: use [first-encounter context](docs/task-briefs.md) before
+technical instructions, including the product/feature relationship and why now.
+
 ## 1. Mission
 
 You are an implementation agent responsible for delivering  **Karakana** , a GitHub-native AI agent harness for managing multiple software, research, and infrastructure projects.

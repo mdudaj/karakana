@@ -81,6 +81,12 @@ Report implemented, verified, merged, deployed and accepted as distinct states.
 Use existing task approval for in-scope work without repeatedly asking, but stop
 for new scope, missing material decisions or actions requiring new authority.
 
+Task and next-task briefs must orient a first-time developer before technical
+details: product purpose, related feature, affected people/workflow, why now,
+current state, intended outcome, scope/authority and evidence. Follow
+`docs/task-briefs.md`; explicit unknowns and links supplement a self-contained
+opening. Structural context coverage is not readiness or approval.
+
 ## End Every Task
 
 Every bounded task must finish with an append-only handoff refresh so the next session can load current continuation context.

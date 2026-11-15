@@ -1,7 +1,7 @@
 ---
 name: engineering-documentation-conventions
 description: Select and tailor engineering documentation resources and apply shared language, reference and source-authority conventions during requested document authoring or review.
-version: 0.1.5
+version: 0.1.6
 risk_level: medium
 category: documentation
 scope: bundled
@@ -144,6 +144,18 @@ remains supported; `links` requires context0.2. Verify compares both raw manifes
 and recomputed assessments; an equal digest alone is not freshness. Unknown facts
 and evidence authenticity remain review concerns. Narrative checking does not add
 P02 export support or automatic task enforcement.
+
+
+## First-encounter task briefs
+
+When creating a task brief or next-task brief, use the shared
+[task brief context contract](../../docs/task-briefs.md) and
+[blank brief](../../templates/protocols/task-brief.md). Lead with product purpose,
+related feature/capability, people/workflow, task relevance and why now, current
+state, intended outcome, scope/authority and governing evidence before technical
+steps. Explain local acronyms; mark missing facts unconfirmed. Apply the
+first-encounter review; field presence does not establish relevance or approval.
+Preserve the requested action and existing safety/approval boundaries.
 
 ## Verification
 

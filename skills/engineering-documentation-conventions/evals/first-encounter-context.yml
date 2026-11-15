@@ -1,0 +1,20 @@
+id: documentation-task-context-contract
+name: Documentation convention links the shared task context contract
+description: Source-text coverage; no automatic content readiness or activation.
+suite: skills
+risk_level: medium
+tags: [task-brief, documentation]
+input:
+  task: Author a bounded brief with project and feature context while retaining review-only authority.
+  skill: engineering-documentation-conventions
+  task_type: documentation
+  prompt_file: skills/engineering-documentation-conventions/SKILL.md
+expectations:
+  must_include:
+    - First-encounter task briefs
+    - docs/task-briefs.md
+    - templates/protocols/task-brief.md
+    - Lead with product purpose
+    - current
+    - state, intended outcome, scope/authority and governing evidence
+    - Preserve the requested action

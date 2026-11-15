@@ -17,7 +17,13 @@ def test_complete_legacy_prompt_bytes_match_pre_refactor_baseline(tmp_path, case
     write_memory_tree(tmp_path); write_skill(tmp_path)
     if case["case"] != "fallback": (tmp_path / "KARAKANA.md").write_text("# Contract\n\nProject contract content.\n")
     if case["case"] == "missing_memory": (tmp_path / "ubongo/projects/karakana/overview.md").unlink()
-    raw = compose_planning_prompt("karakana", "example-skill", "Review selected scope", tmp_path, **case["kwargs"]).encode()
+    prompt = compose_planning_prompt("karakana", "example-skill", "Review selected scope", tmp_path, **case["kwargs"])
+    # KDX-12 intentionally adds one conditional guidance block. Preserve the
+    # historical S1 fixture and verify every other legacy byte is unchanged.
+    from karakana.briefs import render_brief_guidance
+    addition = "- Task brief context: " + render_brief_guidance().replace("\n", "\n  ") + "\n"
+    assert prompt.count(addition) == 1
+    raw = prompt.replace(addition, "", 1).encode()
     assert len(raw) == case["bytes"]
     assert hashlib.sha256(raw).hexdigest() == case["sha256"]
 
