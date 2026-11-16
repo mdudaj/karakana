@@ -1,0 +1,27 @@
+id: engineering-documentation-conventions-pre-review-conformance
+name: Pre-review document conformance preference coverage
+description: Deterministic durable-preference text coverage only; does not prove
+  agent compliance, actual section review, rendered quality or recipient acceptance.
+suite: skills
+risk_level: low
+tags:
+- engineering-artifacts
+- instruction-coverage
+input:
+  task: Before requesting document review, check the complete document against the
+    recorded agreements and correct known deviations first.
+  skill: engineering-documentation-conventions
+  task_type: documentation
+  prompt_file: ubongo/global/user-preferences.md
+expectations:
+  must_include:
+  - Before requesting document review
+  - complete conformance pass
+  - every section and final rendered output
+  - Correct known deviations first
+  - Mechanical export
+  - checks alone are insufficient
+  - document title, version and section
+  - without repository access
+  - Rewrite dependent statements
+  - extracted sharing package

@@ -41,6 +41,18 @@ Capture durable user preferences for workflow, communication, tooling, project p
   as in-scope technical verification, not as a separate product permission
   question. If the sandbox blocks Docker socket access, request the technical
   escalation directly and continue.
+- Before requesting document review, always perform a complete conformance pass
+  against recorded agreements, including every section and final rendered output.
+  Correct known deviations first; check content, scope, terminology, references,
+  headings, numbering, figures, margins and internal authoring boilerplate.
+  Record coverage, changes, verification and remaining limits. Mechanical export
+  checks alone are insufficient; do not make the user rediscover known deviations.
+- Client document references should use document title, version and section.
+  Client copies must stand on their own without repository access or internal
+  release ledgers, test indexes, code links or undistributed control documents.
+  Rewrite dependent statements, not only hyperlink markup. Keep source/control
+  provenance in engineering records. Verify retained navigation and the actual
+  extracted sharing package; do not promise universal viewer or website access.
 
 ## Task Brief Context — Global
 
