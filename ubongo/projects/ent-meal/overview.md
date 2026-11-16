@@ -32,7 +32,39 @@ Earlier checkpoint (historical): FR02 is squash merged at `16ee712`; live previe
 user-deferred until VPN is available. Local v0.3 clarification/name corrections
 are a separate review branch and do not imply integration or acceptance.
 
-## Original scaffold boundary
+## Current Client Documentation Decisions
+
+On 16 November 2026 the user reaffirmed LDAP as the agreed institutional
+authentication method. Do not ask reviewers to select or reconfirm it. Our
+implementation/UAT team performs configuration and readiness tests, reports
+failures or unresolved inputs, and uses its final configuration assessment to
+inform the documents. Reuse the latest assessment to distinguish completed work
+from actual pending work; do not replace it with generic external confirmations.
+UAT records the actual LDAP service configuration, application account bindings,
+TLS and session policy; MFA applicability/enforcement remain separate open inputs.
+Carry settled decisions into documents as facts. Ask for resolution only of
+missing or changed inputs, and distinguish checking test readiness from reopening
+a decision. Use descriptive purpose/scope prose and direct execution instructions.
+See application `docs/delivery/2026-11-15-release1-client-uat.md` for authority,
+scope, evidence and the current UAT issue; load the latest handoff for delivery
+state. These documentation decisions do not claim deployed LDAP or MFA evidence.
+
+The agreed UAT workbook uses three sheets: Setup and Assessment, Test Results,
+and Retests. Maintain changing configuration findings in the existing setup
+assessment area; keep stable testing instructions in the guide. Combine initial
+observations, evidence and issue follow-up per case, and preserve initial results
+when recording later retests. Verify populated screen and print examples before
+issuing revisions; fewer sheets alone do not establish clarity.
+
+Prefill known UAT configuration and completed assessment facts from the actual
+recorded evidence, with dates and scope. A qualified candidate is not evidence
+of activation. Do not turn blank workbook metadata into configuration issues.
+Retain client content only when it helps preparation, testing, evidence,
+follow-up or acceptance; keep exhaustive research and engineering controls in
+internal records. Remove duplicate prompts instead of asking reviewers to
+re-enter known facts or reconfirm settled choices.
+
+## Original Scaffold Boundary
 
 Slice 1 establishes:
 
