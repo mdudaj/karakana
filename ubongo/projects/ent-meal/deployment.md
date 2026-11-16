@@ -2,7 +2,29 @@
 
 No production deployment exists yet.
 
-## Current CRDB UAT continuation — 23 October2026
+## Current CRDB UAT continuation — 16 November 2026
+
+Use the [portable Ubuntu handoff](https://github.com/mdudaj/ent-meal/blob/f83d374c1d923dbd2cbaceb40aa2b46b960f5b5f/docs/deployment/ubuntu-continuation-2026-11-16.md)
+from ent-meal PR142, squash `f83d374`. It supersedes older active-task statements
+below; retain prior checkpoints as history.
+
+Local UAT preview remains available and LDAP is inactive. The detailed bind at
+12:41:15 UTC passed strict TLS, then returned LDAP49/AD52e; no search ran. The
+[sanitized evidence](https://github.com/mdudaj/ent-meal/blob/f83d374c1d923dbd2cbaceb40aa2b46b960f5b5f/docs/deployment/evidence/ldap-bind-2026-11-16.json)
+records the result. Next: review ICT confirmation of the current bind identity
+and credential pairing/account state before another controlled attempt. Preserve
+local preview and prior attempt records. Normal DNS and end-user identity/recovery
+remain separate; SMTP is outside UAT scope. Windows no-credential TCP/strict TLS
+checks passed, but its native LDAP credential path remains unqualified.
+
+The owner confirms newer documents were regenerated in Ubuntu and shared. The
+110 superseded Windows-generated files are preserved in a verified external ZIP
+with a [committed provenance note and manifest](https://github.com/mdudaj/ent-meal/blob/f83d374c1d923dbd2cbaceb40aa2b46b960f5b5f/docs/archive/windows-generated-documents-2026-11-16.md).
+Do not regenerate or restore those historical copies just to resume. Current
+requirements/design/hosting sources govern. No new app deployment, credential
+storage or authentication activation occurred during this archive/handoff task.
+
+## Historical CRDB UAT continuation — 23 October2026
 
 The owner's Windows-to-Ubuntu checkpoint is committed in ent-meal main through
 [PR99](https://github.com/mdudaj/ent-meal/pull/99), squash `80aa22b`.
