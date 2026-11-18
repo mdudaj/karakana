@@ -1,0 +1,23 @@
+id: page-composition-rule
+name: Reusable page composition and landing cards
+description: Guard the global design-system rule against token-only compliance, verbose landing cards, and ambiguous drill-down actions.
+suite: skills
+risk_level: medium
+tags: [skills, ux, design-system, cards]
+input:
+  task: "Design an executive landing page with summary cards using an existing project design system."
+  skill: design-system-governance
+  task_type: planning
+  prompt_file: skills/design-system-governance/SKILL.md
+expectations:
+  must_include:
+    - "audience"
+    - "primary task"
+    - "Token use alone"
+    - "page-local CSS"
+    - "shared component contract"
+    - "short title"
+    - "accurately labelled"
+    - "visible action label"
+    - "Tooltips provide"
+    - "rendered view"
