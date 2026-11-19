@@ -1,0 +1,20 @@
+id: ux-research-before-design
+name: UX layout decisions research and test alternatives first
+description: Preserve the user's experiment-before-decision rule in generated project planning context.
+suite: requirements
+risk_level: medium
+input:
+  task: "Research alternative shared route header arrangements before deciding the UX layout."
+  project: ent-meal
+  skill: hcd-ui-ux-delivery-loop
+  task_type: planning
+expectations:
+  must_include:
+    - "Before deciding a new UX design or layout"
+    - "prototype them in isolation"
+    - "without deformation"
+    - "visual order and keyboard order"
+    - "Inspect rendered captures"
+    - "Prototypes are experiments"
+  must_not_include:
+    - "skip research and apply the first layout"
