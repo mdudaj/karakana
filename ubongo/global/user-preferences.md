@@ -64,3 +64,25 @@ Capture durable user preferences for workflow, communication, tooling, project p
   mark unconfirmed facts and accepted/proposed status. Do not invent feature
   relevance, beneficiaries, priority or approval. Apply docs/task-briefs.md before
   presenting the technical steps; structural completeness is not factual review.
+
+## UX Decisions — Research and Test First
+
+- Before deciding a new UX design or layout, research alternative arrangements,
+  prototype them in isolation, and test how they remain consistent
+  without deformation. Present the evidence and trade-offs for discussion before choosing
+  or changing the product UI. Do not rush from a suggestion into implementation.
+- Use realistic and difficult content: long titles/context and unbroken text,
+  different action counts and labels, missing optional elements, narrow actual
+  workspaces (including sidebar changes), enlarged text and increased spacing.
+  Verify readable complete text, independent layout regions, wrapping, actual
+  clipping/overlap, control bounds, visual order and keyboard order.
+  Inspect rendered captures as well as automated measurements; lack of page overflow
+  alone is insufficient.
+- Preserve research iterations, contrary evidence and limitations.
+  Prototypes are experiments, not approved product changes or full accessibility evidence.
+  Reuse current tested evidence for already-agreed patterns; investigate and
+  requalify changed assumptions rather than repeating broad research needlessly.
+- Record the chosen pattern only after the decision is made, then implement it
+  through shared project components with appropriate regression verification.
+  Scope-specific arrangements such as header row order/action placement remain
+  in that project's governing artifacts, not invented as global defaults.
